@@ -1,0 +1,34 @@
+---
+services:
+  php-apache:
+    container_name: "${CONTAINER_NAME_PREFIX}-apache-php"
+    build: ./docker/php-apache
+    environment:
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+    volumes:
+      - ${PATH_TO_SYMFONY_PROJECT}:/var/www/html
+    ports:
+      - "80:80"
+
+  db:
+    container_name: "${CONTAINER_NAME_PREFIX}-mariadb"
+    image: mariadb:latest
+    environment:
+      - MARIADB_ROOT_USER=${ROOT_USER}
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+    volumes:
+      - ${PATH_TO_DB_DATA}:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+
+  mailer:
+    container_name: "${CONTAINER_NAME_PREFIX}-mailer"
+    image: schickling/mailcatcher
+    ports:
+      - "1025:1025"
+      - "1080:1080"
