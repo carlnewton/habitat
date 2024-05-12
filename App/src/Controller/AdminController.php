@@ -99,7 +99,7 @@ class AdminController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash(
-                'notice',
+                'success',
                 'Settings saved'
             );
 

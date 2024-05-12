@@ -1,1 +1,5 @@
+body { padding-bottom: 80px; }
 #map { height: 100%; }
+#drawer .active {
+    color: var(--bs-blue)!important;
+}

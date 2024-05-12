@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-theme="{{ setting('theme', 'light') }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,7 @@
     </head>
     <body>
         <div class="navbar-expand-md">
-            <nav class="navbar bg-light" data-bs-theme="light">
+            <nav class="navbar bg-{{ setting('theme', 'light') }} border-bottom">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ path('app_index_index') }}">{{ setting('habitatName', 'Habitat') }}</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -58,5 +58,24 @@
             {% endfor %}
             {% block body %}{% endblock %}
         </div>
+        <nav id="drawer" class="navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top">
+            <div class="container-fluid">
+                <a href="/" class="text-center col col-sm-4 text-secondary active text-decoration-none">
+                    <i class="h3 bi bi-house-fill"></i>
+                    <br>
+                    <small>Home</small>
+                </a>
+                <a href="/" class="text-center col col-sm-4 text-secondary text-decoration-none">
+                    <i class="h3 bi bi-plus-circle-fill"></i>
+                    <br>
+                    <small>Post</small>
+                </a>
+                <a href="/" class="text-center col col-sm-4 text-secondary text-decoration-none">
+                    <i class="h3 bi bi-geo-alt-fill"></i>
+                    <br>
+                    <small>Nearby</small>
+                </a>
+            </div>
+        </nav>
     </body>
 </html>

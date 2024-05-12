@@ -23,6 +23,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "bootstrap-icons": "^1.11.3",
         "leaflet": "^1.9.4"
     }
 }
