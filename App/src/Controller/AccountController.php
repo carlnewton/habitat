@@ -7,10 +7,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class IndexController extends AbstractController
+class AccountController extends AbstractController
 {
-    #[Route(path: '/', name: 'app_index_index', methods: ['GET', 'POST'])]
+    #[Route(path: '/account', name: 'app_account_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
@@ -19,7 +20,7 @@ class IndexController extends AbstractController
             return $this->redirectToRoute('app_setup_admin');
         }
 
-        return $this->render('index.html.twig', [
+        return $this->render('admin/index.html.twig', [
             'variable_test' => 'IndexController',
         ]);
     }

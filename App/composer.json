@@ -17,7 +17,11 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
         "symfony/runtime": "7.0.*",
+        "symfony/security-bundle": "7.0.*",
+        "symfony/security-csrf": "7.0.*",
         "symfony/twig-bundle": "7.0.*",
+        "symfony/ux-twig-component": "^2.17",
+        "symfony/validator": "7.0.*",
         "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "7.0.*",
         "symfonycasts/sass-bundle": "^0.6.0",
@@ -75,6 +79,12 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.58"
+        "dama/doctrine-test-bundle": "^8.0",
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "7.0.*",
+        "symfony/css-selector": "7.0.*",
+        "symfony/maker-bundle": "^1.58",
+        "symfony/phpunit-bridge": "^7.0"
     }
 }

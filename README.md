@@ -1,5 +1,7 @@
 # Habitat
 
+This project is currently in very early development. For information on the purpose of Habitat, [read the blog post](https://carlnewton.github.io/posts/location-based-social-network/).
+
 ## Requirements
 
 * [Docker](https://www.docker.com/)

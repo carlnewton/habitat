@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SettingsRepository::class)]
 class Settings
 {
+    public const HABITAT_NAME_MAX_LENGTH = 40;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

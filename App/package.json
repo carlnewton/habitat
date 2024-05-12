@@ -21,5 +21,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "leaflet": "^1.9.4"
     }
 }

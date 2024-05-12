@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en" data-bs-theme="light">
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -13,6 +12,51 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="navbar-expand-md">
+            <nav class="navbar bg-light" data-bs-theme="light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{ path('app_index_index') }}">{{ setting('habitatName', 'Habitat') }}</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                        <div class="offcanvas-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_admin_index') }}">Admin dashboard</a>
+                                    </li>
+                                {% endif %}
+                                {% if app.user %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_logout') }}">Sign out</a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_login') }}">Sign in</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="container mt-3">
+            {% for message in app.flashes('notice') %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form method="post">
+        <div class="row mb-3">
+            <label for="habitatName" class="col-sm-2 col-form-label">Habitat name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control{% if errors.habitatName is defined %} is-invalid{% endif %}" name="habitatName" id="habitatName" value="{{ values.habitatName }}">
+                {% if errors.habitatName is defined %}
+                    <div class="invalid-feedback">
+                        {% for errorMessage in errors.habitatName %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="location" class="col-sm-2 col-form-label">Location</label>
+            <div class="col-sm-10">
+                <div class="card{% if errors.location is defined %} border-danger{% endif %}">
+                    <div class="card-body ratio ratio-16x9">
+                        <div id="map"></div>
+                    </div>
+                    <div class="card-body text-white bg-danger text-center d-none" id="size-warning">
+                        Habitat has not been designed to work at this size. Things may not work as expected.
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 mb-2 mb-md-0 col-md-6 gx-2">
+                                <button type="button" class="btn btn-outline-secondary get-location">Use my location</button>
+                            </div>
+                            <div class="col-12 col-md-6 gx-2">
+                                <div class="input-group">
+                                    <span class="input-group-text">Size</span>
+                                    <input type="number" step="0.1" name="locationRadius" id="locationRadius" class="form-control" autocomplete="off" min="0">
+                                    <button class="btn{% if values.locationMeasurement == "kms" %} active{% endif %} btn-outline-secondary" type="button" id="measurement-kms">kms</button>
+                                    <button class="btn{% if values.locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-miles">miles</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if errors.location is defined %}
+                    <div class="text-danger">
+                        {% for errorMessage in errors.location %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-text">Users will be able to post about any location inside the circle</div>
+            </div>
+        </div>
+        <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng }}">
+        <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters }}">
+        <input type="hidden" name="locationZoom" id="locationZoom" value="{{ values.locationZoom }}">
+        <input type="hidden" name="locationMeasurement" id="locationMeasurement" value="{{ values.locationMeasurement }}">
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('admin_map') }}
+{% endblock %}
