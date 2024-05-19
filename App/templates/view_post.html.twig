@@ -12,8 +12,8 @@
             </div>
         </div>
     {% endif %}
-    <button class="border-0 bg-transparent text-muted fs-4 mb-3">
-        <i class="bi bi-heart-fill"></i> {{ post.heartCount }}
+    <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
+        <i class="bi bi-heart-fill"></i> <span class="heart-count">{{ post.heartCount }}</span>
     </button>
     <h2 id="comments">Comments ({{ post.commentCount }})</h2>
 
@@ -48,4 +48,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('view_map') }}
+    {% if app.user %}
+        {{ encore_entry_script_tags('heart') }}
+    {% endif %}
 {% endblock %}

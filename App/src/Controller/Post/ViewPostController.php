@@ -36,6 +36,15 @@ class ViewPostController extends AbstractController
             'id' => $id
         ]);
 
+        if ($user !== null) {
+            foreach ($post->getHearts() as $heart) {
+                if ($heart->getUser()->getId() === $user->getId()) {
+                    $post->setCurrentUserHearted(true);
+                    break;
+                }
+            }
+        }
+
         if ($request->getMethod() === 'POST') {
             if ($user === null) {
                 return $this->redirectToRoute('app_login');

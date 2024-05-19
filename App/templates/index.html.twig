@@ -11,8 +11,8 @@
                 {% endif %}
             </a>
             <div class="card-body">
-                <button class="float-start border-0 bg-transparent text-muted pe-3">
-                    <i class="bi bi-heart-fill"></i> {{ post.heartCount }}
+                <button id="hearts-{{ post.id }}" class="float-start border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} pe-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
+                    <i class="bi bi-heart-fill"></i> <span class="heart-count">{{ post.heartCount }}</span>
                 </button>
                 <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
                     <i class="bi bi-chat-fill"></i> {{ post.commentCount }}
@@ -21,4 +21,11 @@
             </div>
         </div>
     {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if app.user %}
+        {{ encore_entry_script_tags('heart') }}
+    {% endif %}
 {% endblock %}

@@ -29,6 +29,7 @@ Encore
     .addEntry('admin_map', './assets/admin_map.js')
     .addEntry('post_map', './assets/post_map.js')
     .addEntry('view_map', './assets/view_map.js')
+    .addEntry('heart', './assets/heart.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

@@ -8,11 +8,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class IndexController extends AbstractController
 {
     #[Route(path: '/', name: 'app_index_index', methods: ['GET', 'POST'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(
+        #[CurrentUser] ?User $user,
+        EntityManagerInterface $entityManager
+    ): Response
     {
         $userRepository = $entityManager->getRepository(User::class);
 
@@ -28,6 +32,18 @@ class IndexController extends AbstractController
             ],
             10
         );
+
+        if ($user !== null) {
+            foreach ($posts as $post) {
+                foreach ($post->getHearts() as $heart) {
+                    if ($heart->getUser()->getId() === $user->getId()) {
+                        $post->setCurrentUserHearted(true);
+                        break;
+                    }
+                }
+            }
+        }
+
         return $this->render('index.html.twig', [
             'posts' => $posts,
         ]);

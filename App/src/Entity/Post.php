@@ -49,6 +49,8 @@ class Post
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
     private Collection $comments;
 
+    private bool $currentUserHearted = false;
+
     public function __construct()
     {
         $this->hearts = new ArrayCollection();
@@ -165,6 +167,18 @@ class Post
         }
 
         return $this;
+    }
+
+    public function setCurrentUserHearted(bool $currentUserHearted): static
+    {
+        $this->currentUserHearted = $currentUserHearted;
+
+        return $this;
+    }
+
+    public function getCurrentUserHearted(): bool
+    {
+        return $this->currentUserHearted;
     }
 
     /**
