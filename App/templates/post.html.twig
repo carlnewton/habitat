@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form method="post">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}">
+            <label for="title">Title</label>
+            {% if errors.title is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.title %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-floating mb-3">
+            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
+            <label for="body">Body</label>
+        </div>
+        <div class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
+            <div class="card-header">Location</div>
+            <div class="card-body ratio ratio-16x9">
+                <div id="map" data-center="{{ setting('locationLatLng') }}" data-zoom="{{ setting('locationZoom') }}" data-radius="{{ setting('locationRadiusMeters') }}"></div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-12 gx-2 d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-secondary get-location float-start" title="Show your current location"><i class="bi bi-crosshair2"></i></button>
+                        <span class="ms-2 text-secondary">Do not use your home address</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if errors.location is defined %}
+            <div class="text-danger">
+                {% for errorMessage in errors.location %}
+                    <p>{{ errorMessage }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if values.locationLatLng is defined %}{{ values.locationLatLng }}{% endif %}">
+        <input type="hidden" name="token" value="{{ csrf_token('post') }}">
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Submit post</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('post_map') }}
+{% endblock %}

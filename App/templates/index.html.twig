@@ -1,5 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ variable_test }}
+    <h1 class="visually-hidden">Latest posts</h1>
+    {% for post in posts %}
+        <div class="card card-light mb-3 post-card">
+            <a class="card-body" href="{{ path('app_view_post', { id: post.id })}}">
+                <h2 class="card-title">{{ post.title }}</h2>
+                {% if post.body is defined %}
+                    <p>{{ post.body }}</p>
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <button class="float-start border-0 bg-transparent text-muted pe-3">
+                    <i class="bi bi-heart-fill"></i> {{ post.heartCount }}
+                </button>
+                <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
+                    <i class="bi bi-chat-fill"></i> {{ post.commentCount }}
+                </a>
+                <div class="date float-end text-muted">{{ post.posted|time_diff }}</div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}

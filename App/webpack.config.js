@@ -14,6 +14,11 @@ Encore
     // only needed for CDN's or subdirectory deploy
     //.setManifestKeyPrefix('build/')
 
+    .copyFiles({
+        from: './assets/img',
+        to: 'images/[path][name].[ext]',
+        pattern: /\.(png|jpg|jpeg|svg)$/
+    })
     /*
      * ENTRY CONFIG
      *
@@ -22,6 +27,8 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('admin_map', './assets/admin_map.js')
+    .addEntry('post_map', './assets/post_map.js')
+    .addEntry('view_map', './assets/view_map.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

@@ -22,7 +22,7 @@ class SettingsExtension extends AbstractExtension
         ];
     }
 
-    public function getSetting(string $settingName, mixed $defaultValue): mixed
+    public function getSetting(string $settingName, mixed $defaultValue = null): mixed
     {
         $setting = $this->settingsRepository->getSettingByName($settingName);
 

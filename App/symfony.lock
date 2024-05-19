@@ -50,6 +50,9 @@
             "migrations/.gitignore"
         ]
     },
+    "knplabs/knp-time-bundle": {
+        "version": "v2.2.0"
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -182,6 +185,19 @@
         "files": [
             "config/packages/security.yaml",
             "config/routes/security.yaml"
+        ]
+    },
+    "symfony/translation": {
+        "version": "7.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.3",
+            "ref": "e28e27f53663cc34f0be2837aba18e3a1bef8e7b"
+        },
+        "files": [
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
         ]
     },
     "symfony/twig-bundle": {

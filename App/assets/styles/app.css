@@ -1,5 +1,8 @@
 body { padding-bottom: 80px; }
 #map { height: 100%; }
+.post-card a {
+    text-decoration: none !important;
+}
 #drawer .active {
-    color: var(--bs-blue)!important;
+    color: var(--bs-blue) !important;
 }

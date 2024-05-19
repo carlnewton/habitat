@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,8 +20,16 @@ class IndexController extends AbstractController
             return $this->redirectToRoute('app_setup_admin');
         }
 
+        $postRepository = $entityManager->getRepository(Post::class);
+        $posts = $postRepository->findBy(
+            [], 
+            [
+                'posted' => 'DESC',
+            ],
+            10
+        );
         return $this->render('index.html.twig', [
-            'variable_test' => 'IndexController',
+            'posts' => $posts,
         ]);
     }
 }

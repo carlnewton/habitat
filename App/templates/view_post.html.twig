@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ post.title }}</h1>
+    {% if post.body is not empty %}
+        <p>{{ post.body }}</p>
+    {% endif %}
+    {% if post.location is not empty %}
+        <div class="card mb-4">
+            <div class="card-body ratio ratio-16x9">
+                <div id="map" data-center="{{ post.location }}"></div>
+            </div>
+        </div>
+    {% endif %}
+    <button class="border-0 bg-transparent text-muted fs-4 mb-3">
+        <i class="bi bi-heart-fill"></i> {{ post.heartCount }}
+    </button>
+    <h2 id="comments">Comments ({{ post.commentCount }})</h2>
+
+    {% if app.user %}
+        <form class="mb-3" method="post">
+            <div class="form-floating mb-3">
+                <textarea class="form-control form-control-lg" name="comment" style="height: 100px" placeholder="Comment">{% if values.comment is defined %}{{ values.comment }}{% endif %}</textarea>
+                <label for="comment">Comment</label>
+            </div>
+            <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
+            <button type="submit" class="btn btn-primary">Add comment</button>
+        </form>
+    {% else %}
+        <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
+    {% endif %}
+    {% if post.comments is not empty %}
+        <div id="comments-list" class="mb-5">
+            {% for comment in post.comments %}
+                <h3>{{ comment.user.username }}</h3>
+                <p>
+                    {{ comment.body }}
+                </p>
+                <div class="date text-muted">{{ comment.posted|time_diff }}</div>
+                {% if loop.last == false %}
+                    <hr>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('view_map') }}
+{% endblock %}
