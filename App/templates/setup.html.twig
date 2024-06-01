@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-xs-12">
                             <div class="form-floating mb-3">
-                                <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" placeholder="Admin"{% if values.email is defined %} value="{{ values.email }}"{% endif %} required>
+                                <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" placeholder="email@example.com"{% if values.email is defined %} value="{{ values.email }}"{% endif %} required>
                                 <label for="email">Email address</label>
                                 {% if errors.email is defined %}
                                     <div class="invalid-feedback">
