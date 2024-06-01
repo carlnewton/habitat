@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="form-floating mb-3">
             <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}">
             <label for="title">Title</label>

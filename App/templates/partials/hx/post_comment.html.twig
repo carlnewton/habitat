@@ -1,0 +1,6 @@
+{% if comment is defined %}
+    <div id="comments-list" hx-swap-oob="afterbegin">
+        {% include 'partials/post/comment/comment.html.twig' %}
+    </div>
+{% endif %}
+{% include 'partials/post/comment/form.html.twig' %}

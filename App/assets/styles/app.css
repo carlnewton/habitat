@@ -3,6 +3,15 @@ body { padding-bottom: 80px; }
 .post-card a {
     text-decoration: none !important;
 }
+
 #drawer .active {
     color: var(--bs-blue) !important;
+}
+
+.comment.htmx-added {
+  opacity: 0;
+}
+.comment {
+  opacity: 1;
+  transition: opacity 3s ease-out;
 }

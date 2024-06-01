@@ -1,0 +1,10 @@
+<div class="comment">
+    <h3>{{ comment.user.username }}</h3>
+    <p>
+        {{ comment.body }}
+    </p>
+    <div class="date text-muted">{{ comment.posted|time_diff }}</div>
+    {% if loop is not defined or loop.last == false %}
+        <hr>
+    {% endif %}
+</div>

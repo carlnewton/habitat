@@ -1,0 +1,16 @@
+<form id="comment-form" class="mb-3" hx-swap="outerHTML settle:500ms" hx-post="/hx/add-comment">
+    <div class="form-floating mb-3">
+        <textarea class="form-control form-control-lg{% if errors.comment is defined %} is-invalid{% endif %}" name="comment" style="height: 100px" placeholder="Comment">{% if values.comment is defined %}{{ values.comment }}{% endif %}</textarea>
+        <label for="comment">Comment</label>
+        {% if errors.comment is defined %}
+            <div class="invalid-feedback">
+                {% for errorMessage in errors.comment %}
+                    <p>{{ errorMessage }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
+    <input type="hidden" name="postId" value="{{ post.id }}">
+    <button type="submit" class="btn btn-primary">Add comment</button>
+</form>

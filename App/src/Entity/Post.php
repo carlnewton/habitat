@@ -47,6 +47,7 @@ class Post
      * @var Collection<int, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
+    #[ORM\OrderBy(['posted' => 'DESC'])]
     private Collection $comments;
 
     private bool $currentUserHearted = false;

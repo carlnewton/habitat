@@ -2,7 +2,6 @@
 
 namespace App\Controller\Post;
 
-use App\Entity\Comment;
 use DateTimeImmutable;
 use App\Entity\User;
 use App\Entity\Post;
@@ -16,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class ViewPostController extends AbstractController
 {
-    #[Route(path: '/post/{id}', name: 'app_view_post', methods: ['GET', 'POST'])]
+    #[Route(path: '/post/{id}', name: 'app_view_post', methods: ['GET'])]
     public function index(
         int $id,
         Request $request,
@@ -45,64 +44,8 @@ class ViewPostController extends AbstractController
             }
         }
 
-        if ($request->getMethod() === 'POST') {
-            if ($user === null) {
-                return $this->redirectToRoute('app_login');
-            }
-
-            $submittedToken = $request->getPayload()->get('token');
-            if (!$this->isCsrfTokenValid('comment', $submittedToken)) {
-                $this->addFlash(
-                    'warning',
-                    'Something went wrong, please try again.'
-                );
-
-                return $this->render('post.html.twig');
-            }
-
-            $fieldErrors = $this->validateRequest($request);
-
-            if (!empty($fieldErrors)) {
-                return $this->render('view_post.html.twig', [
-                    'errors' => $fieldErrors,
-                    'values' => [
-                        'comment' => $request->get('comment'),
-                    ]
-                ]);
-            }
-
-            $comment = new Comment();
-            $comment
-                ->setBody(trim($request->get('comment')))
-                ->setPosted(new DateTimeImmutable())
-                ->setPost($post)
-                ->setUser($user)
-            ;
-            
-            $entityManager->persist($comment);
-            $entityManager->flush();
-
-            $this->addFlash(
-                'notice',
-                'Your comment has been added'
-            );
-
-            return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
-        }
-
         return $this->render('view_post.html.twig', [
             'post' => $post,
         ]);
-    }
-
-    protected function validateRequest(Request $request): array
-    {
-        $errors = [];
-
-        if (empty(trim($request->get('comment')))) {
-            $errors['comment'][] = 'The comment cannot be empty';
-        }
-
-        return $errors;
     }
 }

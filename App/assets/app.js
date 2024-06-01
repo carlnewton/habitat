@@ -8,6 +8,8 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/global.scss';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'htmx.org';
 
+window.htmx = require('htmx.org');
 require('bootstrap');
 

@@ -15,34 +15,20 @@
     <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
         <i class="bi bi-heart-fill"></i> <span class="heart-count">{{ post.heartCount }}</span>
     </button>
-    <h2 id="comments">Comments ({{ post.commentCount }})</h2>
+    <h2 id="comments">Comments</h2>
 
     {% if app.user %}
-        <form class="mb-3" method="post">
-            <div class="form-floating mb-3">
-                <textarea class="form-control form-control-lg" name="comment" style="height: 100px" placeholder="Comment">{% if values.comment is defined %}{{ values.comment }}{% endif %}</textarea>
-                <label for="comment">Comment</label>
-            </div>
-            <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
-            <button type="submit" class="btn btn-primary">Add comment</button>
-        </form>
+        {% include 'partials/post/comment/form.html.twig' %}
     {% else %}
         <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
     {% endif %}
-    {% if post.comments is not empty %}
         <div id="comments-list" class="mb-5">
-            {% for comment in post.comments %}
-                <h3>{{ comment.user.username }}</h3>
-                <p>
-                    {{ comment.body }}
-                </p>
-                <div class="date text-muted">{{ comment.posted|time_diff }}</div>
-                {% if loop.last == false %}
-                    <hr>
-                {% endif %}
-            {% endfor %}
+            {% if post.comments is not empty %}
+                {% for comment in post.comments %}
+                    {% include 'partials/post/comment/comment.html.twig' %}
+                {% endfor %}
+            {% endif %}
         </div>
-    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
