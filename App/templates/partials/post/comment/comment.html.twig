@@ -1,4 +1,4 @@
-<div class="comment">
+<div class="comment"{% if loop is defined and loop.last and offset is defined %} hx-get="/hx/list-comments?post={{ post.id }}&offset={{ offset }}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
     <h3>{{ comment.user.username }}</h3>
     <p>
         {{ comment.body }}

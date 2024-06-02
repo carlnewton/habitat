@@ -22,13 +22,13 @@
     {% else %}
         <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
     {% endif %}
-        <div id="comments-list" class="mb-5">
-            {% if post.comments is not empty %}
-                {% for comment in post.comments %}
-                    {% include 'partials/post/comment/comment.html.twig' %}
-                {% endfor %}
-            {% endif %}
+    <div id="comments-list" class="mb-5" hx-trigger="revealed" hx-get="/hx/list-comments?post={{ post.id }}" hx-swap="innerHTML">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
