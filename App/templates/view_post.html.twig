@@ -22,9 +22,9 @@
     {% else %}
         <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
     {% endif %}
-    <div id="comments-list" class="mb-5" hx-trigger="revealed" hx-get="/hx/list-comments?post={{ post.id }}" hx-swap="innerHTML">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
+    <div id="comments-list" class="mb-5" hx-trigger="revealed" hx-get="/hx/list-comments?post={{ post.id }}" hx-swap="afterbegin">
+        <div class="d-flex justify-content-center htmx-indicator" id="comment-spinner">
+            <div class="spinner-border text-secondary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>

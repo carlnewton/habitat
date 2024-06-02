@@ -1,39 +1,39 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\HTMX;
 
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class IndexController extends AbstractController
+class ListPostsController extends AbstractController
 {
-    private const MAX_POSTS = 10;
+    private const MAX_RESULTS_PER_PAGE = 10;
 
-    #[Route(path: '/', name: 'app_index_index', methods: ['GET', 'POST'])]
+    #[Route(path: '/hx/list-posts', name: 'app_hx_list_posts', methods: ['GET'])]
     public function index(
+        Request $request,
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
     ): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
+        $postRepository = $entityManager->getRepository(Post::class);
 
-        if ($userRepository->count() === 0) {
-            return $this->redirectToRoute('app_setup_admin');
+        $offset = 0;
+        if (!empty($request->query->get('offset'))) {
+            $offset = (int) $request->query->get('offset');
+            if ($offset < 0) {
+                $offset = 0;
+            }
         }
 
-        $postRepository = $entityManager->getRepository(Post::class);
-        $posts = $postRepository->findBy(
-            [], 
-            [
-                'posted' => 'DESC',
-            ],
-            self::MAX_POSTS
-        );
+        $posts = $postRepository->findBy([], ['posted' => 'DESC'], self::MAX_RESULTS_PER_PAGE, $offset);
 
         if ($user !== null) {
             foreach ($posts as $post) {
@@ -46,9 +46,9 @@ class IndexController extends AbstractController
             }
         }
 
-        return $this->render('index.html.twig', [
+        return $this->render('partials/hx/list_posts.html.twig', [
             'posts' => $posts,
-            'offset' => self::MAX_POSTS,
+            'offset' => $offset + self::MAX_RESULTS_PER_PAGE,
         ]);
     }
 }

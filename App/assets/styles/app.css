@@ -1,4 +1,7 @@
-body { padding-bottom: 80px; }
+body { 
+  padding-top: 60px;
+  padding-bottom: 80px; 
+}
 #map { height: 100%; }
 .post-card a {
     text-decoration: none !important;
@@ -8,10 +11,10 @@ body { padding-bottom: 80px; }
     color: var(--bs-blue) !important;
 }
 
-.comment.htmx-added {
+.comment.htmx-added, .post.htmx-added {
   opacity: 0;
 }
-.comment {
+.comment, .post {
   opacity: 1;
   transition: opacity 3s ease-out;
 }

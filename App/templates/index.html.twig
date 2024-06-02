@@ -2,25 +2,16 @@
 
 {% block body %}
     <h1 class="visually-hidden">Latest posts</h1>
-    {% for post in posts %}
-        <div class="card card-light mb-3 post-card">
-            <a class="card-body" href="{{ path('app_view_post', { id: post.id })}}">
-                <h2 class="card-title">{{ post.title }}</h2>
-                {% if post.body is defined %}
-                    <p>{{ post.body }}</p>
-                {% endif %}
-            </a>
-            <div class="card-body">
-                <button id="hearts-{{ post.id }}" class="float-start border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} pe-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
-                    <i class="bi bi-heart-fill"></i> <span class="heart-count">{{ post.heartCount }}</span>
-                </button>
-                <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
-                    <i class="bi bi-chat-fill"></i> {{ post.commentCount }}
-                </a>
-                <div class="date float-end text-muted">{{ post.posted|time_diff }}</div>
+    <div id="posts-list">
+        {% for post in posts %}
+            {% include '/partials/post/post.html.twig' %}
+        {% endfor %}
+        <div class="d-flex justify-content-center htmx-indicator" id="post-spinner">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}
