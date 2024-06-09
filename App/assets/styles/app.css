@@ -18,3 +18,9 @@ body {
   opacity: 1;
   transition: opacity 3s ease-out;
 }
+
+.dropzone {
+  border: 2px dashed var(--bs-blue);
+  border-radius: 0.5rem;
+  color: var(--bs-blue);
+}

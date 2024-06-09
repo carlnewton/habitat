@@ -52,10 +52,17 @@ class Post
 
     private bool $currentUserHearted = false;
 
+    /**
+     * @var Collection<int, PostAttachment>
+     */
+    #[ORM\OneToMany(targetEntity: PostAttachment::class, mappedBy: 'post')]
+    private Collection $attachments;
+
     public function __construct()
     {
         $this->hearts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -211,6 +218,36 @@ class Post
             // set the owning side to null (unless already changed)
             if ($comment->getPost() === $this) {
                 $comment->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PostAttachment>
+     */
+    public function getAttachments(): Collection
+    {
+        return $this->attachments;
+    }
+
+    public function addAttachment(PostAttachment $attachment): static
+    {
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments->add($attachment);
+            $attachment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttachment(PostAttachment $attachment): static
+    {
+        if ($this->attachments->removeElement($attachment)) {
+            // set the owning side to null (unless already changed)
+            if ($attachment->getPost() === $this) {
+                $attachment->setPost(null);
             }
         }
 

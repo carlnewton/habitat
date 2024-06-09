@@ -5,6 +5,43 @@
     {% if post.body is not empty %}
         <p>{{ post.body }}</p>
     {% endif %}
+    {% if post.attachments is not empty %}
+        {% if post.attachments|length == 1 %}
+            <img class="img-fluid rounded mb-3" src="{{ path('app_load_attachment', { postId: post.id, attachmentId: post.attachments|first.id })}}" class="d-block w-100" alt="{{ post.title }}">
+        {% else %}
+            <div id="post-carousel" class="carousel slide mb-3">
+                <div class="carousel-indicators">
+                    {% for attachment in post.attachments %}
+                        <button 
+                            type="button"
+                            data-bs-target="#post-carousel"
+                            data-bs-slide-to="{{ loop.index0 }}"
+                            {% if loop.first %}
+                                class="active"
+                                aria-current="true" 
+                            {% endif %}
+                            aria-label="Slide {{ loop.index }}"
+                        ></button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner rounded">
+                    {% for attachment in post.attachments %}
+                        <div class="carousel-item{% if loop.first %} active{% endif %}">
+                            <img src="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}" class="d-block w-100" alt="{{ post.title }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#post-carousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#post-carousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        {% endif %}
+    {% endif %}
     {% if post.location is not empty %}
         <div class="card mb-4">
             <div class="card-body ratio ratio-16x9">

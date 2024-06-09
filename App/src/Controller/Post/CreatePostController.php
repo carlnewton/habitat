@@ -2,6 +2,7 @@
 
 namespace App\Controller\Post;
 
+use App\Entity\PostAttachment;
 use DateTime;
 use App\Entity\User;
 use App\Entity\Post;
@@ -15,18 +16,23 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class CreatePostController extends AbstractController
 {
+    public function __construct(
+        protected EntityManagerInterface $entityManager
+    ) {
+
+    }
+
     #[Route(path: '/post', name: 'app_create_post', methods: ['GET', 'POST'])]
     public function index(
         #[CurrentUser] ?User $user,
-        Request $request,
-        EntityManagerInterface $entityManager
+        Request $request
     ): Response
     {
         if ($user === null) {
             return $this->redirectToRoute('app_login');
         }
 
-        $postRepository = $entityManager->getRepository(Post::class);
+        $postRepository = $this->entityManager->getRepository(Post::class);
 
         if ($request->getMethod() === 'POST') {
             $submittedToken = $request->getPayload()->get('token');
@@ -36,13 +42,13 @@ class CreatePostController extends AbstractController
                     'Something went wrong, please try again.'
                 );
 
-                return $this->render('post.html.twig');
+                return $this->render('create_post.html.twig');
             }
 
             $fieldErrors = $this->validateRequest($request);
 
             if (!empty($fieldErrors)) {
-                return $this->render('post.html.twig', [
+                return $this->render('create_post.html.twig', [
                     'errors' => $fieldErrors,
                     'values' => [
                         'title' => $request->get('title'),
@@ -60,9 +66,13 @@ class CreatePostController extends AbstractController
                 ->setPosted(new DateTime())
                 ->setUser($user)
             ;
-            
-            $entityManager->persist($post);
-            $entityManager->flush();
+
+            $this->entityManager->persist($post);
+            $this->entityManager->flush();
+
+            if (!empty($request->get('attachmentIds'))) {
+                $this->addAttachmentsToPost($request->get('attachmentIds'), $post);
+            }
 
             $this->addFlash(
                 'notice',
@@ -72,7 +82,46 @@ class CreatePostController extends AbstractController
             return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
         }
 
-        return $this->render('post.html.twig');
+        return $this->render('create_post.html.twig');
+    }
+
+    protected function addAttachmentsToPost(string $attachmentIdString, Post $post): void
+    {
+        if (empty($attachmentIdString)) {
+            return;
+        }
+
+        $attachmentIds = explode(',', $attachmentIdString);
+
+        if (empty($attachmentIds)) {
+            return;
+        }
+
+        $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
+
+        $attachmentIdArray = [];
+        foreach ($attachmentIds as $attachmentId) {
+            if (!ctype_digit($attachmentId)) {
+                continue;
+            }
+
+            $attachmentIdArray[] = (int) $attachmentId;
+        }
+
+        $attachmentIdArray = array_unique($attachmentIdArray);
+
+        $attachmentEntities = $attachmentRepository->findOrphanedById($attachmentIdArray);
+
+        if (empty($attachmentEntities)) {
+            return;
+        }
+
+        foreach ($attachmentEntities as $attachmentEntity) {
+            $attachmentEntity->setPost($post);
+            $this->entityManager->persist($attachmentEntity);
+        }
+
+        $this->entityManager->flush();
     }
 
     protected function validateRequest(Request $request): array

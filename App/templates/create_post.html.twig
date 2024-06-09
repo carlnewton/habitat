@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form method="post" enctype="multipart/form-data">
+    <h1 class="visually-hidden">Create a new post</h1>
+    <form id="post-form" method="post" enctype="multipart/form-data">
         <div class="form-floating mb-3">
             <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}">
             <label for="title">Title</label>
@@ -17,6 +18,8 @@
             <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
             <label for="body">Body</label>
         </div>
+        <div class="dropzone mb-3"></div>
+        <input type="hidden" name="attachmentIds" id="attachmentIds" value="">
         <div class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
             <div class="card-header">Location</div>
             <div class="card-body ratio ratio-16x9">

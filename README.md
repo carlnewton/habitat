@@ -17,7 +17,7 @@ This project is currently in very early development. For information on the purp
     DB_PASSWORD=Hunter2
     ```
 
-3. Run `docker-composer up`
+3. Run `docker-compose up`
 
 ## Development
 
