@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('create_post') }}
+{% endblock %}
+
 {% block body %}
     <h1 class="visually-hidden">Create a new post</h1>
     <form id="post-form" method="post" enctype="multipart/form-data">
@@ -19,7 +24,7 @@
             <label for="body">Body</label>
         </div>
         <div class="dropzone mb-3"></div>
-        <input type="hidden" name="attachmentIds" id="attachmentIds" value="">
+        <input type="hidden" name="attachmentIds" id="attachmentIds" value="{% if values.attachmentIds is defined %}{{ values.attachmentIds }}{% endif %}">
         <div class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
             <div class="card-header">Location</div>
             <div class="card-body ratio ratio-16x9">
@@ -51,5 +56,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('post_map') }}
+    {{ encore_entry_script_tags('create_post') }}
 {% endblock %}

@@ -27,7 +27,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('admin_map', './assets/admin_map.js')
-    .addEntry('post_map', './assets/post_map.js')
+    .addEntry('create_post', './assets/create_post.js')
     .addEntry('view_map', './assets/view_map.js')
     .addEntry('heart', './assets/heart.js')
 

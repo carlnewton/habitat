@@ -15,6 +15,12 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UploadFileController extends AbstractController
 {
+    private const ALLOWED_MIMETYPES = [
+        'image/jpeg',
+        'image/png',
+        'image/gif'
+    ];
+
     #[Route(path: '/post/upload', name: 'app_upload_file', methods: ['POST'])]
     public function index(
         Request $request,
@@ -31,6 +37,11 @@ class UploadFileController extends AbstractController
         }
 
         $file = $request->files->get('file');
+
+        if (!in_array($file->getMimeType(), self::ALLOWED_MIMETYPES)) {
+            return new Response('', Response::HTTP_BAD_REQUEST);
+        }
+
         $filename = implode('.', [
             date('Y-m-d'),
             date('H-i-s'),
@@ -49,6 +60,7 @@ class UploadFileController extends AbstractController
 
         $attachment = new PostAttachment();
         $attachment->setFilename($filename);
+        $attachment->setUser($user);
         $entityManager->persist($attachment);
         $entityManager->flush();
 

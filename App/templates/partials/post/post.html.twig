@@ -7,21 +7,23 @@
             {% endif %}
         </a>
         {% if post.attachments is not empty %}
-            <a href="{{ path('app_view_post', { id: post.id })}}" class="position-relative">
-                <img class="img-fluid" src="{{ path('app_load_attachment', { postId: post.id, attachmentId: post.attachments|first.id })}}" alt="{{ post.title }}">
-                {% if post.attachments|length > 1 %}
-                    <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
-                        <i class="bi bi-images"></i> {{ post.attachments|length }}
-                    </div>
-                {% endif %}
-            </a>
+            <div class="d-flex justify-content-center">
+                <a href="{{ path('app_view_post', { id: post.id })}}" class="position-relative">
+                    <img class="img-fluid" src="{{ path('app_load_attachment', { postId: post.id, attachmentId: post.attachments|first.id })}}" alt="{{ post.title }}">
+                    {% if post.attachments|length > 1 %}
+                        <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
+                            <i class="bi bi-images"></i> {{ post.attachments|length }}
+                        </div>
+                    {% endif %}
+                </a>
+            </div>
         {% endif %}
         <div class="card-body">
             <button id="hearts-{{ post.id }}" class="float-start border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} pe-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
-                <i class="bi bi-heart-fill"></i> <span class="heart-count">{{ post.heartCount }}</span>
+                <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
             </button>
             <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
-                <i class="bi bi-chat-fill"></i> {{ post.commentCount }}
+                <i class="bi bi-chat"></i> {{ post.commentCount }}
             </a>
             <div class="date float-end text-muted">{{ post.posted|time_diff }}</div>
         </div>

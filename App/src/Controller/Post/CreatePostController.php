@@ -53,7 +53,8 @@ class CreatePostController extends AbstractController
                     'values' => [
                         'title' => $request->get('title'),
                         'body' => $request->get('body'),
-                        'locationLatLng' => $request->get('locationLatLng')
+                        'locationLatLng' => $request->get('locationLatLng'),
+                        'attachmentIds' => $request->get('attachmentIds'),
                     ]
                 ]);
             }

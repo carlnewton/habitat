@@ -68,17 +68,17 @@
         <nav id="drawer" class="navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top">
             <div class="container-fluid">
                 <a href="{{ path('app_index_index') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
-                    <i class="h3 bi bi-house-fill"></i>
+                    <i class="h3 bi bi-house{% if app.request.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>
                     <br>
                     <small>Home</small>
                 </a>
                 <a href="{{ path('app_create_post') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_create_post' %} active{% endif %}">
-                    <i class="h3 bi bi-plus-circle-fill"></i>
+                    <i class="h3 bi bi-plus-circle{% if app.request.get('_route') == 'app_create_post' %}-fill{% endif %}"></i>
                     <br>
                     <small>Post</small>
                 </a>
                 <a href="/" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
-                    <i class="h3 bi bi-geo-alt-fill"></i>
+                    <i class="h3 bi bi-geo-alt{% if app.request.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
                     <br>
                     <small>Nearby</small>
                 </a>

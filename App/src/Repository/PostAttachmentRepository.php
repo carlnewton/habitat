@@ -21,20 +21,17 @@ class PostAttachmentRepository extends ServiceEntityRepository
         parent::__construct($registry, PostAttachment::class);
     }
 
-    //    /**
-    //     * @return PostAttachment[] Returns an array of PostAttachment objects
-    //     */
-       public function findOrphanedById(array $ids): array
-       {
-           $qb = $this->createQueryBuilder('p');
-           return $qb
-               ->andWhere('p.post IS NULL')
-               ->andWhere($qb->expr()->in('p.id', $ids))
-               ->orderBy('p.id', 'ASC')
-               ->getQuery()
-               ->getResult()
-           ;
-       }
+    public function findOrphanedById(array $ids): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        return $qb
+            ->andWhere('p.post IS NULL')
+            ->andWhere($qb->expr()->in('p.id', $ids))
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     //    public function findOneBySomeField($value): ?PostAttachment
     //    {

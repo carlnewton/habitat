@@ -70,11 +70,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, PostAttachment>
+     */
+    #[ORM\OneToMany(targetEntity: PostAttachment::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $postAttachments;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->hearts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->postAttachments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -248,6 +255,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($comment->getUser() === $this) {
                 $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PostAttachment>
+     */
+    public function getPostAttachments(): Collection
+    {
+        return $this->postAttachments;
+    }
+
+    public function addPostAttachment(PostAttachment $postAttachment): static
+    {
+        if (!$this->postAttachments->contains($postAttachment)) {
+            $this->postAttachments->add($postAttachment);
+            $postAttachment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostAttachment(PostAttachment $postAttachment): static
+    {
+        if ($this->postAttachments->removeElement($postAttachment)) {
+            // set the owning side to null (unless already changed)
+            if ($postAttachment->getUser() === $this) {
+                $postAttachment->setUser(null);
             }
         }
 
