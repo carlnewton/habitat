@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PostAttachmentRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostAttachmentRepository::class)]
@@ -22,6 +23,12 @@ class PostAttachment
     #[ORM\ManyToOne(inversedBy: 'postAttachments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $width = null;
+
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $height = null;
 
     public function getId(): ?int
     {
@@ -60,6 +67,30 @@ class PostAttachment
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getWidth(): ?int
+    {
+        return $this->width;
+    }
+
+    public function setWidth(int $width): static
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): static
+    {
+        $this->height = $height;
 
         return $this;
     }

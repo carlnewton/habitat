@@ -28,7 +28,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('admin_map', './assets/admin_map.js')
     .addEntry('create_post', './assets/create_post.js')
-    .addEntry('view_map', './assets/view_map.js')
+    .addEntry('view_post', './assets/view_post.js')
     .addEntry('heart', './assets/heart.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

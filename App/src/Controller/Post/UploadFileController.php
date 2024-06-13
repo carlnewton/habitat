@@ -42,6 +42,14 @@ class UploadFileController extends AbstractController
             return new Response('', Response::HTTP_BAD_REQUEST);
         }
 
+        $imageSize = getimagesize($file);
+
+        if (!$imageSize) {
+            return new Response('', Response::HTTP_BAD_REQUEST);
+        }
+
+        list($width, $height) = $imageSize;
+
         $filename = implode('.', [
             date('Y-m-d'),
             date('H-i-s'),
@@ -59,8 +67,13 @@ class UploadFileController extends AbstractController
         }
 
         $attachment = new PostAttachment();
-        $attachment->setFilename($filename);
-        $attachment->setUser($user);
+        $attachment
+            ->setFilename($filename)
+            ->setWidth((int) $width)
+            ->setHeight((int) $height)
+            ->setUser($user)
+        ;
+
         $entityManager->persist($attachment);
         $entityManager->flush();
 

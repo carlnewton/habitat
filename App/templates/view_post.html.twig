@@ -1,51 +1,37 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('view_post') }}
+{% endblock %}
+
 {% block body %}
     <h1>{{ post.title }}</h1>
     {% if post.body is not empty %}
         <p>{{ post.body }}</p>
     {% endif %}
     {% if post.attachments is not empty %}
-        {% if post.attachments|length == 1 %}
-            <img class="img-fluid rounded mb-3" src="{{ path('app_load_attachment', { postId: post.id, attachmentId: post.attachments|first.id })}}" class="d-block w-100" alt="{{ post.title }}">
-        {% else %}
-            <div id="post-carousel" class="carousel slide mb-3">
-                <div class="carousel-indicators">
-                    {% for attachment in post.attachments %}
-                        <button 
-                            type="button"
-                            data-bs-target="#post-carousel"
-                            data-bs-slide-to="{{ loop.index0 }}"
-                            {% if loop.first %}
-                                class="active"
-                                aria-current="true" 
-                            {% endif %}
-                            aria-label="Slide {{ loop.index }}"
-                        ></button>
-                    {% endfor %}
-                </div>
-                <div class="carousel-inner rounded">
-                    {% for attachment in post.attachments %}
-                        <div class="carousel-item{% if loop.first %} active{% endif %}">
-                            <img src="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}" class="d-block w-100" alt="{{ post.title }}">
-                        </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#post-carousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#post-carousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        {% endif %}
+        <h2 id="photos">Photos</h2>
+        <div id="gallery" class="card mb-4">
+            {% for attachment in post.attachments %}
+                <a{% if not loop.first %} class="d-none position-relative"{% endif %} data-pswp-width="{{ attachment.width }}" data-pswp-height="{{ attachment.height }}" href="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}">
+                    {% if loop.first %}
+                        <img src="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}" class="rounded d-block w-100" alt="{{ post.title }}">
+                        {% if post.attachments|length > 1 %}
+                            <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
+                                <i class="bi bi-images"></i> {{ post.attachments|length }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
     {% endif %}
     {% if post.location is not empty %}
+        <h2 id="location">Location</h2>
         <div class="card mb-4">
-            <div class="card-body ratio ratio-16x9">
-                <div id="map" data-center="{{ post.location }}"></div>
+            <div class="ratio ratio-16x9">
+                <div id="map" class="rounded" data-center="{{ post.location }}"></div>
             </div>
         </div>
     {% endif %}
@@ -70,7 +56,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('view_map') }}
+    {{ encore_entry_script_tags('view_post') }}
     {% if app.user %}
         {{ encore_entry_script_tags('heart') }}
     {% endif %}

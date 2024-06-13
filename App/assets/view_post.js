@@ -1,5 +1,8 @@
 require('leaflet');
 
+import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import 'photoswipe/style.css';
+
 var location;
 var centerLatLng = document.querySelector('#map').dataset.center;
 var centerLatLngArr = [
@@ -29,3 +32,11 @@ let latLng = L.latLng(
 location = L.marker(latLng, { icon: markerIcon });
 
 map.addLayer(location);
+
+const lightbox = new PhotoSwipeLightbox({
+  gallery: '#gallery',
+  children: 'a',
+  pswpModule: () => import('photoswipe'),
+});
+
+lightbox.init();
