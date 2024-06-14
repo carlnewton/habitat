@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -57,6 +58,7 @@ class SetupController extends AbstractController
             $admin
                 ->setUsername($request->get('username'))
                 ->setEmailAddress($request->get('email'))
+                ->setCreated(new DateTimeImmutable)
                 ->setRoles(['ROLE_SUPER_ADMIN'])
             ;
 

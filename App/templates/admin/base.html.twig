@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-10">
+            {% block admin_body %}{% endblock %}
+        </div>
+        <div class="col-sm-2 order-first order-sm-last">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') == 'app_moderation_users' %} active{% endif %}"{% if app.request.get('_route') == 'app_moderation_users' %} aria-current="page"{% endif %} href="{{ path('app_moderation_users') }}">Moderation</a>
+                </li>
+            </ul>
+        </div>
+{% endblock %}

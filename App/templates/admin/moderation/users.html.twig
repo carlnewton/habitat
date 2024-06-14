@@ -1,0 +1,82 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_body %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Posts</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Comments</a>
+    </li>
+</ul>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><br></th>
+            {% for heading, headingProperties in headings %}
+                <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
+                    {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
+                        <a class="d-block link-underline link-underline-opacity-0" href="{{ path('app_moderation_users', { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
+                    {% endif %}
+                    {{ headingProperties.label }}
+                    {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
+                        <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} float-end"></i>
+                    {% endif %}
+                    </a>
+                </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in items %}
+            <tr>
+                <td class="d-flex justify-content-center">
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="">
+</div>
+                </td>
+                <td{% if sort == 'username' %} class="bg-light border"{% endif %}>{{ user.username }}</td>
+                <td{% if sort == 'email_address' %} class="bg-light border"{% endif %}>{{ user.emailaddress }}</td>
+                <td{% if sort == 'created' %} class="bg-light border"{% endif %}>{{ user.created|date }}</td>
+                <td>{{ user.posts|length }}</td>
+                <td>{{ user.comments|length }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <caption>Displaying {{ items|length }} of {{ total_items }} {{ label|default('items') }}</caption>
+</table>
+</div>
+{% if total_pages > 1 %}
+<nav>
+  <ul class="pagination float-start">
+    {% if current_page > 1 %}
+    <li class="page-item">
+      <a class="page-link" href="{{ path('app_moderation_users', { 'perPage': items_per_page, 'page': current_page - 1, 'sort': sort, 'order': order })}}"><i class="bi bi-chevron-left"></i></a>
+    </li>
+    {% endif %}
+    {% for page in 1..total_pages %}
+        <li class="page-item{% if page == current_page %} active{% endif %}"{% if page == current_page %} aria-current="page"{% endif %}><a class="page-link" href="{{ path('app_moderation_users', { 'perPage': items_per_page, 'page': page, 'sort': sort, 'order': order } ) }}">{{ page }}</a></li>
+    {% endfor %}
+    {% if current_page < total_pages %}
+    <li class="page-item">
+  <a class="page-link" href="{{ path('app_moderation_users', { 'perPage': items_per_page, 'page': current_page + 1, 'sort': sort, 'order': order })}}"><i class="bi bi-chevron-right"></i></a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+<div class="float-end">
+<div class="input-group">
+  <span class="input-group-text">{{ label|capitalize|default('Items') }} per page</span>
+  <select class="form-select" onchange="window.location.href=this.value">
+    {% for items_per_page_option in items_per_page_options %}
+        <option value="{{ path('app_moderation_users', { 'perPage': items_per_page_option, 'sort': sort, 'order': order }) }}"{% if items_per_page_option == items_per_page %} selected{% endif %}>{{ items_per_page_option }}</option>
+    {% endfor %}
+</select>
+</div>
+</div>
+{% endblock %}

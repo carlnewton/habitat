@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -73,6 +74,7 @@ class SecurityController extends AbstractController
         $user = new User();
         $user
             ->setUsername($request->get('username'))
+            ->setCreated(new DateTimeImmutable)
             ->setEmailAddress($request->get('email'))
         ;
 

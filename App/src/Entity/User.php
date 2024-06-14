@@ -76,6 +76,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: PostAttachment::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $postAttachments;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created = null;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -287,6 +290,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $postAttachment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTimeImmutable
+    {
+        return $this->created;
+    }
+
+    public function setCreated(\DateTimeImmutable $created): static
+    {
+        $this->created = $created;
 
         return $this;
     }
