@@ -1,0 +1,10 @@
+{% extends 'admin/moderation/base.html.twig' %}
+
+{% block rows %}
+    <td{% if sort == 'title' %} class="bg-light border"{% endif %}>{{ item.title }}</td>
+    <td{% if sort == 'posted' %} class="bg-light border"{% endif %}>{{ item.posted|date }}</td>
+    <td>{{ item.user.username }}</td>
+    <td>{{ item.attachments|length }}</td>
+    <td>{{ item.comments|length }}</td>
+    <td>{{ item.hearts|length }}</td>
+{% endblock %}

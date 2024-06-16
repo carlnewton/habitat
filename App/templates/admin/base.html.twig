@@ -11,7 +11,7 @@
                     <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link{% if app.request.get('_route') == 'app_moderation_users' %} active{% endif %}"{% if app.request.get('_route') == 'app_moderation_users' %} aria-current="page"{% endif %} href="{{ path('app_moderation_users') }}">Moderation</a>
+                    <a class="nav-link{% if app.request.get('_route') starts with 'app_moderation' %} active{% endif %}"{% if app.request.get('_route') == 'app_moderation_users' %} aria-current="page"{% endif %} href="{{ path('app_moderation_users') }}">Moderation</a>
                 </li>
             </ul>
         </div>

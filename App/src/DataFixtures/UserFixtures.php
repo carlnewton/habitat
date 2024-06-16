@@ -132,6 +132,8 @@ class UserFixtures extends Fixture
             $userEntity->setPassword($hashedPassword);
 
             $manager->persist($userEntity);
+
+            $this->addReference('user/' . strtolower($userEntity->getUsername()), $userEntity);
         }
 
         $manager->flush();

@@ -1,0 +1,13 @@
+{% block tabs %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_users' %} active{% endif %}" href="{{ path('app_moderation_users') }}">Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_posts' %} active{% endif %}" href="{{ path('app_moderation_posts') }}">Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_comments' %} active{% endif %}" href="{{ path('app_moderation_comments') }}">Comments</a>
+        </li>
+    </ul>
+{% endblock %}
