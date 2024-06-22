@@ -58,6 +58,10 @@ class Post
     #[ORM\OneToMany(targetEntity: PostAttachment::class, mappedBy: 'post')]
     private Collection $attachments;
 
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->hearts = new ArrayCollection();
@@ -250,6 +254,18 @@ class Post
                 $attachment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller\Admin\Moderation\Abstract;
+namespace App\Controller\Admin\Abstract;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class AbstractAdminModerationController extends AbstractController
+class AbstractAdminTableController extends AbstractController
 {
     protected const DEFAULT_ITEMS_PER_PAGE = 10;
 
@@ -40,7 +40,7 @@ class AbstractAdminModerationController extends AbstractController
 
         $order = $request->get('order');
         if (!in_array($order, self::SORT_ORDERS)) {
-            $order = 'desc';
+            $order = $this->getDefaultSortOrder();
         }
 
         $itemsPerPage = $request->get('perPage');

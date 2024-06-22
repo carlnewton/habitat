@@ -2,6 +2,7 @@
 
 namespace App\Controller\Post;
 
+use App\Entity\Category;
 use App\Entity\PostAttachment;
 use DateTime;
 use App\Entity\User;
@@ -16,6 +17,8 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class CreatePostController extends AbstractController
 {
+    protected array $categories = [];
+
     public function __construct(
         protected EntityManagerInterface $entityManager
     ) {
@@ -33,6 +36,8 @@ class CreatePostController extends AbstractController
         }
 
         $postRepository = $this->entityManager->getRepository(Post::class);
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $this->categories = $categoryRepository->findAll();
 
         if ($request->getMethod() === 'POST') {
             $submittedToken = $request->getPayload()->get('token');
@@ -50,15 +55,22 @@ class CreatePostController extends AbstractController
             if (!empty($fieldErrors)) {
                 return $this->render('create_post.html.twig', [
                     'errors' => $fieldErrors,
+                    'categories' => $this->categories,
                     'values' => [
                         'title' => $request->get('title'),
                         'body' => $request->get('body'),
                         'locationLatLng' => $request->get('locationLatLng'),
                         'attachmentIds' => $request->get('attachmentIds'),
+                        'category' => $request->get('category'),
                     ]
                 ]);
             }
 
+            foreach ($this->categories as $category) {
+                if ($category->getId() === (int) $request->get('category')) {
+                    $postCategory = $category;
+                }
+            }
             $post = new Post();
             $post
                 ->setTitle(trim($request->get('title')))
@@ -66,6 +78,7 @@ class CreatePostController extends AbstractController
                 ->setLocation($request->get('locationLatLng'))
                 ->setPosted(new DateTime())
                 ->setUser($user)
+                ->setCategory($postCategory)
             ;
 
             $this->entityManager->persist($post);
@@ -83,7 +96,9 @@ class CreatePostController extends AbstractController
             return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
         }
 
-        return $this->render('create_post.html.twig');
+        return $this->render('create_post.html.twig',[
+            'categories' => $this->categories,
+        ]);
     }
 
     protected function addAttachmentsToPost(string $attachmentIdString, Post $post): void
@@ -139,7 +154,23 @@ class CreatePostController extends AbstractController
             empty($request->get('locationLatLng')) ||
             !LatLong::isValidLatLong($request->get('locationLatLng'))
         ) {
-            $errors['location'][] = 'You must choose a valid location';
+            $errors['location'][] = 'You must choose a location';
+        }
+
+        if (empty($request->get('category'))) {
+            $errors['category'][] = 'You must choose a category';
+        } else {
+            $categoryExists = false;
+            foreach ($this->categories as $category) {
+                if ($category->getId() === (int) $request->get('category')) {
+                    $categoryExists = true;
+                    break;
+                }
+            }
+
+            if (!$categoryExists) {
+                $errors['category'][] = 'You must choose a category';
+            }
         }
 
         return $errors;

@@ -7,6 +7,7 @@
 
 {% block body %}
     <h1>{{ post.title }}</h1>
+    <p class="text-muted">Posted in <span class="badge rounded-pill" style="background-color: #{{ post.category.color }};">{{ post.category.name }}</span> by <em>{{ post.user.username }}</em> {{ post.posted|time_diff }}</p>
     {% if post.body is not empty %}
         <p>{{ post.body }}</p>
     {% endif %}

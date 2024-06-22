@@ -1,0 +1,78 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Moderation</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</li>
+        </ol>
+    </nav>
+
+    <h2>User details</h2>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>
+                    <ul>
+                        {% for role in user.roles %}
+                            <li>{{ role }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Email address</th>
+                <td>{{ user.emailaddress }}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{{ user.created|date }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Posts ({{ user.posts|length }})</h2>
+    <table class="table table-striped">
+        <thead>
+            <th>Title</th>
+            <th>Posted</th>
+            <th>Attachments</th>
+            <th>Comments</th>
+            <th>Hearts</th>
+        </thead>
+        <tbody>
+            {% for post in user.posts %}
+                <tr>
+                    <td><a href="{{ path('app_view_post', { id: post.id }) }}">{{ post.title }}</a></td>
+                    <td>{{ post.posted|date }}</td>
+                    <td>{{ post.attachments|length }}</td>
+                    <td>{{ post.comments|length }}</td>
+                    <td>{{ post.hearts|length }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Comments ({{ user.comments|length }})</h2>
+    <table class="table table-striped">
+        <thead>
+            <th>Comment</th>
+            <th>Posted</th>
+            <th>Post</th>
+        </thead>
+        <tbody>
+            {% for comment in user.comments %}
+                <tr>
+                    <td>{{ comment.body }}</td>
+                    <td>{{ comment.posted|date }}</td>
+                    <td><a href="{{ path('app_view_post', { id: comment.post.id }) }}">{{ comment.post.title }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

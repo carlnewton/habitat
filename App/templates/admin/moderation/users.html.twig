@@ -1,7 +1,11 @@
 {% extends 'admin/moderation/base.html.twig' %}
 
 {% block rows %}
-    <td{% if sort == 'username' %} class="bg-light border"{% endif %}>{{ item.username }}</td>
+    <td{% if sort == 'username' %} class="bg-light border"{% endif %}>
+        <a href="{{ path('app_moderation_user', { id: item.id }) }}">
+            {{ item.username }}
+        </a>
+    </td>
     <td{% if sort == 'email_address' %} class="bg-light border"{% endif %}>{{ item.emailaddress }}</td>
     <td{% if sort == 'created' %} class="bg-light border"{% endif %}>{{ item.created|date }}</td>
     <td>{{ item.posts|length }}</td>

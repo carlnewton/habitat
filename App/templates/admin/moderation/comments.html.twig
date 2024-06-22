@@ -3,6 +3,6 @@
 {% block rows %}
     <td>{{ item.body }}</td>
     <td{% if sort == 'posted' %} class="bg-light border"{% endif %}>{{ item.posted|date }}</td>
-    <td>{{ item.user.username }}</td>
-    <td>{{ item.post.title }}</td>
+    <td><a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a></td>
+    <td><a href="{{ path('app_view_post', { id: item.post.id }) }}">{{ item.post.title }}</a></td>
 {% endblock %}

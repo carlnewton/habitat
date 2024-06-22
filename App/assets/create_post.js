@@ -16,12 +16,14 @@ var map = L.map('map', {
 
 var perimeter = L.circle(centerLatLngArr, {
     color: '#000',
-    opacity: 0.2,
+    opacity: 0.4,
     radius: document.querySelector('#map').dataset.radius,
     fill: false,
 });
 
 map.addLayer(perimeter);
+
+map.setMaxBounds(perimeter.getBounds().pad(0.3));
 
 var markerIcon = L.icon({
     iconUrl: 'build/images/marker-icon.2b3e1faf.png',

@@ -2,18 +2,17 @@
 
 namespace App\Controller\Admin\Moderation;
 
-use App\Controller\Admin\Moderation\Abstract\AbstractAdminModerationController;
-use App\Controller\Admin\Moderation\Abstract\AdminModerationInterface;
+use App\Controller\Admin\Abstract\AbstractAdminTableController;
+use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class PostsController extends AbstractAdminModerationController implements AdminModerationInterface
+class PostsIndexController extends AbstractAdminTableController implements AdminTableControllerInterface
 {
     protected EntityManagerInterface $entityManager;
 
@@ -38,6 +37,9 @@ class PostsController extends AbstractAdminModerationController implements Admin
             'posted' => [
                 'label' => 'Posted',
                 'sortable' => true,
+            ],
+            'category' => [
+                'label' => 'Category',
             ],
             'user' => [
                 'label' => 'User',

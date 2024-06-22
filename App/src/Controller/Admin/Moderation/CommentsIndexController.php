@@ -2,22 +2,21 @@
 
 namespace App\Controller\Admin\Moderation;
 
-use App\Controller\Admin\Moderation\Abstract\AbstractAdminModerationController;
-use App\Controller\Admin\Moderation\Abstract\AdminModerationInterface;
-use App\Entity\User;
+use App\Controller\Admin\Abstract\AdminTableControllerInterface;
+use App\Controller\Admin\Abstract\AbstractAdminTableController;
+use App\Entity\Comment;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class UsersController extends AbstractAdminModerationController implements AdminModerationInterface
+class CommentsIndexController extends AbstractAdminTableController implements AdminTableControllerInterface
 {
     protected EntityManagerInterface $entityManager;
 
-    #[Route(path: '/admin/moderation/users', name: 'app_moderation_users', methods: ['GET', 'POST'])]
+    #[Route(path: '/admin/moderation/comments', name: 'app_moderation_comments', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
@@ -25,41 +24,36 @@ class UsersController extends AbstractAdminModerationController implements Admin
     {
         $this->entityManager = $entityManager;
 
-        return $this->renderTemplate($request, 'admin/moderation/users.html.twig');
+        return $this->renderTemplate($request, 'admin/moderation/comments.html.twig');
     }
 
     public function getHeadings(): array
     {
         return [
-            'username' => [
-                'label' => 'Username',
+            'body' => [
+                'label' => 'Comment',
+            ],
+            'posted' => [
+                'label' => 'Posted',
                 'sortable' => true,
             ],
-            'email_address' => [
-                'label' => 'Email address',
-                'sortable' => true,
+            'user' => [
+                'label' => 'User',
             ],
-            'created' => [
-                'label' => 'Created',
-                'sortable' => true,
-            ],
-            'posts' => [
-                'label' => 'Posts',
-            ],
-            'comments' => [
-                'label' => 'Comments',
+            'post' => [
+                'label' => 'Post',
             ],
         ];
     }
 
     public function getItemsLabel(): string
     {
-        return 'users';
+        return 'comments';
     }
 
     public function getDefaultSortProperty(): string
     {
-        return 'created';
+        return 'posted';
     }
 
     public function getDefaultSortOrder(): string
@@ -69,6 +63,6 @@ class UsersController extends AbstractAdminModerationController implements Admin
 
     public function getItemEntityClassName(): string
     {
-        return User::class;
+        return Comment::class;
     }
 }

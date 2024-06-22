@@ -12,4 +12,3 @@ import 'htmx.org';
 
 window.htmx = require('htmx.org');
 require('bootstrap');
-

@@ -46,6 +46,14 @@
                 {% endfor %}
             </div>
         {% endif %}
+        <div class="form-floating mb-3">
+        <select class="form-select" name="category" id="category" aria-label="Category">
+        {% for category in categories %}
+            <option{% if values.category is defined and values.category == category.id %} selected{% endif %} value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+        </select>
+        <label for="category">Category</label>
+        </div>
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if values.locationLatLng is defined %}{{ values.locationLatLng }}{% endif %}">
         <input type="hidden" name="token" value="{{ csrf_token('post') }}">
         <div class="d-grid gap-2">

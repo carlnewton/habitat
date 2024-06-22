@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Entity\Settings;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class AdminController extends AbstractController
+class SettingsController extends AbstractController
 {
     #[Route(path: '/admin', name: 'app_admin_index', methods: ['GET', 'POST'])]
     public function index(

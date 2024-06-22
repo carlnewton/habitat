@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\Admin\Moderation\Abstract;
+namespace App\Controller\Admin\Abstract;
 
-interface AdminModerationInterface
+interface AdminTableControllerInterface
 {
     public function getItemEntityClassName(): string;
     public function getDefaultSortProperty(): string;

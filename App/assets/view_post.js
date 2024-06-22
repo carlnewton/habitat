@@ -32,6 +32,7 @@ let latLng = L.latLng(
 location = L.marker(latLng, { icon: markerIcon });
 
 map.addLayer(location);
+map.setMaxBounds(latLng.toBounds(500));
 
 const lightbox = new PhotoSwipeLightbox({
   gallery: '#gallery',
