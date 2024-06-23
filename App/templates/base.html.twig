@@ -64,16 +64,41 @@
                     {{ message }}
                 </div>
             {% endfor %}
-            {% block body %}{% endblock %}
+            <div class="row">
+                <div class="col-xs-12 col-md-8">
+                    {% block body %}{% endblock %}
+                </div>
+                {% block sidebar %}
+                    <div class="col-sm-3 d-none d-md-block">
+                        <div class="d-grid mb-3">
+                            <a href="{{ path('app_create_post')}}{% if category is defined %}?category={{ category.id }}{% endif %}" class="btn btn-outline-primary btn-lg">Post</a>
+                        </div>
+                        <ul class="nav nav-pills flex-column mb-3">
+                            <li class="nav-item">
+                                <a href="{{ path('app_index_index') }}" class="fs-5 nav-link{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
+                                    <i class="bi bi-house{% if app.request.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/" class="fs-5 nav-link{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
+                                    <i class="bi bi-geo-alt{% if app.request.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
+                                    Nearby
+                                </a>
+                            </li>
+                        </ul> 
+                    </div>
+                {% endblock %}
+            </div>
         </div>
-        <nav id="drawer" class="navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top">
+        <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top">
             <div class="container-fluid">
                 <a href="{{ path('app_index_index') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
                     <i class="h3 bi bi-house{% if app.request.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>
                     <br>
                     <small>Home</small>
                 </a>
-                <a href="{{ path('app_create_post') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_create_post' %} active{% endif %}">
+                <a href="{{ path('app_create_post') }}{% if category is defined %}?category={{ category.id }}{% endif %}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_create_post' %} active{% endif %}">
                     <i class="h3 bi bi-plus-circle{% if app.request.get('_route') == 'app_create_post' %}-fill{% endif %}"></i>
                     <br>
                     <small>Post</small>

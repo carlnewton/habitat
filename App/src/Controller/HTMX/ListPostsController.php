@@ -2,6 +2,7 @@
 
 namespace App\Controller\HTMX;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +24,7 @@ class ListPostsController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
+        $renderArray = [];
         $postRepository = $entityManager->getRepository(Post::class);
 
         $offset = 0;
@@ -33,7 +35,22 @@ class ListPostsController extends AbstractController
             }
         }
 
-        $posts = $postRepository->findBy([], ['posted' => 'DESC'], self::MAX_RESULTS_PER_PAGE, $offset);
+        $filter = [];
+        if (!empty($request->query->get('category'))) {
+            $categoryId = (int) $request->query->get('category');
+
+            $categoryRepository = $entityManager->getRepository(Category::class);
+            $category = $categoryRepository->findOneBy(['id' => $categoryId]);
+            $filter['category'] = $category;
+            $renderArray['category'] = $category;
+        }
+
+        $posts = $postRepository->findBy(
+            $filter,
+            ['posted' => 'DESC'],
+            self::MAX_RESULTS_PER_PAGE,
+            $offset
+        );
 
         if ($user !== null) {
             foreach ($posts as $post) {
@@ -46,9 +63,9 @@ class ListPostsController extends AbstractController
             }
         }
 
-        return $this->render('partials/hx/list_posts.html.twig', [
-            'posts' => $posts,
-            'offset' => $offset + self::MAX_RESULTS_PER_PAGE,
-        ]);
+        $renderArray['posts'] = $posts;
+        $renderArray['offset'] = $offset + self::MAX_RESULTS_PER_PAGE;
+
+        return $this->render('partials/hx/list_posts.html.twig', $renderArray);
     }
 }

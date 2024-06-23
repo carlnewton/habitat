@@ -7,7 +7,7 @@
 
 {% block body %}
     <h1 class="visually-hidden">Create a new post</h1>
-    <form id="post-form" method="post" enctype="multipart/form-data">
+    <form id="post-form" method="post" action="{{ path('app_create_post') }}" enctype="multipart/form-data">
         <div class="form-floating mb-3">
             <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}">
             <label for="title">Title</label>
@@ -49,7 +49,7 @@
         <div class="form-floating mb-3">
         <select class="form-select" name="category" id="category" aria-label="Category">
         {% for category in categories %}
-            <option{% if values.category is defined and values.category == category.id %} selected{% endif %} value="{{ category.id }}">{{ category.name }}</option>
+            <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}">{{ category.name }}</option>
         {% endfor %}
         </select>
         <label for="category">Category</label>

@@ -1,11 +1,23 @@
-<div class="post"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#post-spinner" hx-get="/hx/list-posts?offset={{ offset }}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
+<div class="post"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#post-spinner" hx-get="/hx/list-posts?offset={{ offset }}{% if category is defined %}&category={{ category.id }}{% endif %}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
     <div class="card mb-3 post-card">
-        <a class="card-body" href="{{ path('app_view_post', { id: post.id })}}">
-            <h2 class="card-title">{{ post.title }}</h2>
+        <div class="card-body">
+            <h2 class="card-title">
+                <a href="{{ path('app_view_post', { id: post.id })}}">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <div class="mb-2">
+                {% if category is not defined %}
+                    <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">
+                        <i class="bi bi-tag"></i>
+                        {{ post.category.name }}
+                    </a>
+                {% endif %}
+            </div>
             {% if post.body is defined %}
                 <div>{{ post.body }}</div>
             {% endif %}
-        </a>
+        </div>
         {% if post.attachments is not empty %}
             <div class="d-flex justify-content-center mb-3">
                 <a href="{{ path('app_view_post', { id: post.id })}}" class="position-relative">
@@ -18,9 +30,6 @@
                 </a>
             </div>
         {% endif %}
-        <div class="card-body py-0">
-            <span class="badge rounded-pill float-end" style="background-color: #{{ post.category.color }};">{{ post.category.name }}</span>
-        </div>
         <div class="card-body">
             <button id="hearts-{{ post.id }}" class="float-start border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} pe-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
                 <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
