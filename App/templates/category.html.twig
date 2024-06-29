@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1>{{ category.name }}</h1>
-    <p class="lead">{{ category.description }}</p>
+    <p class="lead">{{ category.description|nl2br }}</p>
 
     <div id="posts-list">
         {% for post in posts %}

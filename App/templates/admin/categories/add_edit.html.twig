@@ -1,0 +1,63 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_categories')}}">Categories</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {% if action == 'add' %}Add a Category{% else %}{{ category.name }}{% endif %}
+            </li>
+        </ol>
+    </nav>
+
+    <h2 class="mb-3">{% if action == 'add' %}Add a Category{% else %}{{ category.name }}{% endif %}</h2>
+
+    <form method="post">
+        <div class="row mb-3">
+            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control{% if errors.name is defined %} is-invalid{% endif %}" name="name" id="name" value="{% if category.name is defined %}{{ category.name }}{% endif %}" required>
+                {% if errors.name is defined %}
+                    <div class="invalid-feedback">
+                        {% for errorMessage in errors.name %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="description" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-10">
+                <textarea class="form-control{% if errors.description is defined %} is-invalid{% endif %}" name="description">{% if category.description is defined %}{{ category.description }}{% endif %}</textarea>
+                {% if errors.description is defined %}
+                    <div class="invalid-feedback">
+                        {% for errorMessage in errors.description %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="Location" class="col-sm-2 col-form-label">Location</label>
+            <div class="col-sm-10">
+                <select class="form-select{% if errors.location is defined %} is-invalid{% endif %}" name="location" id="location" aria-label="Location">
+                    {% for option in location_options %}
+                        <option{% if (values.location is defined and values.location == option) %} selected{% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                    {% endfor %}
+                </select>
+                {% if errors.location is defined %}
+                    <div class="invalid-feedback">
+                        {% for errorMessage in errors.location %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}

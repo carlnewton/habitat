@@ -1,6 +1,7 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block body %}
+    <a href="{{ path('app_admin_categories_add') }}" class="btn btn-primary mb-3">Add a Category</a>
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -28,7 +29,7 @@
                                 <input class="form-check-input" type="checkbox" value="">
                             </div>
                         </td>
-                        <td{% if sort == 'name' %} class="bg-light border"{% endif %}>{{ item.name }}</td>
+                        <td{% if sort == 'name' %} class="bg-light border"{% endif %}><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
                         <td>{{ item.description }}</td>
                         <td{% if sort == 'location' %} class="bg-light border"{% endif %}>{{ item.location.label }}</td>
                         <td>{{ item.posts|length }}</td>
