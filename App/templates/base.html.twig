@@ -44,9 +44,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ path('app_login') }}">Log in</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_signup') }}">Sign up</a>
-                                    </li>
+                                    {% if setting('registration') == 'on' %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_signup') }}">Sign up</a>
+                                        </li>
+                                    {% endif %}
                                 {% endif %}
                             </ul>
                         </div>
@@ -70,7 +72,7 @@
                     {% block body %}{% endblock %}
                 </div>
                 {% block sidebar %}
-                    <div class="col-sm-3 d-none d-md-block">
+                    <div class="col-sm-4 d-none d-md-block">
                         <div class="d-grid mb-3">
                             <a href="{{ path('app_create_post')}}{% if category is defined %}?category={{ category.id }}{% endif %}" class="btn btn-outline-primary btn-lg">Post</a>
                         </div>

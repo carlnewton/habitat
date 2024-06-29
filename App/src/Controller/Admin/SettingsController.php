@@ -51,6 +51,7 @@ class SettingsController extends AbstractController
                         'locationMeasurement' => $request->get('locationMeasurement'),
                         'locationRadiusMeters' => $request->get('locationRadiusMeters'),
                         'locationZoom' => $request->get('locationZoom'),
+                        'registration' => $request->get('registration'),
                     ]
                 ]);
             }
@@ -96,6 +97,14 @@ class SettingsController extends AbstractController
             $locationLatLngSetting->setValue($request->get('locationLatLng'));
             $entityManager->persist($locationLatLngSetting);
 
+            $registrationSetting = $settingsRepository->getSettingByName('registration');
+            if (!$registrationSetting) {
+                $registrationSetting = new Settings();
+                $registrationSetting->setName('registration');
+            }
+            $registrationSetting->setValue($request->get('registration'));
+            $entityManager->persist($registrationSetting);
+
             $entityManager->flush();
 
             $this->addFlash(
@@ -111,6 +120,7 @@ class SettingsController extends AbstractController
         $locationZoomSetting = $settingsRepository->getSettingByName('locationZoom');
         $locationMeasurementSetting = $settingsRepository->getSettingByName('locationMeasurement');
         $locationRadiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
+        $registration = $settingsRepository->getSettingByName('registration');
         return $this->render('admin/index.html.twig', [
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
@@ -118,6 +128,7 @@ class SettingsController extends AbstractController
                 'locationZoom' => ($locationZoomSetting) ? $locationZoomSetting->getValue() : '3',
                 'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'kms',
                 'locationRadiusMeters' => ($locationRadiusSetting) ? $locationRadiusSetting->getValue() : '3000',
+                'registration' => ($registration) ? $registration->getValue() : '',
             ]
         ]);
     }
@@ -144,6 +155,10 @@ class SettingsController extends AbstractController
             $request->get('locationRadiusMeters') < 1
         ) {
             $errors['location'][] = 'You must choose a valid location size';
+        }
+
+        if (!empty($request->get('registration')) && $request->get('registration') !== 'on') {
+            $errors['registration'] = 'You must decide to enable or disable user registration';
         }
 
         return $errors;

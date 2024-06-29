@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Settings;
 use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,6 +42,16 @@ class SecurityController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
 
         if ($userRepository->count() === 0) {
+            return $this->redirectToRoute('app_index_index');
+        }
+
+        $settingsRepository = $entityManager->getRepository(Settings::class);
+        $registrationSetting = $settingsRepository->getSettingByName('registration');
+        if (empty($registrationSetting) || $registrationSetting->getValue() !== 'on') {
+            $this->addFlash(
+                'warning',
+                'Registrations are currently disabled'
+            );
             return $this->redirectToRoute('app_index_index');
         }
 

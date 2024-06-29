@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block sidebar %}
-    <div class="col-sm-3 order-first order-md-last">
+    <div class="col-sm-4 order-first order-md-last">
         <ul class="nav nav-pills flex-column mb-3">
             <li class="nav-item">
                 <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">Settings</a>
