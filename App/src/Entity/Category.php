@@ -21,18 +21,14 @@ class Category
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
-    #[ORM\Column]
-    private ?bool $location_enabled = null;
-
     /**
      * @var Collection<int, Post>
      */
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'category')]
     private Collection $posts;
 
-    #[ORM\Column(length: 6)]
-    private ?string $color = null;
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $location = null;
 
     public function __construct()
     {
@@ -68,18 +64,6 @@ class Category
         return $this;
     }
 
-    public function isLocationEnabled(): ?bool
-    {
-        return $this->location_enabled;
-    }
-
-    public function setLocationEnabled(bool $location_enabled): static
-    {
-        $this->location_enabled = $location_enabled;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Post>
      */
@@ -110,14 +94,14 @@ class Category
         return $this;
     }
 
-    public function getColor(): ?string
+    public function getLocation(): ?CategoryLocationOptionsEnum
     {
-        return $this->color;
+        return CategoryLocationOptionsEnum::from($this->location);
     }
 
-    public function setColor(string $color): static
+    public function setLocation(CategoryLocationOptionsEnum $location): static
     {
-        $this->color = $color;
+        $this->location = $location->value;
 
         return $this;
     }

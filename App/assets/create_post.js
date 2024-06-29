@@ -36,7 +36,68 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+var currentLocationRule;
+setLocationFields();
 setLocation();
+
+document.getElementById('category').onchange = function() {
+    setLocationFields();
+}
+
+document.getElementById('remove-location-btn').onclick = function() {
+    document.getElementById('location-card').classList.add('d-none');
+    document.getElementById('add-location-btn').classList.remove('d-none');
+    removeLocation();
+}
+
+document.getElementById('add-location-btn').onclick = function() {
+    document.getElementById('add-location-btn').classList.add('d-none');
+    document.getElementById('location-card').classList.remove('d-none');
+}
+
+function setLocationFields() {
+    let categorySelect = document.getElementById('category');
+    let selectedCategory = categorySelect.options[categorySelect.selectedIndex];
+    let locationRule = selectedCategory.getAttribute('data-location');
+
+    if (locationRule === currentLocationRule) {
+        return;
+    }
+
+    switch (locationRule) {
+        case 'required':
+            document.getElementById('add-location-btn').classList.add('d-none');
+            document.getElementById('remove-location-btn').classList.add('d-none');
+            document.getElementById('location-card').classList.remove('d-none');
+            break;
+        case 'optional':
+            if (document.querySelector('#locationLatLng').value === '') {
+                document.getElementById('add-location-btn').classList.remove('d-none');
+                document.getElementById('location-card').classList.add('d-none');
+                document.getElementById('remove-location-btn').classList.remove('d-none');
+            } else {
+                document.getElementById('add-location-btn').classList.add('d-none');
+                document.getElementById('location-card').classList.remove('d-none');
+                document.getElementById('remove-location-btn').classList.remove('d-none');
+            }
+            break;
+        case 'disabled':
+            document.getElementById('add-location-btn').classList.add('d-none');
+            document.getElementById('location-card').classList.add('d-none');
+            removeLocation();
+            break;
+    }
+
+    currentLocationRule = locationRule;
+}
+
+function removeLocation() {
+    if (location !== undefined && map.hasLayer(location)) {
+        map.removeLayer(location);
+    }
+
+    document.querySelector('#locationLatLng').value = '';
+}
 
 function setLocation() {
     if (location !== undefined && map.hasLayer(location)) {

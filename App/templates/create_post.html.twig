@@ -23,10 +23,29 @@
             <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
             <label for="body">Body</label>
         </div>
+        <div class="form-floating mb-3">
+            <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="Category">
+                {% for category in categories %}
+                    <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.label|lower }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="category">Category</label>
+            {% if errors.category is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.category %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
         <div class="dropzone mb-3"></div>
         <input type="hidden" name="attachmentIds" id="attachmentIds" value="{% if values.attachmentIds is defined %}{{ values.attachmentIds }}{% endif %}">
-        <div class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
-            <div class="card-header">Location</div>
+        <button class="btn btn-outline-primary mb-3" id="add-location-btn" type="button">Add a location</button>
+        <div id="location-card" class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
+            <div class="card-header">
+                Location
+                <button type="button" class="btn-close float-end" id="remove-location-btn" title="Remove location" aria-label="Remove location"></button>
+            </div>
             <div class="card-body ratio ratio-16x9">
                 <div id="map" data-center="{{ setting('locationLatLng') }}" data-zoom="{{ setting('locationZoom') }}" data-radius="{{ setting('locationRadiusMeters') }}"></div>
             </div>
@@ -34,7 +53,7 @@
                 <div class="row">
                     <div class="col-12 gx-2 d-flex align-items-center">
                         <button type="button" class="btn btn-outline-secondary get-location float-start" title="Show your current location"><i class="bi bi-crosshair2"></i></button>
-                        <span class="ms-2 text-secondary">Do not use your home address</span>
+                        <span class="ms-2 text-secondary">Never post your home address</span>
                     </div>
                 </div>
             </div>
@@ -46,14 +65,6 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <div class="form-floating mb-3">
-        <select class="form-select" name="category" id="category" aria-label="Category">
-        {% for category in categories %}
-            <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}">{{ category.name }}</option>
-        {% endfor %}
-        </select>
-        <label for="category">Category</label>
-        </div>
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if values.locationLatLng is defined %}{{ values.locationLatLng }}{% endif %}">
         <input type="hidden" name="token" value="{{ csrf_token('post') }}">
         <div class="d-grid gap-2">

@@ -30,7 +30,7 @@
                         </td>
                         <td{% if sort == 'name' %} class="bg-light border"{% endif %}>{{ item.name }}</td>
                         <td>{{ item.description }}</td>
-                        <td{% if sort == 'location_enabled' %} class="bg-light border"{% endif %}>{% if item.locationEnabled %}<i class="bi bi-check-lg text-success"></i>{% else %}<i class="bi bi-x-lg text-danger">{% endif %}</td>
+                        <td{% if sort == 'location' %} class="bg-light border"{% endif %}>{{ item.location.label }}</td>
                         <td>{{ item.posts|length }}</td>
                     </tr>
                 {% endfor %}

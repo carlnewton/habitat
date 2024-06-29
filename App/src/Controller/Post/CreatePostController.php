@@ -3,6 +3,7 @@
 namespace App\Controller\Post;
 
 use App\Entity\Category;
+use App\Entity\CategoryLocationOptionsEnum;
 use App\Entity\PostAttachment;
 use DateTime;
 use App\Entity\User;
@@ -75,11 +76,19 @@ class CreatePostController extends AbstractController
             $post
                 ->setTitle(trim($request->get('title')))
                 ->setBody(trim($request->get('body')))
-                ->setLocation($request->get('locationLatLng'))
                 ->setPosted(new DateTime())
                 ->setUser($user)
                 ->setCategory($postCategory)
             ;
+
+            if (
+                in_array($postCategory->getLocation(), [
+                    CategoryLocationOptionsEnum::REQUIRED,
+                    CategoryLocationOptionsEnum::OPTIONAL,
+                ]) && !empty($request->get('locationLatLng'))
+            ) {
+                $post->setLocation($request->get('locationLatLng'));
+            }
 
             $this->entityManager->persist($post);
             $this->entityManager->flush();
@@ -150,26 +159,33 @@ class CreatePostController extends AbstractController
             $errors['title'][] = 'The title cannot be empty';
         }
 
-        if (
-            empty($request->get('locationLatLng')) ||
-            !LatLong::isValidLatLong($request->get('locationLatLng'))
-        ) {
-            $errors['location'][] = 'You must choose a location';
-        }
-
         if (empty($request->get('category'))) {
             $errors['category'][] = 'You must choose a category';
         } else {
-            $categoryExists = false;
+            $foundCategory = null;
             foreach ($this->categories as $category) {
                 if ($category->getId() === (int) $request->get('category')) {
-                    $categoryExists = true;
+                    $foundCategory = $category;
                     break;
                 }
             }
 
-            if (!$categoryExists) {
+            if (is_null($foundCategory)) {
                 $errors['category'][] = 'You must choose a category';
+            } else if (
+                (
+                    $foundCategory->getLocation() === CategoryLocationOptionsEnum::REQUIRED &&
+                    (
+                        empty($request->get('locationLatLng')) ||
+                        !LatLong::isValidLatLong($request->get('locationLatLng'))
+                    )
+                ) || (
+                    $foundCategory->getLocation() === CategoryLocationOptionsEnum::OPTIONAL &&
+                    !empty($request->get('locationLatLng')) &&
+                    !LatLong::isValidLatLong($request->get('locationLatLng'))
+                )
+            ) {
+                $errors['location'][] = 'You must choose a location';
             }
         }
 
