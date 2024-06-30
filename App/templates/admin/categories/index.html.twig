@@ -32,7 +32,7 @@
                         <td{% if sort == 'name' %} class="bg-light border"{% endif %}><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
                         <td>{{ item.description }}</td>
                         <td{% if sort == 'location' %} class="bg-light border"{% endif %}>{{ item.location.label }}</td>
-                        <td>{{ item.posts|length }}</td>
+                        <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>{{ item.posts|length }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

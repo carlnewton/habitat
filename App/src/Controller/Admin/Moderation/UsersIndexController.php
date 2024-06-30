@@ -45,9 +45,13 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
             ],
             'posts' => [
                 'label' => 'Posts',
+                'sortable' => true,
+                'type' => 'count',
             ],
             'comments' => [
                 'label' => 'Comments',
+                'sortable' => true,
+                'type' => 'count',
             ],
         ];
     }

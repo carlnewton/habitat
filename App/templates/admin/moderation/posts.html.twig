@@ -9,7 +9,7 @@
     <td{% if sort == 'posted' %} class="bg-light border"{% endif %}>{{ item.posted|date }}</td>
     <td>{{ item.category.name }}</td>
     <td><a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a></td>
-    <td>{{ item.attachments|length }}</td>
-    <td>{{ item.comments|length }}</td>
-    <td>{{ item.hearts|length }}</td>
+    <td{% if sort == 'attachments' %} class="bg-light border"{% endif %}>{{ item.attachments|length }}</td>
+    <td{% if sort == 'comments' %} class="bg-light border"{% endif %}>{{ item.comments|length }}</td>
+    <td{% if sort == 'hearts' %} class="bg-light border"{% endif %}>{{ item.hearts|length }}</td>
 {% endblock %}

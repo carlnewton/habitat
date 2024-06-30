@@ -72,18 +72,35 @@ class AbstractAdminTableController extends AbstractController
             }
         }
 
+        $orderByCount = false;
+        if (array_key_exists('type', $this->getHeadings()[$sort]) && $this->getHeadings()[$sort]['type'] === 'count') {
+            $orderByCount = true;
+            if ($order === 'asc') {
+                $order = 'desc';
+            } else {
+                $order = 'asc';
+            }
+        }
+
         if (!in_array($order, self::SORT_ORDERS)) {
             $order = $this->getDefaultSortOrder();
+        }
+
+        if ($orderByCount) {
+            return $this->getRepository()->findByAssocCount(
+                [],
+                [ $sort => $order ],
+                $itemsPerPage,
+                $itemsPerPage * ($page - 1),
+            );
         }
 
         return $this->getRepository()->findBy(
             [],
             [ $sort => $order ],
             $itemsPerPage,
-            $itemsPerPage * ($page - 1)
+            $itemsPerPage * ($page - 1),
         );
-
-        return $items;
     }
 
     protected function countTotalItems(): int

@@ -42,6 +42,8 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
             ],
             'posts' => [
                 'label' => 'Posts',
+                'sortable' => true,
+                'type' => 'count',
             ],
         ];
     }

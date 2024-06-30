@@ -8,6 +8,6 @@
     </td>
     <td{% if sort == 'email_address' %} class="bg-light border"{% endif %}>{{ item.emailaddress }}</td>
     <td{% if sort == 'created' %} class="bg-light border"{% endif %}>{{ item.created|date }}</td>
-    <td>{{ item.posts|length }}</td>
-    <td>{{ item.comments|length }}</td>
+    <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>{{ item.posts|length }}</td>
+    <td{% if sort == 'comments' %} class="bg-light border"{% endif %}>{{ item.comments|length }}</td>
 {% endblock %}

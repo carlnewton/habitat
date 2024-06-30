@@ -37,7 +37,41 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
-    
+
+    public function findByAssocCount(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
+    {
+        // NOTE: There might be a way of better sanitising all of this, but until that time, this method should only
+        // be used when the criteria and orderBy parameters are sanitised beforehand. In this instance, in the
+        // moderation sorting options.
+        $qb = $this->createQueryBuilder('user');
+
+        foreach ($criteria as $key => $value) {
+            $qb->andWhere("user.$key = :$key")
+                ->setParameter($key, $value)
+            ;
+        }
+
+        if ($orderBy) {
+            $sortKey = key($orderBy);
+            $sortValue = $orderBy[$sortKey];
+            $qb->select('user, COUNT(a.id) as HIDDEN assocCount')
+                ->leftJoin("user.$sortKey", 'a')
+                ->groupBy('user.id')
+                ->orderBy('assocCount', strtoupper($sortValue))
+            ;
+        }
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

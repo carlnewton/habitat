@@ -46,12 +46,18 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
             ],
             'attachments' => [
                 'label' => 'Attachments',
+                'sortable' => true,
+                'type' => 'count',
             ],
             'comments' => [
                 'label' => 'Comments',
+                'sortable' => true,
+                'type' => 'count',
             ],
             'hearts' => [
                 'label' => 'Hearts',
+                'sortable' => true,
+                'type' => 'count',
             ]
         ];
     }
