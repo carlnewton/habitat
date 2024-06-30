@@ -10,11 +10,11 @@
                     {% for heading, headingProperties in headings %}
                         <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
                             {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                <a class="d-block link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
+                                <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
                             {% endif %}
                             {{ headingProperties.label }}
                             {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} float-end"></i>
+                                    <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} ps-3"></i>
                                 </a>
                             {% endif %}
                         </th>
