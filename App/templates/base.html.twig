@@ -16,7 +16,7 @@
     </head>
     <body>
         <div class="navbar-expand-md">
-            <nav class="navbar fixed-top bg-{{ setting('theme', 'light') }} border-bottom">
+            <nav class="navbar shadow-sm fixed-top bg-{{ setting('theme', 'light') }} border-bottom">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ path('app_index_index') }}">
                         <img src="/build/images/habitat_icon.svg" width="30" height="30" class="d-inline-block align-top" alt="Habitat">
@@ -94,7 +94,7 @@
                 {% endblock %}
             </div>
         </div>
-        <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top">
+        <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top shadow-lg">
             <div class="container-fluid">
                 <a href="{{ path('app_index_index') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
                     <i class="h3 bi bi-house{% if app.request.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>

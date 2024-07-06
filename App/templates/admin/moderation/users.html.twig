@@ -8,6 +8,14 @@
     </td>
     <td{% if sort == 'email_address' %} class="bg-light border"{% endif %}>{{ item.emailaddress }}</td>
     <td{% if sort == 'created' %} class="bg-light border"{% endif %}>{{ item.created|date }}</td>
-    <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>{{ item.posts|length }}</td>
-    <td{% if sort == 'comments' %} class="bg-light border"{% endif %}>{{ item.comments|length }}</td>
+    <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>
+        <div class="d-grid">
+            <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: item.id }) }}">{{ item.posts|length }}</a>
+        </div>
+    </td>
+    <td{% if sort == 'comments' %} class="bg-light border"{% endif %}>
+        <div class="d-grid">
+            <a class="btn btn-link{% if item.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: item.id }) }}">{{ item.comments|length }}</a>
+        </div>
+    </td>
 {% endblock %}

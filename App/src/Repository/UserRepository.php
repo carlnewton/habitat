@@ -72,6 +72,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
+    public function findUsersWithComments()
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.comments', 'c')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findUsersWithPosts()
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.posts', 'p')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

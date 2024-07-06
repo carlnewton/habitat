@@ -54,6 +54,16 @@ class CategoryRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findCategoriesWithPosts()
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.posts', 'p')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Category[] Returns an array of Category objects
     //     */

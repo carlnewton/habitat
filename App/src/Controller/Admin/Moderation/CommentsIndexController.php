@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Moderation;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Entity\Comment;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,29 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
         $this->entityManager = $entityManager;
 
         return $this->renderTemplate($request, 'admin/moderation/comments.html.twig');
+    }
+
+    public function getFilters(): array
+    {
+        $userRepository = $this->entityManager->getRepository(User::class);
+
+        $userEntities = $userRepository->findUsersWithComments();
+
+        $users = [];
+        foreach ($userEntities as $userEntity) {
+            $user['value'] = $userEntity->getId();
+            $user['label'] = $userEntity->getUsername();
+
+            $users[] = $user;
+        }
+        return [
+            'user' => [
+                'label' => 'User',
+                'type' => 'select',
+                'options' => $users,
+                'validation' => 'non-zero-integer',
+            ],
+        ];
     }
 
     public function getHeadings(): array

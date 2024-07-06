@@ -4,7 +4,9 @@ namespace App\Controller\Admin\Moderation;
 
 use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
+use App\Entity\Category;
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +27,47 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
         $this->entityManager = $entityManager;
 
         return $this->renderTemplate($request, 'admin/moderation/posts.html.twig');
+    }
+
+    public function getFilters(): array
+    {
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+
+        $categoryEntities = $categoryRepository->findCategoriesWithPosts();
+
+        $categories = [];
+        foreach ($categoryEntities as $categoryEntity) {
+            $category['value'] = $categoryEntity->getId();
+            $category['label'] = $categoryEntity->getName();
+
+            $categories[] = $category;
+        }
+
+        $userRepository = $this->entityManager->getRepository(User::class);
+
+        $userEntities = $userRepository->findUsersWithPosts();
+
+        $users = [];
+        foreach ($userEntities as $userEntity) {
+            $user['value'] = $userEntity->getId();
+            $user['label'] = $userEntity->getUsername();
+
+            $users[] = $user;
+        }
+        return [
+            'category' => [
+                'label' => 'Category',
+                'type' => 'select',
+                'options' => $categories,
+                'validation' => 'non-zero-integer',
+            ],
+            'user' => [
+                'label' => 'User',
+                'type' => 'select',
+                'options' => $users,
+                'validation' => 'non-zero-integer',
+            ],
+        ];
     }
 
     public function getHeadings(): array

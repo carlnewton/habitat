@@ -48,11 +48,16 @@ class AbstractAdminTableController extends AbstractController
             $itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE;
         }
 
+        $itemFilters = $this->generateItemFilterArray($request);
+
         return $this->render($templatePath, [
+            'filters' => $this->getFilters(),
+            'filtered' => $itemFilters,
             'headings' => $this->getHeadings(),
-            'items' => $this->getItems($page, $itemsPerPage, $sort, $order),
-            'total_items' => $this->countTotalItems(),
-            'total_pages' => ceil($this->countTotalItems() / $itemsPerPage),
+            'items' => $this->getItems($itemFilters, $page, $itemsPerPage, $sort, $order),
+            'total_items' => $this->countTotalItems($itemFilters),
+            'total_items_unfiltered' => $this->countTotalItems(),
+            'total_pages' => ceil($this->countTotalItems($itemFilters) / $itemsPerPage),
             'current_page' => $page,
             'label' => $this->getItemsLabel(),
             'items_per_page' => $itemsPerPage,
@@ -61,7 +66,34 @@ class AbstractAdminTableController extends AbstractController
             'order' => $order,
         ]);
     }
-    protected function getItems(int $page, int $itemsPerPage, ?string $sort, ?string $order): array
+
+    protected function generateItemFilterArray(Request $request): array
+    {
+        if (empty($this->getFilters())) {
+            return [];
+        }
+
+        $filters = [];
+        foreach ($this->getFilters() as $filterName => $filterProperties) {
+            if (!$request->get($filterName)) {
+                continue;
+            }
+
+            switch ($filterProperties['validation']) {
+                case 'non-zero-integer':
+                    if ((int) $request->get($filterName) > 0) {
+                        $filters[$filterName] = (int) $request->get($filterName);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return $filters;
+    }
+
+    protected function getItems(array $filters, int $page, int $itemsPerPage, ?string $sort, ?string $order): array
     {
         if (!in_array($sort, array_keys($this->getHeadings()))) {
             $sort = $this->getDefaultSortProperty();
@@ -88,7 +120,7 @@ class AbstractAdminTableController extends AbstractController
 
         if ($orderByCount) {
             return $this->getRepository()->findByAssocCount(
-                [],
+                $filters,
                 [ $sort => $order ],
                 $itemsPerPage,
                 $itemsPerPage * ($page - 1),
@@ -96,16 +128,16 @@ class AbstractAdminTableController extends AbstractController
         }
 
         return $this->getRepository()->findBy(
-            [],
+            $filters,
             [ $sort => $order ],
             $itemsPerPage,
             $itemsPerPage * ($page - 1),
         );
     }
 
-    protected function countTotalItems(): int
+    protected function countTotalItems(array $filters = []): int
     {
-        return $this->getRepository()->count();
+        return $this->getRepository()->count($filters);
     }
 
     protected function getRepository(): ServiceEntityRepository

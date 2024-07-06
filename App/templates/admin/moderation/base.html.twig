@@ -2,6 +2,37 @@
 
 {% block body %}
     {% include 'admin/moderation/partials/tabs.html.twig' %}
+    {% if filters is not empty %}
+        <div class="card bg-light my-3">
+            <form class="card-body d-flex align-items-center flex-column flex-sm-row gap-2">
+                <h5 class="card-title m-0">Filters</h5>
+                <div class="d-flex flex-fill gap-2 flex-column flex-lg-row">
+                    {% for filterName, filterProperties in filters %}
+                        <div class="input-group">
+                            <span class="input-group-text{% if filtered[filterName] is defined %} border-primary bg-primary-subtle{% endif %}" id="{{ filterName }}-filter">{{ filterProperties.label }}</span>
+                            {% if filterProperties.type == 'text' %}
+                                <input type="text" name="{{ filterName }}" class="form-control" placeholder="{{ filterProperties.label }}" aria-label="{{ filterProperties.label}}" aria-describedby="{{ filterName }}-filter">
+                            {% elseif filterProperties.type == 'select' %}
+                                <select name="{{ filterName }}" class="form-select{% if filtered[filterName] is defined %} border-primary{% endif %}" aria-describedby="{{ filterName }}">
+                                    <option value>Any</option>
+                                    {% for option in filterProperties.options %}
+                                        <option value="{{ option.value }}"{% if filtered[filterName] is defined and filtered[filterName] == option.value %} selected{% endif %}>{{ option.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="perPage" value="{{ items_per_page }}" />
+                <input type="hidden" name="sort" value="{{ sort }}" />
+                <input type="hidden" name="order" value="{{ order }}" />
+                <div class="d-flex flex-column flex-md-row gap-2">
+                    <button type="submit" class="btn btn-outline-primary">Apply</button>
+                    {% if filtered is not empty %}<a href="{{ app.request.pathinfo }}" class="btn btn-outline-danger">Clear</a>{% endif %}
+                </div>
+            </form>
+        </div>
+    {% endif %}
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -10,7 +41,7 @@
                     {% for heading, headingProperties in headings %}
                         <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
                             {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
+                                <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' }) )}}">
                             {% endif %}
                             {{ headingProperties.label }}
                             {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
@@ -34,7 +65,7 @@
                     </tr>
                 {% endfor %}
             </tbody>
-            <caption>Displaying {{ items|length }} of {{ total_items }} {{ label|default('items') }}</caption>
+            <caption>Displaying {{ items|length }} of {{ total_items }}{% if filtered is not empty %} filtered from {{ total_items_unfiltered }}{% endif %} {{ label|default('items') }}</caption>
         </table>
     </div>
     {% if total_pages > 1 %}
@@ -42,15 +73,15 @@
             <ul class="pagination float-start">
                 {% if current_page > 1 %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page - 1, 'sort': sort, 'order': order })}}"><i class="bi bi-chevron-left"></i></a>
+                        <a class="page-link" href="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page, 'page': current_page - 1, 'sort': sort, 'order': order }) )}}"><i class="bi bi-chevron-left"></i></a>
                     </li>
                 {% endif %}
                 {% for page in 1..total_pages %}
-                    <li class="page-item{% if page == current_page %} active{% endif %}"{% if page == current_page %} aria-current="page"{% endif %}><a class="page-link" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': page, 'sort': sort, 'order': order } ) }}">{{ page }}</a></li>
+                    <li class="page-item{% if page == current_page %} active{% endif %}"{% if page == current_page %} aria-current="page"{% endif %}><a class="page-link" href="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page, 'page': page, 'sort': sort, 'order': order }) ) }}">{{ page }}</a></li>
                 {% endfor %}
                 {% if current_page < total_pages %}
                     <li class="page-item">
-                        <a class="page-link" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page + 1, 'sort': sort, 'order': order })}}"><i class="bi bi-chevron-right"></i></a>
+                        <a class="page-link" href="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page, 'page': current_page + 1, 'sort': sort, 'order': order }) )}}"><i class="bi bi-chevron-right"></i></a>
                     </li>
                 {% endif %}
             </ul>
@@ -61,7 +92,7 @@
             <span class="input-group-text">{{ label|capitalize|default('Items') }} per page</span>
             <select class="form-select" onchange="window.location.href=this.value">
                 {% for items_per_page_option in items_per_page_options %}
-                    <option value="{{ path(app.request.get('_route'), { 'perPage': items_per_page_option, 'sort': sort, 'order': order }) }}"{% if items_per_page_option == items_per_page %} selected{% endif %}>{{ items_per_page_option }}</option>
+                    <option value="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page_option, 'sort': sort, 'order': order }) ) }}"{% if items_per_page_option == items_per_page %} selected{% endif %}>{{ items_per_page_option }}</option>
                 {% endfor %}
             </select>
         </div>

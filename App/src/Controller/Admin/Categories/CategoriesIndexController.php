@@ -26,6 +26,11 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
         return $this->renderTemplate($request, 'admin/categories/index.html.twig');
     }
 
+    public function getFilters(): array
+    {
+        return [];
+    }
+
     public function getHeadings(): array
     {
         return [

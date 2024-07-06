@@ -28,6 +28,11 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
         return $this->renderTemplate($request, 'admin/moderation/users.html.twig');
     }
 
+    public function getFilters(): array
+    {
+        return [];
+    }
+
     public function getHeadings(): array
     {
         return [
