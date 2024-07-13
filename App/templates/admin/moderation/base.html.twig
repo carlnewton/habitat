@@ -2,9 +2,10 @@
 
 {% block body %}
     {% include 'admin/moderation/partials/tabs.html.twig' %}
-    {% if filters is not empty %}
-        <div class="card bg-light my-3">
-            <form class="card-body d-flex align-items-center flex-column flex-sm-row gap-2">
+    {% block actions %}{% endblock %}
+    <div class="card my-3">
+        {% if filters is not empty %}
+            <form class="card-body bg-light d-flex align-items-center flex-column flex-sm-row gap-2 rounded-top">
                 <h5 class="card-title m-0">Filters</h5>
                 <div class="d-flex flex-fill gap-2 flex-column flex-lg-row">
                     {% for filterName, filterProperties in filters %}
@@ -31,42 +32,52 @@
                     {% if filtered is not empty %}<a href="{{ app.request.pathinfo }}" class="btn btn-outline-danger">Clear</a>{% endif %}
                 </div>
             </form>
-        </div>
-    {% endif %}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th><br></th>
-                    {% for heading, headingProperties in headings %}
-                        <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
-                            {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' }) )}}">
-                            {% endif %}
-                            {{ headingProperties.label }}
-                            {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                    <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} ps-3"></i>
-                                </a>
-                            {% endif %}
-                        </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="">
-                            </div>
-                        </td>
-                        {% block rows %}
-                        {% endblock %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-            <caption>Displaying {{ items|length }} of {{ total_items }}{% if filtered is not empty %} filtered from {{ total_items_unfiltered }}{% endif %} {{ label|default('items') }}</caption>
-        </table>
+        {% endif %}
+        {% if items is not empty %}
+            <div class="table-responsive rounded">
+                <table id="results-table" class="table m-0">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="form-check">
+                                    <input id="check-all" class="form-check-input" type="checkbox" value="">
+                                </div>
+                            </th>
+                            {% for heading, headingProperties in headings %}
+                                <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
+                                    {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
+                                        <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), filtered|merge({ 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' }) )}}">
+                                    {% endif %}
+                                    {{ headingProperties.label }}
+                                    {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
+                                            <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} ps-3"></i>
+                                        </a>
+                                    {% endif %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input row-check" type="checkbox" onchange="rowCheckChange(this)" value="{{ item.id }}">
+                                    </div>
+                                </td>
+                                {% block rows %}
+                                {% endblock %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <caption class="p-3">Displaying {{ items|length }} of {{ total_items }}{% if filtered is not empty %} filtered from {{ total_items_unfiltered }}{% endif %} {{ label|default('items') }}</caption>
+                </table>
+            </div>
+        {% else %}
+            <div class="card-body p-5">
+                <p class="lead text-center">No matching {{ label|default('items') }} found</p>
+            </div>
+        {% endif %}
     </div>
     {% if total_pages > 1 %}
         <nav>
@@ -97,4 +108,9 @@
             </select>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('admin_table') }}
 {% endblock %}

@@ -75,7 +75,7 @@ class AbstractAdminTableController extends AbstractController
 
         $filters = [];
         foreach ($this->getFilters() as $filterName => $filterProperties) {
-            if (!$request->get($filterName)) {
+            if ($request->get($filterName) === null) {
                 continue;
             }
 
@@ -85,6 +85,10 @@ class AbstractAdminTableController extends AbstractController
                         $filters[$filterName] = (int) $request->get($filterName);
                     }
                     break;
+                case 'boolean':
+                    if (in_array($request->get($filterName), ['0', '1'])) {
+                        $filters[$filterName] = (int) $request->get($filterName);
+                    }
                 default:
                     break;
             }

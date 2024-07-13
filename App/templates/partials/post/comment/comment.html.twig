@@ -1,7 +1,11 @@
 <div class="comment"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#comment-spinner" hx-get="/hx/list-comments?post={{ post.id }}&offset={{ offset }}" hx-trigger="intersect once" hx-swap="beforeend"{% endif %}>
     <h3>{{ comment.user.username }}</h3>
     <p>
-        {{ comment.body }}
+        {% if comment.removed %}
+            <em class="text-muted">This comment has been removed by a moderator.</em>
+        {% else %}
+            {{ comment.body }}
+        {% endif %}
     </p>
     <div class="date text-muted">{{ comment.posted|time_diff }}</div>
     <hr>
