@@ -35,6 +35,10 @@ class ViewPostController extends AbstractController
             'id' => $id
         ]);
 
+        if (!$post || $post->isRemoved()) {
+            throw $this->createNotFoundException('The post does not exist');
+        }
+
         if ($user !== null) {
             foreach ($post->getHearts() as $heart) {
                 if ($heart->getUser()->getId() === $user->getId()) {
