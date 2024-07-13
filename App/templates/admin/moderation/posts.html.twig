@@ -1,10 +1,36 @@
 {% extends 'admin/moderation/base.html.twig' %}
 
+{% block actions %}
+    <div class="dropdown mt-3">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
+            Actions
+        </button>
+        <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
+            <li>
+                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_remove') }}">
+                    <input name="items" type="hidden" value=""/>
+                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                    <button type="submit" class="dropdown-item checkbox-action disabled" href="#">Remove</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
 {% block rows %}
     <td{% if sort == 'title' %} class="bg-light border"{% endif %}>
-        <a href="{{ path('app_view_post', { id: item.id }) }}">
-            {{ item.title }}
-        </a>
+        {% if item.removed and filtered.removed is not defined %}
+            <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}">
+                Post removed
+            </button>
+            <div class="collapse" id="collapse-{{ item.id }}">
+                {{ item.title }}
+            </div>
+        {% else %}
+            <a href="{{ path('app_view_post', { id: item.id }) }}">
+                {{ item.title }}
+            </a>
+        {% endif %}
     </td>
     <td{% if sort == 'posted' %} class="bg-light border"{% endif %}>{{ item.posted|date }}</td>
     <td>{{ item.category.name }}</td>

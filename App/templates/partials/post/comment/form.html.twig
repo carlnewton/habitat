@@ -1,4 +1,4 @@
-<form id="comment-form" class="mb-3" hx-swap="outerHTML settle:500ms" hx-post="/hx/add-comment">
+<form id="comment-form" class="mb-3" hx-swap="outerHTML settle:500ms show:#comments-list:top" hx-post="/hx/add-comment">
     <div class="form-floating mb-3">
         <textarea class="form-control form-control-lg{% if errors.comment is defined %} is-invalid{% endif %}" name="comment" style="height: 100px" placeholder="Comment">{% if values.comment is defined %}{{ values.comment }}{% endif %}</textarea>
         <label for="comment">Comment</label>

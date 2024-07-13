@@ -28,7 +28,9 @@ class IndexController extends AbstractController
 
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findBy(
-            [], 
+            [
+                'removed' => false,
+            ], 
             [
                 'posted' => 'DESC',
             ],

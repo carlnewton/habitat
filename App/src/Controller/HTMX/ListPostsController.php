@@ -35,7 +35,10 @@ class ListPostsController extends AbstractController
             }
         }
 
-        $filter = [];
+        $filter = [
+            'removed' => false,
+        ];
+
         if (!empty($request->query->get('category'))) {
             $categoryId = (int) $request->query->get('category');
 

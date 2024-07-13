@@ -62,6 +62,9 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\Column]
+    private ?bool $removed = false;
+
     public function __construct()
     {
         $this->hearts = new ArrayCollection();
@@ -266,6 +269,18 @@ class Post
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function isRemoved(): ?bool
+    {
+        return $this->removed;
+    }
+
+    public function setRemoved(bool $removed): static
+    {
+        $this->removed = $removed;
 
         return $this;
     }

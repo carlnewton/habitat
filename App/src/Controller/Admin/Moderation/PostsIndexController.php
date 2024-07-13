@@ -67,6 +67,21 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
                 'options' => $users,
                 'validation' => 'non-zero-integer',
             ],
+            'removed' => [
+                'label' => 'Status',
+                'type' => 'select',
+                'options' => [
+                    [
+                        'value' => '0',
+                        'label' => 'Live',
+                    ],
+                    [
+                        'value' => '1',
+                        'label' => 'Removed',
+                    ],
+                ],
+                'validation' => 'boolean',
+            ],
         ];
     }
 
