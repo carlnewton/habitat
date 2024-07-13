@@ -1,0 +1,34 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Moderation</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Posts</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Change category</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header p-5 text-center">
+            <p class="lead">Select a new category for {% if posts|length > 1 %}these posts{% else %}this post{% endif %}</p>
+            <form method="post">
+                <input name="items" type="hidden" value="{{ post_ids }}">
+                <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                <select class="form-select mb-3" name="category" id="category" aria-label="Category">
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-danger">Update</button>
+                <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">Cancel</a>
+            </form>
+        </div>
+        <div class="card-body">
+            {% for post in posts %}
+                {% include 'partials/post/post.html.twig' %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
