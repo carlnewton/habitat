@@ -3,13 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Comment;
-use App\Entity\Post;
-use App\Entity\PostAttachment;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Filesystem\Filesystem;
 
 class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -80,7 +76,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             [
                 'user' => 'Trinity',
                 'comment' => 'I didn\'t know this place was still open! I used to go here as a kid! I\'ll have to return some time',
-            ]
+            ],
         ],
         9 => [
             [
@@ -99,17 +95,18 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             ],
         ],
     ];
+
     public function load(ObjectManager $manager)
     {
         foreach (self::COMMENTS as $postReference => $comments) {
             foreach ($comments as $comment) {
-                $post = $this->getReference('post/' . $postReference);
-                $user = $this->getReference('user/' . strtolower($comment['user']));
+                $post = $this->getReference('post/'.$postReference);
+                $user = $this->getReference('user/'.strtolower($comment['user']));
                 $commentEntity = new Comment();
                 $commentEntity->setPost($post);
                 $commentEntity->setUser($user);
                 $commentEntity->setBody($comment['comment']);
-                $commentEntity->setPosted(new DateTimeImmutable());
+                $commentEntity->setPosted(new \DateTimeImmutable());
 
                 $manager->persist($commentEntity);
             }

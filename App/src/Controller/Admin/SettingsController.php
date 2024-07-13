@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
 use App\Entity\Settings;
+use App\Entity\User;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -19,17 +19,16 @@ class SettingsController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_setup_admin');
         }
 
         $settingsRepository = $entityManager->getRepository(Settings::class);
 
-        if ($request->getMethod() === 'POST') {
+        if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
             if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
                 $this->addFlash(
@@ -52,7 +51,7 @@ class SettingsController extends AbstractController
                         'locationRadiusMeters' => $request->get('locationRadiusMeters'),
                         'locationZoom' => $request->get('locationZoom'),
                         'registration' => $request->get('registration'),
-                    ]
+                    ],
                 ]);
             }
 
@@ -121,6 +120,7 @@ class SettingsController extends AbstractController
         $locationMeasurementSetting = $settingsRepository->getSettingByName('locationMeasurement');
         $locationRadiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
         $registration = $settingsRepository->getSettingByName('registration');
+
         return $this->render('admin/index.html.twig', [
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
@@ -129,7 +129,7 @@ class SettingsController extends AbstractController
                 'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'kms',
                 'locationRadiusMeters' => ($locationRadiusSetting) ? $locationRadiusSetting->getValue() : '3000',
                 'registration' => ($registration) ? $registration->getValue() : '',
-            ]
+            ],
         ]);
     }
 
@@ -138,26 +138,26 @@ class SettingsController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->get('habitatName')) > Settings::HABITAT_NAME_MAX_LENGTH) {
-            $errors['habitatName'][] = 'Your Habitat name must be a maximum of ' . Settings::HABITAT_NAME_MAX_LENGTH . ' characters';
+            $errors['habitatName'][] = 'Your Habitat name must be a maximum of '.Settings::HABITAT_NAME_MAX_LENGTH.' characters';
         }
 
         if (
-            empty($request->get('locationLatLng')) ||
-            !LatLong::isValidLatLong($request->get('locationLatLng'))
+            empty($request->get('locationLatLng'))
+            || !LatLong::isValidLatLong($request->get('locationLatLng'))
         ) {
             $errors['location'][] = 'You must choose a valid location';
         }
 
         if (
-            empty($request->get('locationMeasurement')) ||
-            !in_array($request->get('locationMeasurement'), ['kms', 'miles']) ||
-            $request->get('locationRadiusMeters') != (int) $request->get('locationRadiusMeters') ||
-            $request->get('locationRadiusMeters') < 1
+            empty($request->get('locationMeasurement'))
+            || !in_array($request->get('locationMeasurement'), ['kms', 'miles'])
+            || $request->get('locationRadiusMeters') != (int) $request->get('locationRadiusMeters')
+            || $request->get('locationRadiusMeters') < 1
         ) {
             $errors['location'][] = 'You must choose a valid location size';
         }
 
-        if (!empty($request->get('registration')) && $request->get('registration') !== 'on') {
+        if (!empty($request->get('registration')) && 'on' !== $request->get('registration')) {
             $errors['registration'] = 'You must decide to enable or disable user registration';
         }
 

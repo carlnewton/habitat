@@ -2,8 +2,6 @@
 
 namespace App\Controller\Admin\Categories;
 
-use App\Controller\Admin\Abstract\AbstractAdminTableController;
-use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
 use App\Entity\User;
@@ -23,11 +21,10 @@ class AddEditCategoryController extends AbstractController
         ?int $id,
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_setup_admin');
         }
 
@@ -42,7 +39,7 @@ class AddEditCategoryController extends AbstractController
 
         $categoryLocationOptions = CategoryLocationOptionsEnum::cases();
 
-        if ($request->getMethod() === 'POST') {
+        if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
             if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
                 $this->addFlash(
@@ -70,7 +67,7 @@ class AddEditCategoryController extends AbstractController
                     'action' => $action,
                     'location_options' => $categoryLocationOptions,
                     'errors' => $fieldErrors,
-                    'category' => $category
+                    'category' => $category,
                 ]);
             }
 
@@ -78,7 +75,7 @@ class AddEditCategoryController extends AbstractController
 
             $entityManager->flush();
 
-            if ($action === 'add') {
+            if ('add' === $action) {
                 $this->addFlash('notice', 'Category added');
             } else {
                 $this->addFlash('notice', 'Category updated');
@@ -86,6 +83,7 @@ class AddEditCategoryController extends AbstractController
 
             return $this->redirectToRoute('app_admin_categories');
         }
+
         return $this->render('admin/categories/add_edit.html.twig', [
             'action' => $action,
             'category' => $category,

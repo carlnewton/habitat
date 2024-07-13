@@ -6,7 +6,6 @@ use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,8 +18,7 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $this->entityManager = $entityManager;
 
         return $this->renderTemplate($request, 'admin/categories/index.html.twig');

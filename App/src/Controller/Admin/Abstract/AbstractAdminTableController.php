@@ -19,7 +19,7 @@ class AbstractAdminTableController extends AbstractController
     {
         $userRepository = $this->entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_setup_admin');
         }
 
@@ -33,7 +33,7 @@ class AbstractAdminTableController extends AbstractController
             $sort = $this->getDefaultSortProperty();
         } else {
             $heading = $this->getHeadings()[$sort];
-            if (!array_key_exists('sortable', $heading) || $heading['sortable'] !== true) {
+            if (!array_key_exists('sortable', $heading) || true !== $heading['sortable']) {
                 $sort = $this->getDefaultSortProperty();
             }
         }
@@ -75,7 +75,7 @@ class AbstractAdminTableController extends AbstractController
 
         $filters = [];
         foreach ($this->getFilters() as $filterName => $filterProperties) {
-            if ($request->get($filterName) === null) {
+            if (null === $request->get($filterName)) {
                 continue;
             }
 
@@ -89,6 +89,7 @@ class AbstractAdminTableController extends AbstractController
                     if (in_array($request->get($filterName), ['0', '1'])) {
                         $filters[$filterName] = (int) $request->get($filterName);
                     }
+                    break;
                 default:
                     break;
             }
@@ -103,15 +104,15 @@ class AbstractAdminTableController extends AbstractController
             $sort = $this->getDefaultSortProperty();
         } else {
             $heading = $this->getHeadings()[$sort];
-            if (!array_key_exists('sortable', $heading) || $heading['sortable'] !== true) {
+            if (!array_key_exists('sortable', $heading) || true !== $heading['sortable']) {
                 $sort = $this->getDefaultSortProperty();
             }
         }
 
         $orderByCount = false;
-        if (array_key_exists('type', $this->getHeadings()[$sort]) && $this->getHeadings()[$sort]['type'] === 'count') {
+        if (array_key_exists('type', $this->getHeadings()[$sort]) && 'count' === $this->getHeadings()[$sort]['type']) {
             $orderByCount = true;
-            if ($order === 'asc') {
+            if ('asc' === $order) {
                 $order = 'desc';
             } else {
                 $order = 'asc';
@@ -125,7 +126,7 @@ class AbstractAdminTableController extends AbstractController
         if ($orderByCount) {
             return $this->getRepository()->findByAssocCount(
                 $filters,
-                [ $sort => $order ],
+                [$sort => $order],
                 $itemsPerPage,
                 $itemsPerPage * ($page - 1),
             );
@@ -133,7 +134,7 @@ class AbstractAdminTableController extends AbstractController
 
         return $this->getRepository()->findBy(
             $filters,
-            [ $sort => $order ],
+            [$sort => $order],
             $itemsPerPage,
             $itemsPerPage * ($page - 1),
         );

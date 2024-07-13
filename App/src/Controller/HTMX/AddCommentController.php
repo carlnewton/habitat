@@ -3,14 +3,13 @@
 namespace App\Controller\HTMX;
 
 use App\Entity\Comment;
-use DateTimeImmutable;
-use App\Entity\User;
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
@@ -22,9 +21,8 @@ class AddCommentController extends AbstractController
         #[CurrentUser] ?User $user,
         Security $security,
         EntityManagerInterface $entityManager
-    ): Response
-    {
-        if ($user === null) {
+    ): Response {
+        if (null === $user) {
             return $this->render('partials/hx/must_sign_in.html.twig');
         }
 
@@ -34,7 +32,7 @@ class AddCommentController extends AbstractController
 
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
-            'id' => $request->get('postId')
+            'id' => $request->get('postId'),
         ]);
 
         if (empty($post)) {
@@ -54,14 +52,14 @@ class AddCommentController extends AbstractController
                 'errors' => $fieldErrors,
                 'values' => [
                     'comment' => $request->get('comment'),
-                ]
+                ],
             ]);
         }
 
         $comment = new Comment();
         $comment
             ->setBody(trim($request->get('comment')))
-            ->setPosted(new DateTimeImmutable())
+            ->setPosted(new \DateTimeImmutable())
             ->setPost($post)
             ->setUser($user)
         ;

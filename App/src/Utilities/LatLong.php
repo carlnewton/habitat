@@ -12,7 +12,7 @@ class LatLong
 
         $latLongArr = explode(',', $latLong);
 
-        if (count($latLongArr) !== 2) {
+        if (2 !== count($latLongArr)) {
             return false;
         }
 
@@ -31,10 +31,10 @@ class LatLong
         $longitude = floatval($longitude);
 
         if (
-            $latitude < -90 || 
-            $latitude > 90 ||
-            $longitude < -180 ||
-            $longitude > 180
+            $latitude < -90
+            || $latitude > 90
+            || $longitude < -180
+            || $longitude > 180
         ) {
             return false;
         }

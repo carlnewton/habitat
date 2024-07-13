@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,20 +16,19 @@ class SetupController extends AbstractController
 {
     #[Route(path: '/setup', name: 'app_setup_admin')]
     public function admin(
-        Request $request, 
-        EntityManagerInterface $entityManager, 
+        Request $request,
+        EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
         Security $security
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
         if ($userRepository->count() > 0) {
             return $this->redirectToRoute('app_index_index');
         }
 
-        if ($request->getMethod() === 'POST') {
+        if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
 
             if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
@@ -50,7 +48,7 @@ class SetupController extends AbstractController
                     'values' => [
                         'username' => $request->get('username'),
                         'email' => $request->get('email'),
-                    ]
+                    ],
                 ]);
             }
 
@@ -58,7 +56,7 @@ class SetupController extends AbstractController
             $admin
                 ->setUsername($request->get('username'))
                 ->setEmailAddress($request->get('email'))
-                ->setCreated(new DateTimeImmutable)
+                ->setCreated(new \DateTimeImmutable())
                 ->setRoles(['ROLE_SUPER_ADMIN'])
             ;
 
@@ -75,6 +73,7 @@ class SetupController extends AbstractController
                     'warning',
                     'Something went wrong with your details, please try again.'
                 );
+
                 return $this->render('setup.html.twig');
             }
 
@@ -82,6 +81,7 @@ class SetupController extends AbstractController
             $entityManager->flush();
 
             $security->login($admin);
+
             return $this->redirectToRoute('app_admin_index');
         }
 
@@ -93,11 +93,11 @@ class SetupController extends AbstractController
         $errors = [];
 
         if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
-            $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
+            $errors['username'][] = 'Your username must be a minimum of '.User::USERNAME_MIN_LENGTH.' characters';
         }
-            
+
         if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
-            $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
+            $errors['username'][] = 'Your username must be a maximum of '.User::USERNAME_MAX_LENGTH.' characters';
         }
 
         if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
@@ -109,11 +109,11 @@ class SetupController extends AbstractController
         }
 
         if (
-            empty($request->get('password')) || 
-            mb_strlen($request->get('password') < User::PASSWORD_MIN_LENGTH) ||
-            !preg_match('/[A-Z]/', $request->get('password')) ||
-            !preg_match('/[a-z]/', $request->get('password')) ||
-            !preg_match('/[0-9]/', $request->get('password')) 
+            empty($request->get('password'))
+            || mb_strlen($request->get('password') < User::PASSWORD_MIN_LENGTH)
+            || !preg_match('/[A-Z]/', $request->get('password'))
+            || !preg_match('/[a-z]/', $request->get('password'))
+            || !preg_match('/[0-9]/', $request->get('password'))
         ) {
             $errors['password'][] = 'You must use a stronger password';
         }

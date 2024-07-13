@@ -18,7 +18,7 @@ class UploadFileController extends AbstractController
     private const ALLOWED_MIMETYPES = [
         'image/jpeg',
         'image/png',
-        'image/gif'
+        'image/gif',
     ];
 
     #[Route(path: '/post/upload', name: 'app_upload_file', methods: ['POST'])]
@@ -26,9 +26,8 @@ class UploadFileController extends AbstractController
         Request $request,
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
-    ): Response
-    {
-        if ($user === null) {
+    ): Response {
+        if (null === $user) {
             return new Response('', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -62,7 +61,9 @@ class UploadFileController extends AbstractController
         try {
             $file->move('/var/www/uploads', $filename);
         } catch (FileException $e) {
-            echo $e; exit;
+            echo $e;
+            exit;
+
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

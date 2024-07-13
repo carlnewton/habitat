@@ -2,14 +2,13 @@
 
 namespace App\Controller\Post;
 
-use DateTimeImmutable;
-use App\Entity\User;
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
@@ -22,24 +21,23 @@ class ViewPostController extends AbstractController
         #[CurrentUser] ?User $user,
         Security $security,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_setup_admin');
         }
 
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
-            'id' => $id
+            'id' => $id,
         ]);
 
         if (!$post || $post->isRemoved()) {
             throw $this->createNotFoundException('The post does not exist');
         }
 
-        if ($user !== null) {
+        if (null !== $user) {
             foreach ($post->getHearts() as $heart) {
                 if ($heart->getUser()->getId() === $user->getId()) {
                     $post->setCurrentUserHearted(true);

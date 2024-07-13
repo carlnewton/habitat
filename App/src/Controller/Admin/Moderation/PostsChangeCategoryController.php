@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Controller\Admin\Moderation;
+
 use App\Entity\Category;
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,8 +20,7 @@ class PostsChangeCategoryController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
             $this->addFlash(

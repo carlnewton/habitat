@@ -3,16 +3,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use App\Entity\Comment;
 use App\Entity\CategoryLocationOptionsEnum;
-use App\Entity\Post;
-use App\Entity\PostAttachment;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Filesystem\Filesystem;
 
-class CategoryFixtures extends Fixture 
+class CategoryFixtures extends Fixture
 {
     private const CATEGORIES = [
         'Sightseeing' => [
@@ -65,7 +60,7 @@ class CategoryFixtures extends Fixture
 
             $manager->persist($categoryEntity);
 
-            $this->addReference('category/' . $categoryName, $categoryEntity);
+            $this->addReference('category/'.$categoryName, $categoryEntity);
         }
 
         $manager->flush();

@@ -4,12 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Settings;
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -32,30 +31,30 @@ class SecurityController extends AbstractController
 
     #[Route(path: '/signup', name: 'app_signup')]
     public function signup(
-        Request $request, 
-        EntityManagerInterface $entityManager, 
+        Request $request,
+        EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
         Security $security
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_index_index');
         }
 
         $settingsRepository = $entityManager->getRepository(Settings::class);
         $registrationSetting = $settingsRepository->getSettingByName('registration');
-        if (empty($registrationSetting) || $registrationSetting->getValue() !== 'on') {
+        if (empty($registrationSetting) || 'on' !== $registrationSetting->getValue()) {
             $this->addFlash(
                 'warning',
                 'Registrations are currently disabled'
             );
+
             return $this->redirectToRoute('app_index_index');
         }
 
-        if ($request->getMethod() !== 'POST') {
+        if ('POST' !== $request->getMethod()) {
             return $this->render('security/signup.html.twig');
         }
 
@@ -78,14 +77,14 @@ class SecurityController extends AbstractController
                 'values' => [
                     'username' => $request->get('username'),
                     'email' => $request->get('email'),
-                ]
+                ],
             ]);
         }
 
         $user = new User();
         $user
             ->setUsername($request->get('username'))
-            ->setCreated(new DateTimeImmutable)
+            ->setCreated(new \DateTimeImmutable())
             ->setEmailAddress($request->get('email'))
         ;
 
@@ -99,6 +98,7 @@ class SecurityController extends AbstractController
                 'warning',
                 'Something went wrong with your details, please try again.'
             );
+
             return $this->render('signup.html.twig');
         }
 
@@ -115,11 +115,11 @@ class SecurityController extends AbstractController
         $errors = [];
 
         if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
-            $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
+            $errors['username'][] = 'Your username must be a minimum of '.User::USERNAME_MIN_LENGTH.' characters';
         }
 
         if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
-            $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
+            $errors['username'][] = 'Your username must be a maximum of '.User::USERNAME_MAX_LENGTH.' characters';
         }
 
         if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
@@ -131,11 +131,11 @@ class SecurityController extends AbstractController
         }
 
         if (
-            empty($request->get('password')) || 
-            mb_strlen($request->get('password') < User::PASSWORD_MIN_LENGTH) ||
-            !preg_match('/[A-Z]/', $request->get('password')) ||
-            !preg_match('/[a-z]/', $request->get('password')) ||
-            !preg_match('/[0-9]/', $request->get('password')) 
+            empty($request->get('password'))
+            || mb_strlen($request->get('password') < User::PASSWORD_MIN_LENGTH)
+            || !preg_match('/[A-Z]/', $request->get('password'))
+            || !preg_match('/[a-z]/', $request->get('password'))
+            || !preg_match('/[0-9]/', $request->get('password'))
         ) {
             $errors['password'][] = 'You must use a stronger password';
         }

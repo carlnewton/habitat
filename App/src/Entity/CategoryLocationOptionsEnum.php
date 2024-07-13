@@ -10,12 +10,10 @@ enum CategoryLocationOptionsEnum: int
 
     public function label(): string
     {
-        return match($this) 
-        {
+        return match ($this) {
             self::DISABLED => 'Disabled',
             self::REQUIRED => 'Required',
             self::OPTIONAL => 'Optional',
         };
     }
 }
-

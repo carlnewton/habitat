@@ -28,6 +28,6 @@ class SettingsRepository extends ServiceEntityRepository
                     ->setParameter('val', $name)
                     ->getQuery()
                     ->getOneOrNullResult()
-                ;
+        ;
     }
 }

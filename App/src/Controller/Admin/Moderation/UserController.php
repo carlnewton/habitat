@@ -20,11 +20,10 @@ class UserController extends AbstractController
         int $id,
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
         $user = $userRepository->findOneBy([
-            'id' => $id
+            'id' => $id,
         ]);
 
         return $this->render('admin/moderation/user.html.twig', [

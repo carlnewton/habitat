@@ -2,9 +2,9 @@
 
 namespace App\Controller\API;
 
-use App\Entity\User;
-use App\Entity\Post;
 use App\Entity\Heart;
+use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,18 +20,17 @@ class ToggleHeartController extends AbstractController
         #[CurrentUser] ?User $user,
         Request $request,
         EntityManagerInterface $entityManager
-    ): JsonResponse
-    {
-        if ($user === null) {
+    ): JsonResponse {
+        if (null === $user) {
             throw $this->createAccessDeniedException('User is not signed in');
         }
 
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
-            'id' => $postId
+            'id' => $postId,
         ]);
 
-        if ($post === null) {
+        if (null === $post) {
             throw $this->createNotFoundException('The post does not exist');
         }
 

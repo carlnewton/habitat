@@ -2,9 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Post;
 use App\Entity\PostAttachment;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -110,13 +108,13 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
     {
         $filesystem = new Filesystem();
         foreach (self::ATTACHMENT_FIXTURE_FILES as $attachmentFixtureFile) {
-            if (!$filesystem->exists('/var/www/uploads/' . $attachmentFixtureFile['filename'])) {
-                $filesystem->copy('assets/img/fixtures/' . $attachmentFixtureFile['filename'], '/var/www/uploads/' . $attachmentFixtureFile['filename']);
+            if (!$filesystem->exists('/var/www/uploads/'.$attachmentFixtureFile['filename'])) {
+                $filesystem->copy('assets/img/fixtures/'.$attachmentFixtureFile['filename'], '/var/www/uploads/'.$attachmentFixtureFile['filename']);
             }
         }
 
         foreach (self::POST_ATTACHMENT_GROUPS as $postAttachmentGroup) {
-            $post = $this->getReference('post/' . $postAttachmentGroup['post']);
+            $post = $this->getReference('post/'.$postAttachmentGroup['post']);
             foreach ($postAttachmentGroup['attachments'] as $attachmentPosition) {
                 $attachmentFixtureFile = self::ATTACHMENT_FIXTURE_FILES[$attachmentPosition];
                 $attachmentEntity = new PostAttachment();
@@ -125,7 +123,7 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
                 $attachmentEntity->setWidth($attachmentFixtureFile['width']);
                 $attachmentEntity->setHeight($attachmentFixtureFile['height']);
                 $attachmentEntity->setFilename($attachmentFixtureFile['filename']);
-                
+
                 $manager->persist($attachmentEntity);
             }
         }

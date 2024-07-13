@@ -18,11 +18,10 @@ class IndexController extends AbstractController
     public function index(
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_setup_admin');
         }
 
@@ -30,14 +29,14 @@ class IndexController extends AbstractController
         $posts = $postRepository->findBy(
             [
                 'removed' => false,
-            ], 
+            ],
             [
                 'posted' => 'DESC',
             ],
             self::MAX_POSTS
         );
 
-        if ($user !== null) {
+        if (null !== $user) {
             foreach ($posts as $post) {
                 foreach ($post->getHearts() as $heart) {
                     if ($heart->getUser()->getId() === $user->getId()) {

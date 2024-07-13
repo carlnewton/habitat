@@ -19,8 +19,7 @@ class CommentsRemovalController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
             $this->addFlash(

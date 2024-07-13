@@ -18,8 +18,7 @@ class LoadAttachmentController extends AbstractController
         int $postId,
         int $attachmentId,
         EntityManagerInterface $entityManager
-): Response
-    {
+    ): Response {
         $attachmentRepository = $entityManager->getRepository(PostAttachment::class);
         $attachment = $attachmentRepository->findOneBy([
             'id' => $attachmentId,
@@ -32,11 +31,11 @@ class LoadAttachmentController extends AbstractController
 
         $filename = basename($attachment->getFilename());
 
-        if (!file_exists('/var/www/uploads/' . $filename)) {
+        if (!file_exists('/var/www/uploads/'.$filename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        return new BinaryFileResponse('/var/www/uploads/' . $filename);
+        return new BinaryFileResponse('/var/www/uploads/'.$filename);
     }
 
     #[Route(path: '/attachment/unposted/{attachmentId}', name: 'app_load_unposted_attachment', methods: ['GET'])]
@@ -44,9 +43,8 @@ class LoadAttachmentController extends AbstractController
         int $attachmentId,
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
-): Response
-    {
-        if ($user === null) {
+    ): Response {
+        if (null === $user) {
             return new Response('', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -62,10 +60,10 @@ class LoadAttachmentController extends AbstractController
 
         $filename = basename($attachment->getFilename());
 
-        if (!file_exists('/var/www/uploads/' . $filename)) {
+        if (!file_exists('/var/www/uploads/'.$filename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        return new BinaryFileResponse('/var/www/uploads/' . $filename);
+        return new BinaryFileResponse('/var/www/uploads/'.$filename);
     }
 }

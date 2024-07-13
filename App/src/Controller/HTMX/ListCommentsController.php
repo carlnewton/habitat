@@ -7,8 +7,8 @@ use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ListCommentsController extends AbstractController
@@ -20,15 +20,14 @@ class ListCommentsController extends AbstractController
         Request $request,
         Security $security,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         if (empty($request->query->get('post'))) {
             return new Response('', Response::HTTP_BAD_REQUEST);
         }
 
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
-            'id' => $request->query->get('post')
+            'id' => $request->query->get('post'),
         ]);
 
         if (empty($post)) {

@@ -22,8 +22,7 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $this->entityManager = $entityManager;
 
         return $this->renderTemplate($request, 'admin/moderation/posts.html.twig');
@@ -54,6 +53,7 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
 
             $users[] = $user;
         }
+
         return [
             'category' => [
                 'label' => 'Category',
@@ -116,7 +116,7 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
                 'label' => 'Hearts',
                 'sortable' => true,
                 'type' => 'count',
-            ]
+            ],
         ];
     }
 

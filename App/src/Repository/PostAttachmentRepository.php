@@ -24,6 +24,7 @@ class PostAttachmentRepository extends ServiceEntityRepository
     public function findOrphanedById(array $ids): array
     {
         $qb = $this->createQueryBuilder('p');
+
         return $qb
             ->andWhere('p.post IS NULL')
             ->andWhere($qb->expr()->in('p.id', $ids))

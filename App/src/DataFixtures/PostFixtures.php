@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Post;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -68,7 +67,6 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             'posted' => '2024/02/06 10:24:00',
             'location' => '51.4918,-0.124744',
             'category' => 'Community Initiatives',
-
         ],
         [
             'user' => 'Neo',
@@ -150,17 +148,17 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         foreach (self::POSTS as $post) {
             $postEntity = new Post();
             $postEntity
-                ->setUser($this->getReference('user/' . strtolower($post['user'])))
+                ->setUser($this->getReference('user/'.strtolower($post['user'])))
                 ->setTitle($post['title'])
                 ->setBody($post['body'])
                 ->setLocation($post['location'])
-                ->setPosted(DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $post['posted']))
-                ->setCategory($this->getReference('category/' . $post['category']))
+                ->setPosted(\DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $post['posted']))
+                ->setCategory($this->getReference('category/'.$post['category']))
             ;
 
             $manager->persist($postEntity);
 
-            $this->addReference('post/' . ++$index, $postEntity);
+            $this->addReference('post/'.++$index, $postEntity);
         }
 
         $manager->flush();

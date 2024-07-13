@@ -6,7 +6,6 @@ use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,8 +20,7 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $this->entityManager = $entityManager;
 
         return $this->renderTemplate($request, 'admin/moderation/users.html.twig');

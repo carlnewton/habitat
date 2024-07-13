@@ -20,11 +20,10 @@ class CategoryController extends AbstractController
         int $id,
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $userRepository = $entityManager->getRepository(User::class);
 
-        if ($userRepository->count() === 0) {
+        if (0 === $userRepository->count()) {
             return $this->redirectToRoute('app_setup_admin');
         }
 
@@ -38,14 +37,14 @@ class CategoryController extends AbstractController
             [
                 'removed' => false,
                 'category' => $category,
-            ], 
+            ],
             [
                 'posted' => 'DESC',
             ],
             self::MAX_POSTS
         );
 
-        if ($user !== null) {
+        if (null !== $user) {
             foreach ($posts as $post) {
                 foreach ($post->getHearts() as $heart) {
                     if ($heart->getUser()->getId() === $user->getId()) {

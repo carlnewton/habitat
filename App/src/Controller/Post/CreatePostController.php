@@ -4,15 +4,14 @@ namespace App\Controller\Post;
 
 use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
-use App\Entity\PostAttachment;
-use DateTime;
-use App\Entity\User;
 use App\Entity\Post;
+use App\Entity\PostAttachment;
+use App\Entity\User;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
@@ -23,16 +22,14 @@ class CreatePostController extends AbstractController
     public function __construct(
         protected EntityManagerInterface $entityManager
     ) {
-
     }
 
     #[Route(path: '/post', name: 'app_create_post', methods: ['GET', 'POST'])]
     public function index(
         #[CurrentUser] ?User $user,
         Request $request
-    ): Response
-    {
-        if ($user === null) {
+    ): Response {
+        if (null === $user) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -40,7 +37,7 @@ class CreatePostController extends AbstractController
         $categoryRepository = $this->entityManager->getRepository(Category::class);
         $this->categories = $categoryRepository->findAll();
 
-        if ($request->getMethod() === 'POST') {
+        if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
             if (!$this->isCsrfTokenValid('post', $submittedToken)) {
                 $this->addFlash(
@@ -63,7 +60,7 @@ class CreatePostController extends AbstractController
                         'locationLatLng' => $request->get('locationLatLng'),
                         'attachmentIds' => $request->get('attachmentIds'),
                         'category' => $request->get('category'),
-                    ]
+                    ],
                 ]);
             }
 
@@ -76,7 +73,7 @@ class CreatePostController extends AbstractController
             $post
                 ->setTitle(trim($request->get('title')))
                 ->setBody(trim($request->get('body')))
-                ->setPosted(new DateTime())
+                ->setPosted(new \DateTime())
                 ->setUser($user)
                 ->setCategory($postCategory)
             ;
@@ -105,7 +102,7 @@ class CreatePostController extends AbstractController
             return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
         }
 
-        return $this->render('create_post.html.twig',[
+        return $this->render('create_post.html.twig', [
             'categories' => $this->categories,
         ]);
     }
@@ -154,8 +151,8 @@ class CreatePostController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->get('title')) > Post::TITLE_MAX_LENGTH) {
-            $errors['title'][] = 'The title must be a maximum of ' . Post::TITLE_MAX_LENGTH . ' characters';
-        } else if (empty(trim($request->get('title')))) {
+            $errors['title'][] = 'The title must be a maximum of '.Post::TITLE_MAX_LENGTH.' characters';
+        } elseif (empty(trim($request->get('title')))) {
             $errors['title'][] = 'The title cannot be empty';
         }
 
@@ -172,17 +169,17 @@ class CreatePostController extends AbstractController
 
             if (is_null($foundCategory)) {
                 $errors['category'][] = 'You must choose a category';
-            } else if (
+            } elseif (
                 (
-                    $foundCategory->getLocation() === CategoryLocationOptionsEnum::REQUIRED &&
-                    (
-                        empty($request->get('locationLatLng')) ||
-                        !LatLong::isValidLatLong($request->get('locationLatLng'))
+                    CategoryLocationOptionsEnum::REQUIRED === $foundCategory->getLocation()
+                    && (
+                        empty($request->get('locationLatLng'))
+                        || !LatLong::isValidLatLong($request->get('locationLatLng'))
                     )
                 ) || (
-                    $foundCategory->getLocation() === CategoryLocationOptionsEnum::OPTIONAL &&
-                    !empty($request->get('locationLatLng')) &&
-                    !LatLong::isValidLatLong($request->get('locationLatLng'))
+                    CategoryLocationOptionsEnum::OPTIONAL === $foundCategory->getLocation()
+                    && !empty($request->get('locationLatLng'))
+                    && !LatLong::isValidLatLong($request->get('locationLatLng'))
                 )
             ) {
                 $errors['location'][] = 'You must choose a location';

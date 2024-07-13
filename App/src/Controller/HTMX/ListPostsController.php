@@ -7,9 +7,8 @@ use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
@@ -22,8 +21,7 @@ class ListPostsController extends AbstractController
         Request $request,
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $renderArray = [];
         $postRepository = $entityManager->getRepository(Post::class);
 
@@ -55,7 +53,7 @@ class ListPostsController extends AbstractController
             $offset
         );
 
-        if ($user !== null) {
+        if (null !== $user) {
             foreach ($posts as $post) {
                 foreach ($post->getHearts() as $heart) {
                     if ($heart->getUser()->getId() === $user->getId()) {

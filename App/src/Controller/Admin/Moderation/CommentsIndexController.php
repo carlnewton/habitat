@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Moderation;
 
-use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Controller\Admin\Abstract\AbstractAdminTableController;
+use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,8 +21,7 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
     public function index(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $this->entityManager = $entityManager;
 
         return $this->renderTemplate($request, 'admin/moderation/comments.html.twig');
@@ -41,6 +40,7 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
 
             $users[] = $user;
         }
+
         return [
             'user' => [
                 'label' => 'User',
@@ -62,7 +62,7 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
                     ],
                 ],
                 'validation' => 'boolean',
-            ]
+            ],
         ];
     }
 

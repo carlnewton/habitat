@@ -2,15 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Comment;
 use App\Entity\Heart;
-use App\Entity\Post;
-use App\Entity\PostAttachment;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Filesystem\Filesystem;
 
 class HeartFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -31,9 +26,9 @@ class HeartFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         foreach (self::HEARTS as $username => $postReferences) {
-            $user = $this->getReference('user/' . strtolower($username));
+            $user = $this->getReference('user/'.strtolower($username));
             foreach ($postReferences as $postReference) {
-                $post = $this->getReference('post/' . $postReference);
+                $post = $this->getReference('post/'.$postReference);
                 $heartEntity = new Heart();
                 $heartEntity->setUser($user);
                 $heartEntity->setPost($post);
