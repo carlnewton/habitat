@@ -11,6 +11,23 @@
     </nav>
 
     <h2>User details</h2>
+
+    <div class="dropdown mb-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
+            Actions
+        </button>
+        <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
+            <li>
+                {% if user.posts|length > 0 %}
+                    <a href="{{ path('app_moderation_posts', { user: user.id }) }}" class="dropdown-item">View posts</a>
+                {% endif %}
+                {% if user.comments|length > 0 %}
+                    <a href="{{ path('app_moderation_comments', { user: user.id }) }}" class="dropdown-item">View comments</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+
     <table class="table">
         <tbody>
             <tr>
@@ -35,44 +52,30 @@
                 <th>Created</th>
                 <td>{{ user.created|date }}</td>
             </tr>
-        </tbody>
-    </table>
-    <h2>Posts ({{ user.posts|length }})</h2>
-    <table class="table table-striped">
-        <thead>
-            <th>Title</th>
-            <th>Posted</th>
-            <th>Attachments</th>
-            <th>Comments</th>
-            <th>Hearts</th>
-        </thead>
-        <tbody>
-            {% for post in user.posts %}
-                <tr>
-                    <td><a href="{{ path('app_view_post', { id: post.id }) }}">{{ post.title }}</a></td>
-                    <td>{{ post.posted|date }}</td>
-                    <td>{{ post.attachments|length }}</td>
-                    <td>{{ post.comments|length }}</td>
-                    <td>{{ post.hearts|length }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h2>Comments ({{ user.comments|length }})</h2>
-    <table class="table table-striped">
-        <thead>
-            <th>Comment</th>
-            <th>Posted</th>
-            <th>Post</th>
-        </thead>
-        <tbody>
-            {% for comment in user.comments %}
-                <tr>
-                    <td>{{ comment.body }}</td>
-                    <td>{{ comment.posted|date }}</td>
-                    <td><a href="{{ path('app_view_post', { id: comment.post.id }) }}">{{ comment.post.title }}</a></td>
-                </tr>
-            {% endfor %}
+            <tr>
+                <th>Posts</th>
+                <td>
+                    {% if user.posts| length > 0 %}
+                        <a class="btn btn-link" href="{{ path('app_moderation_posts', { user: user.id }) }}">
+                            {{ user.posts|length }}
+                        </a>
+                    {% else %}
+                        {{ user.posts|length }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Comments</th>
+                <td>
+                    {% if user.comments| length > 0 %}
+                        <a class="btn btn-link" href="{{ path('app_moderation_comments', { user: user.id }) }}">
+                            {{ user.comments|length }}
+                        </a>
+                    {% else %}
+                        {{ user.comments|length }}
+                    {% endif %}
+                </td>
+            </tr>
         </tbody>
     </table>
 {% endblock %}

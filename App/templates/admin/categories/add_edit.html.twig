@@ -13,6 +13,27 @@
 
     <h2 class="mb-3">{% if action == 'add' %}Add a Category{% else %}{{ category.name }}{% endif %}</h2>
 
+    {% if action == 'update' %}
+        <div class="dropdown mb-3">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+            </button>
+            <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
+                <li>
+                    {% if category.posts|length > 0 %}
+                        <a href="{{ path('app_moderation_posts', { category: category.id }) }}" class="dropdown-item">View posts</a>
+                    {% else %}
+                        <form class="action-item-form" method="post" action="{{ path('app_admin_categories_remove') }}">
+                            <input name="items" type="hidden" value="{{ category.id }}"/>
+                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                            <button type="submit" class="dropdown-item checkbox-action" href="#">Remove</button>
+                        </form>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+
     <form method="post">
         <div class="row mb-3">
             <label for="name" class="col-sm-3 col-form-label">Name</label>
