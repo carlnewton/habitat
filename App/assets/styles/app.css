@@ -25,3 +25,13 @@ div.dropzone {
   border-radius: var(--bs-border-radius-lg);
   color: var(--bs-blue);
 }
+
+.form-switch.form-switch-lg {
+  margin-bottom: 1.5rem;
+}
+
+.form-switch.form-switch-lg .form-check-input {
+  height: 2rem;
+  width: calc(3rem + 0.75rem);
+  border-radius: 4rem;
+}

@@ -30,6 +30,9 @@ class Category
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $location = null;
 
+    #[ORM\Column]
+    private ?bool $allow_posting = null;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -102,6 +105,18 @@ class Category
     public function setLocation(CategoryLocationOptionsEnum $location): static
     {
         $this->location = $location->value;
+
+        return $this;
+    }
+
+    public function isAllowPosting(): ?bool
+    {
+        return $this->allow_posting;
+    }
+
+    public function setAllowPosting(bool $allow_posting): static
+    {
+        $this->allow_posting = $allow_posting;
 
         return $this;
     }

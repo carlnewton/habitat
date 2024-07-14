@@ -35,7 +35,9 @@ class CreatePostController extends AbstractController
 
         $postRepository = $this->entityManager->getRepository(Post::class);
         $categoryRepository = $this->entityManager->getRepository(Category::class);
-        $this->categories = $categoryRepository->findAll();
+        $this->categories = $categoryRepository->findBy([
+            'allow_posting' => true,
+        ]);
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');

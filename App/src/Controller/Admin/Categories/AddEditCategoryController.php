@@ -54,6 +54,7 @@ class AddEditCategoryController extends AbstractController
             $category
                 ->setName($request->get('name'))
                 ->setDescription($request->get('description'))
+                ->setAllowPosting((bool) $request->get('allow-posting'))
             ;
 
             if (!empty($locationOption)) {

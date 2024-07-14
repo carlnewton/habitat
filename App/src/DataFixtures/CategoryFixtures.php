@@ -21,6 +21,7 @@ class CategoryFixtures extends Fixture
         'Food and Drink' => [
             'description' => 'Discussions and pictures of restaurants, cafes, food trucks, or special dishes.',
             'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            'allow_posting' => false,
         ],
         'History' => [
             'description' => 'Pictures and discussions specifically focused on the historical significance, stories, and events related to local historical sites, buildings, or events in the area.',
@@ -33,6 +34,7 @@ class CategoryFixtures extends Fixture
         'Sports and Recreation' => [
             'description' => 'Conversations about outdoor activities, or recreational facilities.',
             'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            'allow_posting' => false,
         ],
         'Community Initiatives' => [
             'description' => 'Posts about charities, volunteer opportunities, or community projects.',
@@ -56,6 +58,7 @@ class CategoryFixtures extends Fixture
                 ->setName($categoryName)
                 ->setDescription($categorySettings['description'])
                 ->setLocation($categorySettings['location'])
+                ->setAllowPosting($categorySettings['allow_posting'] ?? true)
             ;
 
             $manager->persist($categoryEntity);

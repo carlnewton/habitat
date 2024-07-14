@@ -43,6 +43,10 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
                 'label' => 'Location',
                 'sortable' => true,
             ],
+            'allow_posting' => [
+                'label' => 'Allow posting',
+                'sortable' => true,
+            ],
             'posts' => [
                 'label' => 'Posts',
                 'sortable' => true,

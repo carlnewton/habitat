@@ -2,46 +2,62 @@
 
 {% block body %}
     <a href="{{ path('app_admin_categories_add') }}" class="btn btn-primary mb-3">Add a Category</a>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th><br></th>
-                    {% for heading, headingProperties in headings %}
-                        <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
-                            {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
-                            {% endif %}
-                            {{ headingProperties.label }}
-                            {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
-                                    <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} ps-3"></i>
-                                </a>
-                            {% endif %}
-                        </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="">
-                            </div>
-                        </td>
-                        <td{% if sort == 'name' %} class="bg-light border"{% endif %}><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
-                        <td>{{ item.description }}</td>
-                        <td{% if sort == 'location' %} class="bg-light border"{% endif %}>{{ item.location.label }}</td>
-                        <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>
-                            <div class="d-grid">
-                                <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { category: item.id }) }}">{{ item.posts|length }}</a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-            <caption>Displaying {{ items|length }} of {{ total_items }} {{ label|default('items') }}</caption>
-        </table>
+
+    <div class="card my-3">
+        {% if items is not empty %}
+            <div class="table-responsive rounded">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><br></th>
+                            {% for heading, headingProperties in headings %}
+                                <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
+                                    {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
+                                        <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.get('_route'), { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
+                                    {% endif %}
+                                    <span class="text-nowrap">{{ headingProperties.label }}</span>
+                                    {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
+                                            <i class="bi bi-caret-{% if order == 'asc' or sort != heading %}up{% else %}down{% endif %}{% if sort == heading %}-fill{% endif %} ps-3"></i>
+                                        </a>
+                                    {% endif %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="">
+                                    </div>
+                                </td>
+                                <td{% if sort == 'name' %} class="bg-light border"{% endif %}><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
+                                <td>{{ item.description }}</td>
+                                <td{% if sort == 'location' %} class="bg-light border"{% endif %}>{{ item.location.label }}</td>
+                                <td class=" text-center{% if sort == 'allow_posting' %} bg-light border{% endif %}">
+                                    {% if item.allowPosting %}
+                                        <i class="bi bi-check-lg fs-4 text-success"></i>
+                                    {% else %}
+                                        <i class="bi bi-x-lg fs-4 text-danger"></i>
+                                    {% endif %}
+                                </td>
+                                <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>
+                                    <div class="d-grid">
+                                        <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { category: item.id }) }}">{{ item.posts|length }}</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <caption class="p-3">Displaying {{ items|length }} of {{ total_items }}{% if filtered is not empty %} filtered from {{ total_items_unfiltered }}{% endif %} {{ label|default('items') }}</caption>
+                </table>
+            </div>
+        {% else %}
+            <div class="card-body p-5">
+                <p class="lead text-center">No matching {{ label|default('items') }} found</p>
+            </div>
+        {% endif %}
     </div>
     {% if total_pages > 1 %}
         <nav>
