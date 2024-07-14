@@ -32,6 +32,10 @@ class CategoryController extends AbstractController
             'id' => $id,
         ]);
 
+        if (!$category) {
+            throw $this->createNotFoundException('The category does not exist');
+        }
+
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findBy(
             [
