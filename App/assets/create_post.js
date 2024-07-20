@@ -24,6 +24,7 @@ var perimeter = L.circle(centerLatLngArr, {
 map.addLayer(perimeter);
 
 map.setMaxBounds(perimeter.getBounds().pad(0.3));
+map.setMinZoom(map.getBoundsZoom(map.options.maxBounds));
 
 var markerIcon = L.icon({
     iconUrl: 'build/images/marker-icon.2b3e1faf.png',
@@ -33,7 +34,7 @@ var markerIcon = L.icon({
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
 var currentLocationRule;

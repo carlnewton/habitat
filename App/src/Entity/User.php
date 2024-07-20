@@ -79,6 +79,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $created = null;
 
+    #[ORM\Column]
+    private ?bool $suspended = false;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -302,6 +305,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreated(\DateTimeImmutable $created): static
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    public function isSuspended(): ?bool
+    {
+        return $this->suspended;
+    }
+
+    public function setSuspended(bool $suspended): static
+    {
+        $this->suspended = $suspended;
 
         return $this;
     }

@@ -55,25 +55,17 @@
             <tr>
                 <th>Posts</th>
                 <td>
-                    {% if user.posts| length > 0 %}
-                        <a class="btn btn-link" href="{{ path('app_moderation_posts', { user: user.id }) }}">
-                            {{ user.posts|length }}
-                        </a>
-                    {% else %}
+                    <a class="btn btn-link{% if user.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: user.id }) }}">
                         {{ user.posts|length }}
-                    {% endif %}
+                    </a>
                 </td>
             </tr>
             <tr>
                 <th>Comments</th>
                 <td>
-                    {% if user.comments| length > 0 %}
-                        <a class="btn btn-link" href="{{ path('app_moderation_comments', { user: user.id }) }}">
-                            {{ user.comments|length }}
-                        </a>
-                    {% else %}
+                    <a class="btn btn-link{% if user.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: user.id }) }}">
                         {{ user.comments|length }}
-                    {% endif %}
+                    </a>
                 </td>
             </tr>
         </tbody>

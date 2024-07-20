@@ -31,6 +31,28 @@
         {% endif %}
     </td>
     <td{% if sort == 'posted' %} class="bg-light border"{% endif %}>{{ item.posted|date }}</td>
-    <td><a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a></td>
-    <td><a href="{{ path('app_view_post', { id: item.post.id }) }}">{{ item.post.title }}</a></td>
+    <td>
+        {% if item.user.suspended %}
+            <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-user-for-{{ item.id }}" aria-expanded="false" aria-controls="collapse-user-for-{{ item.id }}">
+                User suspended
+            </button>
+            <div class="collapse" id="collapse-user-for-{{ item.id }}">
+                <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
+            </div>
+        {% else %}
+            <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
+        {% endif %}
+    </td>
+    <td>
+        {% if item.post.removed %}
+            <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-post-for-{{ item.id }}" aria-expanded="false" aria-controls="collapse-post-for-{{ item.id }}">
+                Post removed
+            </button>
+            <div class="collapse" id="collapse-post-for-{{ item.id }}">
+                <a href="{{ path('app_view_post', { id: item.post.id }) }}">{{ item.post.title }}</a>
+            </div>
+        {% else %}
+            <a href="{{ path('app_view_post', { id: item.post.id }) }}">{{ item.post.title }}</a>
+        {% endif %}
+    </td>
 {% endblock %}
