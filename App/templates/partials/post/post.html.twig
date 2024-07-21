@@ -21,7 +21,24 @@
         {% if post.attachments is not empty %}
             <div class="d-flex justify-content-center mb-3">
                 <a href="{{ path('app_view_post', { id: post.id })}}" class="position-relative">
-                    <img class="img-fluid" src="{{ path('app_load_attachment', { postId: post.id, attachmentId: post.attachments|first.id })}}" alt="{{ post.title }}">
+                    <img
+                        class="img-fluid"
+                        src="{{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 })}}"
+                        {% if post.attachments|first.width > 550 %}
+                            srcset="
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 }) }} 550w,
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 700 }) }} 700w,
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 830 }) }} 830w,
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 970 }) }} 970w
+                            "
+                            sizes="
+                                (max-width: 992px) 550px,
+                                (max-width: 1199px) 700px,
+                                (max-width: 1399px) 830px,
+                                970px"
+                        {% endif %}
+                        alt="{{ post.title }}"
+                    >
                     {% if post.attachments|length > 1 %}
                         <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
                             <i class="bi bi-images"></i> {{ post.attachments|length }}

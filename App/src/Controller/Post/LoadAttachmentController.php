@@ -13,6 +13,15 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class LoadAttachmentController extends AbstractController
 {
+    private const THUMBNAIL_WIDTHS = [
+        550,
+        700,
+        830,
+        970,
+    ];
+
+    private const UPLOADS_DIRECTORY = '/var/www/uploads/';
+
     #[Route(path: '/post/{postId}/attachment/{attachmentId}', name: 'app_load_attachment', methods: ['GET'])]
     public function load(
         int $postId,
@@ -31,11 +40,35 @@ class LoadAttachmentController extends AbstractController
 
         $filename = basename($attachment->getFilename());
 
-        if (!file_exists('/var/www/uploads/'.$filename)) {
+        if (!file_exists(self::UPLOADS_DIRECTORY.$filename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        return new BinaryFileResponse('/var/www/uploads/'.$filename);
+        return new BinaryFileResponse(self::UPLOADS_DIRECTORY.$filename);
+    }
+
+    #[Route(path: '/post/{postId}/attachment/thumbnail/{attachmentId}/{width}', name: 'app_load_attachment_thumbnail', methods: ['GET'])]
+    public function load_create_thumbnail(
+        int $postId,
+        int $attachmentId,
+        int $width,
+        EntityManagerInterface $entityManager
+    ): Response {
+        if (!in_array($width, self::THUMBNAIL_WIDTHS)) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        $attachmentRepository = $entityManager->getRepository(PostAttachment::class);
+        $attachment = $attachmentRepository->findOneBy([
+            'id' => $attachmentId,
+            'post' => $postId,
+        ]);
+
+        if (empty($attachment) || $attachment->getPost()->isRemoved()) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->generateThumbnail($attachment, $width);
     }
 
     #[Route(path: '/attachment/unposted/{attachmentId}', name: 'app_load_unposted_attachment', methods: ['GET'])]
@@ -58,12 +91,49 @@ class LoadAttachmentController extends AbstractController
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        $filename = basename($attachment->getFilename());
+        return $this->generateThumbnail($attachment, 550);
+    }
 
-        if (!file_exists('/var/www/uploads/'.$filename)) {
+    private function generateThumbnail(PostAttachment $attachment, int $width): Response
+    {
+        $originalFilename = basename($attachment->getFilename());
+
+        if (!file_exists(self::UPLOADS_DIRECTORY.$originalFilename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        return new BinaryFileResponse('/var/www/uploads/'.$filename);
+        $filename = $width.'.'.$originalFilename;
+
+        if (!file_exists(self::UPLOADS_DIRECTORY.$filename)) {
+            list($originalWidth, $originalHeight) = getimagesize(self::UPLOADS_DIRECTORY.$originalFilename);
+            if ($width >= $originalWidth) {
+                return new BinaryFileResponse(self::UPLOADS_DIRECTORY.$originalFilename);
+            }
+            $height = ($originalHeight * $width) / $originalWidth;
+            $thumbnail = imagecreatetruecolor($width, $height);
+
+            switch (pathinfo(self::UPLOADS_DIRECTORY.$originalFilename, PATHINFO_EXTENSION)) {
+                case 'jpg':
+                case 'jpeg':
+                    $source = imagecreatefromjpeg(self::UPLOADS_DIRECTORY.$originalFilename);
+                    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                    imagejpeg($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                    break;
+                case 'gif':
+                    $source = imagecreatefromgif(self::UPLOADS_DIRECTORY.$originalFilename);
+                    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                    imagegif($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                    break;
+                case 'png':
+                    $source = imagecreatefrompng(self::UPLOADS_DIRECTORY.$originalFilename);
+                    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                    imagepng($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                    break;
+                default:
+                    return new Response('', Response::HTTP_NOT_FOUND);
+            }
+        }
+
+        return new BinaryFileResponse(self::UPLOADS_DIRECTORY.$filename);
     }
 }

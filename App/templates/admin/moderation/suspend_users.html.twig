@@ -22,35 +22,35 @@
                 <a href="{{ path('app_moderation_users') }}" class="btn btn-outline-primary">Cancel</a>
             </form>
         </div>
-        <div class="card-body">
-        <table class="table table-responsive">
-            <thead>
-                <th>Username</th>
-                <th>Email address</th>
-                <th>Created</th>
-                <th>Posts</th>
-                <th>Comments</th>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.emailaddress }}</td>
-                        <td>{{ user.created|date }}</td>
-                        <td>
-                            <div class="d-grid">
-                                <a class="btn btn-link{% if user.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: user.id }) }}">{{ user.posts|length }}</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-grid">
-                                <a class="btn btn-link{% if user.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: user.id }) }}">{{ user.comments|length }}</a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th>Username</th>
+                    <th>Email address</th>
+                    <th>Created</th>
+                    <th>Posts</th>
+                    <th>Comments</th>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.emailaddress }}</td>
+                            <td>{{ user.created|date }}</td>
+                            <td>
+                                <div class="d-grid">
+                                    <a class="btn btn-link{% if user.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: user.id }) }}">{{ user.posts|length }}</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-grid">
+                                    <a class="btn btn-link{% if user.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: user.id }) }}">{{ user.comments|length }}</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

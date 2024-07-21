@@ -15,6 +15,10 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UploadFileController extends AbstractController
 {
+    private const MAXIMUM_IMAGE_WIDTH = 1920;
+
+    private const UPLOADS_DIRECTORY = '/var/www/uploads/';
+
     private const ALLOWED_MIMETYPES = [
         'image/jpeg',
         'image/png',
@@ -41,13 +45,13 @@ class UploadFileController extends AbstractController
             return new Response('', Response::HTTP_BAD_REQUEST);
         }
 
-        $imageSize = getimagesize($file);
+        $originalImageSize = getimagesize($file);
 
-        if (!$imageSize) {
+        if (!$originalImageSize) {
             return new Response('', Response::HTTP_BAD_REQUEST);
         }
 
-        list($width, $height) = $imageSize;
+        list($originalWidth, $originalHeight) = $originalImageSize;
 
         $filename = implode('.', [
             date('Y-m-d'),
@@ -58,8 +62,33 @@ class UploadFileController extends AbstractController
             $file->guessExtension(),
         ]);
 
+        $width = $originalWidth;
+        $height = $originalHeight;
         try {
-            $file->move('/var/www/uploads', $filename);
+            if ($originalWidth <= self::MAXIMUM_IMAGE_WIDTH) {
+                $file->move('/var/www/uploads', $filename);
+            } else {
+                $width = self::MAXIMUM_IMAGE_WIDTH;
+                $height = ($originalHeight * $width) / $originalWidth;
+                $thumbnail = imagecreatetruecolor($width, $height);
+                switch ($file->getMimeType()) {
+                    case 'image/jpeg':
+                        $source = imagecreatefromjpeg($file);
+                        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                        imagejpeg($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                        break;
+                    case 'image/gif':
+                        $source = imagecreatefromgif(self::UPLOADS_DIRECTORY.$originalFilename);
+                        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                        imagegif($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                        break;
+                    case 'image/png':
+                        $source = imagecreatefrompng(self::UPLOADS_DIRECTORY.$originalFilename);
+                        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                        imagepng($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                        break;
+                }
+            }
         } catch (FileException $e) {
             echo $e;
             exit;
