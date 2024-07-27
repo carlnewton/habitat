@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Settings;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,6 +20,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
+    private UserRepository $userRepository;
+
+    public function __construct(private EntityManagerInterface $entityManager) {
+        $this->userRepository = $entityManager->getRepository(User::class);
+    }
+
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -35,19 +42,16 @@ class SecurityController extends AbstractController
     #[Route(path: '/signup', name: 'app_signup')]
     public function signup(
         Request $request,
-        EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
         MailerInterface $mailer,
         UrlGeneratorInterface $router
     ): Response {
-        $userRepository = $entityManager->getRepository(User::class);
-
-        if (0 === $userRepository->count()) {
+        if (0 === $this->userRepository->count()) {
             return $this->redirectToRoute('app_index_index');
         }
 
-        $settingsRepository = $entityManager->getRepository(Settings::class);
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $registrationSetting = $settingsRepository->getSettingByName('registration');
         if (empty($registrationSetting) || 'on' !== $registrationSetting->getValue()) {
             $this->addFlash('warning', 'Registrations are currently disabled');
@@ -81,45 +85,52 @@ class SecurityController extends AbstractController
 
         $emailVerificationString = bin2hex(random_bytes(16));
 
-        $user = new User();
-        $user
-            ->setUsername($request->get('username'))
-            ->setCreated(new \DateTimeImmutable())
-            ->setEmailAddress($request->get('email'))
-            ->setEmailVerificationString($emailVerificationString)
-        ;
+        // We handle existing email address validation here, and not in the validator to give the same end user
+        // experience so as to prevent email address harvesting.
 
-        $hashedPassword = $passwordHasher->hashPassword($user, $request->get('password'));
+        $existingEmailAddress = $this->userRepository->findOneBy([
+            'email_address' => $request->get('email')
+        ]);
 
-        $user->setPassword($hashedPassword);
+        if (empty($existingEmailAddress)) {
+            $user = new User();
+            $user
+                ->setUsername($request->get('username'))
+                ->setCreated(new \DateTimeImmutable())
+                ->setEmailAddress($request->get('email'))
+                ->setEmailVerificationString($emailVerificationString)
+            ;
 
-        $entityErrors = $validator->validate($user);
-        if (count($entityErrors) > 0) {
-            $this->addFlash('warning', 'Something went wrong with your details, please try again.');
+            $hashedPassword = $passwordHasher->hashPassword($user, $request->get('password'));
 
-            return $this->render('signup.html.twig');
+            $user->setPassword($hashedPassword);
+
+            $entityErrors = $validator->validate($user);
+            if (count($entityErrors) > 0) {
+                $this->addFlash('warning', 'Something went wrong with your details, please try again.');
+
+                return $this->render('signup.html.twig');
+            }
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            $domainSetting = $settingsRepository->getSettingByName('domain');
+            $email = (new Email())
+                ->from('admin@' . $domainSetting->getValue())
+                ->to($user->getEmailAddress())
+                ->subject('Verify your email address for ' . $domainSetting->getValue())
+                ->html(
+                    '<p>Hello ' . $user->getUsername() . ',</p>' . 
+                    '<p>Click the link below to verify the email address for your account.</p>' . 
+                    '<p>Ignore this email if you didn\'t create this account.</p>' . 
+                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
+                        'userId' => $user->getId(),
+                        'verificationString' => $emailVerificationString,
+                    ]) . '">Verify your email address</a>'
+                )
+            ;
         }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        $domainSetting = $settingsRepository->getSettingByName('domain');
-        $email = (new Email())
-            ->from('admin@' . $domainSetting->getValue())
-            ->to($user->getEmailAddress())
-            ->subject('Verify your email address for ' . $domainSetting->getValue())
-            ->html(
-                '<p>Hello ' . $user->getUsername() . ',</p>' . 
-                '<p>Click the link below to verify the email address for your account.</p>' . 
-                '<p>Ignore this email if you didn\'t create this account.</p>' . 
-                '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
-                    'userId' => $user->getId(),
-                    'verificationString' => $emailVerificationString,
-                ]) . '">Verify your email address</a>'
-            )
-        ;
-
-        $thing = $mailer->send($email);
 
         $this->addFlash('notice', 'Check your emails to verify your email address');
         return $this->redirectToRoute('app_index_index');
@@ -139,6 +150,14 @@ class SecurityController extends AbstractController
 
         if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
             $errors['username'][] = 'Your username must only use alphabetic and numeric characters';
+        }
+
+        $existingUser = $this->userRepository->findOneBy([
+            'username' => $request->get('username')
+        ]);
+
+        if ($existingUser) {
+            $errors['username'][] = 'This username is already taken';
         }
 
         if (empty($request->get('email')) || !filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
@@ -162,12 +181,10 @@ class SecurityController extends AbstractController
     public function verifyUser(
         int $userId,
         string $verificationString,
-        Security $security,
-        EntityManagerInterface $entityManager
+        Security $security
     ): Response
     {
-        $userRepository = $entityManager->getRepository(User::class);
-        $user = $userRepository->findOneBy([
+        $user = $this->userRepository->findOneBy([
             'id' => $userId,
             'email_verification_string' => $verificationString,
         ]);
@@ -180,8 +197,8 @@ class SecurityController extends AbstractController
         $user->setEmailVerified(true);
         $user->setEmailVerificationString(NULL);
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $security->login($user);
         
