@@ -130,6 +130,8 @@ class SecurityController extends AbstractController
                     ]) . '">Verify your email address</a>'
                 )
             ;
+
+            $mailer->send($email);
         }
 
         $this->addFlash('notice', 'Check your emails to verify your email address');
@@ -164,17 +166,36 @@ class SecurityController extends AbstractController
             $errors['email'][] = 'This is not a valid email address';
         }
 
-        if (
-            empty($request->get('password'))
-            || mb_strlen($request->get('password') < User::PASSWORD_MIN_LENGTH)
-            || !preg_match('/[A-Z]/', $request->get('password'))
-            || !preg_match('/[a-z]/', $request->get('password'))
-            || !preg_match('/[0-9]/', $request->get('password'))
-        ) {
+        if (!$this->isPasswordStrong($request->get('password'))) {
             $errors['password'][] = 'You must use a stronger password';
         }
 
         return $errors;
+    }
+
+    private function isPasswordStrong($password): bool
+    {
+        if (empty($password)) {
+            return false;
+        }
+        
+        if (mb_strlen($password < User::PASSWORD_MIN_LENGTH)) {
+            return false;
+        }
+
+        if (!preg_match('/[A-Z]/', $password)) {
+            return false;
+        }
+
+        if (!preg_match('/[a-z]/', $password)) {
+            return false;
+        }
+            
+        if (!preg_match('/[0-9]/', $password)) {
+            return false;
+        }
+
+        return true;
     }
 
     #[Route(path: '/verify/{userId}/{verificationString}', name: 'app_verify_user')]
@@ -203,6 +224,99 @@ class SecurityController extends AbstractController
         $security->login($user);
         
         $this->addFlash('notice', 'Your account has been verified');
+        return $this->redirectToRoute('app_index_index');
+    }
+
+    #[Route(path: '/forgot-password', name: 'app_forgot_password')]
+    public function forgotPassword(
+        UrlGeneratorInterface $router,
+        MailerInterface $mailer,
+        Request $request
+    ): Response
+    {
+        if ('POST' !== $request->getMethod()) {
+            return $this->render('security/forgot_password.html.twig');
+        }
+        
+        $emailAddress = $request->get('email');
+
+        $user = $this->userRepository->findOneBy([
+            'email_address' => $emailAddress,
+        ]);
+
+        if ($user) {
+            $emailVerificationString = bin2hex(random_bytes(16));
+            $user->setEmailVerificationString($emailVerificationString);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            $settingsRepository = $this->entityManager->getRepository(Settings::class);
+            $domainSetting = $settingsRepository->getSettingByName('domain');
+            $email = (new Email())
+                ->from('admin@' . $domainSetting->getValue())
+                ->to($user->getEmailAddress())
+                ->subject('Reset your password for ' . $domainSetting->getValue())
+                ->html(
+                    '<p>Hello ' . $user->getUsername() . ',</p>' . 
+                    '<p>Click the link below to reset the password for your account.</p>' . 
+                    '<p>Ignore this email if you didn\'t request a password reset.</p>' . 
+                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_reset_password', [
+                        'userId' => $user->getId(),
+                        'verificationString' => $emailVerificationString,
+                    ]) . '">Reset your password</a>'
+                )
+            ;
+
+            $mailer->send($email);
+        }
+
+        $this->addFlash('notice', 'Check your emails to reset your password');
+        return $this->redirectToRoute('app_index_index');
+    }
+
+    #[Route(path: '/reset-password/{userId}/{verificationString}', name: 'app_reset_password')]
+    public function resetPassword(
+        int $userId,
+        string $verificationString,
+        UserPasswordHasherInterface $passwordHasher,
+        Request $request,
+        Security $security
+    ): Response
+    {
+        $user = $this->userRepository->findOneBy([
+            'id' => $userId,
+            'email_verification_string' => $verificationString,
+        ]);
+
+        if (empty($verificationString) || strlen($verificationString) !== 32 || !$user) {
+            $this->addFlash('warning', 'Account verification failed.');
+            return $this->redirectToRoute('app_index_index');
+        }
+
+        if ('POST' !== $request->getMethod()) {
+            return $this->render('security/reset_password.html.twig');
+        }
+
+        if (!$this->isPasswordStrong($request->get('password'))) {
+            return $this->render('security/reset_password.html.twig', [
+                'validation_failed' => true,
+            ]);
+        }
+
+        $hashedPassword = $passwordHasher->hashPassword($user, $request->get('password'));
+
+        $user
+            ->setPassword($hashedPassword)
+            ->setEmailVerified(true)
+            ->setEmailVerificationString(NULL)
+        ;
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $security->login($user);
+        
+        $this->addFlash('notice', 'Your password has been reset');
         return $this->redirectToRoute('app_index_index');
     }
 
