@@ -124,6 +124,7 @@ class UserFixtures extends Fixture
                 ->setEmailAddress($user['email'])
                 ->setCreated(\DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $user['created']))
                 ->setRoles($user['roles'])
+                ->setEmailVerified(true)
             ;
 
             $hashedPassword = $this->passwordHasher->hashPassword($userEntity, $user['username']);

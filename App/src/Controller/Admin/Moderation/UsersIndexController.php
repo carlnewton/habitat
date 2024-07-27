@@ -58,6 +58,10 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
                 'label' => 'Email address',
                 'sortable' => true,
             ],
+            'email_verified' => [
+                'label' => 'Verified',
+                'sortable' => true,
+            ],
             'created' => [
                 'label' => 'Created',
                 'sortable' => true,

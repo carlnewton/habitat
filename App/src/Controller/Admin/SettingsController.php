@@ -46,6 +46,7 @@ class SettingsController extends AbstractController
                     'errors' => $fieldErrors,
                     'values' => [
                         'habitatName' => $request->get('habitatName'),
+                        'domain' => $request->get('domain'),
                         'locationLatLng' => $request->get('locationLatLng'),
                         'locationMeasurement' => $request->get('locationMeasurement'),
                         'locationRadiusMeters' => $request->get('locationRadiusMeters'),
@@ -63,6 +64,15 @@ class SettingsController extends AbstractController
             $habitatNameSetting->setValue($request->get('habitatName'));
 
             $entityManager->persist($habitatNameSetting);
+
+            $domainSetting = $settingsRepository->getSettingByName('domain');
+            if (!$domainSetting) {
+                $domainSetting = new Settings();
+                $domainSetting->setName('domain');
+            }
+            $domainSetting->setValue($request->get('domain'));
+
+            $entityManager->persist($domainSetting);
 
             $locationRadiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
             if (!$locationRadiusSetting) {
@@ -115,6 +125,7 @@ class SettingsController extends AbstractController
         }
 
         $habitatNameSetting = $settingsRepository->getSettingByName('habitatName');
+        $domainSetting = $settingsRepository->getSettingByName('domain');
         $locationLatLngSetting = $settingsRepository->getSettingByName('locationLatLng');
         $locationZoomSetting = $settingsRepository->getSettingByName('locationZoom');
         $locationMeasurementSetting = $settingsRepository->getSettingByName('locationMeasurement');
@@ -124,6 +135,7 @@ class SettingsController extends AbstractController
         return $this->render('admin/index.html.twig', [
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
+                'domain' => ($domainSetting) ? $domainSetting->getValue() : '',
                 'locationLatLng' => ($locationLatLngSetting) ? $locationLatLngSetting->getValue() : '51,0',
                 'locationZoom' => ($locationZoomSetting) ? $locationZoomSetting->getValue() : '3',
                 'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'kms',
@@ -146,6 +158,13 @@ class SettingsController extends AbstractController
             || !LatLong::isValidLatLong($request->get('locationLatLng'))
         ) {
             $errors['location'][] = 'You must choose a valid location';
+        }
+
+        if (
+            empty($request->get('domain'))
+            || !filter_var($request->get('domain'), FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)
+        ) {
+            $errors['domain'][] = 'You must enter a valid domain';
         }
 
         if (

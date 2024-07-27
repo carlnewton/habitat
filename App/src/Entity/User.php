@@ -82,6 +82,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $suspended = false;
 
+    #[ORM\Column]
+    private ?bool $email_verified = false;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $email_verification_string = null;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -317,6 +323,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSuspended(bool $suspended): static
     {
         $this->suspended = $suspended;
+
+        return $this;
+    }
+
+    public function isEmailVerified(): ?bool
+    {
+        return $this->email_verified;
+    }
+
+    public function setEmailVerified(bool $email_verified): static
+    {
+        $this->email_verified = $email_verified;
+
+        return $this;
+    }
+
+    public function getEmailVerificationString(): ?string
+    {
+        return $this->email_verification_string;
+    }
+
+    public function setEmailVerificationString(?string $email_verification_string): static
+    {
+        $this->email_verification_string = $email_verification_string;
 
         return $this;
     }

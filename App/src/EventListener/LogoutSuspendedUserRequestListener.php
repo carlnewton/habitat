@@ -22,10 +22,6 @@ class LogoutSuspendedUserRequestListener
             return;
         }
 
-        if (!$user->isSuspended()) {
-            return;
-        }
-
         if (!$request = $event->getRequest()) {
             return;
         }
@@ -38,8 +34,16 @@ class LogoutSuspendedUserRequestListener
             return;
         }
 
-        $this->security->logout(false);
+        if ($user->isSuspended()) {
+            $this->security->logout(false);
+            $flashBag->add('warning', 'Your account has been suspended.');
+            return;
+        }
 
-        $flashBag->add('warning', 'Your account has been suspended.');
+        if (!$user->isEmailVerified()) {
+            $this->security->logout(false);
+            $flashBag->add('warning', 'Your email address must be verified before you can login.');
+            return;
+        }
     }
 }

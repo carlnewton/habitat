@@ -35,6 +35,13 @@
         {% endif %}
     </td>
     <td{% if sort == 'email_address' %} class="bg-light border"{% endif %}>{{ item.emailaddress }}</td>
+    <td{% if sort == 'verified' %} class="bg-light border"{% endif %}>
+        {% if item.emailVerified %}
+            <i class="bi bi-check-lg fs-4 text-success"></i>
+        {% else %}
+            <i class="bi bi-x-lg fs-4 text-danger"></i>
+        {% endif %}
+    </td>
     <td{% if sort == 'created' %} class="bg-light border"{% endif %}>{{ item.created|date }}</td>
     <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>
         <div class="d-grid">
