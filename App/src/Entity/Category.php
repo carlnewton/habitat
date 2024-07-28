@@ -33,6 +33,9 @@ class Category
     #[ORM\Column]
     private ?bool $allow_posting = null;
 
+    #[ORM\Column]
+    private ?int $weight = 0;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -117,6 +120,18 @@ class Category
     public function setAllowPosting(bool $allow_posting): static
     {
         $this->allow_posting = $allow_posting;
+
+        return $this;
+    }
+
+    public function getWeight(): ?int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(int $weight): static
+    {
+        $this->weight = $weight;
 
         return $this;
     }

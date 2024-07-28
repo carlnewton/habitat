@@ -79,6 +79,22 @@
             </div>
         </div>
         <div class="row mb-3">
+            <label for="weight" class="col-sm-3 col-form-label">Weight</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control{% if errors.weight is defined %} is-invalid{% endif %}" name="weight" id="weight" value="{% if category.weight is defined %}{{ category.weight }}{% endif %}" aria-describedby="weight-help">
+                <div id="weight-help" class="form-text">
+                    Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically.
+                </div>
+                {% if errors.weight is defined %}
+                    <div class="invalid-feedback">
+                        {% for errorMessage in errors.weight %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
             <label for="allow-posting" class="col-sm-3 col-form-label">Allow posting</label>
             <div class="col-sm-9">
                 <div class="form-check form-switch form-switch-lg">

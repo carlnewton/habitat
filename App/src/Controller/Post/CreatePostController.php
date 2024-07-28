@@ -37,6 +37,10 @@ class CreatePostController extends AbstractController
         $categoryRepository = $this->entityManager->getRepository(Category::class);
         $this->categories = $categoryRepository->findBy([
             'allow_posting' => true,
+        ],
+        [
+            'weight' => 'asc',
+            'name' => 'asc',
         ]);
 
         if ('POST' === $request->getMethod()) {

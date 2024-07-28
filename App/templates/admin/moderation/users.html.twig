@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block rows %}
-    <td{% if sort == 'username' %} class="bg-light border"{% endif %}>
+    <td class="align-middle{% if sort == 'username' %} bg-light border{% endif %}">
         {% if item.suspended and filtered.suspended is not defined %}
             <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}">
                 User suspended
@@ -34,21 +34,21 @@
             </a>
         {% endif %}
     </td>
-    <td{% if sort == 'email_address' %} class="bg-light border"{% endif %}>{{ item.emailaddress }}</td>
-    <td{% if sort == 'verified' %} class="bg-light border"{% endif %}>
+    <td class="align-middle{% if sort == 'email_address' %} bg-light border{% endif %}">{{ item.emailaddress }}</td>
+    <td class="align-middle{% if sort == 'verified' %} bg-light border{% endif %}">
         {% if item.emailVerified %}
             <i class="bi bi-check-lg fs-4 text-success"></i>
         {% else %}
             <i class="bi bi-x-lg fs-4 text-danger"></i>
         {% endif %}
     </td>
-    <td{% if sort == 'created' %} class="bg-light border"{% endif %}>{{ item.created|date }}</td>
-    <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>
+    <td class="align-middle{% if sort == 'created' %} bg-light border{% endif %}">{{ item.created|date }}</td>
+    <td class="align-middle{% if sort == 'posts' %} bg-light border{% endif %}">
         <div class="d-grid">
             <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: item.id }) }}">{{ item.posts|length }}</a>
         </div>
     </td>
-    <td{% if sort == 'comments' %} class="bg-light border"{% endif %}>
+    <td class="align-middle{% if sort == 'comments' %} bg-light border{% endif %}">
         <div class="d-grid">
             <a class="btn btn-link{% if item.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: item.id }) }}">{{ item.comments|length }}</a>
         </div>

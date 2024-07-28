@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block rows %}
-    <td>
+    <td class="align-middle">
         {% if item.removed and filtered.removed is not defined %}
             <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}">
                 Comment removed
@@ -30,8 +30,8 @@
             {{ item.body }}
         {% endif %}
     </td>
-    <td{% if sort == 'posted' %} class="bg-light border"{% endif %}>{{ item.posted|date }}</td>
-    <td>
+    <td class="align-middle{% if sort == 'posted' %} bg-light border{% endif %}">{{ item.posted|date }}</td>
+    <td class="align-middle">
         {% if item.user.suspended %}
             <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-user-for-{{ item.id }}" aria-expanded="false" aria-controls="collapse-user-for-{{ item.id }}">
                 User suspended
@@ -43,7 +43,7 @@
             <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
         {% endif %}
     </td>
-    <td>
+    <td class="align-middle">
         {% if item.post.removed %}
             <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-post-for-{{ item.id }}" aria-expanded="false" aria-controls="collapse-post-for-{{ item.id }}">
                 Post removed

@@ -48,22 +48,23 @@
                     <tbody>
                         {% for item in items %}
                             <tr>
-                                <td>
+                                <td class="align-middle">
                                     <div class="form-check">
                                         <input class="form-check-input row-check" type="checkbox" onchange="rowCheckChange(this)" value="{{ item.id }}">
                                     </div>
                                 </td>
-                                <td{% if sort == 'name' %} class="bg-light border"{% endif %}><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
+                                <td class="align-middle{% if sort == 'name' %} bg-light border{% endif %}"><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
                                 <td>{{ item.description }}</td>
-                                <td{% if sort == 'location' %} class="bg-light border"{% endif %}>{{ item.location.label }}</td>
-                                <td class=" text-center{% if sort == 'allow_posting' %} bg-light border{% endif %}">
+                                <td class="align-middle{% if sort == 'location' %} bg-light border{% endif %}">{{ item.location.label }}</td>
+                                <td class="align-middle{% if sort == 'weight' %} bg-light border{% endif %}">{{ item.weight }}</td>
+                                <td class="align-middle text-center{% if sort == 'allow_posting' %} bg-light border{% endif %}">
                                     {% if item.allowPosting %}
                                         <i class="bi bi-check-lg fs-4 text-success"></i>
                                     {% else %}
                                         <i class="bi bi-x-lg fs-4 text-danger"></i>
                                     {% endif %}
                                 </td>
-                                <td{% if sort == 'posts' %} class="bg-light border"{% endif %}>
+                                <td class="align-middle{% if sort == 'posts' %} bg-light border{% endif %}">
                                     <div class="d-grid">
                                         <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { category: item.id }) }}">{{ item.posts|length }}</a>
                                     </div>

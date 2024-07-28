@@ -57,6 +57,7 @@ class SetupController extends AbstractController
                 ->setUsername($request->get('username'))
                 ->setEmailAddress($request->get('email'))
                 ->setCreated(new \DateTimeImmutable())
+                ->setEmailVerified(true)
                 ->setRoles(['ROLE_SUPER_ADMIN'])
             ;
 
