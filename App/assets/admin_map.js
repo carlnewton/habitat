@@ -57,7 +57,7 @@ function setLocationRadiusField() {
             document.querySelector('#measurement-miles').classList.add('active');
             document.querySelector('#locationRadius').value = parseFloat(locationRadiusValue * 0.00062137).toPrecision(4);
             break;
-        case 'kms':
+        case 'km':
             document.querySelector('#measurement-miles').classList.remove('active');
             document.querySelector('#measurement-kms').classList.add('active');
             document.querySelector('#locationRadius').value = parseFloat(locationRadiusValue / 1000).toPrecision(4);
@@ -75,7 +75,7 @@ function setMeasurement(value) {
 
 document.querySelector('#locationRadius').onchange = function(e) {
     switch (document.querySelector('#locationMeasurement').value) {
-        case 'kms':
+        case 'km':
             document.querySelector('#locationRadiusMeters').value = Math.ceil(e.target.value * 1000);
             break;
         case 'miles':
@@ -102,7 +102,7 @@ document.querySelector('#measurement-miles').onclick = function() {
 }
 
 document.querySelector('#measurement-kms').onclick = function() {
-    setMeasurement('kms');
+    setMeasurement('km');
 }
 
 map.on('click', function(e) {

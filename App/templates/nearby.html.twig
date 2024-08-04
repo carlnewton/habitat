@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="visually-hidden">Nearby</h1>
+    <div id="posts-list" hx-trigger="hasLocation" hx-get="/hx/list-nearby" hx-swap="afterbegin">
+        <div class="d-flex justify-content-center htmx-indicator" id="post-spinner">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('nearby') }}
+    {% if app.user %}
+        {{ encore_entry_script_tags('heart') }}
+    {% endif %}
+{% endblock %}

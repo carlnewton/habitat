@@ -9,6 +9,13 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
+        dql:
+            string_functions:
+                DEGREES: App\DQL\DegreesFunction
+                ACOS: App\DQL\AcosFunction
+                SIN: App\DQL\SinFunction
+                RADIANS: App\DQL\RadiansFunction
+                COS: App\DQL\CosFunction
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
         report_fields_where_declared: true

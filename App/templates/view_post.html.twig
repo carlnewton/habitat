@@ -50,11 +50,11 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% if post.location is not empty %}
+    {% if post.latitude is not null and post.longitude is not null %}
         <h2 id="location">Location</h2>
         <div class="card mb-4">
             <div class="ratio ratio-16x9">
-                <div id="map" class="rounded" data-center="{{ post.location }}"></div>
+                <div id="map" class="rounded" data-center="{{ post.latitude }},{{ post.longitude }}"></div>
             </div>
         </div>
     {% endif %}

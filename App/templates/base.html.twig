@@ -84,7 +84,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/" class="fs-5 nav-link{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
+                                <a href="{{ path('app_nearby_nearby') }}" class="fs-5 nav-link{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
                                     <i class="bi bi-geo-alt{% if app.request.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
                                     Nearby
                                 </a>
@@ -106,7 +106,7 @@
                     <br>
                     <small>Post</small>
                 </a>
-                <a href="/" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
+                <a href="{{ path('app_nearby_nearby') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
                     <i class="h3 bi bi-geo-alt{% if app.request.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
                     <br>
                     <small>Nearby</small>

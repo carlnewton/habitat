@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Utilities\LatLong;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -53,6 +54,43 @@ class PostRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function findByDistance(array $criteria, LatLong $latLong, ?int $limit = null, ?int $offset = null): array
+    {
+        $qb = $this->createQueryBuilder('post');
+
+        foreach ($criteria as $key => $value) {
+            $qb->andWhere("post.$key = :$key")
+                ->setParameter($key, $value)
+            ;
+        }
+
+        $qb->addSelect('DEGREES(ACOS((SIN(RADIANS(:latitude)) * SIN(RADIANS(post.latitude))) + (COS(RADIANS(:latitude)) * COS(RADIANS(post.latitude)) * COS(RADIANS(:longitude - post.longitude))))) * :radius AS distanceMiles')
+            ->setParameter('latitude', $latLong->latitude)
+            ->setParameter('longitude', $latLong->longitude)
+            ->setParameter('radius', 60 * 1.1515)
+            ->addOrderBy('distanceMiles', 'ASC')
+        ;
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        $results = $qb->getQuery()->getResult();
+
+        $entities = [];
+        foreach ($results as $result) {
+            $entity = $result[0];
+            $entity->setDistanceMiles($result['distanceMiles']);
+            $entities[] = $entity;
+        }
+
+        return $entities;
     }
 
     //    /**

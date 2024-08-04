@@ -138,7 +138,7 @@ class SettingsController extends AbstractController
                 'domain' => ($domainSetting) ? $domainSetting->getValue() : '',
                 'locationLatLng' => ($locationLatLngSetting) ? $locationLatLngSetting->getValue() : '51,0',
                 'locationZoom' => ($locationZoomSetting) ? $locationZoomSetting->getValue() : '3',
-                'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'kms',
+                'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'km',
                 'locationRadiusMeters' => ($locationRadiusSetting) ? $locationRadiusSetting->getValue() : '3000',
                 'registration' => ($registration) ? $registration->getValue() : '',
             ],
@@ -169,7 +169,7 @@ class SettingsController extends AbstractController
 
         if (
             empty($request->get('locationMeasurement'))
-            || !in_array($request->get('locationMeasurement'), ['kms', 'miles'])
+            || !in_array($request->get('locationMeasurement'), ['km', 'miles'])
             || $request->get('locationRadiusMeters') != (int) $request->get('locationRadiusMeters')
             || $request->get('locationRadiusMeters') < 1
         ) {

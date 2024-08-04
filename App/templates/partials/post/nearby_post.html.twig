@@ -1,0 +1,60 @@
+<div class="post"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#post-spinner" hx-get="/hx/list-nearby?latLng={{ latLng }}&offset={{ offset }}{% if category is defined %}&category={{ category.id }}{% endif %}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
+    <div class="card shadow mb-3 post-card">
+        <div class="card-body">
+            <h2 class="card-title">
+                <a href="{{ path('app_view_post', { id: post.id })}}">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <div class="mb-2">
+                {% if category is not defined %}
+                    <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">
+                        <i class="bi bi-tag"></i>
+                        {{ post.category.name }}
+                    </a>
+                {% endif %}
+            </div>
+            {% if post.body is defined %}
+                <div>{{ post.body }}</div>
+            {% endif %}
+        </div>
+        {% if post.attachments is not empty %}
+            <div class="d-flex justify-content-center mb-3">
+                <a href="{{ path('app_view_post', { id: post.id })}}" class="position-relative">
+                    <img
+                        class="img-fluid"
+                        src="{{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 })}}"
+                        {% if post.attachments|first.width > 550 %}
+                            srcset="
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 }) }} 550w,
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 700 }) }} 700w,
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 830 }) }} 830w,
+                                {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 970 }) }} 970w
+                            "
+                            sizes="
+                                (max-width: 992px) 550px,
+                                (max-width: 1199px) 700px,
+                                (max-width: 1399px) 830px,
+                                970px"
+                        {% endif %}
+                        alt="{{ post.title }}"
+                    >
+                    {% if post.attachments|length > 1 %}
+                        <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
+                            <i class="bi bi-images"></i> {{ post.attachments|length }}
+                        </div>
+                    {% endif %}
+                </a>
+            </div>
+        {% endif %}
+        <div class="card-body">
+            <button id="hearts-{{ post.id }}" class="float-start border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} pe-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
+                <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
+            </button>
+            <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
+                <i class="bi bi-chat"></i> {{ post.commentCount }}
+            </a>
+            <div class="float-end text-muted">{{ miles_to_relative_distance(post.distanceMiles) }}</div>
+        </div>
+    </div>
+</div>

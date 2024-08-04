@@ -37,12 +37,14 @@ class LogoutSuspendedUserRequestListener
         if ($user->isSuspended()) {
             $this->security->logout(false);
             $flashBag->add('warning', 'Your account has been suspended.');
+
             return;
         }
 
         if (!$user->isEmailVerified()) {
             $this->security->logout(false);
             $flashBag->add('warning', 'Your email address must be verified before you can login.');
+
             return;
         }
     }

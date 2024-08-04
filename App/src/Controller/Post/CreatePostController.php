@@ -27,7 +27,8 @@ class CreatePostController extends AbstractController
     #[Route(path: '/post', name: 'app_create_post', methods: ['GET', 'POST'])]
     public function index(
         #[CurrentUser] ?User $user,
-        Request $request
+        Request $request,
+        LatLong $latLongUtils
     ): Response {
         if (null === $user) {
             return $this->redirectToRoute('app_login');
@@ -38,10 +39,10 @@ class CreatePostController extends AbstractController
         $this->categories = $categoryRepository->findBy([
             'allow_posting' => true,
         ],
-        [
-            'weight' => 'asc',
-            'name' => 'asc',
-        ]);
+            [
+                'weight' => 'asc',
+                'name' => 'asc',
+            ]);
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
@@ -90,7 +91,9 @@ class CreatePostController extends AbstractController
                     CategoryLocationOptionsEnum::OPTIONAL,
                 ]) && !empty($request->get('locationLatLng'))
             ) {
-                $post->setLocation($request->get('locationLatLng'));
+                $latLng = $latLongUtils->fromString($request->get('locationLatLng'));
+                $post->setLatitude($latLng->latitude);
+                $post->setLongitude($latLng->longitude);
             }
 
             $this->entityManager->persist($post);

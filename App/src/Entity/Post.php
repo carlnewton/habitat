@@ -24,9 +24,6 @@ class Post
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $body = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $location = null;
-
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -65,6 +62,14 @@ class Post
     #[ORM\Column]
     private ?bool $removed = false;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $longitude = null;
+
+    private ?float $distanceMiles;
+
     public function __construct()
     {
         $this->hearts = new ArrayCollection();
@@ -89,6 +94,18 @@ class Post
         return $this;
     }
 
+    public function getDistanceMiles(): ?float
+    {
+        return $this->distanceMiles;
+    }
+
+    public function setDistanceMiles(?float $distanceMiles): static
+    {
+        $this->distanceMiles = $distanceMiles;
+
+        return $this;
+    }
+
     public function getBody(): ?string
     {
         return $this->body;
@@ -97,18 +114,6 @@ class Post
     public function setBody(?string $body): static
     {
         $this->body = $body;
-
-        return $this;
-    }
-
-    public function getLocation(): ?string
-    {
-        return $this->location;
-    }
-
-    public function setLocation(?string $location): static
-    {
-        $this->location = $location;
 
         return $this;
     }
@@ -123,6 +128,15 @@ class Post
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getLatLng(): ?string
+    {
+        if (is_null($this->latitude) || is_null($this->longitude)) {
+            return null;
+        }
+
+        return floatval($this->latitude).','.floatval($this->longitude);
     }
 
     public function getPosted(): ?\DateTimeInterface
@@ -281,6 +295,30 @@ class Post
     public function setRemoved(bool $removed): static
     {
         $this->removed = $removed;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): static
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): static
+    {
+        $this->longitude = $longitude;
 
         return $this;
     }

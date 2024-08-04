@@ -22,7 +22,8 @@ class SecurityController extends AbstractController
 {
     private UserRepository $userRepository;
 
-    public function __construct(private EntityManagerInterface $entityManager) {
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
         $this->userRepository = $entityManager->getRepository(User::class);
     }
 
@@ -89,7 +90,7 @@ class SecurityController extends AbstractController
         // experience so as to prevent email address harvesting.
 
         $existingEmailAddress = $this->userRepository->findOneBy([
-            'email_address' => $request->get('email')
+            'email_address' => $request->get('email'),
         ]);
 
         if (empty($existingEmailAddress)) {
@@ -117,17 +118,17 @@ class SecurityController extends AbstractController
 
             $domainSetting = $settingsRepository->getSettingByName('domain');
             $email = (new Email())
-                ->from('admin@' . $domainSetting->getValue())
+                ->from('admin@'.$domainSetting->getValue())
                 ->to($user->getEmailAddress())
-                ->subject('Verify your email address for ' . $domainSetting->getValue())
+                ->subject('Verify your email address for '.$domainSetting->getValue())
                 ->html(
-                    '<p>Hello ' . $user->getUsername() . ',</p>' . 
-                    '<p>Click the link below to verify the email address for your account.</p>' . 
-                    '<p>Ignore this email if you didn\'t create this account.</p>' . 
-                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
+                    '<p>Hello '.$user->getUsername().',</p>'.
+                    '<p>Click the link below to verify the email address for your account.</p>'.
+                    '<p>Ignore this email if you didn\'t create this account.</p>'.
+                    '<p><a href="https://'.$domainSetting->getValue().$router->generate('app_verify_user', [
                         'userId' => $user->getId(),
                         'verificationString' => $emailVerificationString,
-                    ]) . '">Verify your email address</a>'
+                    ]).'">Verify your email address</a>'
                 )
             ;
 
@@ -135,6 +136,7 @@ class SecurityController extends AbstractController
         }
 
         $this->addFlash('notice', 'Check your emails to verify your email address');
+
         return $this->redirectToRoute('app_index_index');
     }
 
@@ -143,11 +145,11 @@ class SecurityController extends AbstractController
         $errors = [];
 
         if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
-            $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
+            $errors['username'][] = 'Your username must be a minimum of '.User::USERNAME_MIN_LENGTH.' characters';
         }
 
         if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
-            $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
+            $errors['username'][] = 'Your username must be a maximum of '.User::USERNAME_MAX_LENGTH.' characters';
         }
 
         if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
@@ -155,7 +157,7 @@ class SecurityController extends AbstractController
         }
 
         $existingUser = $this->userRepository->findOneBy([
-            'username' => $request->get('username')
+            'username' => $request->get('username'),
         ]);
 
         if ($existingUser) {
@@ -178,7 +180,7 @@ class SecurityController extends AbstractController
         if (empty($password)) {
             return false;
         }
-        
+
         if (mb_strlen($password < User::PASSWORD_MIN_LENGTH)) {
             return false;
         }
@@ -190,7 +192,7 @@ class SecurityController extends AbstractController
         if (!preg_match('/[a-z]/', $password)) {
             return false;
         }
-            
+
         if (!preg_match('/[0-9]/', $password)) {
             return false;
         }
@@ -203,27 +205,28 @@ class SecurityController extends AbstractController
         int $userId,
         string $verificationString,
         Security $security
-    ): Response
-    {
+    ): Response {
         $user = $this->userRepository->findOneBy([
             'id' => $userId,
             'email_verification_string' => $verificationString,
         ]);
 
-        if (empty($verificationString) || strlen($verificationString) !== 32 || !$user) {
+        if (empty($verificationString) || 32 !== strlen($verificationString) || !$user) {
             $this->addFlash('warning', 'Account verification failed.');
+
             return $this->redirectToRoute('app_index_index');
         }
 
         $user->setEmailVerified(true);
-        $user->setEmailVerificationString(NULL);
+        $user->setEmailVerificationString(null);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
         $security->login($user);
-        
+
         $this->addFlash('notice', 'Your account has been verified');
+
         return $this->redirectToRoute('app_index_index');
     }
 
@@ -232,12 +235,11 @@ class SecurityController extends AbstractController
         UrlGeneratorInterface $router,
         MailerInterface $mailer,
         Request $request
-    ): Response
-    {
+    ): Response {
         if ('POST' !== $request->getMethod()) {
             return $this->render('security/forgot_password.html.twig');
         }
-        
+
         $emailAddress = $request->get('email');
 
         $user = $this->userRepository->findOneBy([
@@ -253,17 +255,17 @@ class SecurityController extends AbstractController
             $settingsRepository = $this->entityManager->getRepository(Settings::class);
             $domainSetting = $settingsRepository->getSettingByName('domain');
             $email = (new Email())
-                ->from('admin@' . $domainSetting->getValue())
+                ->from('admin@'.$domainSetting->getValue())
                 ->to($user->getEmailAddress())
-                ->subject('Reset your password for ' . $domainSetting->getValue())
+                ->subject('Reset your password for '.$domainSetting->getValue())
                 ->html(
-                    '<p>Hello ' . $user->getUsername() . ',</p>' . 
-                    '<p>Click the link below to reset the password for your account.</p>' . 
-                    '<p>Ignore this email if you didn\'t request a password reset.</p>' . 
-                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_reset_password', [
+                    '<p>Hello '.$user->getUsername().',</p>'.
+                    '<p>Click the link below to reset the password for your account.</p>'.
+                    '<p>Ignore this email if you didn\'t request a password reset.</p>'.
+                    '<p><a href="https://'.$domainSetting->getValue().$router->generate('app_reset_password', [
                         'userId' => $user->getId(),
                         'verificationString' => $emailVerificationString,
-                    ]) . '">Reset your password</a>'
+                    ]).'">Reset your password</a>'
                 )
             ;
 
@@ -271,6 +273,7 @@ class SecurityController extends AbstractController
         }
 
         $this->addFlash('notice', 'Check your emails to reset your password');
+
         return $this->redirectToRoute('app_index_index');
     }
 
@@ -281,15 +284,15 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         Request $request,
         Security $security
-    ): Response
-    {
+    ): Response {
         $user = $this->userRepository->findOneBy([
             'id' => $userId,
             'email_verification_string' => $verificationString,
         ]);
 
-        if (empty($verificationString) || strlen($verificationString) !== 32 || !$user) {
+        if (empty($verificationString) || 32 !== strlen($verificationString) || !$user) {
             $this->addFlash('warning', 'Account verification failed.');
+
             return $this->redirectToRoute('app_index_index');
         }
 
@@ -308,23 +311,22 @@ class SecurityController extends AbstractController
         $user
             ->setPassword($hashedPassword)
             ->setEmailVerified(true)
-            ->setEmailVerificationString(NULL)
+            ->setEmailVerificationString(null)
         ;
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
         $security->login($user);
-        
+
         $this->addFlash('notice', 'Your password has been reset');
+
         return $this->redirectToRoute('app_index_index');
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new \LogicException(
-            'This method can be blank - it will be intercepted by the logout key on your firewall.'
-        );
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

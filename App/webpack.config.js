@@ -30,6 +30,7 @@ Encore
     .addEntry('admin_table', './assets/admin_table.js')
     .addEntry('create_post', './assets/create_post.js')
     .addEntry('view_post', './assets/view_post.js')
+    .addEntry('nearby', './assets/nearby.js')
     .addEntry('heart', './assets/heart.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

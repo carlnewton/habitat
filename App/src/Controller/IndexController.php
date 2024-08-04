@@ -14,7 +14,7 @@ class IndexController extends AbstractController
 {
     private const MAX_POSTS = 10;
 
-    #[Route(path: '/', name: 'app_index_index', methods: ['GET', 'POST'])]
+    #[Route(path: '/', name: 'app_index_index', methods: ['GET'])]
     public function index(
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager

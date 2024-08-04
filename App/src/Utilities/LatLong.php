@@ -4,6 +4,30 @@ namespace App\Utilities;
 
 class LatLong
 {
+    public float $latitude;
+    public float $longitude;
+
+    public function fromString(string $latLong): ?self
+    {
+        if (!self::isValidLatLong($latLong)) {
+            return null;
+        }
+
+        $this->latitude = floatval(explode(',', $latLong)[0]);
+        $this->longitude = floatval(explode(',', $latLong)[1]);
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        if (is_null($this->latitude) || is_null($this->longitude)) {
+            return '';
+        }
+
+        return $this->latitude.','.$this->longitude;
+    }
+
     public static function isValidLatLong(string $latLong): bool
     {
         if (!str_contains($latLong, ',')) {
