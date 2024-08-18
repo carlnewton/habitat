@@ -25,3 +25,6 @@ services:
 
     App\EventListener\LogoutSuspendedUserRequestListener:
         tags: [kernel.event_listener]
+
+    App\Repository\PostRepository:
+        tags: ['doctrine.repository_service']
