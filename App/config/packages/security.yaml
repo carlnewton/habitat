@@ -16,6 +16,8 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            login_throttling:
+                max_attempts: 5
             form_login:
                 login_path: app_login
                 check_path: app_login
