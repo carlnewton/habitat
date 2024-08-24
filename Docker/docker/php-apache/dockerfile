@@ -17,7 +17,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN apt-get -y update && apt-get install -y libicu-dev libzip-dev zip libjpeg-dev libpng-dev libfreetype6-dev git
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd '--with-jpeg' '--with-freetype'
-RUN docker-php-ext-install intl opcache pdo_mysql zip gd
+RUN docker-php-ext-install intl opcache pdo_mysql zip gd exif
 RUN a2enmod rewrite
 
 #INSTALL APCU

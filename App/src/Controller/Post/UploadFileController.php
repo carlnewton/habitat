@@ -62,32 +62,33 @@ class UploadFileController extends AbstractController
             $file->guessExtension(),
         ]);
 
-        $width = $originalWidth;
-        $height = $originalHeight;
         try {
             if ($originalWidth <= self::MAXIMUM_IMAGE_WIDTH) {
-                $file->move('/var/www/uploads', $filename);
+                $width = $originalWidth;
+                $height = $originalHeight;
             } else {
                 $width = self::MAXIMUM_IMAGE_WIDTH;
-                $height = ($originalHeight * $width) / $originalWidth;
-                $thumbnail = imagecreatetruecolor($width, $height);
-                switch ($file->getMimeType()) {
-                    case 'image/jpeg':
-                        $source = imagecreatefromjpeg($file);
-                        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                        imagejpeg($thumbnail, self::UPLOADS_DIRECTORY.$filename);
-                        break;
-                    case 'image/gif':
-                        $source = imagecreatefromgif(self::UPLOADS_DIRECTORY.$originalFilename);
-                        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                        imagegif($thumbnail, self::UPLOADS_DIRECTORY.$filename);
-                        break;
-                    case 'image/png':
-                        $source = imagecreatefrompng(self::UPLOADS_DIRECTORY.$originalFilename);
-                        imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                        imagepng($thumbnail, self::UPLOADS_DIRECTORY.$filename);
-                        break;
-                }
+                $height = ($originalHeight * self::MAXIMUM_IMAGE_WIDTH) / $originalWidth;
+            }
+
+            $thumbnail = imagecreatetruecolor($width, $height);
+            switch ($file->getMimeType()) {
+                case 'image/jpeg':
+                    $source = imagecreatefromjpeg($file);
+                    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                    $thumbnail = $this->rotateJpeg(exif_read_data($file), $thumbnail);
+                    imagejpeg($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    break;
+                case 'image/gif':
+                    $source = imagecreatefromgif($file);
+                    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                    imagegif($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    break;
+                case 'image/png':
+                    $source = imagecreatefrompng($file);
+                    imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+                    imagepng($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    break;
             }
         } catch (FileException $e) {
             echo $e;
@@ -96,11 +97,13 @@ class UploadFileController extends AbstractController
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        list($newWidth, $newHeight) = getimagesize(self::UPLOADS_DIRECTORY . $filename);
+
         $attachment = new PostAttachment();
         $attachment
             ->setFilename($filename)
-            ->setWidth((int) $width)
-            ->setHeight((int) $height)
+            ->setWidth((int) $newWidth)
+            ->setHeight((int) $newHeight)
             ->setUser($user)
         ;
 
@@ -110,5 +113,40 @@ class UploadFileController extends AbstractController
         return new JsonResponse([
             'id' => $attachment->getId(),
         ]);
+    }
+
+    private function rotateJpeg(?array $exifData, $image)
+    {
+        if (empty($exifData['Orientation'])) {
+            return $image;
+        }
+
+        switch($exifData['Orientation']) {
+            case 2:
+                imageflip($image, IMG_FLIP_HORIZONTAL);
+                break;
+            case 3:
+                $image = imagerotate($image, 180, 0);
+                break;
+            case 4:
+                imageflip($image, IMG_FLIP_VERTICAL);
+                break;
+            case 5:
+                $image = imagerotate($image, -90, 0);
+                imageflip($image, IMG_FLIP_HORIZONTAL);
+                break;
+            case 6:
+                $image = imagerotate($image, -90, 0);
+                break;
+            case 7:
+                $image = imagerotate($image, 90, 0);
+                imageflip($image, IMG_FLIP_HORIZONTAL);
+                break;
+            case 8:
+                $image = imagerotate($image, 90, 0); 
+                break;
+        }
+
+        return $image;
     }
 }
