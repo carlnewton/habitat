@@ -68,9 +68,13 @@
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if values.locationLatLng is defined %}{{ values.locationLatLng }}{% endif %}">
         <input type="hidden" name="token" value="{{ csrf_token('post') }}">
         <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary btn-lg">Submit post</button>
+            <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg">Submit post</button>
         </div>
     </form>
+    <div id="posting" class="text-center text-secondary py-5 d-none">
+        <div class="spinner-border my-5" role="status"></div>
+        <p class="fs-3">Posting...</p>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

@@ -9,6 +9,9 @@ var centerLatLngArr = [
     centerLatLng.substring(0, centerLatLng.indexOf(',')),
     centerLatLng.substring(centerLatLng.indexOf(',') + 1, centerLatLng.length)
 ];
+
+var filesUploading = false;
+
 var map = L.map('map', {
     center: centerLatLngArr,
     zoom: document.querySelector('#map').dataset.zoom,
@@ -49,6 +52,12 @@ document.getElementById('remove-location-btn').onclick = function() {
     document.getElementById('location-card').classList.add('d-none');
     document.getElementById('add-location-btn').classList.remove('d-none');
     removeLocation();
+}
+
+document.getElementById('submit-post-btn').onclick = function() {
+    document.getElementById('post-form').classList.add('d-none');
+    document.getElementById('posting').classList.remove('d-none');
+    submitPost();
 }
 
 document.getElementById('add-location-btn').onclick = function() {
@@ -190,8 +199,23 @@ let dropzone = new Dropzone(".dropzone", {
              */
             return this._updateMaxFilesReachedClass();
         }
+    },
+    queuecomplete: function() {
+        filesUploading = false;
+    },
+    sending: function() {
+        filesUploading = true;
     }
 });
+
+function submitPost() {
+    if (!filesUploading) {
+        document.getElementById('post-form').submit();
+    }
+    setTimeout(function() {
+        submitPost();
+    }, 1000);
+}
 
 let existingAttachmentIds = document.getElementById('attachmentIds').value;
 if (existingAttachmentIds.length > 0) {
