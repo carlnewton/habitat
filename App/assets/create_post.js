@@ -175,6 +175,11 @@ let dropzone = new Dropzone(".dropzone", {
         attachmentIdArray.push(response.id);
         file.attachmentId = response.id;
         document.getElementById('attachmentIds').value = attachmentIdArray.join(',');
+
+        // Everything below this line is what the super success method does.
+        if (file.previewElement) {
+            return file.previewElement.classList.add("dz-success");
+        }
     },
     removedfile: function(file) {
         let attachmentIdString = document.getElementById('attachmentIds').value;
@@ -183,10 +188,10 @@ let dropzone = new Dropzone(".dropzone", {
         if (attachmentIndex > -1) {
             attachmentIdArray.splice(attachmentIndex, 1);
             document.getElementById('attachmentIds').value = attachmentIdArray.join(',');
-            if (file.previewElement != null && file.previewElement.parentNode != null) {
-                file.previewElement.parentNode.removeChild(file.previewElement);
-            }
+
             /*
+             * Everything below this line is what the super removedFile method does.
+             *
              * NOTE: There's a visual bug here. When removing a file after existing files have been displayed (eg after
              * the form has been posted and the page has been refreshed to display errors) the upload icon will appear
              * above the icons again.
@@ -197,6 +202,9 @@ let dropzone = new Dropzone(".dropzone", {
              * that I'll allow updates to happen. eg. if editing the post, the attachments should only be removed upon
              * saving the changes, rather than on deletion.
              */
+            if (file.previewElement != null && file.previewElement.parentNode != null) {
+                file.previewElement.parentNode.removeChild(file.previewElement);
+            }
             return this._updateMaxFilesReachedClass();
         }
     },
@@ -205,6 +213,38 @@ let dropzone = new Dropzone(".dropzone", {
     },
     sending: function() {
         filesUploading = true;
+    },
+    error: function(file, message) {
+        retry: if (message === 'Server responded with 408 code.') {
+            if (file.timedOutCount === 5) {
+                break retry;
+            }
+
+            this.removeFile(file);
+            new File([file], file.name, { type: file.type });
+            if (file.timedOutCount === undefined) {
+                file.timedOutCount = 1;
+            } else {
+                file.timedOutCount++;
+            }
+
+            this.uploadFile(file);
+
+            return;
+        }
+
+        // Everything below this line is what the super error method does.
+        if (file.previewElement) {
+            file.previewElement.classList.add("dz-error");
+            if (typeof message !== "string" && message.error) {
+                message = message.error;
+            }
+            for (let node of file.previewElement.querySelectorAll(
+                "[data-dz-errormessage]"
+            )) {
+                node.textContent = message;
+            }
+        }
     }
 });
 
