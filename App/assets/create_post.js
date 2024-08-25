@@ -210,10 +210,10 @@ let dropzone = new Dropzone(".dropzone", {
 
 function submitPost() {
     if (!filesUploading) {
-        document.getElementById('post-form').submit();
+        return document.getElementById('post-form').submit();
     }
     setTimeout(function() {
-        submitPost();
+        return submitPost();
     }, 1000);
 }
 
