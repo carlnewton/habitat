@@ -268,3 +268,7 @@ if (existingAttachmentIds.length > 0) {
         dropzone.displayExistingFile({ name: 'Uploaded file', attachmentId: existingAttachmentIdArray[i] }, '/attachment/unposted/' + existingAttachmentIdArray[i])
     }
 }
+
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(getGeolocation);
+}
