@@ -269,6 +269,8 @@ if (existingAttachmentIds.length > 0) {
     }
 }
 
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(getGeolocation);
+if (document.querySelector('#locationLatLng').value === '') {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getGeolocation);
+    }
 }
