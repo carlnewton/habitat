@@ -66,6 +66,9 @@ class PostRepository extends ServiceEntityRepository
             ;
         }
 
+        $qb->andWhere('post.latitude IS NOT NULL');
+        $qb->andWhere('post.longitude IS NOT NULL');
+
         $qb->addSelect('DEGREES(ACOS((SIN(RADIANS(:latitude)) * SIN(RADIANS(post.latitude))) + (COS(RADIANS(:latitude)) * COS(RADIANS(post.latitude)) * COS(RADIANS(:longitude - post.longitude))))) * :radius AS distanceMiles')
             ->setParameter('latitude', $latLong->latitude)
             ->setParameter('longitude', $latLong->longitude)

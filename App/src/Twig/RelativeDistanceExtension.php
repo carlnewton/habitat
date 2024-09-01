@@ -22,8 +22,12 @@ class RelativeDistanceExtension extends AbstractExtension
         ];
     }
 
-    public function milesToRelativeDistance(float $distance): string
+    public function milesToRelativeDistance(?float $distance): string
     {
+        if ($distance === null) {
+            return 'Distance unknown';
+        }
+
         $measurement = $this->settingsRepository->getSettingByName('locationMeasurement')->getValue();
         if ('km' === $measurement) {
             $distance = $distance * 1.609344;
