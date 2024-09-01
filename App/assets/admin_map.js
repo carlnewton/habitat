@@ -42,10 +42,10 @@ function getGeolocation(position) {
     document.querySelector('#locationZoom').value = 10;
     map.setZoom(document.querySelector('#locationZoom').value);
     document.querySelector('#locationLatLng').value = position.coords.latitude + ',' + position.coords.longitude;
-    map.panTo(new L.LatLng(
-        latLngStr.substring(0, latLngStr.indexOf(',')),
-        latLngStr.substring(latLngStr.indexOf(',') + 1, latLngStr.length)
-    ));
+    map.panTo([
+        position.coords.latitude,
+        position.coords.longitude
+    ]);
     setLocation();
 }
 

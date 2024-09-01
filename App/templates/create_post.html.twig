@@ -49,6 +49,9 @@
             <div class="card-body ratio ratio-16x9">
                 <div id="map" data-center="{{ setting('locationLatLng') }}" data-zoom="{{ setting('locationZoom') }}" data-radius="{{ setting('locationRadiusMeters') }}"></div>
             </div>
+            <div class="card-body text-white bg-danger text-center fw-bold d-none" id="bounds-warning">
+                The location can only be set inside the bounds of this Habitat
+            </div>
             <div class="card-footer">
                 <div class="row">
                     <div class="col-12 gx-2 d-flex align-items-center">

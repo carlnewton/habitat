@@ -61,6 +61,10 @@ document.getElementById('submit-post-btn').onclick = function() {
 }
 
 document.getElementById('add-location-btn').onclick = function() {
+
+    if (document.querySelector('#locationLatLng').value === '' && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getGeolocation);
+    }
     document.getElementById('add-location-btn').classList.add('d-none');
     document.getElementById('location-card').classList.remove('d-none');
 }
@@ -76,6 +80,11 @@ function setLocationFields() {
 
     switch (locationRule) {
         case 'required':
+            if (document.querySelector('#locationLatLng').value === '') {
+                if (locationRule === 'required' && navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(getGeolocation);
+                }
+            }
             document.getElementById('add-location-btn').classList.add('d-none');
             document.getElementById('remove-location-btn').classList.add('d-none');
             document.getElementById('location-card').classList.remove('d-none');
@@ -110,6 +119,8 @@ function removeLocation() {
 }
 
 function setLocation() {
+    document.querySelector('#bounds-warning').classList.add('d-none');
+
     if (location !== undefined && map.hasLayer(location)) {
         map.removeLayer(location);
     }
@@ -136,6 +147,7 @@ function withinPerimeter(latLng) {
 function getGeolocation(position) {
     let latLng = L.latLng(parseFloat(position.coords.latitude).toPrecision(6), parseFloat(position.coords.longitude).toPrecision(6));
     if (!withinPerimeter(latLng)) {
+        document.querySelector('#bounds-warning').classList.remove('d-none');
         return;
     }
 
@@ -157,6 +169,7 @@ document.querySelector('.get-location').onclick = function() {
 map.on('click', function(e) {
     let latLng = L.latLng(parseFloat(e.latlng.lat).toPrecision(6), parseFloat(e.latlng.lng).toPrecision(6));
     if (!withinPerimeter(latLng)) {
+        document.querySelector('#bounds-warning').classList.remove('d-none');
         return;
     }
     document.querySelector('#locationLatLng').value = parseFloat(e.latlng.lat).toPrecision(6) + ',' + parseFloat(e.latlng.lng).toPrecision(6);
@@ -270,7 +283,10 @@ if (existingAttachmentIds.length > 0) {
 }
 
 if (document.querySelector('#locationLatLng').value === '') {
-    if (navigator.geolocation) {
+    let categorySelect = document.getElementById('category');
+    let selectedCategory = categorySelect.options[categorySelect.selectedIndex];
+    let locationRule = selectedCategory.getAttribute('data-location');
+    if (locationRule === 'required' && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getGeolocation);
     }
 }
