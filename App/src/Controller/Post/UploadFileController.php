@@ -121,7 +121,7 @@ class UploadFileController extends AbstractController
             return $image;
         }
 
-        switch($exifData['Orientation']) {
+        switch ($exifData['Orientation']) {
             case 2:
                 imageflip($image, IMG_FLIP_HORIZONTAL);
                 break;
@@ -143,7 +143,7 @@ class UploadFileController extends AbstractController
                 imageflip($image, IMG_FLIP_HORIZONTAL);
                 break;
             case 8:
-                $image = imagerotate($image, 90, 0); 
+                $image = imagerotate($image, 90, 0);
                 break;
         }
 

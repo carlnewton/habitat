@@ -100,8 +100,8 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
     {
         foreach (self::COMMENTS as $postReference => $comments) {
             foreach ($comments as $comment) {
-                $post = $this->getReference('post/'.$postReference);
-                $user = $this->getReference('user/'.strtolower($comment['user']));
+                $post = $this->getReference('post/' . $postReference);
+                $user = $this->getReference('user/' . strtolower($comment['user']));
                 $commentEntity = new Comment();
                 $commentEntity->setPost($post);
                 $commentEntity->setUser($user);

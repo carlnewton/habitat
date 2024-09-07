@@ -21,12 +21,6 @@ class CategoryController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager
     ): Response {
-        $userRepository = $entityManager->getRepository(User::class);
-
-        if (0 === $userRepository->count()) {
-            return $this->redirectToRoute('app_setup_admin');
-        }
-
         $categoryRepository = $entityManager->getRepository(Category::class);
         $category = $categoryRepository->findOneBy([
             'id' => $id,

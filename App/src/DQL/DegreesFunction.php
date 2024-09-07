@@ -21,7 +21,7 @@ class DegreesFunction extends FunctionNode
 
     public function dispatch(SqlWalker $sqlWalker): string
     {
-        return 'DEGREES('.$this->firstExpression->dispatch($sqlWalker).')';
+        return 'DEGREES(' . $this->firstExpression->dispatch($sqlWalker) . ')';
     }
 
     public function getSql(SqlWalker $sqlWalker): string

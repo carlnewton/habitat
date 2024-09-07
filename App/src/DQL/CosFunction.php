@@ -21,7 +21,7 @@ class CosFunction extends FunctionNode
 
     public function dispatch(SqlWalker $sqlWalker): string
     {
-        return 'COS('.$this->firstExpression->dispatch($sqlWalker).')';
+        return 'COS(' . $this->firstExpression->dispatch($sqlWalker) . ')';
     }
 
     public function getSql(SqlWalker $sqlWalker): string

@@ -21,7 +21,7 @@ class AcosFunction extends FunctionNode
 
     public function dispatch(SqlWalker $sqlWalker): string
     {
-        return 'ACOS('.$this->firstExpression->dispatch($sqlWalker).')';
+        return 'ACOS(' . $this->firstExpression->dispatch($sqlWalker) . ')';
     }
 
     public function getSql(SqlWalker $sqlWalker): string

@@ -30,4 +30,19 @@ class SettingsRepository extends ServiceEntityRepository
                     ->getOneOrNullResult()
         ;
     }
+
+    public function isValue(string $name, mixed $value): bool
+    {
+        $setting = $this->getSettingByName($name);
+
+        if (!$setting) {
+            return false;
+        }
+
+        if ($setting->getValue() === $value) {
+            return true;
+        }
+
+        return false;
+    }
 }

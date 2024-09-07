@@ -21,7 +21,7 @@ class SinFunction extends FunctionNode
 
     public function dispatch(SqlWalker $sqlWalker): string
     {
-        return 'SIN('.$this->firstExpression->dispatch($sqlWalker).')';
+        return 'SIN(' . $this->firstExpression->dispatch($sqlWalker) . ')';
     }
 
     public function getSql(SqlWalker $sqlWalker): string

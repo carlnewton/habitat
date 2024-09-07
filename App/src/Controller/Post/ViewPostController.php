@@ -22,12 +22,6 @@ class ViewPostController extends AbstractController
         Security $security,
         EntityManagerInterface $entityManager
     ): Response {
-        $userRepository = $entityManager->getRepository(User::class);
-
-        if (0 === $userRepository->count()) {
-            return $this->redirectToRoute('app_setup_admin');
-        }
-
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
             'id' => $id,

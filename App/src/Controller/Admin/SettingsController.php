@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Settings;
-use App\Entity\User;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,12 +19,6 @@ class SettingsController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $userRepository = $entityManager->getRepository(User::class);
-
-        if (0 === $userRepository->count()) {
-            return $this->redirectToRoute('app_setup_admin');
-        }
-
         $settingsRepository = $entityManager->getRepository(Settings::class);
 
         if ('POST' === $request->getMethod()) {
@@ -150,7 +143,7 @@ class SettingsController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->get('habitatName')) > Settings::HABITAT_NAME_MAX_LENGTH) {
-            $errors['habitatName'][] = 'Your Habitat name must be a maximum of '.Settings::HABITAT_NAME_MAX_LENGTH.' characters';
+            $errors['habitatName'][] = 'Your Habitat name must be a maximum of ' . Settings::HABITAT_NAME_MAX_LENGTH . ' characters';
         }
 
         if (

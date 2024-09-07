@@ -160,7 +160,7 @@ class CreatePostController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->get('title')) > Post::TITLE_MAX_LENGTH) {
-            $errors['title'][] = 'The title must be a maximum of '.Post::TITLE_MAX_LENGTH.' characters';
+            $errors['title'][] = 'The title must be a maximum of ' . Post::TITLE_MAX_LENGTH . ' characters';
         } elseif (empty(trim($request->get('title')))) {
             $errors['title'][] = 'The title cannot be empty';
         }

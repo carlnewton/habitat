@@ -1,0 +1,46 @@
+{% extends 'setup/base.html.twig' %}
+
+{% block body %}
+    <h1 class="display-5 fw-bold">Habitat</h1>
+    <div class="mt-3">
+        <i class="bi bi-circle px-2 text-black-50"></i>
+        <i class="bi bi-circle px-2 text-black-50"></i>
+        <i class="bi bi-circle-fill px-2 text-black-50"></i>
+    </div>
+    <div class="col-lg-6 col-md-8 mx-auto">
+        <p class="lead mb-4">3. Add some categories</p>
+        <form class="text-start" method="post" action="{{ path('app_setup_categories') }}">
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% if errors is defined %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="list-group mb-3">
+                {% for category_reference, category_properties in suggested_categories %}
+                    <div class="list-group-item d-flex">
+                        <div class="flex-grow-1">
+                            <h5>{{ category_properties.name }}</h5>
+                            <p>{{ category_properties.description }}</p>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch form-switch-lg pt-1">
+                                <input class="form-check-input" type="checkbox" name="{{ category_reference }}" role="switch" id="{{ category_reference }}"{% if selected_categories[category_reference] is defined %} checked{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary btn-lg">Continue</button>
+            </div>
+            <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
+        </form>
+    </div>
+{% endblock %}

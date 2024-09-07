@@ -136,7 +136,7 @@ class Post
             return null;
         }
 
-        return floatval($this->latitude).','.floatval($this->longitude);
+        return floatval($this->latitude) . ',' . floatval($this->longitude);
     }
 
     public function getPosted(): ?\DateTimeInterface

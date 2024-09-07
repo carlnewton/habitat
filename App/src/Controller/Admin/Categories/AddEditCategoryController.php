@@ -4,7 +4,6 @@ namespace App\Controller\Admin\Categories;
 
 use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +21,6 @@ class AddEditCategoryController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $userRepository = $entityManager->getRepository(User::class);
-
-        if (0 === $userRepository->count()) {
-            return $this->redirectToRoute('app_setup_admin');
-        }
-
         $categoryRepository = $entityManager->getRepository(Category::class);
 
         $action = 'add';

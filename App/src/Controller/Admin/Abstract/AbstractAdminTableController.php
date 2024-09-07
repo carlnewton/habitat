@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin\Abstract;
 
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,12 +16,6 @@ class AbstractAdminTableController extends AbstractController
 
     protected function renderTemplate(Request $request, string $templatePath)
     {
-        $userRepository = $this->entityManager->getRepository(User::class);
-
-        if (0 === $userRepository->count()) {
-            return $this->redirectToRoute('app_setup_admin');
-        }
-
         $page = $request->get('page');
         if ((int) $page < 1) {
             $page = 1;

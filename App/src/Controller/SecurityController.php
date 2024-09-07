@@ -118,17 +118,17 @@ class SecurityController extends AbstractController
 
             $domainSetting = $settingsRepository->getSettingByName('domain');
             $email = (new Email())
-                ->from('admin@'.$domainSetting->getValue())
+                ->from('admin@' . $domainSetting->getValue())
                 ->to($user->getEmailAddress())
-                ->subject('Verify your email address for '.$domainSetting->getValue())
+                ->subject('Verify your email address for ' . $domainSetting->getValue())
                 ->html(
-                    '<p>Hello '.$user->getUsername().',</p>'.
-                    '<p>Click the link below to verify the email address for your account.</p>'.
-                    '<p>Ignore this email if you didn\'t create this account.</p>'.
-                    '<p><a href="https://'.$domainSetting->getValue().$router->generate('app_verify_user', [
+                    '<p>Hello ' . $user->getUsername() . ',</p>' .
+                    '<p>Click the link below to verify the email address for your account.</p>' .
+                    '<p>Ignore this email if you didn\'t create this account.</p>' .
+                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
                         'userId' => $user->getId(),
                         'verificationString' => $emailVerificationString,
-                    ]).'">Verify your email address</a>'
+                    ]) . '">Verify your email address</a>'
                 )
             ;
 
@@ -145,11 +145,11 @@ class SecurityController extends AbstractController
         $errors = [];
 
         if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
-            $errors['username'][] = 'Your username must be a minimum of '.User::USERNAME_MIN_LENGTH.' characters';
+            $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
         }
 
         if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
-            $errors['username'][] = 'Your username must be a maximum of '.User::USERNAME_MAX_LENGTH.' characters';
+            $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
         }
 
         if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
@@ -255,17 +255,17 @@ class SecurityController extends AbstractController
             $settingsRepository = $this->entityManager->getRepository(Settings::class);
             $domainSetting = $settingsRepository->getSettingByName('domain');
             $email = (new Email())
-                ->from('admin@'.$domainSetting->getValue())
+                ->from('admin@' . $domainSetting->getValue())
                 ->to($user->getEmailAddress())
-                ->subject('Reset your password for '.$domainSetting->getValue())
+                ->subject('Reset your password for ' . $domainSetting->getValue())
                 ->html(
-                    '<p>Hello '.$user->getUsername().',</p>'.
-                    '<p>Click the link below to reset the password for your account.</p>'.
-                    '<p>Ignore this email if you didn\'t request a password reset.</p>'.
-                    '<p><a href="https://'.$domainSetting->getValue().$router->generate('app_reset_password', [
+                    '<p>Hello ' . $user->getUsername() . ',</p>' .
+                    '<p>Click the link below to reset the password for your account.</p>' .
+                    '<p>Ignore this email if you didn\'t request a password reset.</p>' .
+                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_reset_password', [
                         'userId' => $user->getId(),
                         'verificationString' => $emailVerificationString,
-                    ]).'">Reset your password</a>'
+                    ]) . '">Reset your password</a>'
                 )
             ;
 

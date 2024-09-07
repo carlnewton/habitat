@@ -63,7 +63,7 @@ class CategoryFixtures extends Fixture
 
             $manager->persist($categoryEntity);
 
-            $this->addReference('category/'.$categoryName, $categoryEntity);
+            $this->addReference('category/' . $categoryName, $categoryEntity);
         }
 
         $manager->flush();

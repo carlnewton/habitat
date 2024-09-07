@@ -40,11 +40,11 @@ class LoadAttachmentController extends AbstractController
 
         $filename = basename($attachment->getFilename());
 
-        if (!file_exists(self::UPLOADS_DIRECTORY.$filename)) {
+        if (!file_exists(self::UPLOADS_DIRECTORY . $filename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        return new BinaryFileResponse(self::UPLOADS_DIRECTORY.$filename);
+        return new BinaryFileResponse(self::UPLOADS_DIRECTORY . $filename);
     }
 
     #[Route(path: '/post/{postId}/attachment/thumbnail/{attachmentId}/{width}', name: 'app_load_attachment_thumbnail', methods: ['GET'])]
@@ -98,42 +98,42 @@ class LoadAttachmentController extends AbstractController
     {
         $originalFilename = basename($attachment->getFilename());
 
-        if (!file_exists(self::UPLOADS_DIRECTORY.$originalFilename)) {
+        if (!file_exists(self::UPLOADS_DIRECTORY . $originalFilename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        $filename = $width.'.'.$originalFilename;
+        $filename = $width . '.' . $originalFilename;
 
-        if (!file_exists(self::UPLOADS_DIRECTORY.$filename)) {
-            list($originalWidth, $originalHeight) = getimagesize(self::UPLOADS_DIRECTORY.$originalFilename);
+        if (!file_exists(self::UPLOADS_DIRECTORY . $filename)) {
+            list($originalWidth, $originalHeight) = getimagesize(self::UPLOADS_DIRECTORY . $originalFilename);
             if ($width >= $originalWidth) {
-                return new BinaryFileResponse(self::UPLOADS_DIRECTORY.$originalFilename);
+                return new BinaryFileResponse(self::UPLOADS_DIRECTORY . $originalFilename);
             }
             $height = ($originalHeight * $width) / $originalWidth;
             $thumbnail = imagecreatetruecolor($width, $height);
 
-            switch (pathinfo(self::UPLOADS_DIRECTORY.$originalFilename, PATHINFO_EXTENSION)) {
+            switch (pathinfo(self::UPLOADS_DIRECTORY . $originalFilename, PATHINFO_EXTENSION)) {
                 case 'jpg':
                 case 'jpeg':
-                    $source = imagecreatefromjpeg(self::UPLOADS_DIRECTORY.$originalFilename);
+                    $source = imagecreatefromjpeg(self::UPLOADS_DIRECTORY . $originalFilename);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagejpeg($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                    imagejpeg($thumbnail, self::UPLOADS_DIRECTORY . $filename);
                     break;
                 case 'gif':
-                    $source = imagecreatefromgif(self::UPLOADS_DIRECTORY.$originalFilename);
+                    $source = imagecreatefromgif(self::UPLOADS_DIRECTORY . $originalFilename);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagegif($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                    imagegif($thumbnail, self::UPLOADS_DIRECTORY . $filename);
                     break;
                 case 'png':
-                    $source = imagecreatefrompng(self::UPLOADS_DIRECTORY.$originalFilename);
+                    $source = imagecreatefrompng(self::UPLOADS_DIRECTORY . $originalFilename);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagepng($thumbnail, self::UPLOADS_DIRECTORY.$filename);
+                    imagepng($thumbnail, self::UPLOADS_DIRECTORY . $filename);
                     break;
                 default:
                     return new Response('', Response::HTTP_NOT_FOUND);
             }
         }
 
-        return new BinaryFileResponse(self::UPLOADS_DIRECTORY.$filename);
+        return new BinaryFileResponse(self::UPLOADS_DIRECTORY . $filename);
     }
 }

@@ -164,18 +164,18 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         foreach (self::POSTS as $post) {
             $postEntity = new Post();
             $postEntity
-                ->setUser($this->getReference('user/'.strtolower($post['user'])))
+                ->setUser($this->getReference('user/' . strtolower($post['user'])))
                 ->setTitle($post['title'])
                 ->setBody($post['body'])
                 ->setLatitude($post['latitude'])
                 ->setLongitude($post['longitude'])
                 ->setPosted(\DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $post['posted']))
-                ->setCategory($this->getReference('category/'.$post['category']))
+                ->setCategory($this->getReference('category/' . $post['category']))
             ;
 
             $manager->persist($postEntity);
 
-            $this->addReference('post/'.++$index, $postEntity);
+            $this->addReference('post/' . ++$index, $postEntity);
         }
 
         $manager->flush();

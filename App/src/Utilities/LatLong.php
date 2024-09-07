@@ -25,7 +25,7 @@ class LatLong
             return '';
         }
 
-        return $this->latitude.','.$this->longitude;
+        return $this->latitude . ',' . $this->longitude;
     }
 
     public static function isValidLatLong(string $latLong): bool

@@ -24,7 +24,7 @@ class RelativeDistanceExtension extends AbstractExtension
 
     public function milesToRelativeDistance(?float $distance): string
     {
-        if ($distance === null) {
+        if (null === $distance) {
             return 'Distance unknown';
         }
 
@@ -34,9 +34,9 @@ class RelativeDistanceExtension extends AbstractExtension
         }
 
         if ($distance >= 100) {
-            return round($distance).' '.$measurement.' away';
+            return round($distance) . ' ' . $measurement . ' away';
         }
 
-        return round($distance, 1).' '.$measurement.' away';
+        return round($distance, 1) . ' ' . $measurement . ' away';
     }
 }

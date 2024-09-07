@@ -21,7 +21,7 @@ class RadiansFunction extends FunctionNode
 
     public function dispatch(SqlWalker $sqlWalker): string
     {
-        return 'RADIANS('.$this->firstExpression->dispatch($sqlWalker).')';
+        return 'RADIANS(' . $this->firstExpression->dispatch($sqlWalker) . ')';
     }
 
     public function getSql(SqlWalker $sqlWalker): string

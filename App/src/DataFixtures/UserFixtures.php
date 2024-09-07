@@ -132,7 +132,7 @@ class UserFixtures extends Fixture
 
             $manager->persist($userEntity);
 
-            $this->addReference('user/'.strtolower($userEntity->getUsername()), $userEntity);
+            $this->addReference('user/' . strtolower($userEntity->getUsername()), $userEntity);
         }
 
         $manager->flush();
