@@ -11,7 +11,7 @@ class SettingFixtures extends Fixture
     private const SETTINGS = [
         'habitatName' => 'City of London',
         'locationRadiusMeters' => 3000,
-        'locationMeasurement' => 'kms',
+        'locationMeasurement' => 'km',
         'locationZoom' => 14,
         'locationLatLng' => '51.5071,-0.1283',
         'setup' => 'complete',
