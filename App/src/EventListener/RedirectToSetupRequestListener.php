@@ -6,6 +6,7 @@ use App\Entity\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectToSetupRequestListener
 {
@@ -15,8 +16,10 @@ class RedirectToSetupRequestListener
         'app_setup_categories',
     ];
 
-    public function __construct(protected EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        protected EntityManagerInterface $entityManager,
+        protected UrlGeneratorInterface $router
+    ) {
     }
 
     public function __invoke(
@@ -42,6 +45,6 @@ class RedirectToSetupRequestListener
             return;
         }
 
-        $event->setResponse(new RedirectResponse('setup', RedirectResponse::HTTP_FOUND));
+        $event->setResponse(new RedirectResponse($this->router->generate('app_setup_admin'), RedirectResponse::HTTP_FOUND));
     }
 }
