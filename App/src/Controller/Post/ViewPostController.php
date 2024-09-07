@@ -2,6 +2,7 @@
 
 namespace App\Controller\Post;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,8 +41,11 @@ class ViewPostController extends AbstractController
             }
         }
 
+        $categoryRepository = $entityManager->getRepository(Category::class);
+
         return $this->render('view_post.html.twig', [
             'post' => $post,
+            'show_category' => $categoryRepository->count() > 1,
         ]);
     }
 }

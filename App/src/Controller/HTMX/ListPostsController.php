@@ -37,10 +37,10 @@ class ListPostsController extends AbstractController
             'removed' => false,
         ];
 
+        $categoryRepository = $entityManager->getRepository(Category::class);
         if (!empty($request->query->get('category'))) {
             $categoryId = (int) $request->query->get('category');
 
-            $categoryRepository = $entityManager->getRepository(Category::class);
             $category = $categoryRepository->findOneBy(['id' => $categoryId]);
             $filter['category'] = $category;
             $renderArray['category'] = $category;
@@ -66,6 +66,7 @@ class ListPostsController extends AbstractController
 
         $renderArray['posts'] = $posts;
         $renderArray['offset'] = $offset + self::MAX_RESULTS_PER_PAGE;
+        $renderArray['show_category'] = $categoryRepository->count() > 1;
 
         return $this->render('partials/hx/list_posts.html.twig', $renderArray);
     }

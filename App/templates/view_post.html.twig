@@ -7,12 +7,14 @@
 
 {% block body %}
     <h1>{{ post.title }}</h1>
-    <div class="mb-2">
-        <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">
-            <i class="bi bi-tag"></i>
-            {{ post.category.name }}
-        </a>
-    </div>
+    {% if show_category %}
+        <div class="mb-2">
+            <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">
+                <i class="bi bi-tag"></i>
+                {{ post.category.name }}
+            </a>
+        </div>
+    {% endif %}
     {% if post.body is not empty %}
         <p>{{ post.body }}</p>
     {% endif %}

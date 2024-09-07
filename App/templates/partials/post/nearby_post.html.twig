@@ -7,7 +7,7 @@
                 </a>
             </h2>
             <div class="mb-2">
-                {% if category is not defined %}
+                {% if category is not defined and show_category %}
                     <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">
                         <i class="bi bi-tag"></i>
                         {{ post.category.name }}

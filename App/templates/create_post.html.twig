@@ -23,7 +23,7 @@
             <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
             <label for="body">Body</label>
         </div>
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
             <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="Category">
                 {% for category in categories %}
                     <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.label|lower }}">{{ category.name }}</option>

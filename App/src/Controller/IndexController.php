@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,9 +42,12 @@ class IndexController extends AbstractController
             }
         }
 
+        $categoryRepository = $entityManager->getRepository(Category::class);
+
         return $this->render('index.html.twig', [
             'posts' => $posts,
             'offset' => self::MAX_POSTS,
+            'show_category' => $categoryRepository->count() > 1,
         ]);
     }
 }
