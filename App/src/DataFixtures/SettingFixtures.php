@@ -14,6 +14,7 @@ class SettingFixtures extends Fixture
         'locationMeasurement' => 'kms',
         'locationZoom' => 14,
         'locationLatLng' => '51.5071,-0.1283',
+        'setup' => 'complete',
     ];
 
     public function load(ObjectManager $manager)

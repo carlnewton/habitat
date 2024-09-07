@@ -57,7 +57,14 @@ class UsersSuspensionController extends AbstractController
             ]);
         }
 
+        $usersSuspended = false;
         foreach ($users as $user) {
+            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $this->addFlash('warning', $user->getUsername() . ' could not be suspended because they are an administrator.');
+                continue;
+            }
+
+            $usersSuspended = true;
             $user->setSuspended(true);
 
             foreach ($user->getPosts() as $post) {
@@ -72,9 +79,11 @@ class UsersSuspensionController extends AbstractController
 
             $entityManager->persist($user);
         }
-        $entityManager->flush();
 
-        $this->addFlash('notice', 'Users suspended');
+        if ($usersSuspended) {
+            $entityManager->flush();
+            $this->addFlash('notice', 'Users suspended');
+        }
 
         return $this->redirectToRoute('app_moderation_users');
     }
