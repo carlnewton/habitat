@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+export APP_SECRET=$(openssl rand -hex 16)
+/usr/local/bin/php /var/www/html/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+/usr/local/bin/php /var/www/html/bin/console cache:clear
+
+if [ "${1#-}" != "$1" ]; then
+    set -- apache2-foreground "$@"
+fi
+
+exec "$@"
