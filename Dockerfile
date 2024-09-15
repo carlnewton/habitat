@@ -7,8 +7,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # ini files
-COPY ./opcache.ini "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
-COPY ./file_uploads.ini "$PHP_INI_DIR/conf.d/file_uploads.ini"
+COPY ./Docker/var/opcache.ini "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
+COPY ./Docker/var/file_uploads.ini "$PHP_INI_DIR/conf.d/file_uploads.ini"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 COPY App .
@@ -38,5 +38,5 @@ RUN npm install
 RUN npm run build
 
 # Override docker entrypoint to run database migrations and set APP_SECRET
-COPY docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
+COPY ./Docker/var/docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
 RUN chmod +x /usr/local/bin/docker-php-entrypoint
