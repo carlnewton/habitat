@@ -1,0 +1,3 @@
+email: your.email@example.com
+domain: example.com
+document_root: /var/www/html

@@ -3,11 +3,6 @@
 This project is currently in very early development. For information on the purpose of Habitat,
 [read the blog post](https://carlnewton.github.io/posts/location-based-social-network/).
 
-## Requirements
-
-* [Docker](https://www.docker.com/)
-* [Docker Compose](https://docs.docker.com/compose/)
-
 ## Getting Started
 
 Fork this repository to create your own instance of Habitat. To adhere to the AGPL license, your fork must be a public
@@ -22,6 +17,16 @@ When hosting Habitat using the Dockerfile container, you'll need to connect it t
 - A volume at `/var/www/uploads/` for persistent image storage
 - A database which will be connected to with an environment variable
 - A mail service for sending out emails
+
+## Linux Server Hosting
+
+The packages and setup required for hosting Habitat on a Linux server are in the Ansible playbook.
+
+To run the ansible playbook:
+
+1. Navigate to the `Ansible` directory
+2. Copy `vars.yaml.template` to `vars.yaml` and amend its contents accordingly
+3. Run `ansible-playbook -i "domain-or-ip-address.example.com," -u example-user playbook.yaml --key-file=~/.ssh/example-key --become`
 
 ### Continuous Deployment
 

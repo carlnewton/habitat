@@ -1,0 +1,109 @@
+- name: Habitat Server Provisioning
+  hosts: all
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: Update dnf package index
+      dnf:
+        update_cache: yes
+
+    - name: Install httpd
+      dnf:
+        name: httpd
+        state: present
+
+    - name: Install supporting packages
+      dnf:
+        name:
+          - libicu-devel
+          - libzip-devel
+          - zip
+          - libjpeg-devel
+          - libpng-devel
+          - freetype-devel
+          - git
+          - mod_ssl
+          - nodejs
+          - npm
+        state: present
+
+    - name: Install PHP 8.3 and required extensions
+      dnf:
+        name:
+          - php8.3
+          - php8.3-cli
+          - php8.3-mysqlnd
+          - php8.3-xml
+          - php8.3-mbstring
+          - php8.3-intl
+          - php8.3-opcache
+          - php8.3-zip
+          - php8.3-gd
+        state: present
+
+    - name: Copy INI files to php conf.d directory
+      copy:
+        src: "{{ item }}"
+        dest: /etc/php.d/
+        owner: root
+        group: root
+        mode: '0644'
+      with_fileglob:
+        - var/*.ini
+
+    - name: Create virtual host configuration for HTTP
+      ansible.builtin.template:
+        src: httpd-vhost.conf.j2
+        dest: /etc/httpd/conf.d/{{ domain }}.conf
+      notify: restart httpd
+
+    - name: Install Certbot
+      dnf:
+        name:
+          - certbot
+          - python3-certbot-apache
+        state: present
+
+    - name: Obtain Let's Encrypt certificate
+      ansible.builtin.command:
+        cmd: certbot --apache --non-interactive --agree-tos --email {{ email }} -d {{ domain }}
+      register: certbot_result
+      changed_when: certbot_result.rc == 0
+
+    - name: Create or update the rewrite configuration
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/conf.d/rewrite.conf
+        line: |
+          RewriteEngine On
+          RewriteCond %{HTTPS} off
+          RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+        state: present
+        create: yes
+      notify: restart httpd
+
+    - name: Start and enable httpd service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Open port 443 in the firewall
+      ansible.builtin.command:
+        cmd: iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+      ignore_errors: yes
+
+    - name: Open port 80 in the firewall
+      ansible.builtin.command:
+        cmd: iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+      ignore_errors: yes
+
+    - name: Save iptables rules
+      ansible.builtin.command:
+        cmd: service iptables save
+      ignore_errors: yes
+
+  handlers:
+    - name: restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
