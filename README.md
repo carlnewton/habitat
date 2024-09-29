@@ -8,6 +8,29 @@ This project is currently in very early development. For information on the purp
 Fork this repository to create your own instance of Habitat. To adhere to the AGPL license, your fork must be a public
 repository, so be careful not to ever commit any secrets to your fork.
 
+## Linux Server Hosting
+
+The packages and setup required for hosting Habitat on a Linux server are in the Ansible playbook.
+
+Install ansible and the collections:
+
+```sh
+ansible-galaxy collection install community.general
+ansible-galaxy collection install community.mysql
+```
+
+To run the ansible playbook:
+
+1. Navigate to the `Ansible` directory
+2. Copy `vars.yaml.template` to `vars.yaml` and amend its contents accordingly
+3. Run `ansible-playbook -i "domain-or-ip-address.example.com," -u example-user playbook.yaml --key-file=~/.ssh/example-key`
+
+### Deploying the application
+
+1. Update the `host` entry in App/deploy.php accordingly
+3. Run `vendor/bin/dep deploy`
+2. Run `vendor/bin/dep database:migrate`
+
 ## Docker Hosting
 
 Habitat can be setup to run on a container hosting service (Such as [Google Cloud Run](https://cloud.google.com/run)).
@@ -17,16 +40,6 @@ When hosting Habitat using the Dockerfile container, you'll need to connect it t
 - A volume at `/var/www/uploads/` for persistent image storage
 - A database which will be connected to with an environment variable
 - A mail service for sending out emails
-
-## Linux Server Hosting
-
-The packages and setup required for hosting Habitat on a Linux server are in the Ansible playbook.
-
-To run the ansible playbook:
-
-1. Navigate to the `Ansible` directory
-2. Copy `vars.yaml.template` to `vars.yaml` and amend its contents accordingly
-3. Run `ansible-playbook -i "domain-or-ip-address.example.com," -u example-user playbook.yaml --key-file=~/.ssh/example-key --become`
 
 ### Continuous Deployment
 

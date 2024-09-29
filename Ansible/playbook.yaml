@@ -7,10 +7,27 @@
       dnf:
         update_cache: yes
 
+    - name: Install development tools and PHP packages
+      dnf:
+        name:
+          - gcc
+          - make
+          - php-devel
+          - php-pear
+        state: present
+      become: yes
+
+    - name: Update PECL channel
+      command: pecl channel-update pecl.php.net
+
+    - name: Set PHP ini path for PEAR
+      command: pear config-set php_ini /etc/php.ini
+
     - name: Install httpd
       dnf:
         name: httpd
         state: present
+      become: yes
 
     - name: Install supporting packages
       dnf:
@@ -26,6 +43,7 @@
           - nodejs
           - npm
         state: present
+      become: yes
 
     - name: Install PHP 8.3 and required extensions
       dnf:
@@ -40,6 +58,7 @@
           - php8.3-zip
           - php8.3-gd
         state: present
+      become: yes
 
     - name: Copy INI files to php conf.d directory
       copy:
@@ -55,7 +74,24 @@
       ansible.builtin.template:
         src: httpd-vhost.conf.j2
         dest: /etc/httpd/conf.d/{{ domain }}.conf
-      notify: restart httpd
+      become: yes
+
+    - name: Update the DocumentRoot in httpd.conf
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^DocumentRoot'
+        line: 'DocumentRoot "/var/www/html/current/public"'
+        state: present
+      become: yes
+
+    - name: Ensure the new document root directory exists
+      file:
+        path: /var/www/html/current/public
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0775'
+      become: yes
 
     - name: Install Certbot
       dnf:
@@ -63,12 +99,14 @@
           - certbot
           - python3-certbot-apache
         state: present
+      become: yes
 
     - name: Obtain Let's Encrypt certificate
       ansible.builtin.command:
         cmd: certbot --apache --non-interactive --agree-tos --email {{ email }} -d {{ domain }}
       register: certbot_result
       changed_when: certbot_result.rc == 0
+      become: yes
 
     - name: Create or update the rewrite configuration
       ansible.builtin.lineinfile:
@@ -79,7 +117,7 @@
           RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
         state: present
         create: yes
-      notify: restart httpd
+      become: yes
 
     - name: Start and enable httpd service
       ansible.builtin.service:
@@ -102,8 +140,142 @@
         cmd: service iptables save
       ignore_errors: yes
 
-  handlers:
-    - name: restart httpd
-      ansible.builtin.service:
-        name: httpd
-        state: restarted
+    - name: Install PIP
+      dnf:
+        name: python3-pip
+        state: present
+      become: yes
+      tags:
+      - mariadb
+
+    - name: Install PyMySQL
+      pip:
+        name: PyMySQL
+        state: present
+      become: yes
+      tags:
+      - mariadb
+
+    - name: Install mariadb
+      dnf:
+        name:
+          - mariadb105
+          - mariadb105-server
+        state: present
+      become: yes
+      tags:
+      - mariadb
+
+    - name: Start and enable MariaDB service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+      tags:
+      - mariadb
+
+    - name: Generate a random database password
+      set_fact:
+        random_password: "{{ lookup('community.general.random_string', length=16, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!#$()[]') }}"
+      tags:
+      - mariadb
+
+    - name: Create database
+      mysql_db:
+        name: "habitat"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+      become: yes
+      tags:
+      - mariadb
+
+    - name: Create database user
+      mysql_user:
+        name: "habitat"
+        password: "{{ random_password }}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+      become: yes
+      tags:
+      - mariadb
+
+    - name: Grant privileges to the user
+      mysql_user:
+        name: "habitat"
+        priv: "habitat.*:ALL"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+      become: yes
+      tags:
+      - mariadb
+
+    - name: Check if .env.local file exists
+      stat:
+        path: "{{ shared_path }}/.env.local"
+      register: env_file
+      tags:
+      - variables
+
+    - name: Create shared directory
+      file:
+        path: "{{ shared_path }}"
+        owner: apache
+        group: apache
+        mode: '0775'
+        state: directory
+      become: yes
+      when: not env_file.stat.exists
+      tags:
+      - variables
+
+    - name: Create .env.local file if it does not exist
+      copy:
+        dest: "{{ shared_path }}/.env.local"
+        content: ""
+        owner: apache
+        group: apache
+        mode: '0664'
+      when: not env_file.stat.exists
+      become: yes
+      tags:
+      - variables
+
+    - name: Check if DATABASE_URL is set in .env.local
+      command: grep '^DATABASE_URL=' "{{ shared_path }}/.env.local"
+      register: db_url_check
+      ignore_errors: yes
+      tags:
+      - variables
+
+    - name: Add DATABASE_URL to .env.local
+      lineinfile:
+        path: "{{ shared_path }}/.env.local"
+        line: "DATABASE_URL=mysql://habitat:{{ random_password }}@localhost:3306/habitat"
+        state: present
+      when: db_url_check.rc != 0
+      become: yes
+      tags:
+      - variables
+
+    - name: Check if APP_ENV is set in .env.local
+      command: grep '^APP_ENV=' "{{ shared_path }}/.env.local"
+      register: app_env_check
+      ignore_errors: yes
+      tags:
+      - variables
+      
+    - name: Add APP_ENV to .env.local
+      lineinfile:
+        path: "{{ shared_path }}/.env.local"
+        line: "APP_ENV=prod"
+        state: present
+      when: app_env_check.rc != 0
+      become: yes
+      tags:
+      - variables
+
+    - name: Remove current directory in preparation for it to be created as a symlink from Deployer
+      file:
+        path: /var/www/html/current
+        state: absent
+      become: yes
