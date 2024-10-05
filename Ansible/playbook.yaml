@@ -93,6 +93,15 @@
         mode: '0775'
       become: yes
 
+    - name: Ensure the file uploads directory exists
+      file:
+        path: /var/www/uploads
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0775'
+      become: yes
+
     - name: Install Certbot
       dnf:
         name:
@@ -176,7 +185,7 @@
 
     - name: Generate a random database password
       set_fact:
-        random_password: "{{ lookup('community.general.random_string', length=16, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!#$()[]') }}"
+        random_password: "{{ lookup('community.general.random_string', length=16, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
       tags:
       - mariadb
 
@@ -240,19 +249,12 @@
       tags:
       - variables
 
-    - name: Check if DATABASE_URL is set in .env.local
-      command: grep '^DATABASE_URL=' "{{ shared_path }}/.env.local"
-      register: db_url_check
-      ignore_errors: yes
-      tags:
-      - variables
-
     - name: Add DATABASE_URL to .env.local
       lineinfile:
         path: "{{ shared_path }}/.env.local"
+        regexp: '^DATABASE_URL='
         line: "DATABASE_URL=mysql://habitat:{{ random_password }}@localhost:3306/habitat"
         state: present
-      when: db_url_check.rc != 0
       become: yes
       tags:
       - variables
@@ -274,8 +276,14 @@
       tags:
       - variables
 
+    - name: Check if public directory is empty
+      find:
+        paths: '/var/www/html/current/public'
+      register: publicFilesFound
+
     - name: Remove current directory in preparation for it to be created as a symlink from Deployer
       file:
         path: /var/www/html/current
         state: absent
+      when: publicFilesFound == 0
       become: yes
