@@ -12,6 +12,11 @@
             <li class="nav-item">
                 <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">Categories</a>
             </li>
+            {% if setting('imageStorage') == 's3' %}
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_s3_details' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_s3_details' %} aria-current="page"{% endif %} href="{{ path('app_admin_s3_details') }}">Amazon S3 details</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 {% endblock %}

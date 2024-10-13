@@ -6,7 +6,9 @@ use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
 use App\Entity\Settings;
 use App\Entity\User;
+use App\Utilities\AmazonS3;
 use App\Utilities\LatLong;
+use Aws\S3\Exception\S3Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -18,9 +20,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SetupController extends AbstractController
 {
+    /**
+     * The setup routes are explicitly bypassed in the RedirectToSetupRequestListener. If adding a new setup step, it is
+     * important to also add to the listener to prevent a redirect loop.
+     */
     private const SETUP_STEP_TO_ROUTE = [
         'location' => 'app_setup_location',
         'categories' => 'app_setup_categories',
+        'image_storage' => 'app_setup_image_storage',
         'complete' => 'app_index_index',
     ];
 
@@ -72,6 +79,11 @@ class SetupController extends AbstractController
             'description' => 'A catch-all for various topics that do not fit anywhere else.',
             'location' => CategoryLocationOptionsEnum::OPTIONAL,
         ],
+    ];
+
+    private const IMAGE_STORAGE_OPTIONS = [
+        'local',
+        's3',
     ];
 
     public function __construct(
@@ -146,16 +158,15 @@ class SetupController extends AbstractController
 
             return $this->render('setup/admin.html.twig');
         }
+
         $setupSetting = new Settings();
         $setupSetting
             ->setName('setup')
             ->setValue('location')
         ;
-
-        $this->entityManager->persist($admin);
         $this->entityManager->persist($setupSetting);
+        $this->entityManager->persist($admin);
         $this->entityManager->flush();
-
         $this->security->login($admin, 'form_login');
 
         return $this->redirectToRoute('app_setup_location');
@@ -237,11 +248,7 @@ class SetupController extends AbstractController
         $locationLatLngSetting->setValue($request->get('locationLatLng'));
         $this->entityManager->persist($locationLatLngSetting);
 
-        $setupSetting = $settingsRepository->getSettingByName('setup');
-        $setupSetting
-            ->setName('setup')
-            ->setValue('categories')
-        ;
+        $setupSetting->setValue('categories');
 
         $this->entityManager->persist($setupSetting);
         $this->entityManager->flush();
@@ -312,15 +319,171 @@ class SetupController extends AbstractController
             $this->entityManager->persist($category);
         }
 
+        $setupSetting->setValue('image_storage');
+        $this->entityManager->persist($setupSetting);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_setup_image_storage');
+    }
+
+    #[Route(path: '/setup/image-storage', name: 'app_setup_image_storage')]
+    public function imageStorage(Request $request): Response
+    {
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
-        $setupSetting
-            ->setName('setup')
-            ->setValue('complete')
+
+        if (empty($setupSetting)) {
+            return $this->redirectToRoute('app_setup_admin');
+        }
+
+        if ('image_storage' !== $setupSetting->getValue()) {
+            return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
+        }
+
+        $encryptionKeyExists = !empty(getenv('ENCRYPTION_KEY'));
+
+        if ('POST' !== $request->getMethod()) {
+            return $this->render('setup/image_storage.html.twig', [
+                'regions' => AmazonS3::REGIONS,
+                'encryption_key_exists' => $encryptionKeyExists,
+            ]);
+        }
+
+        $submittedToken = $request->getPayload()->get('token');
+        if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
+            $this->addFlash(
+                'warning',
+                'Something went wrong, please try again.'
+            );
+
+            return $this->render('setup/image_storage.html.twig', [
+                'regions' => AmazonS3::REGIONS,
+                'encryption_key_exists' => $encryptionKeyExists,
+            ]);
+        }
+
+        $fieldErrors = $this->validateSetupImageStorageRequest($request);
+
+        if (!empty($fieldErrors)) {
+            return $this->render('setup/image_storage.html.twig', [
+                'errors' => $fieldErrors,
+                'regions' => AmazonS3::REGIONS,
+                'encryption_key_exists' => $encryptionKeyExists,
+                'values' => [
+                    'storageOption' => $request->get('storageOption'),
+                    'region' => $request->get('region'),
+                    'bucketName' => $request->get('bucketName'),
+                    'accessKey' => $request->get('accessKey'),
+                    'secretKey' => $request->get('secretKey'),
+                ],
+            ]);
+        }
+
+        if ('s3' === $request->get('storageOption')) {
+            $s3RegionSetting = $settingsRepository->getSettingByName('s3Region');
+            if (!$s3RegionSetting) {
+                $s3RegionSetting = new Settings();
+                $s3RegionSetting->setName('s3Region');
+            }
+            $s3RegionSetting->setValue($request->get('region'));
+            $this->entityManager->persist($s3RegionSetting);
+
+            $s3BucketNameSetting = $settingsRepository->getSettingByName('s3BucketName');
+            if (!$s3BucketNameSetting) {
+                $s3BucketNameSetting = new Settings();
+                $s3BucketNameSetting->setName('s3BucketName');
+            }
+            $s3BucketNameSetting->setValue($request->get('bucketName'));
+            $this->entityManager->persist($s3BucketNameSetting);
+
+            $s3AccessKeySetting = $settingsRepository->getSettingByName('s3AccessKey');
+            if (!$s3AccessKeySetting) {
+                $s3AccessKeySetting = new Settings();
+                $s3AccessKeySetting->setName('s3AccessKey');
+            }
+            $s3AccessKeySetting->setValue($request->get('accessKey'));
+            $this->entityManager->persist($s3AccessKeySetting);
+
+            $s3SecretKeySetting = $settingsRepository->getSettingByName('s3SecretKey');
+            if (!$s3SecretKeySetting) {
+                $s3SecretKeySetting = new Settings();
+                $s3SecretKeySetting->setName('s3SecretKey');
+            }
+            $s3SecretKeySetting->setEncryptedValue($request->get('secretKey'));
+            $this->entityManager->persist($s3SecretKeySetting);
+        }
+
+        $imageStorageSetting = new Settings();
+        $imageStorageSetting
+            ->setName('imageStorage')
+            ->setValue($request->get('storageOption'))
         ;
+        $this->entityManager->persist($imageStorageSetting);
+
+        $setupSetting->setValue('complete');
+        $this->entityManager->persist($setupSetting);
 
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_admin_index');
+    }
+
+    private function validateSetupImageStorageRequest(Request $request): array
+    {
+        $errors = [];
+
+        if (empty($request->get('storageOption')) || !in_array($request->get('storageOption'), self::IMAGE_STORAGE_OPTIONS)) {
+            $errors['storageOption'][] = 'You must choose an image storage option';
+        }
+
+        if ('s3' !== $request->get('storageOption')) {
+            return $errors;
+        }
+
+        // All validation from here on is for the S3 storage option.
+
+        if (empty(getenv('ENCRYPTION_KEY'))) {
+            $errors['secretKey'][] = 'The secret key cannot be saved unless an ENCRYPTION_KEY environment variable is set';
+        }
+
+        if (empty($request->get('region')) || !in_array($request->get('region'), AmazonS3::REGIONS)) {
+            $errors['region'][] = 'You must select the region of your S3 bucket';
+        }
+
+        if (empty($request->get('bucketName'))) {
+            $errors['bucketName'][] = 'You must enter the name of your S3 bucket';
+        }
+
+        if (empty($request->get('accessKey'))) {
+            $errors['accessKey'][] = 'You must enter the access key for your S3 bucket';
+        }
+
+        if (empty($request->get('secretKey'))) {
+            $errors['secretKey'][] = 'You must enter the secret key for your S3 bucket';
+        }
+
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        // All validation from here on relates to connecting to the S3 API.
+
+        $s3 = new AmazonS3();
+        try {
+            $s3->testSettings(
+                $request->get('region'),
+                $request->get('bucketName'),
+                $request->get('accessKey'),
+                $request->get('secretKey')
+            );
+        } catch (S3Exception $exception) {
+            $errors['s3'] = [
+                'summary' => 'An error occurred when attempting to connect to the S3 bucket',
+                'detail' => $exception->getMessage(),
+            ];
+        }
+
+        return $errors;
     }
 
     private function validateSetupAdminUserRequest(Request $request): array

@@ -27,9 +27,10 @@ To run the ansible playbook:
 
 ### Deploying the application
 
-1. Update the `host` entry in App/deploy.php accordingly
+1. Set the `repository` setting in `App/deploy.php` to your fork of Habitat
+2. Update the `host` entry in `App/deploy.php` accordingly
 3. Run `vendor/bin/dep deploy`
-2. Run `vendor/bin/dep database:migrate`
+4. Run `vendor/bin/dep database:migrate`
 
 ## Docker Hosting
 
@@ -76,11 +77,15 @@ hosting, you can use the [Google Cloud SQL](https://cloud.google.com/sql) servic
 you could use [AWS RDS](https://aws.amazon.com/rds/). For email handling, [Mailjet](https://www.mailjet.com/) have a
 free tier that should be enough for most Habitat isntances.
 
-| Name         | Value                                  |
-| ------------ | -------------------------------------- |
-| DATABASE_URL | mysql://dbUsername:dbPassword@localhost:3306/example-db-name?unix_socket=/cloudsql/example:database-instance:connection-name&serverVersion=8.0.31&charset=utf8mb4 |
-| MAILER_DSN   | smtp://example:example@example.com:587 |
-| APP_ENV      | prod                                   |
+| Name           | Value                                  |
+| -------------- | -------------------------------------- |
+| DATABASE_URL   | mysql://dbUsername:dbPassword@localhost:3306/example-db-name?unix_socket=/cloudsql/example:database-instance:connection-name&serverVersion=8.0.31&charset=utf8mb4 |
+| MAILER_DSN     | smtp://example:example@example.com:587 |
+| APP_ENV        | prod                                   |
+| ENCRYPTION_KEY | (Generate an encryption key*)          |
+
+There are online key generators. It is recommended that the encryption key is no fewer than 32 characters, consists of
+uppercase, lowercase, numeric and special characters.
 
 ## Local Development
 

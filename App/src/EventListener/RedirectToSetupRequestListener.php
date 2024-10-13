@@ -14,6 +14,7 @@ class RedirectToSetupRequestListener
         'app_setup_admin',
         'app_setup_location',
         'app_setup_categories',
+        'app_setup_image_storage',
     ];
 
     public function __construct(

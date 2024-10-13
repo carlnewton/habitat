@@ -10,6 +10,8 @@ services:
       - MARIADB_USER=${DB_USER}
       - MARIADB_PASSWORD=${DB_PASSWORD}
       - MARIADB_DATABASE=${DB_NAME}
+      - APP_SECRET=${APP_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     volumes:
       - ${PATH_TO_SYMFONY_PROJECT}:/var/www/html
     ports:

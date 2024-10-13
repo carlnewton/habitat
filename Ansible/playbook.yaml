@@ -259,19 +259,28 @@
       tags:
       - variables
 
-    - name: Check if APP_ENV is set in .env.local
-      command: grep '^APP_ENV=' "{{ shared_path }}/.env.local"
-      register: app_env_check
-      ignore_errors: yes
+    - name: Generate an encryption key
+      set_fact:
+        encryption_key: "{{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+      tags:
+      - variables
+
+    - name: Add ENCRYPTION_KEY to .env.local
+      lineinfile:
+        path: "{{ shared_path }}/.env.local"
+        regexp: '^ENCRYPTION_KEY='
+        line: "ENCRYPTION_KEY={{ encryption_key }}"
+        state: present
+      become: yes
       tags:
       - variables
       
     - name: Add APP_ENV to .env.local
       lineinfile:
         path: "{{ shared_path }}/.env.local"
+        regexp: '^APP_ENV='
         line: "APP_ENV=prod"
         state: present
-      when: app_env_check.rc != 0
       become: yes
       tags:
       - variables

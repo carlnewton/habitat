@@ -3,7 +3,9 @@
 namespace App\Controller\Post;
 
 use App\Entity\PostAttachment;
+use App\Entity\Settings;
 use App\Entity\User;
+use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -17,7 +19,7 @@ class UploadFileController extends AbstractController
 {
     private const MAXIMUM_IMAGE_WIDTH = 1920;
 
-    private const UPLOADS_DIRECTORY = '/var/www/uploads/';
+    private const LOCAL_UPLOADS_DIRECTORY = '/var/www/uploads/';
 
     private const ALLOWED_MIMETYPES = [
         'image/jpeg',
@@ -62,6 +64,25 @@ class UploadFileController extends AbstractController
             $file->guessExtension(),
         ]);
 
+        $settingsRepository = $entityManager->getRepository(Settings::class);
+        $imageStorageSetting = $settingsRepository->getSettingByName('imageStorage');
+
+        $uploadPrefix = self::LOCAL_UPLOADS_DIRECTORY;
+        if (!empty($imageStorageSetting) && 's3' === $imageStorageSetting->getValue()) {
+            $s3Client = new S3Client([
+                'region' => $settingsRepository->getSettingByName('s3Region')->getValue(),
+                'credentials' => [
+                    'key' => $settingsRepository->getSettingByName('s3AccessKey')->getValue(),
+                    'secret' => $settingsRepository->getSettingByName('s3SecretKey')->getEncryptedValue(),
+                ],
+            ]);
+
+            $s3Client->registerStreamWrapper();
+
+            $bucketSetting = $settingsRepository->getSettingByName('s3BucketName');
+            $uploadPrefix = 's3://' . $bucketSetting->getValue() . '/';
+        }
+
         try {
             if ($originalWidth <= self::MAXIMUM_IMAGE_WIDTH) {
                 $width = $originalWidth;
@@ -77,17 +98,17 @@ class UploadFileController extends AbstractController
                     $source = imagecreatefromjpeg($file);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
                     $thumbnail = $this->rotateJpeg(exif_read_data($file), $thumbnail);
-                    imagejpeg($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    imagejpeg($thumbnail, $uploadPrefix . $filename);
                     break;
                 case 'image/gif':
                     $source = imagecreatefromgif($file);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagegif($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    imagegif($thumbnail, $uploadPrefix . $filename);
                     break;
                 case 'image/png':
                     $source = imagecreatefrompng($file);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagepng($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    imagepng($thumbnail, $uploadPrefix . $filename);
                     break;
             }
         } catch (FileException $e) {
@@ -97,7 +118,7 @@ class UploadFileController extends AbstractController
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        list($newWidth, $newHeight) = getimagesize(self::UPLOADS_DIRECTORY . $filename);
+        list($newWidth, $newHeight) = getimagesize($uploadPrefix . $filename);
 
         $attachment = new PostAttachment();
         $attachment

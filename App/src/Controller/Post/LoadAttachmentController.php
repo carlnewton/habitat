@@ -3,7 +3,9 @@
 namespace App\Controller\Post;
 
 use App\Entity\PostAttachment;
+use App\Entity\Settings;
 use App\Entity\User;
+use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -20,15 +22,20 @@ class LoadAttachmentController extends AbstractController
         970,
     ];
 
-    private const UPLOADS_DIRECTORY = '/var/www/uploads/';
+    private const LOCAL_UPLOADS_DIRECTORY = '/var/www/uploads/';
+
+    private string $uploadPrefix;
+
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+    }
 
     #[Route(path: '/post/{postId}/attachment/{attachmentId}', name: 'app_load_attachment', methods: ['GET'])]
     public function load(
         int $postId,
-        int $attachmentId,
-        EntityManagerInterface $entityManager
+        int $attachmentId
     ): Response {
-        $attachmentRepository = $entityManager->getRepository(PostAttachment::class);
+        $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
         $attachment = $attachmentRepository->findOneBy([
             'id' => $attachmentId,
             'post' => $postId,
@@ -40,25 +47,26 @@ class LoadAttachmentController extends AbstractController
 
         $filename = basename($attachment->getFilename());
 
-        if (!file_exists(self::UPLOADS_DIRECTORY . $filename)) {
+        $this->setUploadPrefix();
+
+        if (!file_exists($this->uploadPrefix . $filename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        return new BinaryFileResponse(self::UPLOADS_DIRECTORY . $filename);
+        return new BinaryFileResponse($this->uploadPrefix . $filename);
     }
 
     #[Route(path: '/post/{postId}/attachment/thumbnail/{attachmentId}/{width}', name: 'app_load_attachment_thumbnail', methods: ['GET'])]
     public function load_create_thumbnail(
         int $postId,
         int $attachmentId,
-        int $width,
-        EntityManagerInterface $entityManager
+        int $width
     ): Response {
         if (!in_array($width, self::THUMBNAIL_WIDTHS)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        $attachmentRepository = $entityManager->getRepository(PostAttachment::class);
+        $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
         $attachment = $attachmentRepository->findOneBy([
             'id' => $attachmentId,
             'post' => $postId,
@@ -74,14 +82,13 @@ class LoadAttachmentController extends AbstractController
     #[Route(path: '/attachment/unposted/{attachmentId}', name: 'app_load_unposted_attachment', methods: ['GET'])]
     public function loadUnposted(
         int $attachmentId,
-        #[CurrentUser] ?User $user,
-        EntityManagerInterface $entityManager
+        #[CurrentUser] ?User $user
     ): Response {
         if (null === $user) {
             return new Response('', Response::HTTP_UNAUTHORIZED);
         }
 
-        $attachmentRepository = $entityManager->getRepository(PostAttachment::class);
+        $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
         $attachment = $attachmentRepository->findOneBy([
             'id' => $attachmentId,
             'user' => $user->getId(),
@@ -98,42 +105,68 @@ class LoadAttachmentController extends AbstractController
     {
         $originalFilename = basename($attachment->getFilename());
 
-        if (!file_exists(self::UPLOADS_DIRECTORY . $originalFilename)) {
+        $this->setUploadPrefix();
+        if (!file_exists($this->uploadPrefix . $originalFilename)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
         $filename = $width . '.' . $originalFilename;
 
-        if (!file_exists(self::UPLOADS_DIRECTORY . $filename)) {
-            list($originalWidth, $originalHeight) = getimagesize(self::UPLOADS_DIRECTORY . $originalFilename);
+        if (!file_exists($this->uploadPrefix . $filename)) {
+            list($originalWidth, $originalHeight) = getimagesize($this->uploadPrefix . $originalFilename);
             if ($width >= $originalWidth) {
-                return new BinaryFileResponse(self::UPLOADS_DIRECTORY . $originalFilename);
+                return new BinaryFileResponse($this->uploadPrefix . $originalFilename);
             }
             $height = ($originalHeight * $width) / $originalWidth;
             $thumbnail = imagecreatetruecolor($width, $height);
 
-            switch (pathinfo(self::UPLOADS_DIRECTORY . $originalFilename, PATHINFO_EXTENSION)) {
+            switch (pathinfo($this->uploadPrefix . $originalFilename, PATHINFO_EXTENSION)) {
                 case 'jpg':
                 case 'jpeg':
-                    $source = imagecreatefromjpeg(self::UPLOADS_DIRECTORY . $originalFilename);
+                    $source = imagecreatefromjpeg($this->uploadPrefix . $originalFilename);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagejpeg($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    imagejpeg($thumbnail, $this->uploadPrefix . $filename);
                     break;
                 case 'gif':
-                    $source = imagecreatefromgif(self::UPLOADS_DIRECTORY . $originalFilename);
+                    $source = imagecreatefromgif($this->uploadPrefix . $originalFilename);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagegif($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    imagegif($thumbnail, $this->uploadPrefix . $filename);
                     break;
                 case 'png':
-                    $source = imagecreatefrompng(self::UPLOADS_DIRECTORY . $originalFilename);
+                    $source = imagecreatefrompng($this->uploadPrefix . $originalFilename);
                     imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
-                    imagepng($thumbnail, self::UPLOADS_DIRECTORY . $filename);
+                    imagepng($thumbnail, $this->uploadPrefix . $filename);
                     break;
                 default:
                     return new Response('', Response::HTTP_NOT_FOUND);
             }
         }
 
-        return new BinaryFileResponse(self::UPLOADS_DIRECTORY . $filename);
+        return new BinaryFileResponse($this->uploadPrefix . $filename);
+    }
+
+    private function setUploadPrefix(): void
+    {
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
+        $imageStorageSetting = $settingsRepository->getSettingByName('imageStorage');
+
+        if (empty($imageStorageSetting) || 's3' !== $imageStorageSetting->getValue()) {
+            $this->uploadPrefix = self::LOCAL_UPLOADS_DIRECTORY;
+
+            return;
+        }
+
+        $s3Client = new S3Client([
+            'region' => $settingsRepository->getSettingByName('s3Region')->getValue(),
+            'credentials' => [
+                'key' => $settingsRepository->getSettingByName('s3AccessKey')->getValue(),
+                'secret' => $settingsRepository->getSettingByName('s3SecretKey')->getEncryptedValue(),
+            ],
+        ]);
+
+        $s3Client->registerStreamWrapper();
+
+        $bucketSetting = $settingsRepository->getSettingByName('s3BucketName');
+        $this->uploadPrefix = 's3://' . $bucketSetting->getValue() . '/';
     }
 }

@@ -1,0 +1,81 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <div class="alert alert-warning">
+        This instance has been configured to use Amazon S3 storage for image hosting. You should not change the values here
+        unless images are no longer successfully uploading or being displayed due to an AWS S3 configuration change.
+    </div>
+    {% if errors.s3 is defined %}
+        <div class="card">
+            <div class="card-body">
+                <div class="invalid-feedback d-block">
+                    {{ errors.s3.summary }}
+                </div>
+            </div>
+            <div class="card-footer">
+                <code>{{ errors.s3.detail }}</code>
+            </div>
+        </div>
+    {% endif %}
+    <form method="post" action="{{ path('app_admin_s3_details') }}">
+        <div class="mb-3">
+            <label for="region" class="form-label">Region</label>
+            <select class="form-select{% if errors.region is defined %} is-invalid{% endif %}" name="region" id="region" aria-label="AWS region">
+                <option selected>Select the region</option>
+                {% for region in regions %}
+                    <option value="{{ region }}"{% if values.region is defined and values.region == region %} selected{% endif %}>{{ region }}</option>
+                {% endfor %}
+            </select>
+
+            {% if errors.region is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.region %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+                            
+        <div class="mb-3">
+            <label for="bucketName" class="form-label">Bucket name</label>
+            <input type="text" class="form-control{% if errors.bucketName is defined %} is-invalid{% endif %}" id="bucketName" name="bucketName" placeholder="my-bucket"{% if values.bucketName is defined %} value="{{ values.bucketName }}{% endif %}">
+            {% if errors.bucketName is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.bucketName %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+                            
+        <div class="mb-3">
+            <label for="accessKey" class="form-label">Access key</label>
+            <input type="text" class="form-control{% if errors.accessKey is defined %} is-invalid{% endif %}" id="accessKey" name="accessKey" placeholder="access-key"{% if values.accessKey is defined %} value="{{ values.accessKey }}{% endif %}">
+            {% if errors.accessKey is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.accessKey %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="secretKey" class="form-label">Secret key</label>
+            <input type="password" class="form-control{% if errors.secretKey is defined %} is-invalid{% endif %}" id="secretKey" name="secretKey" placeholder="secret-key"{% if values.secretKey is defined %} value="{{ values.secretKey }}{% endif %}">
+            <div class="form-text">
+                The value for this field is hidden once saved. If left empty, the existing secret key will be used.
+            </div>
+            {% if errors.secretKey is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.secretKey %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        
+        <button class="btn btn-primary">Save</button>
+    </form>
+    {% endblock %}

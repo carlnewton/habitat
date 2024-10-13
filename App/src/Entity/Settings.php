@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Settings
 {
     public const HABITAT_NAME_MAX_LENGTH = 40;
+    private const ENCRYPTION_METHOD = 'AES-256-CBC';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,6 +42,42 @@ class Settings
     public function getValue(): ?string
     {
         return $this->value;
+    }
+
+    public function getEncryptedValue(): ?string
+    {
+        $decryptedValue = openssl_decrypt(
+            $this->value,
+            self::ENCRYPTION_METHOD,
+            getenv('ENCRYPTION_KEY'),
+            0,
+            substr(hash('sha256', getenv('ENCRYPTION_KEY')), 0, 16),
+        );
+
+        return $decryptedValue;
+    }
+
+    /**
+     * Encrypting values using this method is only as an extra layer of security in the worst case scenario of somebody
+     * getting hold of the database. The encrypted value is not expected to be displayed on the front-end. If it was,
+     * we'd have a unique value for the IV. In any case, this may be replaced with the DoctrineEncryptBundle solution
+     * once it becomes available for ORM 3.
+     *
+     * @see https://github.com/DoctrineEncryptBundle/DoctrineEncryptBundle/issues/20
+     */
+    public function setEncryptedValue(?string $value): static
+    {
+        $encryptedValue = openssl_encrypt(
+            $value,
+            self::ENCRYPTION_METHOD,
+            getenv('ENCRYPTION_KEY'),
+            0,
+            substr(hash('sha256', getenv('ENCRYPTION_KEY')), 0, 16),
+        );
+
+        $this->value = $encryptedValue;
+
+        return $this;
     }
 
     public function setValue(?string $value): static
