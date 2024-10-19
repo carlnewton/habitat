@@ -54,7 +54,7 @@
             <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
                 <i class="bi bi-chat"></i> {{ post.commentCount }}
             </a>
-            <div class="float-end text-muted">{{ post.posted|time_diff }}</div>
+            <div class="float-end text-muted" title="{{ post.posted|date }}">{{ post.posted|time_diff }}</div>
         </div>
     </div>
 </div>

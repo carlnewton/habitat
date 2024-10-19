@@ -60,7 +60,7 @@
             </div>
         </div>
     {% endif %}
-    <p class="text-muted float-end">Posted by <em>{{ post.user.username }}</em> {{ post.posted|time_diff }}</p>
+    <p class="text-muted float-end">Posted by <em>{{ post.user.username }}</em> <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span></p>
     <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
         <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
     </button>

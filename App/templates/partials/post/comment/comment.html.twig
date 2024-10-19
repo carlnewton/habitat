@@ -7,6 +7,6 @@
             {{ comment.body }}
         {% endif %}
     </p>
-    <div class="date text-muted">{{ comment.posted|time_diff }}</div>
+    <div class="date text-muted" title="{{ comment.posted|date }}">{{ comment.posted|time_diff }}</div>
     <hr>
 </div>
