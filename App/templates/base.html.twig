@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="manifest" href="/manifest.json">
-        <title>{{ setting('habitatName', 'Habitat') }}</title>
+        <title>{% if page_title is defined %}{{ page_title }} - {% endif %}{{ setting('habitatName', 'Habitat') }}</title>
         <link rel="icon" href="/build/images/habitat_icon.svg">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}

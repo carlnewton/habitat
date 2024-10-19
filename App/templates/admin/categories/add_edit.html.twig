@@ -1,4 +1,10 @@
 {% extends 'admin/base.html.twig' %}
+{% if action == 'add' %}
+    {% set page_title = 'Add a category' %}
+{% else %}
+    {% set page_title = category.name %}
+{% endif %}
+
 
 {% block body %}
     <nav aria-label="breadcrumb">

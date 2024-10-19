@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% set page_title = 'Log in to your account' %}
 
 {% block body %}
     <form method="post">
@@ -12,7 +13,7 @@
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Log in to your account</h1>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus>
             <label for="username">Username</label>

@@ -45,6 +45,7 @@ class ViewPostController extends AbstractController
 
         return $this->render('view_post.html.twig', [
             'post' => $post,
+            'page_title' => $post->getTitle(),
             'show_category' => $categoryRepository->count() > 1,
         ]);
     }
