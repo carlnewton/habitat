@@ -340,7 +340,7 @@ class SetupController extends AbstractController
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
         }
 
-        $encryptionKeyExists = !empty(getenv('ENCRYPTION_KEY'));
+        $encryptionKeyExists = !empty($_ENV['ENCRYPTION_KEY']);
 
         if ('POST' !== $request->getMethod()) {
             return $this->render('setup/image_storage.html.twig', [
@@ -442,7 +442,7 @@ class SetupController extends AbstractController
 
         // All validation from here on is for the S3 storage option.
 
-        if (empty(getenv('ENCRYPTION_KEY'))) {
+        if (empty($_ENV['ENCRYPTION_KEY'])) {
             $errors['secretKey'][] = 'The secret key cannot be saved unless an ENCRYPTION_KEY environment variable is set';
         }
 

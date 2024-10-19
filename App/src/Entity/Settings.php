@@ -49,9 +49,9 @@ class Settings
         $decryptedValue = openssl_decrypt(
             $this->value,
             self::ENCRYPTION_METHOD,
-            getenv('ENCRYPTION_KEY'),
+            $_ENV['ENCRYPTION_KEY'],
             0,
-            substr(hash('sha256', getenv('ENCRYPTION_KEY')), 0, 16),
+            substr(hash('sha256', $_ENV['ENCRYPTION_KEY']), 0, 16),
         );
 
         return $decryptedValue;
@@ -70,9 +70,9 @@ class Settings
         $encryptedValue = openssl_encrypt(
             $value,
             self::ENCRYPTION_METHOD,
-            getenv('ENCRYPTION_KEY'),
+            $_ENV['ENCRYPTION_KEY'],
             0,
-            substr(hash('sha256', getenv('ENCRYPTION_KEY')), 0, 16),
+            substr(hash('sha256', $_ENV['ENCRYPTION_KEY']), 0, 16),
         );
 
         $this->value = $encryptedValue;
