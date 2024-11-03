@@ -56,6 +56,7 @@ class PostsChangeCategoryController extends AbstractController
                 'post_ids' => implode(',', $postIds),
                 'posts' => $posts,
                 'categories' => $categoryRepository->findAll(),
+                'show_category' => true,
             ]);
         }
 

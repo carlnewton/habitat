@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -87,6 +88,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 32, nullable: true)]
     private ?string $email_verification_string = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $suspended_datetime = null;
 
     public function __construct()
     {
@@ -347,6 +351,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmailVerificationString(?string $email_verification_string): static
     {
         $this->email_verification_string = $email_verification_string;
+
+        return $this;
+    }
+
+    public function getSuspendedDatetime(): ?\DateTimeInterface
+    {
+        return $this->suspended_datetime;
+    }
+
+    public function setSuspendedDatetime(?\DateTimeInterface $suspended_datetime): static
+    {
+        $this->suspended_datetime = $suspended_datetime;
 
         return $this;
     }

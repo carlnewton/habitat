@@ -70,6 +70,9 @@ class Post
 
     private ?float $distanceMiles;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $removed_datetime = null;
+
     public function __construct()
     {
         $this->hearts = new ArrayCollection();
@@ -319,6 +322,18 @@ class Post
     public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getRemovedDatetime(): ?\DateTimeInterface
+    {
+        return $this->removed_datetime;
+    }
+
+    public function setRemovedDatetime(?\DateTimeInterface $removed_datetime): static
+    {
+        $this->removed_datetime = $removed_datetime;
 
         return $this;
     }

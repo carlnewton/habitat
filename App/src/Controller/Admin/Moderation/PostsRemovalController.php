@@ -54,11 +54,13 @@ class PostsRemovalController extends AbstractController
             return $this->render('admin/moderation/remove_posts.html.twig', [
                 'post_ids' => implode(',', $postIds),
                 'posts' => $posts,
+                'show_category' => true,
             ]);
         }
 
         foreach ($posts as $post) {
             $post->setRemoved(true);
+            $post->setRemovedDatetime(new \DateTime());
             $entityManager->persist($post);
         }
         $entityManager->flush();

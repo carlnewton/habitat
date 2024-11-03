@@ -58,7 +58,10 @@ class CommentsRemovalController extends AbstractController
         }
 
         foreach ($comments as $comment) {
-            $comment->setRemoved(true);
+            $comment
+                ->setRemoved(true)
+                ->setRemovedDatetime(new \DateTime())
+            ;
             $entityManager->persist($comment);
         }
         $entityManager->flush();

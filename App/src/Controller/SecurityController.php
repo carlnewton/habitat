@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\BlockedEmailAddress;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -93,7 +94,12 @@ class SecurityController extends AbstractController
             'email_address' => $request->get('email'),
         ]);
 
-        if (empty($existingEmailAddress)) {
+        $blockedEmailAddressRepository = $this->entityManager->getRepository(BlockedEmailAddress::class);
+        $blockedEmailAddress = $blockedEmailAddressRepository->findOneBy([
+            'email_address' => $request->get('email'),
+        ]);
+
+        if (empty($existingEmailAddress) && empty($blockedEmailAddress)) {
             $user = new User();
             $user
                 ->setUsername($request->get('username'))
@@ -223,7 +229,7 @@ class SecurityController extends AbstractController
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $security->login($user);
+        $security->login($user, 'security.authenticator.form_login.main');
 
         $this->addFlash('notice', 'Your account has been verified');
 

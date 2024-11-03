@@ -99,3 +99,12 @@ docker exec -it habitat-apache-php bash
 ```
 
 Habitat can be loaded in the web browser from [localhost](http://localhost).
+
+## Running Scheduled Tasks
+
+Scheduled Tasks do not run automatically for local development environments. You can run them manually from within the
+`habitat-apache-php` container with the following command:
+
+```sh
+php /var/www/html/bin/console messenger:consume -vv
+```

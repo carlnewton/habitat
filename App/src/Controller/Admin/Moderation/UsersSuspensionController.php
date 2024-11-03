@@ -66,14 +66,17 @@ class UsersSuspensionController extends AbstractController
 
             $usersSuspended = true;
             $user->setSuspended(true);
+            $user->setSuspendedDatetime(new \DateTime());
 
             foreach ($user->getPosts() as $post) {
                 $post->setRemoved(true);
+                $post->setRemovedDatetime(new \DateTime());
                 $entityManager->persist($post);
             }
 
             foreach ($user->getComments() as $comment) {
                 $comment->setRemoved(true);
+                $comment->setRemovedDatetime(new \DateTime());
                 $entityManager->persist($comment);
             }
 
