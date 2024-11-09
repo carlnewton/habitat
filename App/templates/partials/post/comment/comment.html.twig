@@ -1,5 +1,25 @@
 <div class="comment"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#comment-spinner" hx-get="/hx/list-comments?post={{ post.id }}&offset={{ offset }}" hx-trigger="intersect once" hx-swap="beforeend"{% endif %}>
-    <h3>{{ comment.user.username }}</h3>
+    <div class="d-flex justify-content-between">
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <h3><a class="text-secondary" href="{{ path('app_moderation_user', { id: comment.user.id }) }}">{{ comment.user.username }}</a></h3>
+            <div class="dropdown">
+                <button role="button" type="button" class="btn text-secondary fs-4" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <form class="action-item-form" method="post" action="{{ path('app_moderation_comments_remove') }}">
+                            <input name="items" type="hidden" value="{{ comment.id }}"/>
+                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                            <button type="submit" class="dropdown-item checkbox-action">Remove</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            <h3>{{ comment.user.username }}</h3>
+        {% endif %}
+    </div>
     <p>
         {% if comment.removed %}
             <em class="text-muted">This comment has been removed by a moderator.</em>

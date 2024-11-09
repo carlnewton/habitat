@@ -6,7 +6,33 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ post.title }}</h1>
+    <div class="d-flex justify-content-between">
+        <h1>{{ post.title }}</h1>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <div class="dropdown">
+                <button role="button" type="button" class="btn text-secondary fs-4" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
+                            <input name="items" type="hidden" value="{{ post.id }}"/>
+                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                            <button type="submit" class="dropdown-item checkbox-action">Change category</button>
+                        </form>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_remove') }}">
+                            <input name="items" type="hidden" value="{{ post.id }}"/>
+                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                            <button type="submit" class="dropdown-item checkbox-action">Remove</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
     {% if show_category %}
         <div class="mb-2">
             <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">
@@ -60,7 +86,15 @@
             </div>
         </div>
     {% endif %}
-    <p class="text-muted float-end">Posted by <em>{{ post.user.username }}</em> <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span></p>
+    <p class="text-muted float-end">
+        Posted by 
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <a class="text-secondary" href="{{ path('app_moderation_user', { id: post.user.id }) }}">{{ post.user.username }}</a>
+        {% else %}
+            <em>{{ post.user.username }}</em>
+        {% endif %}
+        <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span>
+    </p>
     <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
         <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
     </button>

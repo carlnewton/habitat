@@ -1,11 +1,37 @@
 <div class="post"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#post-spinner" hx-get="/hx/list-posts?offset={{ offset }}{% if category is defined %}&category={{ category.id }}{% endif %}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
     <div class="card shadow mb-3 post-card">
         <div class="card-body">
-            <h2 class="card-title">
-                <a href="{{ path('app_view_post', { id: post.id })}}">
-                    {{ post.title }}
-                </a>
-            </h2>
+            <div class="d-flex justify-content-between">
+                <h2 class="card-title">
+                    <a href="{{ path('app_view_post', { id: post.id })}}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <div class="dropdown">
+                        <button role="button" type="button" class="btn text-secondary fs-5" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
+                                    <input name="items" type="hidden" value="{{ post.id }}"/>
+                                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                                    <button type="submit" class="dropdown-item checkbox-action">Change category</button>
+                                </form>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_remove') }}">
+                                    <input name="items" type="hidden" value="{{ post.id }}"/>
+                                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                                    <button type="submit" class="dropdown-item checkbox-action">Remove</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
             <div class="mb-2">
                 {% if category is not defined and show_category %}
                     <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">
