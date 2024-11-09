@@ -259,9 +259,21 @@
       tags:
       - variables
 
+    - name: Check if the encryption key is already defined
+      lineinfile:
+        state: absent
+        path: "{{ shared_path }}/.env.local"
+        regexp: '^ENCRYPTION_KEY='
+      check_mode: true
+      changed_when: false
+      register: existing_encryption_key
+      tags:
+      - variables
+
     - name: Generate an encryption key
       set_fact:
         encryption_key: "{{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+      when: existing_encryption_key.found == 0
       tags:
       - variables
 
@@ -272,6 +284,7 @@
         line: "ENCRYPTION_KEY={{ encryption_key }}"
         state: present
       become: yes
+      when: existing_encryption_key.found == 0
       tags:
       - variables
       
