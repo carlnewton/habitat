@@ -185,7 +185,7 @@
 
     - name: Generate a random database password
       set_fact:
-        random_password: "{{ lookup('community.general.random_string', length=16, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+        random_password: "{{ lookup('community.general.random_string', length=16, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!()[]') }}"
       tags:
       - mariadb
 
