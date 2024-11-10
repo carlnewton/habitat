@@ -309,12 +309,3 @@
         state: absent
       when: publicFilesFound == 0
       become: yes
-
-    - name: Ensure Symfony Messenger consumer is running
-      shell: |
-        if ! pgrep -f "messenger:consume" > /dev/null; then
-          php /var/www/html/bin/console messenger:consume > /var/log/habitat-scheduled-tasks.log 2>&1 &
-        fi
-      become: yes
-      args:
-        executable: /bin/bash

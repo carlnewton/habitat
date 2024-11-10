@@ -21,6 +21,12 @@ host('example.com')
 ;
 
 // Hooks
+task('habitat:stop_messenger', function () {
+    if (has('previous_release')) {
+        run('{{bin/php}} {{previous_release}}/bin/console messenger:stop-workers');
+    }
+});
+
 task('habitat:generate_app_secret', function () {
     $secret = trim(shell_exec('openssl rand -hex 16'));
     $envFile = '/var/www/html/shared/.env.local';
@@ -36,6 +42,10 @@ task('habitat:generate_app_secret', function () {
 
 task('habitat:generate_assets', function () {
     run("cd {{release_path}} && npm install --loglevel=verbose && npm run build");
+});
+
+task('habitat:start_messenger', function () {
+    run('{{bin/php}} {{release_path}}/bin/console messenger:consume');
 });
 after('deploy:shared', 'habitat:generate_app_secret');
 after('deploy:writable', 'habitat:generate_assets');
