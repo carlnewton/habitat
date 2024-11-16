@@ -45,6 +45,15 @@
         state: present
       become: yes
 
+    - name: Install Crontab
+      dnf:
+        name:
+          - cronie
+        state: present
+      become: yes
+      tags:
+      - cron
+
     - name: Install PHP 8.3 and required extensions
       dnf:
         name:
@@ -133,6 +142,15 @@
         name: httpd
         state: started
         enabled: yes
+
+    - name: Start and enable crontab service
+      ansible.builtin.service:
+        name: crond
+        state: started
+        enabled: yes
+      become: yes
+      tags:
+      - cron
 
     - name: Open port 443 in the firewall
       ansible.builtin.command:
@@ -297,6 +315,15 @@
       become: yes
       tags:
       - variables
+
+    - name: Create a cron job for Habitat data retention
+      cron:
+        name: "Run Symfony data retention command"
+        minute: "0"
+        hour: "0"
+        job: "php /var/www/html/current/bin/console habitat:data-retention"
+      tags:
+      - cron
 
     - name: Check if public directory is empty
       find:
