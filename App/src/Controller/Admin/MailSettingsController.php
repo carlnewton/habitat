@@ -106,7 +106,7 @@ class MailSettingsController extends AbstractController
 
             $this->addFlash(
                 'notice',
-                'A test email has been sent to ' . $smtpFromEmailAddress->getValue() . ' and no issues have been ' . 
+                'A test email has been sent to ' . $request->get('smtpToEmailAddress') . ' and no issues have been ' . 
                 'reported. If you have not received it, check the settings here and try again.'
             );
         }
