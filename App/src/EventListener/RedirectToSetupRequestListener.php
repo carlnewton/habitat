@@ -10,12 +10,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectToSetupRequestListener
 {
-    private const PRE_SETUP_ALLOWED_ROUTES = [
-        'app_setup_admin',
-        'app_setup_location',
-        'app_setup_categories',
-        'app_setup_image_storage',
-    ];
+    private const SETUP_ROUTES_PREFIX = 'app_setup_';
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
@@ -42,7 +37,7 @@ class RedirectToSetupRequestListener
             return;
         }
 
-        if (in_array($request->get('_route'), self::PRE_SETUP_ALLOWED_ROUTES)) {
+        if (str_starts_with($request->get('_route'), self::SETUP_ROUTES_PREFIX)) {
             return;
         }
 

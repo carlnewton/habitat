@@ -80,7 +80,6 @@ free tier that should be enough for most Habitat isntances.
 | Name           | Value                                  |
 | -------------- | -------------------------------------- |
 | DATABASE_URL   | mysql://dbUsername:dbPassword@localhost:3306/example-db-name?unix_socket=/cloudsql/example:database-instance:connection-name&serverVersion=8.0.31&charset=utf8mb4 |
-| MAILER_DSN     | smtp://example:example@example.com:587 |
 | APP_ENV        | prod                                   |
 | ENCRYPTION_KEY | (Generate an encryption key*)          |
 

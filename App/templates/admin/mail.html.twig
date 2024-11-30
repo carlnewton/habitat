@@ -1,0 +1,94 @@
+{% extends 'admin/base.html.twig' %}
+{% set page_title = 'Mail' %}
+
+{% block body %}
+    {% if email_sent_exception is defined %}
+        <div class="alert alert-danger" role="alert">
+            An issue occurred when attempting to send a test email: {{ email_sent_exception }}
+        </div>
+    {% endif %}
+    <form method="post" action="{{ path('app_admin_mail') }}">
+
+        <div class="mb-3">
+            <label for="smtpUsername" class="form-label">SMTP username</label>
+            <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" id="smtpUsername" name="smtpUsername" placeholder="email@example.com"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}{% endif %}">
+            {% if errors.smtpUsername is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.smtpUsername %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="smtpPassword" class="form-label">SMTP password</label>
+            <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" id="smtpPassword" name="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}{% endif %}">
+            <div class="form-text">
+                The value for this field is hidden once saved. If left empty, the existing password will be used.
+            </div>
+            {% if errors.smtpPassword is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.smtpPassword %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="smtpServer" class="form-label">SMTP server</label>
+            <input type="text" class="form-control{% if errors.smtpServer is defined %} is-invalid{% endif %}" id="smtpServer" name="smtpServer" placeholder="server"{% if values.smtpServer is defined %} value="{{ values.smtpServer }}{% endif %}">
+            {% if errors.smtpServer is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.smtpServer %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="smtpPort" class="form-label">SMTP port</label>
+            <input type="text" class="form-control{% if errors.smtpPort is defined %} is-invalid{% endif %}" id="smtpPort" name="smtpPort" placeholder="587"{% if values.smtpPort is defined %} value="{{ values.smtpPort }}{% endif %}">
+            {% if errors.smtpPort is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.smtpPort %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="smtpFromEmailAddress" class="form-label">Sender email address</label>
+            <input type="text" class="form-control{% if errors.smtpFromEmailAddress is defined %} is-invalid{% endif %}" id="smtpFromEmailAddress" name="smtpFromEmailAddress" placeholder="587"{% if values.smtpFromEmailAddress is defined %} value="{{ values.smtpFromEmailAddress }}{% endif %}">
+            {% if errors.smtpFromEmailAddress is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.smtpFromEmailAddress %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="smtpToEmailAddress" class="form-label">Recipient email address</label>
+            <input type="text" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" id="smtpToEmailAddress" name="smtpToEmailAddress" placeholder="user@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}{% endif %}" aria-describedby="smtpToEmailAddressHelp">
+            <small id="smtpToEmailAddressHelp" class="form-text">
+                A test email will be sent to this email address, if provided, when saving these settings.
+            </small>
+            {% if errors.smtpToEmailAddress is defined %}
+                    <div class="invalid-feedback">
+                    {% for errorMessage in errors.smtpToEmailAddress %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        
+        <button class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}

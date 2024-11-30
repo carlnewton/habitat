@@ -8,12 +8,14 @@ use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\AmazonS3;
 use App\Utilities\LatLong;
+use App\Utilities\Mailer;
 use Aws\S3\Exception\S3Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -28,6 +30,7 @@ class SetupController extends AbstractController
         'location' => 'app_setup_location',
         'categories' => 'app_setup_categories',
         'image_storage' => 'app_setup_image_storage',
+        'mail' => 'app_setup_mail',
         'complete' => 'app_index_index',
     ];
 
@@ -90,7 +93,8 @@ class SetupController extends AbstractController
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private ValidatorInterface $validator,
-        private Security $security
+        private Security $security,
+        private Mailer $mailer
     ) {
     }
 
@@ -420,12 +424,175 @@ class SetupController extends AbstractController
         ;
         $this->entityManager->persist($imageStorageSetting);
 
+        $setupSetting->setValue('mail');
+        $this->entityManager->persist($setupSetting);
+
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_setup_mail');
+    }
+
+    #[Route(path: '/setup/mail', name: 'app_setup_mail')]
+    public function mail(Request $request): Response
+    {
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
+        $setupSetting = $settingsRepository->getSettingByName('setup');
+
+        if (empty($setupSetting)) {
+            return $this->redirectToRoute('app_setup_admin');
+        }
+
+        if ('mail' !== $setupSetting->getValue()) {
+            return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
+        }
+
+        $encryptionKeyExists = !empty($_ENV['ENCRYPTION_KEY']);
+
+        if ('POST' !== $request->getMethod()) {
+            return $this->render('setup/mail.html.twig', [
+                'encryption_key_exists' => $encryptionKeyExists,
+            ]);
+        }
+
+        $submittedToken = $request->getPayload()->get('token');
+        if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
+            $this->addFlash(
+                'warning',
+                'Something went wrong, please try again.'
+            );
+
+            return $this->render('setup/mail.html.twig', [
+                'encryption_key_exists' => $encryptionKeyExists,
+            ]);
+        }
+
+        $fieldErrors = $this->validateSetupMailRequest($request);
+
+        if (!empty($fieldErrors)) {
+            return $this->render('setup/mail.html.twig', [
+                'errors' => $fieldErrors,
+                'encryption_key_exists' => $encryptionKeyExists,
+                'values' => [
+                    'smtpUsername' => $request->get('smtpUsername'),
+                    'smtpPassword' => $request->get('smtpPassword'),
+                    'smtpServer' => $request->get('smtpServer'),
+                    'smtpPort' => $request->get('smtpPort'),
+                    'smtpFromEmailAddress' => $request->get('smtpFromEmailAddress'),
+                    'smtpToEmailAddress' => $request->get('smtpToEmailAddress'),
+                ],
+            ]);
+        }
+
+        if (!empty($request->get('smtpToEmailAddress'))) {
+            $mailException = null;
+            try {
+                $this->mailer->sendTest(
+                    $request->get('smtpUsername'),
+                    $request->get('smtpPassword'),
+                    $request->get('smtpServer'),
+                    (int) $request->get('smtpPort'),
+                    $request->get('smtpToEmailAddress'),
+                    $request->get('smtpFromEmailAddress'),
+                );
+            } catch (TransportExceptionInterface $e) {
+                $mailException = $e->getMessage();
+            }
+            return $this->render('setup/mail.html.twig', [
+                'email_sent_to' => $request->get('smtpToEmailAddress'),
+                'email_sent_exception' => $mailException,
+                'encryption_key_exists' => $encryptionKeyExists,
+                'values' => [
+                    'smtpUsername' => $request->get('smtpUsername'),
+                    'smtpPassword' => $request->get('smtpPassword'),
+                    'smtpServer' => $request->get('smtpServer'),
+                    'smtpPort' => $request->get('smtpPort'),
+                    'smtpFromEmailAddress' => $request->get('smtpFromEmailAddress'),
+                    'smtpToEmailAddress' => $request->get('smtpToEmailAddress'),
+                ],
+            ]);
+        }
+
+        $smtpUsername = $settingsRepository->getSettingByName('smtpUsername');
+        if (!$smtpUsername) {
+            $smtpUsername = new Settings();
+            $smtpUsername->setName('smtpUsername');
+        }
+        $smtpUsername->setValue($request->get('smtpUsername'));
+        $this->entityManager->persist($smtpUsername);
+
+        $smtpPassword = $settingsRepository->getSettingByName('smtpPassword');
+        if (!$smtpPassword) {
+            $smtpPassword = new Settings();
+            $smtpPassword->setName('smtpPassword');
+        }
+        $smtpPassword->setEncryptedValue($request->get('smtpPassword'));
+        $this->entityManager->persist($smtpPassword);
+
+        $smtpServer = $settingsRepository->getSettingByName('smtpServer');
+        if (!$smtpServer) {
+            $smtpServer = new Settings();
+            $smtpServer->setName('smtpServer');
+        }
+        $smtpServer->setValue($request->get('smtpServer'));
+        $this->entityManager->persist($smtpServer);
+
+        $smtpPort = $settingsRepository->getSettingByName('smtpPort');
+        if (!$smtpPort) {
+            $smtpPort = new Settings();
+            $smtpPort->setName('smtpPort');
+        }
+        $smtpPort->setValue($request->get('smtpPort'));
+        $this->entityManager->persist($smtpPort);
+
+        $smtpFromEmailAddress = $settingsRepository->getSettingByName('smtpFromEmailAddress');
+        if (!$smtpFromEmailAddress) {
+            $smtpFromEmailAddress = new Settings();
+            $smtpFromEmailAddress->setName('smtpFromEmailAddress');
+        }
+        $smtpFromEmailAddress->setValue($request->get('smtpFromEmailAddress'));
+        $this->entityManager->persist($smtpFromEmailAddress);
+
         $setupSetting->setValue('complete');
         $this->entityManager->persist($setupSetting);
 
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_admin_index');
+    }
+
+    private function validateSetupMailRequest(Request $request): array
+    {
+        $errors = [];
+
+        if (empty($request->get('smtpUsername'))) {
+            $errors['smtpUsername'][] = 'You must enter an SMTP username';
+        }
+
+        if (empty($request->get('smtpPassword'))) {
+            $errors['smtpPassword'][] = 'You must enter an SMTP password';
+        }
+
+        if (empty($_ENV['ENCRYPTION_KEY'])) {
+            $errors['smtpPassword'][] = 'The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set';
+        }
+
+        if (empty($request->get('smtpServer'))) {
+            $errors['smtpServer'][] = 'You must enter an SMTP server';
+        }
+
+        if (empty($request->get('smtpPort')) || !is_numeric($request->get('smtpPort'))) {
+            $errors['smtpPort'][] = 'You must enter a valid port number';
+        }
+
+        if (empty($request->get('smtpFromEmailAddress')) || !filter_var($request->get('smtpFromEmailAddress'), FILTER_VALIDATE_EMAIL)) {
+            $errors['smtpFromEmailAddress'][] = 'You must enter a valid sender email address';
+        }
+
+        if (!empty($request->get('smtpToEmailAddress')) && !filter_var($request->get('smtpToEmailAddress'), FILTER_VALIDATE_EMAIL)) {
+            $errors['smtpToEmailAddress'][] = 'You must enter a valid recipient email address';
+        }
+
+        return $errors;
     }
 
     private function validateSetupImageStorageRequest(Request $request): array

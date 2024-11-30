@@ -6,12 +6,12 @@ use App\Entity\BlockedEmailAddress;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Utilities\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,7 +23,7 @@ class SecurityController extends AbstractController
 {
     private UserRepository $userRepository;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager, private Mailer $mailer)
     {
         $this->userRepository = $entityManager->getRepository(User::class);
     }
@@ -46,7 +46,7 @@ class SecurityController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
-        MailerInterface $mailer,
+        Mailer $mailer,
         UrlGeneratorInterface $router
     ): Response {
         if (0 === $this->userRepository->count()) {
@@ -123,22 +123,20 @@ class SecurityController extends AbstractController
             $this->entityManager->flush();
 
             $domainSetting = $settingsRepository->getSettingByName('domain');
-            $email = (new Email())
-                ->from('admin@' . $domainSetting->getValue())
-                ->to($user->getEmailAddress())
-                ->subject('Verify your email address for ' . $domainSetting->getValue())
-                ->html(
-                    '<p>Hello ' . $user->getUsername() . ',</p>' .
-                    '<p>Click the link below to verify the email address for your account.</p>' .
-                    '<p>Ignore this email if you didn\'t create this account.</p>' .
-                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
-                        'userId' => $user->getId(),
-                        'verificationString' => $emailVerificationString,
-                    ]) . '">Verify your email address</a>'
-                )
-            ;
 
-            $mailer->send($email);
+            $mailer->send(
+                $user->getEmailAddress(),
+                $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+                'Verify your email address for ' . $domainSetting->getValue(),
+                '<p>Hello ' . $user->getUsername() . ',</p>' .
+                '<p>Click the link below to verify the email address for your account.</p>' .
+                '<p>Ignore this email if you didn\'t create this account.</p>' .
+                '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
+                    'userId' => $user->getId(),
+                    'verificationString' => $emailVerificationString,
+                ]) . '">Verify your email address</a>'
+
+            );
         }
 
         $this->addFlash('notice', 'Check your emails to verify your email address');
@@ -239,7 +237,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/forgot-password', name: 'app_forgot_password')]
     public function forgotPassword(
         UrlGeneratorInterface $router,
-        MailerInterface $mailer,
+        Mailer $mailer,
         Request $request
     ): Response {
         if ('POST' !== $request->getMethod()) {
@@ -260,22 +258,19 @@ class SecurityController extends AbstractController
 
             $settingsRepository = $this->entityManager->getRepository(Settings::class);
             $domainSetting = $settingsRepository->getSettingByName('domain');
-            $email = (new Email())
-                ->from('admin@' . $domainSetting->getValue())
-                ->to($user->getEmailAddress())
-                ->subject('Reset your password for ' . $domainSetting->getValue())
-                ->html(
-                    '<p>Hello ' . $user->getUsername() . ',</p>' .
-                    '<p>Click the link below to reset the password for your account.</p>' .
-                    '<p>Ignore this email if you didn\'t request a password reset.</p>' .
-                    '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_reset_password', [
-                        'userId' => $user->getId(),
-                        'verificationString' => $emailVerificationString,
-                    ]) . '">Reset your password</a>'
-                )
-            ;
 
-            $mailer->send($email);
+            $mailer->send(
+                $user->getEmailAddress(),
+                $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+                'Reset your password for ' . $domainSetting->getValue(),
+                '<p>Hello ' . $user->getUsername() . ',</p>' .
+                '<p>Click the link below to reset the password for your account.</p>' .
+                '<p>Ignore this email if you didn\'t request a password reset.</p>' .
+                '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_reset_password', [
+                    'userId' => $user->getId(),
+                    'verificationString' => $emailVerificationString,
+                ]) . '">Reset your password</a>'
+            );
         }
 
         $this->addFlash('notice', 'Check your emails to reset your password');

@@ -17,6 +17,9 @@
                     <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_s3_details' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_s3_details' %} aria-current="page"{% endif %} href="{{ path('app_admin_s3_details') }}">Amazon S3 details</a>
                 </li>
             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link{% if app.request.get('_route') == 'app_admin_mail' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_mail' %} aria-current="page"{% endif %} href="{{ path('app_admin_mail') }}">Mail</a>
+            </li>
         </ul>
     </div>
 {% endblock %}
