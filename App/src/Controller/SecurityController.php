@@ -318,7 +318,7 @@ class SecurityController extends AbstractController
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $security->login($user);
+        $security->login($user, 'form_login');
 
         $this->addFlash('notice', 'Your password has been reset');
 
