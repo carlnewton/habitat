@@ -316,6 +316,20 @@
       tags:
       - variables
 
+    - name: Create a cron job for certbot auto renewal
+      cron:
+        name: "Auto-renew letsencrypt certificate with certbot"
+        minute: "0"
+        hour: "1"
+        day: "*"
+        month: "*"
+        weekday: "0"
+        job: "certbot renew --post-hook 'systemctl reload httpd'"
+        user: "root"
+      become: yes
+      tags:
+      - cron
+
     - name: Create a cron job for Habitat data retention
       cron:
         name: "Run Symfony data retention command"
