@@ -1,0 +1,33 @@
+{% extends 'admin/base.html.twig' %}
+{% set page_title = 'User registration' %}
+
+{% block body %}
+    <form method="post">
+        <div class="row mb-3">
+            <label for="enable-registration" class="col-sm-3 col-form-label">Allow users to register</label>
+            <div class="col-sm-9">
+                <div class="form-check form-switch form-switch-lg">
+                    <input class="form-check-input" type="checkbox" name="enable-registration" role="switch" id="enable_registration"{% if values.registration is defined and values.registration == 'on' %} checked{% endif %}>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Registration challenge</label>
+            <input type="hidden" id="registration-challenge-questions" name="registration-challenge-questions" value="{% if values.questions is defined %}{{ values.questions }}{% else %}[]{% endif %}">
+            <div class="form-text">
+                You can create questions which the user must answer correctly in order to create an account. If creating
+                multiple questions, the user will be required to answer one question at random when registering for an
+                account.
+            </div>
+            <div class="accordion my-3" id="questions-accordion"></div>
+            <button id="registration-challenge-add-question-btn" type="button" class="btn btn-outline-primary">Add a question</button>
+        </div>
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('admin_registration_settings') }}
+{% endblock %}

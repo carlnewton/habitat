@@ -17,7 +17,7 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
     #[Route(path: '/admin/categories', name: 'app_admin_categories', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $this->entityManager = $entityManager;
 

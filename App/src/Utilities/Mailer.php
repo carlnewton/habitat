@@ -16,7 +16,8 @@ class Mailer
 
     private SymfonyMailer $symfonyMailer;
 
-    public function __construct(private EntityManagerInterface $entityManager) {
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
         $this->settingsRepository = $entityManager->getRepository(Settings::class);
     }
 
@@ -48,11 +49,10 @@ class Mailer
         $server = $this->settingsRepository->getSettingByName('smtpServer');
         $port = $this->settingsRepository->getSettingByName('smtpPort');
 
-        
-        $transport = Transport::fromDsn(sprintf('smtp://%s:%s@%s:%s', 
-            $username->getValue(), 
-            $password->getEncryptedValue(), 
-            $server->getValue(), 
+        $transport = Transport::fromDsn(sprintf('smtp://%s:%s@%s:%s',
+            $username->getValue(),
+            $password->getEncryptedValue(),
+            $server->getValue(),
             $port->getValue()
         ));
 
@@ -70,7 +70,7 @@ class Mailer
 
     private function getTransport(string $username, string $password, string $server, int $port): TransportInterface
     {
-        return Transport::fromDsn(sprintf('smtp://%s:%s@%s:%d', 
+        return Transport::fromDsn(sprintf('smtp://%s:%s@%s:%d',
             $username,
             $password,
             $server,

@@ -18,7 +18,7 @@ class CommentsRemovalController extends AbstractController
     #[Route(path: '/admin/moderation/comments/remove', name: 'app_moderation_comments_remove', methods: ['POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {

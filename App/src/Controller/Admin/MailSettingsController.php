@@ -3,9 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Settings;
-use App\Utilities\AmazonS3;
 use App\Utilities\Mailer;
-use Aws\S3\Exception\S3Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +19,7 @@ class MailSettingsController extends AbstractController
     public function edit(
         Request $request,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
     ): Response {
         $settingsRepository = $entityManager->getRepository(Settings::class);
 
@@ -106,7 +104,7 @@ class MailSettingsController extends AbstractController
 
             $this->addFlash(
                 'notice',
-                'A test email has been sent to ' . $request->get('smtpToEmailAddress') . ' and no issues have been ' . 
+                'A test email has been sent to ' . $request->get('smtpToEmailAddress') . ' and no issues have been ' .
                 'reported. If you have not received it, check the settings here and try again.'
             );
         }

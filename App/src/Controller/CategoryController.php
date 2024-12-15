@@ -19,7 +19,7 @@ class CategoryController extends AbstractController
     public function index(
         int $id,
         #[CurrentUser] ?User $user,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $categoryRepository = $entityManager->getRepository(Category::class);
         $category = $categoryRepository->findOneBy([

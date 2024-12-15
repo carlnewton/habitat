@@ -18,7 +18,7 @@ class UsersSuspensionController extends AbstractController
     #[Route(path: '/admin/moderation/users/suspend', name: 'app_moderation_users_suspend', methods: ['POST'], priority: 2)]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {

@@ -18,7 +18,7 @@ class EditS3DetailsController extends AbstractController
     #[Route(path: '/admin/s3', name: 'app_admin_s3_details', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $settingsRepository = $entityManager->getRepository(Settings::class);
         $imageStorageSetting = $settingsRepository->getSettingByName('imageStorage');

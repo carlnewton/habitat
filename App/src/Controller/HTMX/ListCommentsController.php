@@ -19,7 +19,7 @@ class ListCommentsController extends AbstractController
     public function index(
         Request $request,
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         if (empty($request->query->get('post'))) {
             return new Response('', Response::HTTP_BAD_REQUEST);

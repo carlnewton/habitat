@@ -19,7 +19,7 @@ class UserController extends AbstractController
     public function show(
         int $id,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $userRepository = $entityManager->getRepository(User::class);
         $user = $userRepository->findOneBy([

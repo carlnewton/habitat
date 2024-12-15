@@ -21,7 +21,7 @@ class ViewPostController extends AbstractController
         Request $request,
         #[CurrentUser] ?User $user,
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([

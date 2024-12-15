@@ -14,7 +14,7 @@ class RedirectToSetupRequestListener
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
-        protected UrlGeneratorInterface $router
+        protected UrlGeneratorInterface $router,
     ) {
     }
 

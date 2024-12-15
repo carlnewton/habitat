@@ -20,7 +20,7 @@ class AddCommentController extends AbstractController
         Request $request,
         #[CurrentUser] ?User $user,
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         if (null === $user) {
             return $this->render('partials/hx/must_sign_in.html.twig');

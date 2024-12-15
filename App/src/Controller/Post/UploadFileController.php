@@ -31,7 +31,7 @@ class UploadFileController extends AbstractController
     public function index(
         Request $request,
         #[CurrentUser] ?User $user,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         if (null === $user) {
             return new Response('', Response::HTTP_UNAUTHORIZED);

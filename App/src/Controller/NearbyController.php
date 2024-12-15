@@ -11,7 +11,7 @@ class NearbyController extends AbstractController
 {
     #[Route(path: '/nearby', name: 'app_nearby_nearby', methods: ['GET'])]
     public function index(
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         return $this->render('nearby.html.twig');
     }

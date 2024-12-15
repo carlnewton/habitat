@@ -20,7 +20,7 @@ class ListPostsController extends AbstractController
     public function index(
         Request $request,
         #[CurrentUser] ?User $user,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $renderArray = [];
         $postRepository = $entityManager->getRepository(Post::class);

@@ -16,6 +16,8 @@ doctrine:
                 SIN: App\DQL\SinFunction
                 RADIANS: App\DQL\RadiansFunction
                 COS: App\DQL\CosFunction
+            numeric_functions:
+                RAND: App\DQL\RandFunction
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
         report_fields_where_declared: true

@@ -19,7 +19,7 @@ class AddEditCategoryController extends AbstractController
     public function add(
         ?int $id,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $categoryRepository = $entityManager->getRepository(Category::class);
 

@@ -19,7 +19,7 @@ class PostsChangeCategoryController extends AbstractController
     #[Route(path: '/admin/moderation/posts/change-category', name: 'app_moderation_posts_change_category', methods: ['POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {

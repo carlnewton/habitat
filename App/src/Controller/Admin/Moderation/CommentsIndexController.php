@@ -20,7 +20,7 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
     #[Route(path: '/admin/moderation/comments', name: 'app_moderation_comments', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $this->entityManager = $entityManager;
 

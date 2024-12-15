@@ -64,6 +64,29 @@
                 </p>
             </div>
         </div>
+
+        {% if question is defined and question is not null %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Registration challenge</h5>
+                    <p>To successfully create an account, you must correctly answer the following question:</p>
+                    <p><strong>{{ question.question }}</strong></p>
+                    <div class="form-floating">
+                        <input type="text" class="form-control{% if errors.question is defined %} is-invalid{% endif %}" name="answer" id="answer" placeholder="Answer" required>
+                        <label for="answer">Answer</label>
+                        {% if errors.question is defined %}
+                            <div class="invalid-feedback">
+                                {% for errorMessage in errors.question %}
+                                    <p>{{ errorMessage }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <input type="hidden" name="question" value="{{ question.id }}">
+                </div>
+            </div>
+        {% endif %}
+
         <button class="btn btn-primary btn-lg">Sign up</button>
         <input type="hidden" name="token" value="{{ csrf_token('signup') }}">
     </form>

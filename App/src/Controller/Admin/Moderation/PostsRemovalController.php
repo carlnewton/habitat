@@ -18,7 +18,7 @@ class PostsRemovalController extends AbstractController
     #[Route(path: '/admin/moderation/posts/remove', name: 'app_moderation_posts_remove', methods: ['POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {

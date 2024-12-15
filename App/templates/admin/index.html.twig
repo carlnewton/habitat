@@ -60,13 +60,6 @@
             {% endif %}
             <div class="form-text">Users will be able to create posts in any location inside the circle</div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Feature management</label>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" name="registration" role="switch" id="registration"{% if values.registration == 'on' %} checked{% endif %}>
-                <label class="form-check-label" for="registration">User registration</label>
-            </div>
-        </div>
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng }}">
         <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters }}">
         <input type="hidden" name="locationZoom" id="locationZoom" value="{{ values.locationZoom }}">

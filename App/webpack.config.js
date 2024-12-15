@@ -28,6 +28,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('admin_map', './assets/admin_map.js')
     .addEntry('admin_table', './assets/admin_table.js')
+    .addEntry('admin_registration_settings', './assets/admin_registration_settings.js')
     .addEntry('create_post', './assets/create_post.js')
     .addEntry('view_post', './assets/view_post.js')
     .addEntry('nearby', './assets/nearby.js')

@@ -94,7 +94,7 @@ class SetupController extends AbstractController
         private UserPasswordHasherInterface $passwordHasher,
         private ValidatorInterface $validator,
         private Security $security,
-        private Mailer $mailer
+        private Mailer $mailer,
     ) {
     }
 
@@ -497,6 +497,7 @@ class SetupController extends AbstractController
             } catch (TransportExceptionInterface $e) {
                 $mailException = $e->getMessage();
             }
+
             return $this->render('setup/mail.html.twig', [
                 'email_sent_to' => $request->get('smtpToEmailAddress'),
                 'email_sent_exception' => $mailException,

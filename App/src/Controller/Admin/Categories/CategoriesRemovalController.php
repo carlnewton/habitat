@@ -17,7 +17,7 @@ class CategoriesRemovalController extends AbstractController
     public function remove(
         ?int $id,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {

@@ -1,10 +1,7 @@
 <?php
+
 namespace App\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use App\Entity\BlockedEmailAddress;
 use App\Entity\Comment;
 use App\Entity\Post;
@@ -12,6 +9,10 @@ use App\Entity\Settings;
 use App\Entity\User;
 use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -49,7 +50,6 @@ class DataRetentionCommand extends Command
         return Command::SUCCESS;
     }
 
-
     private function deleteUserData(OutputInterface $output): void
     {
         $userRepository = $this->entityManager->getRepository(User::class);
@@ -59,6 +59,7 @@ class DataRetentionCommand extends Command
 
         if (empty($users)) {
             $output->writeln('- No users found.');
+
             return;
         }
 
@@ -132,6 +133,7 @@ class DataRetentionCommand extends Command
 
         if (empty($posts)) {
             $output->writeln('- No posts found.');
+
             return;
         }
 
@@ -168,6 +170,7 @@ class DataRetentionCommand extends Command
 
         if (empty($comments)) {
             $output->writeln('- No comments found.');
+
             return;
         }
 

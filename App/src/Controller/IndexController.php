@@ -18,7 +18,7 @@ class IndexController extends AbstractController
     #[Route(path: '/', name: 'app_index_index', methods: ['GET'])]
     public function index(
         #[CurrentUser] ?User $user,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findBy(

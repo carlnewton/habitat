@@ -20,7 +20,7 @@ class CreatePostController extends AbstractController
     protected array $categories = [];
 
     public function __construct(
-        protected EntityManagerInterface $entityManager
+        protected EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -28,7 +28,7 @@ class CreatePostController extends AbstractController
     public function index(
         #[CurrentUser] ?User $user,
         Request $request,
-        LatLong $latLongUtils
+        LatLong $latLongUtils,
     ): Response {
         if (null === $user) {
             return $this->redirectToRoute('app_login');

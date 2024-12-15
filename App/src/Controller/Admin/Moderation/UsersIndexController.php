@@ -19,7 +19,7 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
     #[Route(path: '/admin/moderation/users', name: 'app_moderation_users', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $this->entityManager = $entityManager;
 

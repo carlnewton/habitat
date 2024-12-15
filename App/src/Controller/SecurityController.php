@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\BlockedEmailAddress;
+use App\Entity\RegistrationQuestion;
 use App\Entity\Settings;
 use App\Entity\User;
+use App\Repository\RegistrationQuestionRepository;
 use App\Repository\UserRepository;
 use App\Utilities\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,9 +25,12 @@ class SecurityController extends AbstractController
 {
     private UserRepository $userRepository;
 
+    private RegistrationQuestionRepository $registrationQuestionRepository;
+
     public function __construct(private EntityManagerInterface $entityManager, private Mailer $mailer)
     {
         $this->userRepository = $entityManager->getRepository(User::class);
+        $this->registrationQuestionRepository = $entityManager->getRepository(RegistrationQuestion::class);
     }
 
     #[Route(path: '/login', name: 'app_login')]
@@ -47,7 +52,7 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
         Mailer $mailer,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
     ): Response {
         if (0 === $this->userRepository->count()) {
             return $this->redirectToRoute('app_index_index');
@@ -61,8 +66,12 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_index_index');
         }
 
+        $newRegistrationQuestion = $this->registrationQuestionRepository->getOneRandom();
+
         if ('POST' !== $request->getMethod()) {
-            return $this->render('security/signup.html.twig');
+            return $this->render('security/signup.html.twig', [
+                'question' => $newRegistrationQuestion,
+            ]);
         }
 
         $submittedToken = $request->getPayload()->get('token');
@@ -78,6 +87,7 @@ class SecurityController extends AbstractController
         if (!empty($fieldErrors)) {
             return $this->render('security/signup.html.twig', [
                 'errors' => $fieldErrors,
+                'question' => $newRegistrationQuestion,
                 'values' => [
                     'username' => $request->get('username'),
                     'email' => $request->get('email'),
@@ -116,7 +126,9 @@ class SecurityController extends AbstractController
             if (count($entityErrors) > 0) {
                 $this->addFlash('warning', 'Something went wrong with your details, please try again.');
 
-                return $this->render('signup.html.twig');
+                return $this->render('signup.html.twig', [
+                    'question' => $newRegistrationQuestion,
+                ]);
             }
 
             $this->entityManager->persist($user);
@@ -135,7 +147,6 @@ class SecurityController extends AbstractController
                     'userId' => $user->getId(),
                     'verificationString' => $emailVerificationString,
                 ]) . '">Verify your email address</a>'
-
             );
         }
 
@@ -176,7 +187,35 @@ class SecurityController extends AbstractController
             $errors['password'][] = 'You must use a stronger password';
         }
 
+        if ($this->registrationQuestionRepository->count() > 0) {
+            $question = $this->registrationQuestionRepository->findOneBy([
+                'id' => (int) $request->get('question'),
+            ]);
+
+            if (empty($question)) {
+                $errors['question'][] = 'Please try answering this again';
+            } elseif ('' === $request->get('answer')) {
+                $errors['question'][] = 'You must answer the registration challenge question';
+            } elseif (!$this->questionHasAnswer($question, $request->get('answer'))) {
+                $errors['question'][] = 'The answer you gave is incorrect. Please try again';
+            }
+        }
+
         return $errors;
+    }
+
+    private function questionHasAnswer(RegistrationQuestion $question, string $submittedAnswer): bool
+    {
+        $correctAnswers = [];
+        foreach ($question->getAnswers() as $answer) {
+            $correctAnswers[] = trim(mb_strtolower($answer->getAnswer()));
+        }
+
+        if (!in_array(trim(mb_strtolower($submittedAnswer)), $correctAnswers)) {
+            return false;
+        }
+
+        return true;
     }
 
     private function isPasswordStrong($password): bool
@@ -208,7 +247,7 @@ class SecurityController extends AbstractController
     public function verifyUser(
         int $userId,
         string $verificationString,
-        Security $security
+        Security $security,
     ): Response {
         $user = $this->userRepository->findOneBy([
             'id' => $userId,
@@ -238,7 +277,7 @@ class SecurityController extends AbstractController
     public function forgotPassword(
         UrlGeneratorInterface $router,
         Mailer $mailer,
-        Request $request
+        Request $request,
     ): Response {
         if ('POST' !== $request->getMethod()) {
             return $this->render('security/forgot_password.html.twig');
@@ -284,7 +323,7 @@ class SecurityController extends AbstractController
         string $verificationString,
         UserPasswordHasherInterface $passwordHasher,
         Request $request,
-        Security $security
+        Security $security,
     ): Response {
         $user = $this->userRepository->findOneBy([
             'id' => $userId,

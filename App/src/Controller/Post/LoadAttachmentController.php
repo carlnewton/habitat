@@ -33,7 +33,7 @@ class LoadAttachmentController extends AbstractController
     #[Route(path: '/post/{postId}/attachment/{attachmentId}', name: 'app_load_attachment', methods: ['GET'])]
     public function load(
         int $postId,
-        int $attachmentId
+        int $attachmentId,
     ): Response {
         $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
         $attachment = $attachmentRepository->findOneBy([
@@ -60,7 +60,7 @@ class LoadAttachmentController extends AbstractController
     public function load_create_thumbnail(
         int $postId,
         int $attachmentId,
-        int $width
+        int $width,
     ): Response {
         if (!in_array($width, self::THUMBNAIL_WIDTHS)) {
             return new Response('', Response::HTTP_NOT_FOUND);
@@ -82,7 +82,7 @@ class LoadAttachmentController extends AbstractController
     #[Route(path: '/attachment/unposted/{attachmentId}', name: 'app_load_unposted_attachment', methods: ['GET'])]
     public function loadUnposted(
         int $attachmentId,
-        #[CurrentUser] ?User $user
+        #[CurrentUser] ?User $user,
     ): Response {
         if (null === $user) {
             return new Response('', Response::HTTP_UNAUTHORIZED);

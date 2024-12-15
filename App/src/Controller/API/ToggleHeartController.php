@@ -19,7 +19,7 @@ class ToggleHeartController extends AbstractController
         int $postId,
         #[CurrentUser] ?User $user,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): JsonResponse {
         if (null === $user) {
             throw $this->createAccessDeniedException('User is not signed in');
