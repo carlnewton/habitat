@@ -19,7 +19,16 @@
                 multiple questions, the user will be required to answer one question at random when registering for an
                 account.
             </div>
-            <div class="accordion my-3" id="questions-accordion"></div>
+            <div class="accordion my-3{% if errors.questions is defined %} is-invalid{% endif %}" id="questions-accordion"></div>
+            {% if errors.questions is defined %}
+                <div class="invalid-feedback">
+                    <ul>
+                        {% for error in errors.questions %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             <button id="registration-challenge-add-question-btn" type="button" class="btn btn-outline-primary">Add a question</button>
         </div>
         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">

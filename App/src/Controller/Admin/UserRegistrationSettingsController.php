@@ -49,7 +49,7 @@ class UserRegistrationSettingsController extends AbstractController
                     'errors' => $fieldErrors,
                     'values' => [
                         'questions' => $request->get('registration-challenge-questions'),
-                        'registration' => $request->get('registration'),
+                        'registration' => $request->get('enable-registration'),
                     ],
                 ]);
             }
@@ -139,6 +139,40 @@ class UserRegistrationSettingsController extends AbstractController
 
         if (!empty($request->get('enable-registration')) && 'on' !== $request->get('enable-registration')) {
             $errors['enable-registration'] = 'You must decide to enable or disable user registration';
+        }
+
+        $submittedQuestions = $request->get('registration-challenge-questions');
+
+        if (!json_validate($submittedQuestions)) {
+            $errors['questions'][] = 'Unable to validate the registration questions';
+        } else {
+            $submittedQuestions = json_decode($submittedQuestions);
+            foreach ($submittedQuestions as $question) {
+                if (strlen(trim($question->question)) > 255) {
+                    $errors['questions'][] = 'All questions must be 255 characters or less';
+                }
+
+                if (strlen(trim($question->question)) > 0) {
+                    $questionHasAnswer = false;
+                    foreach ($question->answers as $answer) {
+                        if (strlen(trim($answer)) > 0) {
+                            $questionHasAnswer = true;
+
+                            if (strlen(trim($answer)) > 255) {
+                                $errors['questions'][] = 'All answers must be 255 characters or less';
+                            }
+                        }
+                    }
+
+                    if (!$questionHasAnswer) {
+                        $errors['questions'][] = 'All questions must have at least one correct answer';
+                    }
+                }
+            }
+        }
+
+        if (!empty($errors['questions'])) {
+            $errors['questions'] = array_unique($errors['questions']);
         }
 
         return $errors;
