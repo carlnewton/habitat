@@ -350,3 +350,42 @@
         state: absent
       when: publicFilesFound == 0
       become: yes
+
+    - name: Create a swap file
+      command: fallocate -l 2G /swapfile
+      args:
+        creates: /swapfile
+      become: yes
+      tags:
+      - swap
+
+    - name: Set the correct permissions for the swap file
+      file:
+        path: /swapfile
+        mode: '0600'
+      become: yes
+      tags:
+      - swap
+
+    - name: Set up the swap area
+      command: mkswap /swapfile
+      args:
+        creates: /swapfile.swap
+      become: yes
+      tags:
+      - swap
+
+    - name: Enable the swap file
+      command: swapon /swapfile
+      become: yes
+      tags:
+      - swap
+
+    - name: Ensure swap is enabled on boot
+      lineinfile:
+        path: /etc/fstab
+        line: '/swapfile none swap sw 0 0'
+        state: present
+      become: yes
+      tags:
+      - swap
