@@ -15,6 +15,9 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li>
+                        <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">Edit</a>
+                    </li>
+                    <li>
                         <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
                             <input name="items" type="hidden" value="{{ post.id }}"/>
                             <input type="hidden" name="token" value="{{ csrf_token('admin') }}">

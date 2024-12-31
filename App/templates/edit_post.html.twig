@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+{% set page_title = 'Edit post' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('create_post') }}
+{% endblock %}
+
+{% block body %}
+    <h1 class="visually-hidden">Edit post</h1>
+    <form id="post-form" method="post" action="{{ path('app_edit_post', { id: post.id }) }}" enctype="multipart/form-data">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if post.title is defined %}{{ post.title }}{% endif %}">
+            <label for="title">Title</label>
+            {% if errors.title is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.title %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-floating mb-3">
+            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body">{% if post.body is defined %}{{ post.body }}{% endif %}</textarea>
+            <label for="body">Body</label>
+        </div>
+        <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
+            <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="Category">
+                {% for category in categories %}
+                    <option{% if (post.category is defined and post.category.id == category.id) or (post.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.label|lower }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="category">Category</label>
+            {% if errors.category is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.category %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="dropzone mb-3"></div>
+        <input type="hidden" name="attachmentIds" id="attachmentIds" value="{% if attachmentIds is defined %}{{ attachmentIds }}{% endif %}">
+        <button class="btn btn-outline-primary mb-3" id="add-location-btn" type="button">Add a location</button>
+        <div id="location-card" class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
+            <div class="card-header">
+                Location
+                <button type="button" class="btn-close float-end" id="remove-location-btn" title="Remove location" aria-label="Remove location"></button>
+            </div>
+            <div class="card-body ratio ratio-16x9">
+                <div id="map" data-center="{{ setting('locationLatLng') }}" data-zoom="{{ setting('locationZoom') }}" data-radius="{{ setting('locationRadiusMeters') }}"></div>
+            </div>
+            <div class="card-body text-white bg-danger text-center fw-bold d-none" id="bounds-warning">
+                The location can only be set inside the bounds of this Habitat
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-12 gx-2 d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-secondary get-location float-start" title="Show your current location"><i class="bi bi-crosshair2"></i></button>
+                        <span class="ms-2 text-secondary">Never post your home address</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if errors.location is defined %}
+            <div class="text-danger">
+                {% for errorMessage in errors.location %}
+                    <p>{{ errorMessage }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if post.latitude is defined and post.longitude is defined %}{{ post.latitude }},{{ post.longitude }}{% endif %}">
+        <input type="hidden" name="token" value="{{ csrf_token('edit') }}">
+        <div class="d-grid gap-2">
+            <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg">Submit post</button>
+        </div>
+    </form>
+    <div id="posting" class="text-center text-secondary py-5 d-none">
+        <div class="spinner-border my-5" role="status"></div>
+        <p class="fs-3">Posting...</p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('create_post') }}
+{% endblock %}

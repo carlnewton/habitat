@@ -14,8 +14,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class CreatePostController extends AbstractController
+#[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
+class EditPostController extends AbstractController
 {
     protected array $categories = [];
 
@@ -24,17 +26,22 @@ class CreatePostController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/post', name: 'app_create_post', methods: ['GET', 'POST'])]
+    #[Route(path: '/post/{id}/edit', name: 'app_edit_post', methods: ['GET', 'POST'])]
     public function index(
+        int $id,
         #[CurrentUser] ?User $user,
         Request $request,
         LatLong $latLongUtils,
     ): Response {
-        if (null === $user) {
-            return $this->redirectToRoute('app_login');
+        $postRepository = $this->entityManager->getRepository(Post::class);
+        $post = $postRepository->findOneBy([
+            'id' => $id,
+        ]);
+
+        if (!$post || $post->isRemoved()) {
+            throw $this->createNotFoundException('The post does not exist');
         }
 
-        $postRepository = $this->entityManager->getRepository(Post::class);
         $categoryRepository = $this->entityManager->getRepository(Category::class);
         $this->categories = $categoryRepository->findBy(
             [
@@ -46,31 +53,20 @@ class CreatePostController extends AbstractController
             ]
         );
 
+        $attachmentIds = [];
+        foreach ($post->getAttachments() as $attachment) {
+            $attachmentIds[] = $attachment->getId();
+        }
+
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
-            if (!$this->isCsrfTokenValid('post', $submittedToken)) {
+            if (!$this->isCsrfTokenValid('edit', $submittedToken)) {
                 $this->addFlash(
                     'warning',
                     'Something went wrong, please try again.'
                 );
 
-                return $this->render('create_post.html.twig');
-            }
-
-            $fieldErrors = $this->validateRequest($request);
-
-            if (!empty($fieldErrors)) {
-                return $this->render('create_post.html.twig', [
-                    'errors' => $fieldErrors,
-                    'categories' => $this->categories,
-                    'values' => [
-                        'title' => $request->get('title'),
-                        'body' => $request->get('body'),
-                        'locationLatLng' => $request->get('locationLatLng'),
-                        'attachmentIds' => $request->get('attachmentIds'),
-                        'category' => $request->get('category'),
-                    ],
-                ]);
+                return $this->redirectToRoute('app_edit_post', ['id' => $post->getId()]);
             }
 
             foreach ($this->categories as $category) {
@@ -78,14 +74,23 @@ class CreatePostController extends AbstractController
                     $postCategory = $category;
                 }
             }
-            $post = new Post();
+
             $post
                 ->setTitle(trim($request->get('title')))
                 ->setBody(trim($request->get('body')))
-                ->setPosted(new \DateTime())
-                ->setUser($user)
                 ->setCategory($postCategory)
             ;
+
+            $fieldErrors = $this->validateRequest($request);
+
+            if (!empty($fieldErrors)) {
+                return $this->render('edit_post.html.twig', [
+                    'errors' => $fieldErrors,
+                    'post' => $post,
+                    'categories' => $this->categories,
+                    'attachmentIds' => implode(',', $attachmentIds),
+                ]);
+            }
 
             if (
                 in_array($postCategory->getLocation(), [
@@ -99,22 +104,60 @@ class CreatePostController extends AbstractController
             }
 
             $this->entityManager->persist($post);
-            $this->entityManager->flush();
 
+            $postedAttachmentIds = [];
             if (!empty($request->get('attachmentIds'))) {
-                $this->addAttachmentsToPost($request->get('attachmentIds'), $post);
+                $postedAttachmentIds = explode(',', $request->get('attachmentIds'));
             }
+
+            $removedAttachmentIds = [];
+
+            $originalAttachments = $post->getAttachments();
+            $originalAttachmentIds = [];
+            if (!empty($originalAttachments)) {
+                foreach ($originalAttachments as $originalAttachment) {
+                    $originalAttachmentIds[] = $originalAttachment->getId();
+                    if (!in_array($originalAttachment->getId(), $postedAttachmentIds)) {
+                        $removedAttachmentIds[] = $originalAttachment->getId();
+                    }
+                }
+            }
+
+            if (!empty($postedAttachmentIds)) {
+                $newAttachmentIds = [];
+                foreach ($postedAttachmentIds as $attachmentId) {
+                    if (!in_array($attachmentId, $originalAttachmentIds)) {
+                        $newAttachmentIds[] = $attachmentId;
+                    }
+                }
+                $this->addAttachmentsToPost(implode(',', $newAttachmentIds), $post);
+            }
+
+            if (!empty($removedAttachmentIds)) {
+                $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
+                foreach ($removedAttachmentIds as $removedAttachmentId) {
+                    $removedAttachment = $attachmentRepository->findOneBy([
+                        'id' => $removedAttachmentId
+                    ]);
+                    $removedAttachment->setPost(NULL);
+                    $this->entityManager->persist($removedAttachment);
+                }
+            }
+
+            $this->entityManager->flush();
 
             $this->addFlash(
                 'notice',
-                'Your post has been submitted'
+                'The post has been updated'
             );
 
             return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
         }
 
-        return $this->render('create_post.html.twig', [
+        return $this->render('edit_post.html.twig', [
+            'post' => $post,
             'categories' => $this->categories,
+            'attachmentIds' => implode(',', $attachmentIds),
         ]);
     }
 

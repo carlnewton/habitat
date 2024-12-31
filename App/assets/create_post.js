@@ -30,7 +30,7 @@ map.setMaxBounds(perimeter.getBounds().pad(0.3));
 map.setMinZoom(map.getBoundsZoom(map.options.maxBounds));
 
 var markerIcon = L.icon({
-    iconUrl: 'build/images/marker-icon.2b3e1faf.png',
+    iconUrl: '/build/images/marker-icon.2b3e1faf.png',
     iconSize:     [25, 41],
     iconAnchor:   [13, 41],
 })
@@ -177,7 +177,7 @@ map.on('click', function(e) {
 });
 
 let dropzone = new Dropzone(".dropzone", { 
-    url: "post/upload",
+    url: "/post/upload",
     maxFilesize: 99,
     acceptedFiles: "image/*",
     addRemoveLinks: true,
