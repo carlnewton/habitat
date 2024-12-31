@@ -30,7 +30,6 @@ To run the ansible playbook:
 1. Set the `repository` setting in `App/deploy.php` to your fork of Habitat
 2. Update the `host` entry in `App/deploy.php` accordingly
 3. Run `vendor/bin/dep deploy`
-4. Run `vendor/bin/dep database:migrate`
 
 ## Docker Hosting
 
