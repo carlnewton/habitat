@@ -88,11 +88,16 @@ class LoadAttachmentController extends AbstractController
             return new Response('', Response::HTTP_UNAUTHORIZED);
         }
 
-        $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
-        $attachment = $attachmentRepository->findOneBy([
+        $attachmentCriteria = [
             'id' => $attachmentId,
-            'user' => $user->getId(),
-        ]);
+        ];
+
+        if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $attachmentCriteria['user'] = $user->getId();
+        }
+
+        $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
+        $attachment = $attachmentRepository->findOneBy($attachmentCriteria);
 
         if (empty($attachment)) {
             return new Response('', Response::HTTP_NOT_FOUND);
