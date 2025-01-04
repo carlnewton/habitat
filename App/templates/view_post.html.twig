@@ -8,33 +8,7 @@
 {% block body %}
     <div class="d-flex justify-content-between">
         <h1>{{ post.title }}</h1>
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <div class="dropdown">
-                <button role="button" type="button" class="btn text-secondary fs-4" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">Edit</a>
-                    </li>
-                    <li>
-                        <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
-                            <input name="items" type="hidden" value="{{ post.id }}"/>
-                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                            <button type="submit" class="dropdown-item checkbox-action">Change category</button>
-                        </form>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_remove') }}">
-                            <input name="items" type="hidden" value="{{ post.id }}"/>
-                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                            <button type="submit" class="dropdown-item checkbox-action">Remove</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        {% endif %}
+        {% include 'partials/post/dropdown_menu.html.twig' %}
     </div>
     {% if show_category %}
         <div class="mb-2">

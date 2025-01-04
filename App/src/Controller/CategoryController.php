@@ -42,7 +42,9 @@ class CategoryController extends AbstractController
             self::MAX_POSTS
         );
 
+        $categoryHidden = false;
         if (null !== $user) {
+            $categoryHidden = $user->hasHiddenCategory($category->getId());
             foreach ($posts as $post) {
                 foreach ($post->getHearts() as $heart) {
                     if ($heart->getUser()->getId() === $user->getId()) {
@@ -57,6 +59,7 @@ class CategoryController extends AbstractController
             'posts' => $posts,
             'offset' => self::MAX_POSTS,
             'category' => $category,
+            'categoryHidden' => $categoryHidden,
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\UserHiddenCategory;
 use App\Utilities\LatLong;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -56,7 +57,7 @@ class PostRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findByDistance(array $criteria, LatLong $latLong, ?int $limit = null, ?int $offset = null): array
+    public function findByDistance(array $criteria, LatLong $latLong, ?int $limit = null, ?int $offset = null, ?int $userId = null): array
     {
         $qb = $this->createQueryBuilder('post');
 
@@ -68,6 +69,13 @@ class PostRepository extends ServiceEntityRepository
 
         $qb->andWhere('post.latitude IS NOT NULL');
         $qb->andWhere('post.longitude IS NOT NULL');
+        if (!is_null($userId)) {
+            $qb->leftJoin('post.category', 'c')
+                ->leftJoin(UserHiddenCategory::class, 'uhc', 'WITH', 'uhc.category = c.id AND uhc.user = :userId')
+                ->andWhere('uhc.id IS NULL')
+                ->setParameter('userId', $userId)
+           ;
+        }
 
         $qb->addSelect('DEGREES(ACOS((SIN(RADIANS(:latitude)) * SIN(RADIANS(post.latitude))) + (COS(RADIANS(:latitude)) * COS(RADIANS(post.latitude)) * COS(RADIANS(:longitude - post.longitude))))) * :radius AS distanceMiles')
             ->setParameter('latitude', $latLong->latitude)
@@ -110,20 +118,40 @@ class PostRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //    /**
-    //     * @return Post[] Returns an array of Post objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByHiddenCategories(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null, ?int $userId = null): array
+    {
+        $qb = $this->createQueryBuilder('post');
+
+        foreach ($criteria as $key => $value) {
+            $qb->andWhere("post.$key = :$key")
+                ->setParameter($key, $value)
+            ;
+        }
+
+        if (!is_null($userId)) {
+            $qb->leftJoin('post.category', 'c')
+               ->leftJoin(UserHiddenCategory::class, 'uhc', 'WITH', 'uhc.category = c.id AND uhc.user = :userId')
+               ->andWhere('uhc.id IS NULL')
+               ->setParameter('userId', $userId)
+           ;
+        }
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        if ($orderBy) {
+            foreach ($orderBy as $field => $direction) {
+                $qb->orderBy('post.' . $field, $direction);
+            }
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?Post
     //    {

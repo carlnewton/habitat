@@ -3,6 +3,12 @@
 {% block body %}
     <h1>{{ category.name }}</h1>
     <p class="lead">{{ category.description|nl2br }}</p>
+    {% if app.user %}
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" onclick="toggleHiddenCategory({{ category.id }})" id="showCategoryPosts"{% if categoryHidden == false %} checked{% endif %}>
+            <label class="form-check-label text-secondary" for="showCategoryPosts">Show me posts from this category</label>
+        </div>
+    {% endif %}
 
     <div id="posts-list">
         {% for post in posts %}
@@ -20,5 +26,6 @@
     {{ parent() }}
     {% if app.user %}
         {{ encore_entry_script_tags('heart') }}
+        {{ encore_entry_script_tags('category') }}
     {% endif %}
 {% endblock %}

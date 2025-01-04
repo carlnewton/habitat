@@ -36,9 +36,16 @@ class Category
     #[ORM\Column]
     private ?int $weight = 0;
 
+    /**
+     * @var Collection<int, UserHiddenCategory>
+     */
+    #[ORM\OneToMany(targetEntity: UserHiddenCategory::class, mappedBy: 'category', orphanRemoval: true)]
+    private Collection $userHiddenCategories;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->userHiddenCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +139,36 @@ class Category
     public function setWeight(int $weight): static
     {
         $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserHiddenCategory>
+     */
+    public function getUserHiddenCategories(): Collection
+    {
+        return $this->userHiddenCategories;
+    }
+
+    public function addUserHiddenCategory(UserHiddenCategory $userHiddenCategory): static
+    {
+        if (!$this->userHiddenCategories->contains($userHiddenCategory)) {
+            $this->userHiddenCategories->add($userHiddenCategory);
+            $userHiddenCategory->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserHiddenCategory(UserHiddenCategory $userHiddenCategory): static
+    {
+        if ($this->userHiddenCategories->removeElement($userHiddenCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($userHiddenCategory->getCategory() === $this) {
+                $userHiddenCategory->setCategory(null);
+            }
+        }
 
         return $this;
     }

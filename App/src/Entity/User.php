@@ -92,12 +92,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $suspended_datetime = null;
 
+    /**
+     * @var Collection<int, UserHiddenCategory>
+     */
+    #[ORM\OneToMany(targetEntity: UserHiddenCategory::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $hiddenCategories;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->hearts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->postAttachments = new ArrayCollection();
+        $this->hiddenCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -363,6 +370,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSuspendedDatetime(?\DateTimeInterface $suspended_datetime): static
     {
         $this->suspended_datetime = $suspended_datetime;
+
+        return $this;
+    }
+
+    public function hasHiddenCategory(int $categoryId): bool
+    {
+        $hiddenCategories = $this->getHiddenCategories();
+
+        foreach ($hiddenCategories as $hiddenCategory) {
+            if ($hiddenCategory->getCategory()->getId() === $categoryId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return Collection<int, UserHiddenCategory>
+     */
+    public function getHiddenCategories(): Collection
+    {
+        return $this->hiddenCategories;
+    }
+
+    public function addHiddenCategory(UserHiddenCategory $hiddenCategory): static
+    {
+        if (!$this->hiddenCategories->contains($hiddenCategory)) {
+            $this->hiddenCategories->add($hiddenCategory);
+            $hiddenCategory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHiddenCategory(UserHiddenCategory $hiddenCategory): static
+    {
+        if ($this->hiddenCategories->removeElement($hiddenCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($hiddenCategory->getUser() === $this) {
+                $hiddenCategory->setUser(null);
+            }
+        }
 
         return $this;
     }

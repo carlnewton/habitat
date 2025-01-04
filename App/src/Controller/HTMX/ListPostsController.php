@@ -46,12 +46,22 @@ class ListPostsController extends AbstractController
             $renderArray['category'] = $category;
         }
 
-        $posts = $postRepository->findBy(
-            $filter,
-            ['posted' => 'DESC'],
-            self::MAX_RESULTS_PER_PAGE,
-            $offset
-        );
+        if (!empty($request->query->get('category'))) {
+            $posts = $postRepository->findBy(
+                $filter,
+                ['posted' => 'DESC'],
+                self::MAX_RESULTS_PER_PAGE,
+                $offset
+            );
+        } else {
+            $posts = $postRepository->findByHiddenCategories(
+                $filter,
+                ['posted' => 'DESC'],
+                self::MAX_RESULTS_PER_PAGE,
+                $offset,
+                (null !== $user) ? $user->getId() : null,
+            );
+        }
 
         if (null !== $user) {
             foreach ($posts as $post) {

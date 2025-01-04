@@ -21,14 +21,16 @@ class IndexController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $postRepository = $entityManager->getRepository(Post::class);
-        $posts = $postRepository->findBy(
+        $posts = $postRepository->findByHiddenCategories(
             [
                 'removed' => false,
             ],
             [
                 'posted' => 'DESC',
             ],
-            self::MAX_POSTS
+            self::MAX_POSTS,
+            0,
+            (null !== $user) ? $user->getId() : null,
         );
 
         if (null !== $user) {

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% set page_title = 'Settings' %}
+
+{% block body %}
+    <h1 class="mb-3">Settings</h1>
+    <div class="card col-lg-6">
+        <div class="card-body bg-light">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-tag"></i> Hidden categories
+            </h5>
+        </div>
+        {% if user.hiddenCategories is empty %}
+            <div class="card-body">
+                You are not currently hiding any categories.
+            </div>
+        {% else %}
+            <ul class="list-group list-group-flush">
+                {% for hiddenCategory in user.hiddenCategories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="hidden-category-{{ hiddenCategory.id }}">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                <a href="{{ path('app_category_index', { id: hiddenCategory.category.id }) }}">
+                                    {{ hiddenCategory.category.name }}
+                                </a>
+                            </div>
+                            {{ hiddenCategory.category.description }}
+                        </div>
+                        <form hx-swap="outerHTML settle:500ms" hx-post="/hx/unhide-category" hx-target="#hidden-category-{{ hiddenCategory.id }}">
+                            <input type="hidden" name="token" value="{{ csrf_token('unhide_category') }}">
+                            <input type="hidden" name="category" value="{{ hiddenCategory.category.id }}">
+                            <button type="submit" class="btn btn-outline-primary">Unhide</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

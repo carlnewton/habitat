@@ -33,6 +33,7 @@ Encore
     .addEntry('view_post', './assets/view_post.js')
     .addEntry('nearby', './assets/nearby.js')
     .addEntry('heart', './assets/heart.js')
+    .addEntry('category', './assets/category.js')
     .addEntry('image_storage_setup', './assets/image_storage_setup.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

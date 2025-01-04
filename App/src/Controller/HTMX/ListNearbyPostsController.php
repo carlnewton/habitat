@@ -58,7 +58,8 @@ class ListNearbyPostsController extends AbstractController
             $filter,
             $latLng,
             self::MAX_RESULTS_PER_PAGE,
-            $offset
+            $offset,
+            (null !== $user) ? $user->getId() : null,
         );
 
         if (null !== $user) {
