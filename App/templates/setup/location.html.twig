@@ -10,24 +10,24 @@
         <i class="bi bi-circle px-2 text-primary" style="--bs-text-opacity: .5;"></i>
     </div>
     <div class="col-lg-6 col-md-8 mx-auto">
-        <p class="lead mb-4">2. Set the location of your Habitat</p>
+        <p class="lead mb-4">{{ 'setup.set_location.title' | trans }}</p>
         <form class="text-start" method="post" action="{{ path('app_setup_location') }}">
             <div class="card{% if errors.location is defined %} border-danger{% endif %}">
                 <div class="card-body ratio ratio-16x9">
                     <div class="rounded-top" id="map"></div>
                 </div>
                 <div class="card-body text-white bg-danger text-center d-none" id="size-warning">
-                    Habitat has not been designed to work at this size. Things may not work as expected.
+                    {{ 'map.warnings.area_too_large' | trans }}
                 </div>
                 <div class="card-footer">
                     <div class="row">
                         <div class="d-flex gx-2">
-                            <button type="button" class="btn btn-outline-secondary me-2 get-location" title="Show your current location"><i class="bi bi-crosshair2"></i></button>
+                            <button type="button" class="btn btn-outline-secondary me-2 get-location" title="{{ 'buttons.show_current_location' | trans }}"><i class="bi bi-crosshair2"></i></button>
                             <div class="input-group">
-                                <span class="input-group-text">Size</span>
+                                <span class="input-group-text">{{ 'map.size_label' | trans }}</span>
                                 <input type="number" step="0.1" name="locationRadius" id="locationRadius" class="form-control" autocomplete="off" min="0">
-                                <button class="btn{% if values.locationMeasurement is not defined or values.locationMeasurement == 'km' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-kms">kilometers</button>
-                                <button class="btn{% if values.locationMeasurement is defined and values.locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-miles">miles</button>
+                                <button class="btn{% if values.locationMeasurement is not defined or values.locationMeasurement == 'km' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-kms">{{ 'map.toggle_kilometers' | trans }}</button>
+                                <button class="btn{% if values.locationMeasurement is defined and values.locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-miles">{{ 'map.toggle_miles' | trans }}</button>
                             </div>
                         </div>
                     </div>
@@ -43,12 +43,12 @@
             <div class="alert alert-primary d-flex align-items-center mt-3" role="alert">
                 <i class="bi bi-info-circle-fill fs-2"></i>
                 <ul>
-                    <li>Users will be able to create posts in any location inside the circle.</li>
-                    <li>Setting the map zoom, boundary size and measurement preference here also sets it throughout your Habitat instance.</li>
+                    <li>{{ 'setup.set_location.info.post_inside_circle' | trans }}</li>
+                    <li>{{ 'setup.set_location.info.global_preferences' | trans }}</li>
                 </ul>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">Continue</button>
+                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng ?? '' }}">
             <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters ?? 3000 }}">

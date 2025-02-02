@@ -19,6 +19,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SetupController extends AbstractController
 {
@@ -34,56 +35,6 @@ class SetupController extends AbstractController
         'complete' => 'app_index_index',
     ];
 
-    private const SUGGESTED_CATEGORIES = [
-        'sightseeing' => [
-            'name' => 'Sightseeing',
-            'description' => 'A space for sharing and discussing visual discoveries, landmarks, nature spots, street art, hidden gems, and other unique finds in the area.',
-            'location' => CategoryLocationOptionsEnum::REQUIRED,
-        ],
-        'news_events' => [
-            'name' => 'News and Events',
-            'description' => 'Posts related to news updates, events, festivals, concerts, or community gatherings.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-        ],
-        'food_drink' => [
-            'name' => 'Food and Drink',
-            'description' => 'Discussions and pictures of restaurants, cafes, food trucks, or special dishes.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-            'allow_posting' => false,
-        ],
-        'history' => [
-            'name' => 'History',
-            'description' => 'Pictures and discussions specifically focused on the historical significance, stories, and events related to local historical sites, buildings, or events in the area.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-        ],
-        'businesses' => [
-            'name' => 'Businesses',
-            'description' => 'Posts promoting or discussing shops, boutiques, or services.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-        ],
-        'sports_recreation' => [
-            'name' => 'Sports and Recreation',
-            'description' => 'Conversations about outdoor activities, or recreational facilities.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-            'allow_posting' => false,
-        ],
-        'community_initiatives' => [
-            'name' => 'Community Initiatives',
-            'description' => 'Posts about charities, volunteer opportunities, or community projects.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-        ],
-        'habitat_meta' => [
-            'name' => 'Habitat Meta',
-            'description' => 'Discussions about this instance of Habitat.',
-            'location' => CategoryLocationOptionsEnum::DISABLED,
-        ],
-        'random' => [
-            'name' => 'Random',
-            'description' => 'A catch-all for various topics that do not fit anywhere else.',
-            'location' => CategoryLocationOptionsEnum::OPTIONAL,
-        ],
-    ];
-
     private const IMAGE_STORAGE_OPTIONS = [
         'local',
         's3',
@@ -95,6 +46,7 @@ class SetupController extends AbstractController
         private ValidatorInterface $validator,
         private Security $security,
         private Mailer $mailer,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -119,7 +71,7 @@ class SetupController extends AbstractController
         if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
             $this->addFlash(
                 'warning',
-                'Something went wrong, please try again.'
+                $this->translator->trans('fields.csrf_token.validations.invalid'),
             );
 
             return $this->render('setup/admin.html.twig');
@@ -157,7 +109,7 @@ class SetupController extends AbstractController
         if (count($entityErrors) > 0) {
             $this->addFlash(
                 'warning',
-                'Something went wrong with your details, please try again.'
+                $this->translator->trans('setup.create_admin_account.validations.generic'),
             );
 
             return $this->render('setup/admin.html.twig');
@@ -200,7 +152,7 @@ class SetupController extends AbstractController
         if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
             $this->addFlash(
                 'warning',
-                'Something went wrong, please try again.'
+                $this->translator->trans('fields.csrf_token.validations.invalid'),
             );
 
             return $this->render('setup/location.html.twig');
@@ -258,7 +210,7 @@ class SetupController extends AbstractController
         $this->entityManager->flush();
 
         return $this->render('setup/categories.html.twig', [
-            'suggested_categories' => self::SUGGESTED_CATEGORIES,
+            'suggested_categories' => $this->getSuggestedCategories(),
         ]);
     }
 
@@ -276,16 +228,17 @@ class SetupController extends AbstractController
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
         }
 
+        $suggestedCategories = $this->getSuggestedCategories();
         if ('POST' !== $request->getMethod()) {
             return $this->render('setup/categories.html.twig', [
-                'suggested_categories' => self::SUGGESTED_CATEGORIES,
+                'suggested_categories' => $suggestedCategories,
             ]);
         }
 
         $selectedCategories = [];
         foreach ($request->request->all() as $requestParamKey => $requestParamValue) {
-            if (array_key_exists($requestParamKey, self::SUGGESTED_CATEGORIES)) {
-                $selectedCategories[$requestParamKey] = self::SUGGESTED_CATEGORIES[$requestParamKey];
+            if (array_key_exists($requestParamKey, $suggestedCategories)) {
+                $selectedCategories[$requestParamKey] = $suggestedCategories[$requestParamKey];
             }
         }
 
@@ -293,20 +246,20 @@ class SetupController extends AbstractController
         if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
             $this->addFlash(
                 'warning',
-                'Something went wrong, please try again.'
+                $this->translator->trans('fields.csrf_token.validations.invalid'),
             );
 
             return $this->render('setup/categories.html.twig', [
-                'suggested_categories' => self::SUGGESTED_CATEGORIES,
+                'suggested_categories' => $suggestedCategories,
                 'selected_categories' => $selectedCategories,
             ]);
         }
 
         if (empty($selectedCategories)) {
             return $this->render('setup/categories.html.twig', [
-                'suggested_categories' => self::SUGGESTED_CATEGORIES,
+                'suggested_categories' => $suggestedCategories,
                 'errors' => [
-                    'You must select at least one category. Don\'t worry, you can change these later.',
+                    $this->translator->trans('setup.add_categories.validations.empty'),
                 ],
             ]);
         }
@@ -357,7 +310,7 @@ class SetupController extends AbstractController
         if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
             $this->addFlash(
                 'warning',
-                'Something went wrong, please try again.'
+                $this->translator->trans('fields.csrf_token.validations.invalid'),
             );
 
             return $this->render('setup/image_storage.html.twig', [
@@ -458,7 +411,7 @@ class SetupController extends AbstractController
         if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
             $this->addFlash(
                 'warning',
-                'Something went wrong, please try again.'
+                $this->translator->trans('fields.csrf_token.validations.invalid'),
             );
 
             return $this->render('setup/mail.html.twig', [
@@ -566,31 +519,31 @@ class SetupController extends AbstractController
         $errors = [];
 
         if (empty($request->get('smtpUsername'))) {
-            $errors['smtpUsername'][] = 'You must enter an SMTP username';
+            $errors['smtpUsername'][] = $this->translator->trans('fields.smtp_username.validations.empty');
         }
 
         if (empty($request->get('smtpPassword'))) {
-            $errors['smtpPassword'][] = 'You must enter an SMTP password';
+            $errors['smtpPassword'][] = $this->translator->trans('fields.smtp_password.validations.empty');
         }
 
         if (empty($_ENV['ENCRYPTION_KEY'])) {
-            $errors['smtpPassword'][] = 'The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set';
+            $errors['smtpPassword'][] = $this->translator->trans('fields.smtp_password.validations.no_encryption_key');
         }
 
         if (empty($request->get('smtpServer'))) {
-            $errors['smtpServer'][] = 'You must enter an SMTP server';
+            $errors['smtpServer'][] = $this->translator->trans('fields.smtp_server.validations.empty');
         }
 
         if (empty($request->get('smtpPort')) || !is_numeric($request->get('smtpPort'))) {
-            $errors['smtpPort'][] = 'You must enter a valid port number';
+            $errors['smtpPort'][] = $this->translator->trans('fields.smtp_port.validations.invalid');
         }
 
         if (empty($request->get('smtpFromEmailAddress')) || !filter_var($request->get('smtpFromEmailAddress'), FILTER_VALIDATE_EMAIL)) {
-            $errors['smtpFromEmailAddress'][] = 'You must enter a valid sender email address';
+            $errors['smtpFromEmailAddress'][] = $this->translator->trans('fields.sender_email_address.validations.invalid');
         }
 
         if (!empty($request->get('smtpToEmailAddress')) && !filter_var($request->get('smtpToEmailAddress'), FILTER_VALIDATE_EMAIL)) {
-            $errors['smtpToEmailAddress'][] = 'You must enter a valid recipient email address';
+            $errors['smtpToEmailAddress'][] = $this->translator->trans('fields.recipient_email_address.validations.invalid');
         }
 
         return $errors;
@@ -601,7 +554,7 @@ class SetupController extends AbstractController
         $errors = [];
 
         if (empty($request->get('storageOption')) || !in_array($request->get('storageOption'), self::IMAGE_STORAGE_OPTIONS)) {
-            $errors['storageOption'][] = 'You must choose an image storage option';
+            $errors['storageOption'][] = $this->translator->trans('setup.image_storage.validations.no_option_selected');
         }
 
         if ('s3' !== $request->get('storageOption')) {
@@ -611,23 +564,23 @@ class SetupController extends AbstractController
         // All validation from here on is for the S3 storage option.
 
         if (empty($_ENV['ENCRYPTION_KEY'])) {
-            $errors['secretKey'][] = 'The secret key cannot be saved unless an ENCRYPTION_KEY environment variable is set';
+            $errors['secretKey'][] = $this->translator->trans('fields.amazon_s3_secret_key.validations.no_encryption_key');
         }
 
         if (empty($request->get('region')) || !in_array($request->get('region'), AmazonS3::REGIONS)) {
-            $errors['region'][] = 'You must select the region of your S3 bucket';
+            $errors['region'][] = $this->translator->trans('fields.amazon_s3_region.validations.empty');
         }
 
         if (empty($request->get('bucketName'))) {
-            $errors['bucketName'][] = 'You must enter the name of your S3 bucket';
+            $errors['bucketName'][] = $this->translator->trans('fields.amazon_s3_bucket_name.validations.empty');
         }
 
         if (empty($request->get('accessKey'))) {
-            $errors['accessKey'][] = 'You must enter the access key for your S3 bucket';
+            $errors['accessKey'][] = $this->translator->trans('fields.amazon_s3_access_key.validations.empty');
         }
 
         if (empty($request->get('secretKey'))) {
-            $errors['secretKey'][] = 'You must enter the secret key for your S3 bucket';
+            $errors['secretKey'][] = $this->translator->trans('fields.amazon_s3_secret_key.validations.empty');
         }
 
         if (!empty($errors)) {
@@ -646,7 +599,7 @@ class SetupController extends AbstractController
             );
         } catch (S3Exception $exception) {
             $errors['s3'] = [
-                'summary' => 'An error occurred when attempting to connect to the S3 bucket',
+                'summary' => $this->translator->trans('setup.image_storage.warnings.amazon_s3_exception'),
                 'detail' => $exception->getMessage(),
             ];
         }
@@ -659,19 +612,29 @@ class SetupController extends AbstractController
         $errors = [];
 
         if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
-            $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
+            $errors['username'][] = $this->translator->trans(
+                'fields.username.validations.minimum_characters',
+                [
+                    '%character_length%' => User::USERNAME_MIN_LENGTH,
+                ]
+            );
         }
 
         if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
-            $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
+            $errors['username'][] = $this->translator->trans(
+                'fields.username.validations.maximum_characters',
+                [
+                    '%character_length%' => User::USERNAME_MAX_LENGTH,
+                ]
+            );
         }
 
         if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
-            $errors['username'][] = 'Your username must only use alphabetic and numeric characters';
+            $errors['username'][] = $this->translator->trans('fields.username.validations.alphabetic_numeric');
         }
 
         if (empty($request->get('email')) || !filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
-            $errors['email'][] = 'This is not a valid email address';
+            $errors['email'][] = $this->translator->trans('fields.email_address.validations.invalid_email_address');
         }
 
         if (
@@ -681,7 +644,7 @@ class SetupController extends AbstractController
             || !preg_match('/[a-z]/', $request->get('password'))
             || !preg_match('/[0-9]/', $request->get('password'))
         ) {
-            $errors['password'][] = 'You must use a stronger password';
+            $errors['password'][] = $this->translator->trans('fields.password.validations.weak_password');
         }
 
         return $errors;
@@ -695,7 +658,7 @@ class SetupController extends AbstractController
             empty($request->get('locationLatLng'))
             || !LatLong::isValidLatLong($request->get('locationLatLng'))
         ) {
-            $errors['location'][] = 'You must choose a valid location';
+            $errors['location'][] = $this->translator->trans('map.validations.invalid_location');
         }
 
         if (
@@ -704,9 +667,62 @@ class SetupController extends AbstractController
             || $request->get('locationRadiusMeters') != (int) $request->get('locationRadiusMeters')
             || $request->get('locationRadiusMeters') < 1
         ) {
-            $errors['location'][] = 'You must choose a valid location size';
+            $errors['location'][] = $this->translator->trans('map.validations.invalid_location_size');
         }
 
         return $errors;
+    }
+
+    private function getSuggestedCategories(): array
+    {
+        return [
+            'sightseeing' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.sightseeing.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.sightseeing.description'),
+                'location' => CategoryLocationOptionsEnum::REQUIRED,
+            ],
+            'news_events' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.news_events.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.news_events.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            ],
+            'food_drink' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.food_drink.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.food_drink.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+                'allow_posting' => false,
+            ],
+            'history' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.history.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.history.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            ],
+            'businesses' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.businesses.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.businesses.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            ],
+            'sports_recreation' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.sports_recreation.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.sports_recreation.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+                'allow_posting' => false,
+            ],
+            'community_initiatives' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.community_initiatives.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.community_initiatives.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            ],
+            'habitat_meta' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.habitat_meta.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.habitat_meta.description'),
+                'location' => CategoryLocationOptionsEnum::DISABLED,
+            ],
+            'random' => [
+                'name' => $this->translator->trans('setup.add_categories.suggested_categories.random.name'),
+                'description' => $this->translator->trans('setup.add_categories.suggested_categories.random.description'),
+                'location' => CategoryLocationOptionsEnum::OPTIONAL,
+            ],
+        ];
     }
 }

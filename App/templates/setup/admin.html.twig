@@ -10,7 +10,7 @@
         <i class="bi bi-circle px-2 text-primary" style="--bs-text-opacity: .5;"></i>
     </div>
     <div class="col-lg-6 col-md-8 mx-auto">
-        <p class="lead mb-4">1. Create your admin account</p>
+        <p class="lead mb-4">{{ 'setup.create_admin_account.title' | trans }}</p>
         <form class="text-start" method="post" action="{{ path('app_setup_admin') }}">
             {% for message in app.flashes('warning') %}
                 <div class="alert alert-danger" role="alert">
@@ -21,7 +21,7 @@
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control{% if errors.username is defined %} is-invalid{% endif %}" name="username" id="username" placeholder="Admin"{% if values.username is defined %} value="{{ values.username }}"{% endif %} required>
-                        <label for="username">Username</label>
+                        <label for="username">{{ 'fields.username.title' | trans }}</label>
                         {% if errors.username is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.username %}
@@ -32,16 +32,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        Your username will be publicly visible. You are recommended to choose a nickname.
-                    </p>
+                    <p>{{ 'fields.username.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" placeholder="email@example.com"{% if values.email is defined %} value="{{ values.email }}"{% endif %} required>
-                        <label for="email">Email address</label>
+                        <label for="email">{{ 'fields.email_address.title' | trans}}</label>
                         {% if errors.email is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.email %}
@@ -52,16 +50,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        Your email address will be kept private, and can be used to recover your password.
-                    </p>
+                    <p>{{ 'fields.email_address.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control{% if errors.password is defined %} is-invalid{% endif %}" name="password" id="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
-                        <label for="password">Password</label>
+                        <label for="password">{{ 'fields.password.title' | trans }}</label>
                         {% if errors.password is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.password %}
@@ -72,13 +68,11 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter.
-                    </p>
+                    <p>{{ 'fields.password.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">Continue</button>
+                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>

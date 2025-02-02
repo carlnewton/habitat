@@ -104,7 +104,7 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
         ],
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $filesystem = new Filesystem();
         foreach (self::ATTACHMENT_FIXTURE_FILES as $attachmentFixtureFile) {
@@ -131,7 +131,7 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
         $manager->flush();
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,

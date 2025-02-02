@@ -96,7 +96,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
         ],
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         foreach (self::COMMENTS as $postReference => $comments) {
             foreach ($comments as $comment) {
@@ -115,7 +115,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,

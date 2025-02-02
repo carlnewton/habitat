@@ -10,7 +10,7 @@
         <i class="bi bi-circle-fill px-2 text-primary"></i>
     </div>
     <div class="col-lg-6 col-md-8 mx-auto">
-        <p class="lead mb-4">5. Configure your mail settings</p>
+        <p class="lead mb-4">{{ 'setup.configure_mail.title' | trans }}</p>
         <form class="text-start" method="post" action="{{ path('app_setup_mail') }}">
             {% for message in app.flashes('warning') %}
                 <div class="alert alert-danger" role="alert">
@@ -20,12 +20,11 @@
             {% if email_sent_to is defined %}
                 {% if email_sent_exception is null %}
                     <div class="alert alert-info" role="alert">
-                        A test email has been sent to {{ email_sent_to }} and no issues have been reported. If you have
-                        not received it, check the settings here and try again.
+                        {{ 'setup.configure_mail.test_email_sent' | trans({ '%email_address%': email_sent_to }) }}
                     </div>
                 {% else %}
                     <div class="alert alert-danger" role="alert">
-                        An issue occurred when attempting to send a test email: {{ email_sent_exception }}
+                        {{ 'setup.configure_mail.warnings.test_email_exception' | trans({ '%exception%': email_sent_exception }) }}
                     </div>
                 {% endif %}
             {% endif %}
@@ -33,7 +32,7 @@
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" name="smtpUsername" id="smtpUsername" placeholder="admin"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}"{% endif %} required>
-                        <label for="smtpUsername">SMTP username</label>
+                        <label for="smtpUsername">{{ 'fields.smtp_username.title' | trans }}</label>
                         {% if errors.smtpUsername is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.smtpUsername %}
@@ -44,16 +43,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        The username for your SMTP mail service. This is usually an email address.
-                    </p>
+                    <p>{{ 'fields.smtp_username.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" name="smtpPassword" id="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}"{% endif %} required>
-                        <label for="smtpPassword">SMTP password</label>
+                        <label for="smtpPassword">{{ 'fields.smtp_password.title' | trans }}</label>
                         {% if errors.smtpPassword is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.smtpPassword %}
@@ -64,16 +61,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        The password for your SMTP mail service. This can sometimes be an API key.
-                    </p>
+                    <p>{{ 'fields.smtp_password.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control{% if errors.smtpServer is defined %} is-invalid{% endif %}" name="smtpServer" id="smtpServer" placeholder="smtp.example.com"{% if values.smtpServer is defined %} value="{{ values.smtpServer }}"{% endif %} required>
-                        <label for="smtpServer">SMTP server</label>
+                        <label for="smtpServer">{{ 'fields.smtp_server.title' | trans }}</label>
                         {% if errors.smtpServer is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.smtpServer %}
@@ -84,16 +79,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        The server URL of your SMTP mail service.
-                    </p>
+                    <p>{{ 'fields.smtp_server.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control{% if errors.smtpPort is defined %} is-invalid{% endif %}" name="smtpPort" id="smtpPort" placeholder="587"{% if values.smtpPort is defined %} value="{{ values.smtpPort }}"{% endif %} required>
-                        <label for="smtpPort">SMTP port</label>
+                        <label for="smtpPort">{{ 'fields.smtp_port.title' | trans }}</label>
                         {% if errors.smtpPort is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.smtpPort %}
@@ -104,16 +97,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        The port for sending mail to your SMTP mail service.
-                    </p>
+                    <p>{{ 'fields.smtp_port.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control{% if errors.smtpFromEmailAddress is defined %} is-invalid{% endif %}" name="smtpFromEmailAddress" id="smtpFromEmailAddress" placeholder="habitat@example.com"{% if values.smtpFromEmailAddress is defined %} value="{{ values.smtpFromEmailAddress }}"{% endif %} required>
-                        <label for="smtpFromEmailAddress">Sender email address</label>
+                        <label for="smtpFromEmailAddress">{{ 'fields.sender_email_address.title' | trans }}</label>
                         {% if errors.smtpFromEmailAddress is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.smtpFromEmailAddress %}
@@ -124,16 +115,14 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        Emails sent to users of this Habitat instance will be sent from the email address provided.
-                    </p>
+                    <p>{{ 'fields.sender_email_address.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" name="smtpToEmailAddress" id="smtpToEmailAddress" placeholder="recipient@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}"{% endif %}>
-                        <label for="smtpToEmailAddress">Test recipient email address</label>
+                        <label for="smtpToEmailAddress">{{ 'fields.test_recipient_email_address.title' | trans }}</label>
                         {% if errors.smtpToEmailAddress is defined %}
                             <div class="invalid-feedback">
                                 {% for errorMessage in errors.smtpToEmailAddress %}
@@ -144,13 +133,11 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-xs-12">
-                    <p>
-                        A test email will be sent to this email address if provided. Leave this empty to skip the test and continue.
-                    </p>
+                    <p>{{ 'fields.test_recipient_email_address.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">Continue</button>
+                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>

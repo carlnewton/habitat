@@ -10,7 +10,7 @@
         <i class="bi bi-circle px-2 text-primary" style="--bs-text-opacity: .5;"></i>
     </div>
     <div class="col-lg-6 col-md-8 mx-auto">
-        <p class="lead mb-4">3. Add some categories</p>
+        <p class="lead mb-4">{{ 'setup.add_categories.title' | trans }}</p>
         <form class="text-start" method="post" action="{{ path('app_setup_categories') }}">
             {% for message in app.flashes('warning') %}
                 <div class="alert alert-danger" role="alert">
@@ -40,7 +40,7 @@
                 {% endfor %}
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">Continue</button>
+                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>

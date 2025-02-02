@@ -1,0 +1,146 @@
+setup:
+  create_admin_account:
+    title: "1. Create your admin account"
+    validations:
+      generic: "Something went wrong with your details, please try again."
+  set_location:
+    title: "2. Set the location of your Habitat"
+    info:
+      post_inside_circle: "Users will be able to create posts in any location inside the circle."
+      global_preferences: "Setting the map zoom, boundary size and measurement preference here also sets it throughout your Habitat instance."
+  add_categories:
+    title: "3. Add some categories"
+    suggested_categories:
+      sightseeing:
+        name: "Sightseeing"
+        description: "A space for sharing and discussing visual discoveries, landmarks, nature spots, street art, hidden gems, and other unique finds in the area."
+      news_events:
+        name: "News and Events"
+        description: "Posts related to news updates, events, festivals, concerts, or community gatherings."
+      food_drink:
+        name: "Food and Drink"
+        description: "Discussions and pictures of restaurants, cafes, food trucks, or special dishes."
+      history:
+        name: "History"
+        description: "Pictures and discussions specifically focused on the historical significance, stories, and events related to local historical sites, buildings, or events in the area."
+      businesses:
+        name: "Businesses"
+        description: "Posts promoting or discussing shops, boutiques, or services."
+      sports_recreation:
+        name: "Sports and Recreation"
+        description: "Conversations about outdoor activities, or recreational facilities."
+      community_initiatives:
+        name: "Community Initiatives"
+        description: "Posts about charities, volunteer opportunities, or community projects."
+      habitat_meta:
+        name: "Habitat Meta"
+        description: "Discussions about this instance of Habitat."
+      random:
+        name: "Random"
+        description: "A catch-all for various topics that do not fit anywhere else."
+    validations:
+      empty: "You must select at least one category. Don't worry, you can change these later."
+  image_storage:
+    title: "4. Choose your image storage solution"
+    options:
+      local:
+        label: "Local"
+        description: "Images will be stored in the <code>/var/www/uploads</code> directory. This option is simpler to set up, but may be more difficult and more expensive to maintain in the long run when running out of disk space."
+      amazon_s3:
+        label: "Amazon S3"
+        description: "Images will be stored using Amazon S3 Cloud Object Storage."
+    warnings:
+      no_encryption_key: "This is not available because the <strong>ENCRYPTION_KEY</strong> environment variable has not been set."
+      amazon_s3_exception: "An error occurred when attempting to connect to the S3 bucket"
+    validations:
+      no_option_selected: "You must choose an image storage option"
+  configure_mail:
+    title: "5. Configure your mail settings"
+    test_email_sent: "A test email has been sent to %email_address% and no issues have been reported. If you have not received it, check the settings here and try again."
+    warnings:
+      test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
+
+fields:
+  username:
+    title: "Username"
+    help_text: "Your username will be publicly visible. You are recommended to choose a nickname."
+    validations:
+      minimum_characters: "Your username must be a minimum of %character_length% characters"
+      maximum_characters: "Your username must be a maximum of %character_length% characters"
+      alphabetic_numeric: "Your username must only use alphabetic and numeric characters"
+  email_address:
+    title: "Email address"
+    help_text: "Your email address will be kept private, and can be used to recover your password."
+    validations:
+      invalid_email_address: "This is not a valid email address"
+  password:
+    title: "Password"
+    help_text: "Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter."
+    validations:
+      weak_password: "You must use a stronger password"
+  amazon_s3_region:
+    title: "Region"
+    default_value: "Select the region"
+    validations:
+      empty: "You must select the region of your S3 bucket"
+  amazon_s3_bucket_name:
+    title: "Bucket name"
+    validations:
+      empty: "You must enter the name of your S3 bucket"
+  amazon_s3_access_key:
+    title: "Access key"
+    validations:
+      empty: "You must enter the access key for your S3 bucket"
+  amazon_s3_secret_key:
+    title: "Secret key"
+    validations:
+      no_encryption_key: "The secret key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
+      empty: "You must enter the secret key for your S3 bucket"
+  smtp_username:
+    title: "SMTP username"
+    help_text: "The username for your SMTP mail service. This is usually an email address."
+    validations:
+      empty: "You must enter an SMTP username"
+  smtp_password:
+    title: "SMTP password"
+    help_text: "The password for your SMTP mail service. This can sometimes be an API key."
+    validations:
+      empty: "You must enter an SMTP password"
+      no_encryption_key: "The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
+  smtp_server:
+    title: "SMTP server"
+    help_text: "The server URL of your SMTP mail service."
+    validations:
+      empty: "You must enter an SMTP server"
+  smtp_port:
+    title: "SMTP port"
+    help_text: "The port for sending mail to your SMTP mail service."
+    validations:
+      invalid: "You must enter a valid port number"
+  sender_email_address:
+    title: "Sender email address"
+    help_text: "Emails sent to users of this Habitat instance will be sent from the email address provided."
+    validations:
+      invalid: "You must enter a valid sender email address"
+  test_recipient_email_address:
+    title: "Test recipient email address"
+    help_text: "A test email will be sent to this email address if provided. Leave this empty to skip the test and continue."
+    validations:
+      invalid: "You must enter a valid recipient email address"
+  csrf_token:
+    validations:
+      invalid: "Invalid or missing CSRF token. Please try again."
+
+buttons:
+  continue: "Continue"
+  show_current_location: "Show your current location"
+
+map:
+  size_label: "Size"
+  toggle_miles: "miles"
+  toggle_kilometers: "kilometers"
+  warnings:
+    area_too_large: "Habitat has not been designed to work at this size. Things may not work as expected."
+  validations:
+    invalid_location: "You must choose a valid location"
+    invalid_location_size: "You must choose a valid location size"

@@ -17,7 +17,7 @@ class SettingFixtures extends Fixture
         'setup' => 'complete',
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         foreach (self::SETTINGS as $name => $value) {
             $setting = new Settings();

@@ -23,7 +23,7 @@ class HeartFixtures extends Fixture implements DependentFixtureInterface
         'Dozer' => [1, 2, 3, 4, 5],
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         foreach (self::HEARTS as $username => $postReferences) {
             $user = $this->getReference('user/' . strtolower($username));
@@ -40,7 +40,7 @@ class HeartFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,

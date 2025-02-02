@@ -158,7 +158,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         ],
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $index = 0;
         foreach (self::POSTS as $post) {
@@ -181,7 +181,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,
