@@ -112,8 +112,7 @@ class UploadFileController extends AbstractController
                     break;
             }
         } catch (FileException $e) {
-            echo $e;
-            exit;
+            error_log($e->getMessage());
 
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }

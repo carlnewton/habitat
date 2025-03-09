@@ -1,3 +1,4 @@
-email: your.email@example.com
+habitat_repo_url: https://github.com/carlnewton/habitat
+habitat_repo_version: main
+email_address: email@example.com
 domain: example.com
-document_root: /var/www/html

@@ -1,391 +1,224 @@
+# ansible-playbook -i Ansible/inventory Ansible/playbook.yaml --private-key ~/.ssh/private-key-example.pem
+
 - name: Habitat Server Provisioning
+  become: true
   hosts: all
-  vars_files:
-    - vars.yaml
+  vars_files: vars.yaml
   tasks:
-    - name: Update dnf package index
-      dnf:
+    - name: Update repository index
+      package:
         update_cache: yes
 
-    - name: Install development tools and PHP packages
-      dnf:
-        name:
-          - gcc
-          - make
-          - php-devel
-          - php-pear
-        state: present
-      become: yes
+    - name: Install cURL
+      package:
+        name: curl
+        state: latest
 
-    - name: Update PECL channel
-      command: pecl channel-update pecl.php.net
+    - name: Install unzip
+      package:
+        name: unzip
+        state: latest
 
-    - name: Set PHP ini path for PEAR
-      command: pear config-set php_ini /etc/php.ini
+    - name: Install ca-certificates
+      package:
+        name: ca-certificates
+        state: latest
 
-    - name: Install httpd
-      dnf:
-        name: httpd
-        state: present
-      become: yes
+    - name: Install certbot
+      package:
+        name: certbot
+        state: latest
 
-    - name: Install supporting packages
-      dnf:
-        name:
-          - libicu-devel
-          - libzip-devel
-          - zip
-          - libjpeg-devel
-          - libpng-devel
-          - freetype-devel
-          - git
-          - mod_ssl
-          - nodejs
-          - npm
-        state: present
-      become: yes
-
-    - name: Install Crontab
-      dnf:
-        name:
-          - cronie
-        state: present
-      become: yes
-      tags:
-      - cron
-
-    - name: Install PHP 8.3 and required extensions
-      dnf:
-        name:
-          - php8.3
-          - php8.3-cli
-          - php8.3-mysqlnd
-          - php8.3-xml
-          - php8.3-mbstring
-          - php8.3-intl
-          - php8.3-opcache
-          - php8.3-zip
-          - php8.3-gd
-        state: present
-      become: yes
-
-    - name: Copy INI files to php conf.d directory
-      copy:
-        src: "{{ item }}"
-        dest: /etc/php.d/
-        owner: root
-        group: root
-        mode: '0644'
-      with_fileglob:
-        - var/*.ini
-
-    - name: Create virtual host configuration for HTTP
-      ansible.builtin.template:
-        src: httpd-vhost.conf.j2
-        dest: /etc/httpd/conf.d/{{ domain }}.conf
-      become: yes
-
-    - name: Update the DocumentRoot in httpd.conf
-      lineinfile:
-        path: /etc/httpd/conf/httpd.conf
-        regexp: '^DocumentRoot'
-        line: 'DocumentRoot "/var/www/html/current/public"'
-        state: present
-      become: yes
-
-    - name: Ensure the new document root directory exists
+    - name: Create /etc/apt/keyrings directory
       file:
-        path: /var/www/html/current/public
+        path: /etc/apt/keyrings
         state: directory
-        owner: apache
-        group: apache
-        mode: '0775'
-      become: yes
+        mode: 0755
 
-    - name: Ensure the file uploads directory exists
-      file:
-        path: /var/www/uploads
-        state: directory
-        owner: apache
-        group: apache
-        mode: '0775'
-      become: yes
+    - name: Download Docker GPG file
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: 0644
+      when: ansible_distribution == "Ubuntu"
 
-    - name: Install Certbot
-      dnf:
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        state: present
+        filename: docker
+      when: ansible_distribution == "Ubuntu"
+      notify: Update apt repository index
+
+    - name: Install Docker packages
+      apt:
         name:
-          - certbot
-          - python3-certbot-apache
-        state: present
-      become: yes
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
 
-    - name: Obtain Let's Encrypt certificate
-      ansible.builtin.command:
-        cmd: certbot --apache --non-interactive --agree-tos --email {{ email }} -d {{ domain }}
-      register: certbot_result
-      changed_when: certbot_result.rc == 0
-      become: yes
-
-    - name: Create or update the rewrite configuration
-      ansible.builtin.lineinfile:
-        path: /etc/httpd/conf.d/rewrite.conf
-        line: |
-          RewriteEngine On
-          RewriteCond %{HTTPS} off
-          RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-        state: present
-        create: yes
-      become: yes
-
-    - name: Start and enable httpd service
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: yes
-
-    - name: Start and enable crontab service
-      ansible.builtin.service:
-        name: crond
-        state: started
-        enabled: yes
-      become: yes
-      tags:
-      - cron
-
-    - name: Open port 443 in the firewall
-      ansible.builtin.command:
-        cmd: iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-      ignore_errors: yes
-
-    - name: Open port 80 in the firewall
-      ansible.builtin.command:
-        cmd: iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-      ignore_errors: yes
-
-    - name: Save iptables rules
-      ansible.builtin.command:
-        cmd: service iptables save
-      ignore_errors: yes
-
-    - name: Install PIP
-      dnf:
-        name: python3-pip
-        state: present
-      become: yes
-      tags:
-      - mariadb
-
-    - name: Install PyMySQL
-      pip:
-        name: PyMySQL
-        state: present
-      become: yes
-      tags:
-      - mariadb
-
-    - name: Install mariadb
-      dnf:
-        name:
-          - mariadb105
-          - mariadb105-server
-        state: present
-      become: yes
-      tags:
-      - mariadb
-
-    - name: Start and enable MariaDB service
-      service:
-        name: mariadb
-        state: started
-        enabled: yes
-      tags:
-      - mariadb
-
-    - name: Generate a random database password
-      set_fact:
-        random_password: "{{ lookup('community.general.random_string', length=16, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!()[]') }}"
-      tags:
-      - mariadb
-
-    - name: Create database
-      mysql_db:
-        name: "habitat"
-        login_unix_socket: /var/lib/mysql/mysql.sock
-        state: present
-      become: yes
-      tags:
-      - mariadb
-
-    - name: Create database user
-      mysql_user:
-        name: "habitat"
-        password: "{{ random_password }}"
-        login_unix_socket: /var/lib/mysql/mysql.sock
-        state: present
-      become: yes
-      tags:
-      - mariadb
-
-    - name: Grant privileges to the user
-      mysql_user:
-        name: "habitat"
-        priv: "habitat.*:ALL"
-        login_unix_socket: /var/lib/mysql/mysql.sock
-        state: present
-      become: yes
-      tags:
-      - mariadb
-
-    - name: Check if .env.local file exists
-      stat:
-        path: "{{ shared_path }}/.env.local"
-      register: env_file
-      tags:
-      - variables
-
-    - name: Create shared directory
-      file:
-        path: "{{ shared_path }}"
-        owner: apache
-        group: apache
-        mode: '0775'
-        state: directory
-      become: yes
-      when: not env_file.stat.exists
-      tags:
-      - variables
-
-    - name: Create .env.local file if it does not exist
-      copy:
-        dest: "{{ shared_path }}/.env.local"
-        content: ""
-        owner: apache
-        group: apache
-        mode: '0664'
-      when: not env_file.stat.exists
-      become: yes
-      tags:
-      - variables
-
-    - name: Add DATABASE_URL to .env.local
-      lineinfile:
-        path: "{{ shared_path }}/.env.local"
-        regexp: '^DATABASE_URL='
-        line: "DATABASE_URL=mysql://habitat:{{ random_password }}@localhost:3306/habitat"
-        state: present
-      become: yes
-      tags:
-      - variables
-
-    - name: Check if the encryption key is already defined
-      lineinfile:
-        state: absent
-        path: "{{ shared_path }}/.env.local"
-        regexp: '^ENCRYPTION_KEY='
-      check_mode: true
-      changed_when: false
-      register: existing_encryption_key
-      tags:
-      - variables
-
-    - name: Generate an encryption key
-      set_fact:
-        encryption_key: "{{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
-      when: existing_encryption_key.found == 0
-      tags:
-      - variables
-
-    - name: Add ENCRYPTION_KEY to .env.local
-      lineinfile:
-        path: "{{ shared_path }}/.env.local"
-        regexp: '^ENCRYPTION_KEY='
-        line: "ENCRYPTION_KEY={{ encryption_key }}"
-        state: present
-      become: yes
-      when: existing_encryption_key.found == 0
-      tags:
-      - variables
-      
-    - name: Add APP_ENV to .env.local
-      lineinfile:
-        path: "{{ shared_path }}/.env.local"
-        regexp: '^APP_ENV='
-        line: "APP_ENV=prod"
-        state: present
-      become: yes
-      tags:
-      - variables
-
-    - name: Create a cron job for certbot auto renewal
-      cron:
-        name: "Auto-renew letsencrypt certificate with certbot"
-        minute: "0"
-        hour: "1"
-        day: "*"
-        month: "*"
-        weekday: "0"
-        job: "certbot renew --post-hook 'systemctl reload httpd'"
-        user: "root"
-      become: yes
-      tags:
-      - cron
-
-    - name: Create a cron job for Habitat data retention
-      cron:
-        name: "Run Symfony data retention command"
-        minute: "0"
-        hour: "0"
-        job: "php /var/www/html/current/bin/console habitat:data-retention"
-      tags:
-      - cron
-
-    - name: Check if public directory is empty
-      find:
-        paths: '/var/www/html/current/public'
-      register: publicFilesFound
-
-    - name: Remove current directory in preparation for it to be created as a symlink from Deployer
-      file:
-        path: /var/www/html/current
-        state: absent
-      when: publicFilesFound == 0
-      become: yes
+    - name: Check if swapfile is active
+      command: swapon --show=NAME
+      register: swap_status
 
     - name: Create a swap file
       command: fallocate -l 2G /swapfile
       args:
         creates: /swapfile
-      become: yes
-      tags:
-      - swap
+      when: '"/swapfile" not in swap_status.stdout'
 
     - name: Set the correct permissions for the swap file
       file:
         path: /swapfile
-        mode: '0600'
-      become: yes
-      tags:
-      - swap
+        mode: 0600
+      when: '"/swapfile" not in swap_status.stdout'
 
     - name: Set up the swap area
       command: mkswap /swapfile
       args:
         creates: /swapfile.swap
-      become: yes
-      tags:
-      - swap
+      when: '"/swapfile" not in swap_status.stdout'
 
     - name: Enable the swap file
       command: swapon /swapfile
-      become: yes
-      tags:
-      - swap
+      when: '"/swapfile" not in swap_status.stdout'
 
     - name: Ensure swap is enabled on boot
       lineinfile:
         path: /etc/fstab
         line: '/swapfile none swap sw 0 0'
         state: present
-      become: yes
-      tags:
-      - swap
+
+    - name: Create MARIADB_USER variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^MARIADB_USER="
+        line: "MARIADB_USER=habitat"
+
+    - name: Create HABITAT_EMAIL_ADDRESS variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^HABITAT_EMAIL_ADDRESS="
+        line: "HABITAT_EMAIL_ADDRESS={{ email_address }}"
+
+    - name: Create HABITAT_DOMAIN variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^HABITAT_DOMAIN="
+        line: "HABITAT_DOMAIN={{ domain }}"
+
+    - name: Check if the MARIADB_PASSWORD is already defined
+      lineinfile:
+        state: absent
+        path: /etc/environment
+        regexp: '^MARIADB_PASSWORD='
+      check_mode: true
+      register: existing_mariadb_password
+
+    - name: Create MARIADB_PASSWORD variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^MARIADB_PASSWORD="
+        line: "MARIADB_PASSWORD={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+      when: existing_mariadb_password.found == 0
+
+    - name: Create MARIADB_DATABASE variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^MARIADB_DATABASE=habitat"
+        line: "MARIADB_DATABASE=habitat"
+
+    - name: Create APP_SECRET variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^APP_SECRET="
+        line: "APP_SECRET={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+
+    - name: Check if the ENCRYPTION_KEY is already defined
+      lineinfile:
+        state: absent
+        path: /etc/environment
+        regexp: '^ENCRYPTION_KEY='
+      check_mode: true
+      register: existing_encryption_key
+
+    - name: Create ENCRYPTION_KEY variable
+      lineinfile:
+        path: /etc/environment
+        state: present
+        regexp: "^ENCRYPTION_KEY="
+        line: "ENCRYPTION_KEY={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+      when: existing_encryption_key.found == 0
+
+    - name: Create /opt/habitat/files directory
+      file:
+        path: /opt/habitat/files
+        state: directory
+        mode: 0755
+
+    - name: Create /opt/habitat/db directory
+      file:
+        path: /opt/habitat/db
+        state: directory
+        mode: 0755
+
+    - name: Copy docker-compose files to /opt/habitat/docker-compose directory
+      copy:
+        src: files/docker-compose
+        dest: /opt/habitat/
+        mode: 0755
+
+    - name: Delete Habitat app directory
+      file:
+        path: /opt/habitat/app
+        state: absent
+
+    - name: Download Habitat
+      get_url:
+        url: "{{ habitat_repo_url }}/archive/refs/heads/{{ habitat_repo_version }}.zip"
+        dest: /tmp
+      register: habitat_archive
+
+    - name: Unarchive Habitat
+      unarchive:
+        src: "{{ habitat_archive.dest }}"
+        dest: /tmp
+        remote_src: yes
+        list_files: yes
+      register: habitat_unarchive
+
+    - name: Move Habitat app directory
+      command: "mv /tmp/{{ habitat_unarchive.files[0] }}/App/ /opt/habitat/app"
+
+    - name: Delete temporary Habitat archive file
+      file:
+        path: "{{ habitat_archive.dest }}"
+        state: absent
+
+    - name: Delete temporary Habitat archive directory
+      file:
+        path: "/tmp/{{ habitat_unarchive.files[0] }}"
+        state: absent
+
+    - name: Generate SSL certificate
+      shell: |
+        certbot certonly --standalone --non-interactive --agree-tos --email {{ email_address }} -d {{ domain }}
+
+    - name: Run docker compose up
+      community.docker.docker_compose_v2:
+        project_src: /opt/habitat/docker-compose
+
+  handlers:
+    - name: Update apt repository index
+      apt:
+        update_cache: yes
+

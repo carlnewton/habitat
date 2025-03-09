@@ -1,0 +1,48 @@
+---
+services:
+  php-apache:
+    container_name: "habitat-php-apache"
+    depends_on:
+      db:
+        condition: service_healthy
+    build: ./php-apache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    environment:
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - APP_SECRET=${APP_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - HABITAT_DOMAIN=${HABITAT_DOMAIN}
+      - APP_ENV=prod
+    volumes:
+      - /opt/habitat/app:/var/www/html
+      - /opt/habitat/files:/var/www/uploads
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+
+  db:
+    container_name: "habitat-mariadb"
+    image: mariadb:latest
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      - MARIADB_ROOT_USER=root
+      - MARIADB_ROOT_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+    volumes:
+      - /opt/habitat/db:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
