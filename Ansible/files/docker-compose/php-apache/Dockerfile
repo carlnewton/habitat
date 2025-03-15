@@ -16,7 +16,18 @@ COPY ./file_uploads.ini "$PHP_INI_DIR/conf.d/file_uploads.ini"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Install packages
-RUN apt-get -y update && apt-get install -y libicu-dev libzip-dev zip libjpeg-dev libpng-dev libfreetype6-dev git nodejs npm
+RUN apt-get -y update && apt-get install -y \ 
+    cron \
+    libicu-dev \
+    libzip-dev \
+    zip \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    git \
+    nodejs \
+    npm
+
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd '--with-jpeg' '--with-freetype'
 RUN docker-php-ext-install intl opcache pdo_mysql zip gd exif
@@ -31,6 +42,9 @@ RUN pecl install apcu-5.1.22 && docker-php-ext-enable apcu
 RUN echo "extension=apcu.so" > /usr/local/etc/php/php.ini
 RUN echo "apc.enable_cli=1" > /usr/local/etc/php/php.ini
 RUN echo "apc.enable=1" > /usr/local/etc/php/php.ini
+
+RUN echo "php /var/www/html/bin/console habitat:data-retention" > /etc/cron.daily/habitat
+RUN chmod ugo+x /etc/cron.daily/habitat
 
 # Override docker entrypoint to run app installation
 COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
