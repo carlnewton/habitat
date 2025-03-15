@@ -1,4 +1,4 @@
-# ansible-playbook -i Ansible/inventory Ansible/playbook.yaml --private-key ~/.ssh/private-key-example.pem
+# ansible-playbook -i "example.com," -u example-user playbook.yaml --private-key ~/.ssh/private-key-example.pem
 
 - name: Habitat Server Provisioning
   become: true
@@ -199,6 +199,12 @@
     - name: Move Habitat app directory
       command: "mv /tmp/{{ habitat_unarchive.files[0] }}/App/ /opt/habitat/app"
 
+    - name: Create .install file to instruct Docker to run Composer and NPM install
+      copy:
+        content: "This file exists as an instruction to the Docker entrypoint to run Compose and NPM install."
+        dest: /opt/habitat/app/.install
+        mode: 0755
+
     - name: Delete temporary Habitat archive file
       file:
         path: "{{ habitat_archive.dest }}"
@@ -221,4 +227,3 @@
     - name: Update apt repository index
       apt:
         update_cache: yes
-

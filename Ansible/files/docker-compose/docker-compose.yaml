@@ -26,6 +26,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: always
 
   db:
     container_name: "habitat-mariadb"
@@ -46,3 +47,4 @@ services:
       - /opt/habitat/db:/var/lib/mysql:rw
     ports:
       - "3306:3306"
+    restart: always

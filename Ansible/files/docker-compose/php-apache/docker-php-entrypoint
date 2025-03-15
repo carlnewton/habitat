@@ -1,19 +1,23 @@
 #!/bin/sh
 set -e
 
-chown root:www-data /var/www/uploads
-chmod g+w /var/www/uploads
+if [ -f /var/www/html/.install ]; then
+    chown root:www-data /var/www/uploads
+    chmod g+w /var/www/uploads
 
-curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
-composer install
+    composer install
 
-npm install
-npm run build
+    npm install
+    npm run build
 
-/usr/local/bin/php /var/www/html/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-/usr/local/bin/php /var/www/html/bin/console cache:clear
+    /usr/local/bin/php /var/www/html/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+    /usr/local/bin/php /var/www/html/bin/console cache:clear
+
+    rm -f /var/www/html/.install
+fi
 
 if [ "${1#-}" != "$1" ]; then
     set -- apache2-foreground "$@"
