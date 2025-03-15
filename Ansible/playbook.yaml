@@ -29,6 +29,17 @@
         name: certbot
         state: latest
 
+    - name: Install Crontab
+      package:
+        name: cronie
+        state: present
+
+    - name: Start and enable crontab service
+      service:
+        name: cronie
+        state: started
+        enabled: yes
+
     - name: Create /etc/apt/keyrings directory
       file:
         path: /etc/apt/keyrings
@@ -218,6 +229,17 @@
     - name: Generate SSL certificate
       shell: |
         certbot certonly --standalone --non-interactive --agree-tos --email {{ email_address }} -d {{ domain }}
+
+    - name: Create a cron job for certbot auto renewal
+      cron:
+        name: "Auto-renew letsencrypt certificate with certbot"
+        minute: "0"
+        hour: "1"
+        day: "*"
+        month: "*"
+        weekday: "0"
+        job: "certbot renew --post-hook 'docker compose -f /opt/habitat/docker-compose/docker-compose.yaml restart php-apache'"
+        user: "root"
 
     - name: Run docker compose up
       community.docker.docker_compose_v2:
