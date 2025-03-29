@@ -137,9 +137,9 @@ class EditPostController extends AbstractController
                 $attachmentRepository = $this->entityManager->getRepository(PostAttachment::class);
                 foreach ($removedAttachmentIds as $removedAttachmentId) {
                     $removedAttachment = $attachmentRepository->findOneBy([
-                        'id' => $removedAttachmentId
+                        'id' => $removedAttachmentId,
                     ]);
-                    $removedAttachment->setPost(NULL);
+                    $removedAttachment->setPost(null);
                     $this->entityManager->persist($removedAttachment);
                 }
             }

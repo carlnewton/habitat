@@ -1,38 +1,68 @@
 {% extends 'base.html.twig' %}
-{% set page_title = 'Settings' %}
+{% set page_title = 'user_settings.title' | trans %}
 
 {% block body %}
-    <h1 class="mb-3">Settings</h1>
-    <div class="card col-lg-6">
-        <div class="card-body bg-light">
-            <h5 class="card-title mb-0">
-                <i class="bi bi-tag"></i> Hidden categories
-            </h5>
-        </div>
-        {% if user.hiddenCategories is empty %}
-            <div class="card-body">
-                You are not currently hiding any categories.
-            </div>
-        {% else %}
-            <ul class="list-group list-group-flush">
-                {% for hiddenCategory in user.hiddenCategories %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center" id="hidden-category-{{ hiddenCategory.id }}">
+    <h1 class="mb-3">{{ 'user_settings.title' | trans }}</h1>
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card mb-3">
+                <div class="card-body bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-sliders"></i> {{ 'user_settings.preferences.title' | trans }}
+                    </h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" id="thing">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">
-                                <a href="{{ path('app_category_index', { id: hiddenCategory.category.id }) }}">
-                                    {{ hiddenCategory.category.name }}
-                                </a>
+                            {{ 'user_settings.preferences.measurement_units.title' | trans }}
                             </div>
-                            {{ hiddenCategory.category.description }}
+                            {{ 'user_settings.preferences.measurement_units.description' | trans }}
                         </div>
-                        <form hx-swap="outerHTML settle:500ms" hx-post="/hx/unhide-category" hx-target="#hidden-category-{{ hiddenCategory.id }}">
-                            <input type="hidden" name="token" value="{{ csrf_token('unhide_category') }}">
-                            <input type="hidden" name="category" value="{{ hiddenCategory.category.id }}">
-                            <button type="submit" class="btn btn-outline-primary">Unhide</button>
+                        <form hx-swap="outerHTML settle:500ms" hx-post="/hx/set-measurement-units" hx-target="#measurement-units">
+                            <div class="input-group" id="measurement-units">
+                                <button class="btn{% if locationMeasurement == "km" %} active{% endif %} btn-outline-secondary" type="submit" name="km" id="measurement-kms">{{ 'measurement_units.kilometers.label.long' | trans }}</button>
+                                <button class="btn{% if locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="submit" name="miles" id="measurement-miles">{{ 'measurement_units.miles.label' | trans }}</button>
+                            </div>
+                            <input type="hidden" name="token" value="{{ csrf_token('set_measurement_units') }}">
                         </form>
                     </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-3">
+                <div class="card-body bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-tag"></i> {{ 'user_settings.hidden_categories.title' | trans }}
+                    </h5>
+                </div>
+                {% if user.hiddenCategories is empty %}
+                    <div class="card-body">
+                        {{ 'user_settings.hidden_categories.no_hidden_categories' | trans }}
+                    </div>
+                {% else %}
+                    <ul class="list-group list-group-flush">
+                        {% for hiddenCategory in user.hiddenCategories %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center" id="hidden-category-{{ hiddenCategory.id }}">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <a href="{{ path('app_category_index', { id: hiddenCategory.category.id }) }}">
+                                            {{ hiddenCategory.category.name }}
+                                        </a>
+                                    </div>
+                                    {{ hiddenCategory.category.description }}
+                                </div>
+                                <form hx-swap="outerHTML settle:500ms" hx-post="/hx/unhide-category" hx-target="#hidden-category-{{ hiddenCategory.id }}">
+                                    <input type="hidden" name="token" value="{{ csrf_token('unhide_category') }}">
+                                    <input type="hidden" name="category" value="{{ hiddenCategory.category.id }}">
+                                    <button type="submit" class="btn btn-outline-secondary">Unhide</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}

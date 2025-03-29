@@ -2,8 +2,6 @@
 
 namespace App\Controller\HTMX;
 
-use App\Entity\Comment;
-use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\UserHiddenCategory;
 use Doctrine\ORM\EntityManagerInterface;

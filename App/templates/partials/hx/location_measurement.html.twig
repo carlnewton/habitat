@@ -1,0 +1,4 @@
+<div class="input-group" id="measurement-units">
+    <button class="btn{% if locationMeasurement == "km" %} active{% endif %} btn-outline-secondary" type="submit" name="km" id="measurement-kms">{{ 'measurement_units.kilometers.label.long' | trans }}</button>
+    <button class="btn{% if locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="submit" name="miles" id="measurement-miles">{{ 'measurement_units.miles.label' | trans }}</button>
+</div>

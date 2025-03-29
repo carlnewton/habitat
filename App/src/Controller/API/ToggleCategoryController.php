@@ -2,9 +2,9 @@
 
 namespace App\Controller\API;
 
-use App\Entity\UserHiddenCategory;
 use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\UserHiddenCategory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

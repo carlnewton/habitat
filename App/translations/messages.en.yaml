@@ -144,3 +144,22 @@ map:
   validations:
     invalid_location: "You must choose a valid location"
     invalid_location_size: "You must choose a valid location size"
+
+user_settings:
+  title: "Settings"
+  preferences:
+    title: "Preferences"
+    measurement_units:
+      title: "Measurement units"
+      description: "Display distances in"
+  hidden_categories:
+    title: "Hidden categories"
+    no_hidden_categories: "You are not currently hiding any categories."
+
+measurement_units:
+  kilometers:
+    label:
+      long: "kilometers"
+      short: "km"
+  miles:
+    label: "miles"

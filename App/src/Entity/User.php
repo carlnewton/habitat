@@ -98,6 +98,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserHiddenCategory::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $hiddenCategories;
 
+    /**
+     * @var Collection<int, UserSettings>
+     */
+    #[ORM\OneToMany(targetEntity: UserSettings::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $settings;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -105,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->comments = new ArrayCollection();
         $this->postAttachments = new ArrayCollection();
         $this->hiddenCategories = new ArrayCollection();
+        $this->settings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -411,6 +418,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($hiddenCategory->getUser() === $this) {
                 $hiddenCategory->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserSettings>
+     */
+    public function getSettings(): Collection
+    {
+        return $this->settings;
+    }
+
+    public function addSetting(UserSettings $setting): static
+    {
+        if (!$this->settings->contains($setting)) {
+            $this->settings->add($setting);
+            $setting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSetting(UserSettings $setting): static
+    {
+        if ($this->settings->removeElement($setting)) {
+            // set the owning side to null (unless already changed)
+            if ($setting->getUser() === $this) {
+                $setting->setUser(null);
             }
         }
 

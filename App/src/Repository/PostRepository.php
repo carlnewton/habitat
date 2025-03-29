@@ -74,7 +74,7 @@ class PostRepository extends ServiceEntityRepository
                 ->leftJoin(UserHiddenCategory::class, 'uhc', 'WITH', 'uhc.category = c.id AND uhc.user = :userId')
                 ->andWhere('uhc.id IS NULL')
                 ->setParameter('userId', $userId)
-           ;
+            ;
         }
 
         $qb->addSelect('DEGREES(ACOS((SIN(RADIANS(:latitude)) * SIN(RADIANS(post.latitude))) + (COS(RADIANS(:latitude)) * COS(RADIANS(post.latitude)) * COS(RADIANS(:longitude - post.longitude))))) * :radius AS distanceMiles')
@@ -133,7 +133,7 @@ class PostRepository extends ServiceEntityRepository
                ->leftJoin(UserHiddenCategory::class, 'uhc', 'WITH', 'uhc.category = c.id AND uhc.user = :userId')
                ->andWhere('uhc.id IS NULL')
                ->setParameter('userId', $userId)
-           ;
+            ;
         }
 
         if ($limit) {
