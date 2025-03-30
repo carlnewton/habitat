@@ -1,0 +1,17 @@
+<div class="form-group mb-2" id="hx-change-username">
+    <label for="changeUsername">{{ 'fields.username.title' | trans }}</label>
+    <div class="input-group">
+        <input type="text" class="form-control{% if errors is defined %} is-invalid{% elseif success is defined %} is-valid{% endif %}" value="{{ username }}" name="username" id="changeUsername">
+        <button class="btn btn-outline-secondary rounded-end" type="submit">{{ 'buttons.change' | trans }}</button>
+        {% if errors is defined %}
+            {% for error in errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if success is defined %}
+            <div class="valid-feedback">{{ 'fields.username.updated' | trans }}</div>
+        {% endif %}
+    </div>
+</div>

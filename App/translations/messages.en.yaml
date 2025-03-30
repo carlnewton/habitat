@@ -68,6 +68,8 @@ fields:
       minimum_characters: "Your username must be a minimum of %character_length% characters"
       maximum_characters: "Your username must be a maximum of %character_length% characters"
       alphabetic_numeric: "Your username must only use alphabetic and numeric characters"
+      already_taken: "This username is already taken"
+    updated: "Your username has been updated"
   email_address:
     title: "Email address"
     help_text: "Your email address will be kept private, and can be used to recover your password."
@@ -133,6 +135,7 @@ fields:
 
 buttons:
   continue: "Continue"
+  change: "Change"
   show_current_location: "Show your current location"
 
 map:
@@ -155,6 +158,8 @@ user_settings:
   hidden_categories:
     title: "Hidden categories"
     no_hidden_categories: "You are not currently hiding any categories."
+  change_details:
+    title: "Change your details"
 
 measurement_units:
   kilometers:
