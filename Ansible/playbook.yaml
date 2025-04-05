@@ -137,7 +137,7 @@
         path: /etc/environment
         state: present
         regexp: "^MARIADB_PASSWORD="
-        line: "MARIADB_PASSWORD={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+        line: "MARIADB_PASSWORD={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$[]') }}"
       when: existing_mariadb_password.found == 0
 
     - name: Create MARIADB_DATABASE variable
@@ -152,7 +152,7 @@
         path: /etc/environment
         state: present
         regexp: "^APP_SECRET="
-        line: "APP_SECRET={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+        line: "APP_SECRET={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$[]') }}"
 
     - name: Check if the ENCRYPTION_KEY is already defined
       lineinfile:
@@ -167,7 +167,7 @@
         path: /etc/environment
         state: present
         regexp: "^ENCRYPTION_KEY="
-        line: "ENCRYPTION_KEY={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$()[]') }}"
+        line: "ENCRYPTION_KEY={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$[]') }}"
       when: existing_encryption_key.found == 0
 
     - name: Create /opt/habitat/files directory
