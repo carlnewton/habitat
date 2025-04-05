@@ -15,20 +15,6 @@
             {% endif %}
         </div>
         <div class="mb-3">
-            <label for="domain" class="form-label">Domain</label>
-            <div class="input-group{% if errors.domain is defined %} is-invalid{% endif %}">
-                <span class="input-group-text">https://</span>
-                <input type="text" class="form-control{% if errors.domain is defined %} is-invalid{% endif %}" name="domain" id="domain" value="{{ values.domain }}">
-            </div>
-            {% if errors.domain is defined %}
-                <div class="invalid-feedback">
-                    {% for errorMessage in errors.domain %}
-                        <p>{{ errorMessage }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
             <label for="location" class="form-label">Location</label>
             <div class="card{% if errors.location is defined %} border-danger{% endif %}">
                 <div class="card-body ratio ratio-16x9">

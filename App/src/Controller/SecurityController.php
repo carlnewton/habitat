@@ -134,16 +134,16 @@ class SecurityController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            $domainSetting = $settingsRepository->getSettingByName('domain');
+            $domain = getenv('HABITAT_DOMAIN');
 
             $mailer->send(
                 $user->getEmailAddress(),
                 $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
-                'Verify your email address for ' . $domainSetting->getValue(),
+                'Verify your email address for ' . $domain,
                 '<p>Hello ' . $user->getUsername() . ',</p>' .
                 '<p>Click the link below to verify the email address for your account.</p>' .
                 '<p>Ignore this email if you didn\'t create this account.</p>' .
-                '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_verify_user', [
+                '<p><a href="https://' . $domain . $router->generate('app_verify_user', [
                     'userId' => $user->getId(),
                     'verificationString' => $emailVerificationString,
                 ]) . '">Verify your email address</a>'
@@ -296,16 +296,16 @@ class SecurityController extends AbstractController
             $this->entityManager->flush();
 
             $settingsRepository = $this->entityManager->getRepository(Settings::class);
-            $domainSetting = $settingsRepository->getSettingByName('domain');
+            $domain = getenv('HABITAT_DOMAIN');
 
             $mailer->send(
                 $user->getEmailAddress(),
                 $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
-                'Reset your password for ' . $domainSetting->getValue(),
+                'Reset your password for ' . $domain,
                 '<p>Hello ' . $user->getUsername() . ',</p>' .
                 '<p>Click the link below to reset the password for your account.</p>' .
                 '<p>Ignore this email if you didn\'t request a password reset.</p>' .
-                '<p><a href="https://' . $domainSetting->getValue() . $router->generate('app_reset_password', [
+                '<p><a href="https://' . $domain . $router->generate('app_reset_password', [
                     'userId' => $user->getId(),
                     'verificationString' => $emailVerificationString,
                 ]) . '">Reset your password</a>'

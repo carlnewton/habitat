@@ -12,6 +12,7 @@ services:
       - MARIADB_DATABASE=${DB_NAME}
       - APP_SECRET=${APP_SECRET}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - HABITAT_DOMAIN=${HABITAT_DOMAIN}
     volumes:
       - ${PATH_TO_SYMFONY_PROJECT}:/var/www/html
     ports:

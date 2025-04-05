@@ -21,9 +21,11 @@ class AboutController extends AbstractController
 
         $admins = $userRepository->findUsersByRole('ROLE_SUPER_ADMIN');
         $admin = $admins[0];
+        $domain = getenv('HABITAT_DOMAIN');
 
         return $this->render('about.html.twig', [
             'admin' => $admin,
+            'domain' => $domain,
         ]);
     }
 }
