@@ -29,6 +29,16 @@
                     </li>
                 </ul>
             </div>
+            <div class="card mb-3">
+                <div class="card-body bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-x-octagon"></i> {{ 'user_settings.delete_account.title' | trans }}
+                    </h5>
+                </div>
+                <div class="card-body d-grid">
+                    <a href="{{ path('app_delete_account') }}" class="btn btn-lg btn-outline-danger">{{ 'user_settings.delete_account.title' | trans }}</a>
+                </div>
+            </div>
         </div>
         <div class="col-xl-6">
             <div class="card mb-3">

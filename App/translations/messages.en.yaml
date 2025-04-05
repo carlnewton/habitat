@@ -75,6 +75,7 @@ fields:
     help_text: "Your email address will be kept private, and can be used to recover your password."
     validations:
       invalid_email_address: "This is not a valid email address"
+      non_matching_email_address: "The provided email address does not match that of your account"
   password:
     title: "Password"
     help_text: "Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter."
@@ -160,6 +161,13 @@ user_settings:
     no_hidden_categories: "You are not currently hiding any categories."
   change_details:
     title: "Change your details"
+  delete_account:
+    title: "Delete your account"
+    warning: "Warning: Account deletion is perminent. All of your posts and comments will also be deleted."
+    description: "To delete your account, enter your email address:"
+    validations:
+      admin_account: "This is an adminstrator account and as such cannot be deleted"
+    success: "Your account has been deleted"
 
 measurement_units:
   kilometers:

@@ -52,7 +52,7 @@ class Post
     /**
      * @var Collection<int, PostAttachment>
      */
-    #[ORM\OneToMany(targetEntity: PostAttachment::class, mappedBy: 'post')]
+    #[ORM\OneToMany(targetEntity: PostAttachment::class, mappedBy: 'post', orphanRemoval: true)]
     private Collection $attachments;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% set page_title = 'user_settings.delete_account.title' | trans %}
+
+{% block body %}
+    <div class="card border-danger">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="bi bi-x-octagon"></i> {{ 'user_settings.delete_account.title' | trans }}
+            </h5>
+            <p>
+                <strong class="text-danger">{{ 'user_settings.delete_account.warning' | trans }}</strong>
+            </p>
+            <p>{{ 'user_settings.delete_account.description' | trans }}</p>
+
+            <form method="post">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control{% if error is defined %} is-invalid{% endif %}" id="email_address" name="email_address" placeholder="{{ 'fields.email_address.title' | trans }}" required>
+                    <label for="email_address">{{ 'fields.email_address.title' | trans }}</label>
+                    {% if error is defined %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_account') }}">
+
+                <button class="btn btn-lg btn-danger" type="submit">{{ 'user_settings.delete_account.title' | trans }}</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
