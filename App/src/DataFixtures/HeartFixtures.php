@@ -3,6 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\Heart;
+use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -26,9 +28,9 @@ class HeartFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         foreach (self::HEARTS as $username => $postReferences) {
-            $user = $this->getReference('user/' . strtolower($username));
+            $user = $this->getReference('user/' . strtolower($username), User::class);
             foreach ($postReferences as $postReference) {
-                $post = $this->getReference('post/' . $postReference);
+                $post = $this->getReference('post/' . $postReference, Post::class);
                 $heartEntity = new Heart();
                 $heartEntity->setUser($user);
                 $heartEntity->setPost($post);

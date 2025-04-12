@@ -3,6 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\Comment;
+use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -100,8 +102,8 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
     {
         foreach (self::COMMENTS as $postReference => $comments) {
             foreach ($comments as $comment) {
-                $post = $this->getReference('post/' . $postReference);
-                $user = $this->getReference('user/' . strtolower($comment['user']));
+                $post = $this->getReference('post/' . $postReference, Post::class);
+                $user = $this->getReference('user/' . strtolower($comment['user']), User::class);
                 $commentEntity = new Comment();
                 $commentEntity->setPost($post);
                 $commentEntity->setUser($user);

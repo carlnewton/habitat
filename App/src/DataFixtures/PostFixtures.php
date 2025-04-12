@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -164,13 +166,13 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         foreach (self::POSTS as $post) {
             $postEntity = new Post();
             $postEntity
-                ->setUser($this->getReference('user/' . strtolower($post['user'])))
+                ->setUser($this->getReference('user/' . strtolower($post['user']), User::class))
                 ->setTitle($post['title'])
                 ->setBody($post['body'])
                 ->setLatitude($post['latitude'])
                 ->setLongitude($post['longitude'])
                 ->setPosted(\DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $post['posted']))
-                ->setCategory($this->getReference('category/' . $post['category']))
+                ->setCategory($this->getReference('category/' . $post['category'], Category::class))
             ;
 
             $manager->persist($postEntity);

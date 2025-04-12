@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Post;
 use App\Entity\PostAttachment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -114,7 +115,7 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
         }
 
         foreach (self::POST_ATTACHMENT_GROUPS as $postAttachmentGroup) {
-            $post = $this->getReference('post/' . $postAttachmentGroup['post']);
+            $post = $this->getReference('post/' . $postAttachmentGroup['post'], Post::class);
             foreach ($postAttachmentGroup['attachments'] as $attachmentPosition) {
                 $attachmentFixtureFile = self::ATTACHMENT_FIXTURE_FILES[$attachmentPosition];
                 $attachmentEntity = new PostAttachment();
