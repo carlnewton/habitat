@@ -133,11 +133,16 @@ fields:
   csrf_token:
     validations:
       invalid: "Invalid or missing CSRF token. Please try again."
+  habitat_name:
+    title: "Habitat name"
+  location:
+    title: "Location"
 
 buttons:
   continue: "Continue"
   change: "Change"
   show_current_location: "Show your current location"
+  save: "Save"
 
 map:
   size_label: "Size"
@@ -176,3 +181,7 @@ measurement_units:
       short: "km"
   miles:
     label: "miles"
+
+admin:
+  settings:
+    title: "Settings"
