@@ -15,7 +15,7 @@ window.toggleHeart = function(postId) {
 
         switch (res.result) {
             case 'added':
-                navigator.vibrate(20);
+                navigator.vibrate && navigator.vibrate(20);
                 heartsButton.classList.add('text-danger');
                 heartsButton.classList.remove('text-muted');
                 heartsIcon.classList.add('bi-heart-fill');
