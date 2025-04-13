@@ -104,20 +104,6 @@ class PostRepository extends ServiceEntityRepository
         return $entities;
     }
 
-    public function findRemovedBeforeRelativeTime(string $relativeTime): array
-    {
-        $dateTime = new \DateTime();
-        $dateTime->modify('-' . $relativeTime);
-
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.removed = :removed')
-            ->andWhere('p.removed_datetime <= :dateTime')
-            ->setParameter('removed', true)
-            ->setParameter('dateTime', $dateTime)
-            ->getQuery()
-            ->getResult();
-    }
-
     public function findByHiddenCategories(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null, ?int $userId = null): array
     {
         $qb = $this->createQueryBuilder('post');

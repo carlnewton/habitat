@@ -11,11 +11,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class PostsRemovalController extends AbstractController
+class PostsDeleteController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
 
-    #[Route(path: '/admin/moderation/posts/remove', name: 'app_moderation_posts_remove', methods: ['POST'])]
+    #[Route(path: '/admin/moderation/posts/delete', name: 'app_moderation_posts_delete', methods: ['POST'])]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -36,8 +36,7 @@ class PostsRemovalController extends AbstractController
 
         $posts = $postRepository->findBy(
             [
-                'id' => $postIds,
-                'removed' => false,
+                'id' => $postIds
             ]
         );
 
@@ -51,7 +50,7 @@ class PostsRemovalController extends AbstractController
         }
 
         if (empty($request->get('delete'))) {
-            return $this->render('admin/moderation/remove_posts.html.twig', [
+            return $this->render('admin/moderation/delete_posts.html.twig', [
                 'post_ids' => implode(',', $postIds),
                 'posts' => $posts,
                 'show_category' => true,
@@ -59,13 +58,11 @@ class PostsRemovalController extends AbstractController
         }
 
         foreach ($posts as $post) {
-            $post->setRemoved(true);
-            $post->setRemovedDatetime(new \DateTime());
-            $entityManager->persist($post);
+            $entityManager->remove($post);
         }
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Posts removed');
+        $this->addFlash('notice', 'Posts deleted');
 
         return $this->redirectToRoute('app_moderation_posts');
     }

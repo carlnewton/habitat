@@ -1,3 +1,0 @@
-#!/bin/sh
-
-php /var/www/html/bin/console habitat:data-retention

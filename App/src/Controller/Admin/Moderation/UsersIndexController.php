@@ -28,23 +28,7 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
 
     public function getFilters(): array
     {
-        return [
-            'suspended' => [
-                'label' => 'Status',
-                'type' => 'select',
-                'options' => [
-                    [
-                        'value' => '0',
-                        'label' => 'Active',
-                    ],
-                    [
-                        'value' => '1',
-                        'label' => 'Suspended',
-                    ],
-                ],
-                'validation' => 'boolean',
-            ],
-        ];
+        return [];
     }
 
     public function getHeadings(): array

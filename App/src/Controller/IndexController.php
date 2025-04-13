@@ -22,9 +22,7 @@ class IndexController extends AbstractController
     ): Response {
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findByHiddenCategories(
-            [
-                'removed' => false,
-            ],
+            [],
             [
                 'posted' => 'DESC',
             ],

@@ -37,20 +37,6 @@ class CommentRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findRemovedBeforeRelativeTime(string $relativeTime): array
-    {
-        $dateTime = new \DateTime();
-        $dateTime->modify('-' . $relativeTime);
-
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.removed = :removed')
-            ->andWhere('c.removed_datetime <= :dateTime')
-            ->setParameter('removed', true)
-            ->setParameter('dateTime', $dateTime)
-            ->getQuery()
-            ->getResult();
-    }
-
     //    public function findOneBySomeField($value): ?Comment
     //    {
     //        return $this->createQueryBuilder('c')

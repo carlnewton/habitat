@@ -90,20 +90,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
-    public function findSuspendedBeforeRelativeTime(string $relativeTime): array
-    {
-        $dateTime = new \DateTime();
-        $dateTime->modify('-' . $relativeTime);
-
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.suspended = :suspended')
-            ->andWhere('u.suspended_datetime <= :dateTime')
-            ->setParameter('suspended', true)
-            ->setParameter('dateTime', $dateTime)
-            ->getQuery()
-            ->getResult();
-    }
-
     public function findUsersByRole(string $role)
     {
         $qb = $this->createQueryBuilder('u');

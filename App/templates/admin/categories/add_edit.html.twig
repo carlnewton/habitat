@@ -29,10 +29,10 @@
                     {% if category.posts|length > 0 %}
                         <a href="{{ path('app_moderation_posts', { category: category.id }) }}" class="dropdown-item">View posts</a>
                     {% else %}
-                        <form class="action-item-form" method="post" action="{{ path('app_admin_categories_remove') }}">
+                        <form class="action-item-form" method="post" action="{{ path('app_admin_categories_delete') }}">
                             <input name="items" type="hidden" value="{{ category.id }}"/>
                             <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                            <button type="submit" class="dropdown-item checkbox-action">Remove</button>
+                            <button type="submit" class="dropdown-item checkbox-action">Delete</button>
                         </form>
                     {% endif %}
                 </li>

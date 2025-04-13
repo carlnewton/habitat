@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Moderation;
 
+use App\Entity\BlockedEmailAddress;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,11 +12,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class UsersSuspensionController extends AbstractController
+class UsersBanController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
 
-    #[Route(path: '/admin/moderation/users/suspend', name: 'app_moderation_users_suspend', methods: ['POST'], priority: 2)]
+    #[Route(path: '/admin/moderation/users/ban', name: 'app_moderation_users_ban', methods: ['POST'], priority: 2)]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -34,12 +35,9 @@ class UsersSuspensionController extends AbstractController
 
         $userRepository = $entityManager->getRepository(User::class);
 
-        $users = $userRepository->findBy(
-            [
-                'id' => $userIds,
-                'suspended' => false,
-            ]
-        );
+        $users = $userRepository->findBy([
+            'id' => $userIds,
+        ]);
 
         if (empty($users)) {
             $this->addFlash(
@@ -51,41 +49,37 @@ class UsersSuspensionController extends AbstractController
         }
 
         if (empty($request->get('delete'))) {
-            return $this->render('admin/moderation/suspend_users.html.twig', [
+            return $this->render('admin/moderation/ban_users.html.twig', [
                 'user_ids' => implode(',', $userIds),
                 'users' => $users,
             ]);
         }
 
-        $usersSuspended = false;
+        $usersBanned = false;
+        $blockedEmailAddressRepository = $entityManager->getRepository(BlockedEmailAddress::class);
         foreach ($users as $user) {
             if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be suspended because they are an administrator.');
+                $this->addFlash('warning', $user->getUsername() . ' could not be banned because they are an administrator.');
                 continue;
             }
 
-            $usersSuspended = true;
-            $user->setSuspended(true);
-            $user->setSuspendedDatetime(new \DateTime());
+            $blockedEmailAddress = $blockedEmailAddressRepository->findOneBy([
+                'email_address' => $user->getEmailAddress(),
+            ]);
 
-            foreach ($user->getPosts() as $post) {
-                $post->setRemoved(true);
-                $post->setRemovedDatetime(new \DateTime());
-                $entityManager->persist($post);
+            if (empty($blockedEmailAddress)) {
+                $blockedEmailAddress = new BlockedEmailAddress();
+                $blockedEmailAddress->setEmailAddress($user->getEmailAddress());
+                $entityManager->persist($blockedEmailAddress);
             }
 
-            foreach ($user->getComments() as $comment) {
-                $comment->setRemoved(true);
-                $comment->setRemovedDatetime(new \DateTime());
-                $entityManager->persist($comment);
-            }
-
-            $entityManager->persist($user);
+            $entityManager->remove($user);
+            $usersBanned = true;
         }
 
-        if ($usersSuspended) {
+        if ($usersBanned) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users suspended');
+            $this->addFlash('notice', 'Users banned');
         }
 
         return $this->redirectToRoute('app_moderation_users');

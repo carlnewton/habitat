@@ -8,10 +8,10 @@
         </button>
         <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
             <li>
-                <form class="action-item-form" method="post" action="{{ path('app_moderation_users_suspend') }}">
+                <form class="action-item-form" method="post" action="{{ path('app_moderation_users_ban') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">Suspend</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled">Ban</button>
                 </form>
             </li>
         </ul>
@@ -20,20 +20,9 @@
 
 {% block rows %}
     <td class="align-middle{% if sort == 'username' %} bg-light border{% endif %}">
-        {% if item.suspended and filtered.suspended is not defined %}
-            <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}">
-                User suspended
-            </button>
-            <div class="collapse" id="collapse-{{ item.id }}">
-                <a href="{{ path('app_moderation_user', { id: item.id }) }}">
-                    {{ item.username }}
-                </a>
-            </div>
-        {% else %}
-            <a href="{{ path('app_moderation_user', { id: item.id }) }}">
-                {{ item.username }}
-            </a>
-        {% endif %}
+        <a href="{{ path('app_moderation_user', { id: item.id }) }}">
+            {{ item.username }}
+        </a>
     </td>
     <td class="align-middle{% if sort == 'email_address' %} bg-light border{% endif %}">{{ item.emailaddress }}</td>
     <td class="align-middle{% if sort == 'verified' %} bg-light border{% endif %}">

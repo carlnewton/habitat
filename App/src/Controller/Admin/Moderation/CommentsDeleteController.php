@@ -11,11 +11,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class CommentsRemovalController extends AbstractController
+class CommentsDeleteController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
 
-    #[Route(path: '/admin/moderation/comments/remove', name: 'app_moderation_comments_remove', methods: ['POST'])]
+    #[Route(path: '/admin/moderation/comments/delete', name: 'app_moderation_comments_delete', methods: ['POST'])]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -36,8 +36,7 @@ class CommentsRemovalController extends AbstractController
 
         $comments = $commentRepository->findBy(
             [
-                'id' => $commentIds,
-                'removed' => false,
+                'id' => $commentIds
             ]
         );
 
@@ -51,22 +50,18 @@ class CommentsRemovalController extends AbstractController
         }
 
         if (empty($request->get('delete'))) {
-            return $this->render('admin/moderation/remove_comments.html.twig', [
+            return $this->render('admin/moderation/delete_comments.html.twig', [
                 'comment_ids' => implode(',', $commentIds),
                 'comments' => $comments,
             ]);
         }
 
         foreach ($comments as $comment) {
-            $comment
-                ->setRemoved(true)
-                ->setRemovedDatetime(new \DateTime())
-            ;
-            $entityManager->persist($comment);
+            $entityManager->remove($comment);
         }
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Comments removed');
+        $this->addFlash('notice', 'Comments deleted');
 
         return $this->redirectToRoute('app_moderation_comments');
     }

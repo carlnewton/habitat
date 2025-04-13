@@ -33,7 +33,6 @@ class CategoryController extends AbstractController
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findBy(
             [
-                'removed' => false,
                 'category' => $category,
             ],
             [

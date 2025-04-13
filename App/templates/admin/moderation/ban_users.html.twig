@@ -1,5 +1,5 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Suspend users' %}
+{% set page_title = 'Ban users' %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
@@ -7,19 +7,19 @@
             <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Moderation</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Suspend</li>
+            <li class="breadcrumb-item active" aria-current="page">Ban</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to suspend {% if users|length > 1 %}these users{% else %}this user{% endif %}?</p>
-            <p>All content created by {% if users|length > 1 %}these users{% else %}this user{% endif %} will also be removed.</p>
-            <form method="post" action="{{ path('app_moderation_users_suspend') }}">
+            <p class="lead">Are you sure you would like to ban {% if users|length > 1 %}these users{% else %}this user{% endif %}?</p>
+            <p>All content created by {% if users|length > 1 %}these users{% else %}this user{% endif %} will be permanently deleted.</p>
+            <form method="post" action="{{ path('app_moderation_users_ban') }}">
                 <input name="items" type="hidden" value="{{ user_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
-                <button type="submit" class="btn btn-danger">Suspend</button>
+                <button type="submit" class="btn btn-danger">Ban</button>
                 <a href="{{ path('app_moderation_users') }}" class="btn btn-outline-primary">Cancel</a>
             </form>
         </div>

@@ -28,12 +28,6 @@ class Comment
     #[ORM\Column]
     private ?\DateTimeImmutable $posted = null;
 
-    #[ORM\Column]
-    private ?bool $removed = false;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $removed_datetime = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -83,30 +77,6 @@ class Comment
     public function setPosted(\DateTimeImmutable $posted): static
     {
         $this->posted = $posted;
-
-        return $this;
-    }
-
-    public function isRemoved(): ?bool
-    {
-        return $this->removed;
-    }
-
-    public function setRemoved(bool $removed): static
-    {
-        $this->removed = $removed;
-
-        return $this;
-    }
-
-    public function getRemovedDatetime(): ?\DateTimeInterface
-    {
-        return $this->removed_datetime;
-    }
-
-    public function setRemovedDatetime(?\DateTimeInterface $removed_datetime): static
-    {
-        $this->removed_datetime = $removed_datetime;
 
         return $this;
     }

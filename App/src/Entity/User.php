@@ -81,16 +81,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $created = null;
 
     #[ORM\Column]
-    private ?bool $suspended = false;
-
-    #[ORM\Column]
     private ?bool $email_verified = false;
 
     #[ORM\Column(length: 32, nullable: true)]
     private ?string $email_verification_string = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $suspended_datetime = null;
 
     /**
      * @var Collection<int, UserHiddenCategory>
@@ -333,18 +327,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isSuspended(): ?bool
-    {
-        return $this->suspended;
-    }
-
-    public function setSuspended(bool $suspended): static
-    {
-        $this->suspended = $suspended;
-
-        return $this;
-    }
-
     public function isEmailVerified(): ?bool
     {
         return $this->email_verified;
@@ -365,18 +347,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmailVerificationString(?string $email_verification_string): static
     {
         $this->email_verification_string = $email_verification_string;
-
-        return $this;
-    }
-
-    public function getSuspendedDatetime(): ?\DateTimeInterface
-    {
-        return $this->suspended_datetime;
-    }
-
-    public function setSuspendedDatetime(?\DateTimeInterface $suspended_datetime): static
-    {
-        $this->suspended_datetime = $suspended_datetime;
 
         return $this;
     }

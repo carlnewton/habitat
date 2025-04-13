@@ -6,86 +6,88 @@
 {% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-between">
-        <h1>{{ post.title }}</h1>
-        {% include 'partials/post/dropdown_menu.html.twig' %}
-    </div>
-    {% if show_category %}
-        <div class="mb-2">
-            <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">
-                <i class="bi bi-tag"></i>
-                {{ post.category.name }}
-            </a>
+    <div class="post">
+        <div class="d-flex justify-content-between">
+            <h1>{{ post.title }}</h1>
+            {% include 'partials/post/dropdown_menu.html.twig' %}
         </div>
-    {% endif %}
-    {% if post.body is not empty %}
-        <p>{{ post.body }}</p>
-    {% endif %}
-    {% if post.attachments is not empty %}
-        <h2 id="photos">Photos</h2>
-        <div id="gallery" class="card mb-4">
-            {% for attachment in post.attachments %}
-                <a{% if not loop.first %} class="d-none position-relative"{% endif %} data-pswp-width="{{ attachment.width }}" data-pswp-height="{{ attachment.height }}" href="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}">
-                    {% if loop.first %}
-                        <img
-                            class="rounded d-block w-100"
-                            src="{{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 })}}"
-                            {% if post.attachments|first.width > 550 %}
-                                srcset="
-                                    {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 }) }} 550w,
-                                    {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 700 }) }} 700w,
-                                    {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 830 }) }} 830w,
-                                    {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 970 }) }} 970w
-                                "
-                                sizes="
-                                    (max-width: 992px) 550px,
-                                    (max-width: 1199px) 700px,
-                                    (max-width: 1399px) 830px,
-                                    970px"
-                            {% endif %}
-                            alt="{{ post.title }}"
-                        >
-                        {% if post.attachments|length > 1 %}
-                            <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
-                                <i class="bi bi-images"></i> {{ post.attachments|length }}
-                            </div>
-                        {% endif %}
-                    {% endif %}
+        {% if show_category %}
+            <div class="mb-2">
+                <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">
+                    <i class="bi bi-tag"></i>
+                    {{ post.category.name }}
                 </a>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if post.latitude is not null and post.longitude is not null %}
-        <h2 id="location">Location</h2>
-        <div class="card mb-4">
-            <div class="ratio ratio-16x9">
-                <div id="map" class="rounded" data-center="{{ post.latitude }},{{ post.longitude }}"></div>
             </div>
-        </div>
-    {% endif %}
-    <p class="text-muted float-end">
-        Posted by 
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <a class="text-secondary" href="{{ path('app_moderation_user', { id: post.user.id }) }}">{{ post.user.username }}</a>
-        {% else %}
-            <em>{{ post.user.username }}</em>
         {% endif %}
-        <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span>
-    </p>
-    <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
-        <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
-    </button>
-    <h2 id="comments">Comments</h2>
+        {% if post.body is not empty %}
+            <p>{{ post.body }}</p>
+        {% endif %}
+        {% if post.attachments is not empty %}
+            <h2 id="photos">Photos</h2>
+            <div id="gallery" class="card mb-4">
+                {% for attachment in post.attachments %}
+                    <a{% if not loop.first %} class="d-none position-relative"{% endif %} data-pswp-width="{{ attachment.width }}" data-pswp-height="{{ attachment.height }}" href="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}">
+                        {% if loop.first %}
+                            <img
+                                class="rounded d-block w-100"
+                                src="{{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 })}}"
+                                {% if post.attachments|first.width > 550 %}
+                                    srcset="
+                                        {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 }) }} 550w,
+                                        {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 700 }) }} 700w,
+                                        {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 830 }) }} 830w,
+                                        {{ path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 970 }) }} 970w
+                                    "
+                                    sizes="
+                                        (max-width: 992px) 550px,
+                                        (max-width: 1199px) 700px,
+                                        (max-width: 1399px) 830px,
+                                        970px"
+                                {% endif %}
+                                alt="{{ post.title }}"
+                            >
+                            {% if post.attachments|length > 1 %}
+                                <div class="position-absolute bg-dark text-white bottom-0 end-0 p-2 m-3 opacity-75 rounded-pill fs-4">
+                                    <i class="bi bi-images"></i> {{ post.attachments|length }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if post.latitude is not null and post.longitude is not null %}
+            <h2 id="location">Location</h2>
+            <div class="card mb-4">
+                <div class="ratio ratio-16x9">
+                    <div id="map" class="rounded" data-center="{{ post.latitude }},{{ post.longitude }}"></div>
+                </div>
+            </div>
+        {% endif %}
+        <p class="text-muted float-end">
+            Posted by 
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <a class="text-secondary" href="{{ path('app_moderation_user', { id: post.user.id }) }}">{{ post.user.username }}</a>
+            {% else %}
+                <em>{{ post.user.username }}</em>
+            {% endif %}
+            <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span>
+        </p>
+        <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
+            <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
+        </button>
+        <h2 id="comments">Comments</h2>
 
-    {% if app.user %}
-        {% include 'partials/post/comment/form.html.twig' %}
-    {% else %}
-        <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
-    {% endif %}
-    <div id="comments-list" class="mb-5" hx-trigger="revealed" hx-get="/hx/list-comments?post={{ post.id }}" hx-swap="afterbegin">
-        <div class="d-flex justify-content-center htmx-indicator" id="comment-spinner">
-            <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
+        {% if app.user %}
+            {% include 'partials/post/comment/form.html.twig' %}
+        {% else %}
+            <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
+        {% endif %}
+        <div id="comments-list" class="mb-5" hx-trigger="revealed" hx-get="/hx/list-comments?post={{ post.id }}" hx-swap="afterbegin">
+            <div class="d-flex justify-content-center htmx-indicator" id="comment-spinner">
+                <div class="spinner-border text-secondary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </div>

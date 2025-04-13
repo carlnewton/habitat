@@ -59,9 +59,6 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
-    #[ORM\Column]
-    private ?bool $removed = false;
-
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
@@ -69,9 +66,6 @@ class Post
     private ?float $longitude = null;
 
     private ?float $distanceMiles;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $removed_datetime = null;
 
     public function __construct()
     {
@@ -290,18 +284,6 @@ class Post
         return $this;
     }
 
-    public function isRemoved(): ?bool
-    {
-        return $this->removed;
-    }
-
-    public function setRemoved(bool $removed): static
-    {
-        $this->removed = $removed;
-
-        return $this;
-    }
-
     public function getLatitude(): ?float
     {
         return $this->latitude;
@@ -322,18 +304,6 @@ class Post
     public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
-
-        return $this;
-    }
-
-    public function getRemovedDatetime(): ?\DateTimeInterface
-    {
-        return $this->removed_datetime;
-    }
-
-    public function setRemovedDatetime(?\DateTimeInterface $removed_datetime): static
-    {
-        $this->removed_datetime = $removed_datetime;
 
         return $this;
     }

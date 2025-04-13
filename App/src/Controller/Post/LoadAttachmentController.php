@@ -41,7 +41,7 @@ class LoadAttachmentController extends AbstractController
             'post' => $postId,
         ]);
 
-        if (empty($attachment) || $attachment->getPost()->isRemoved()) {
+        if (empty($attachment)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
@@ -72,7 +72,7 @@ class LoadAttachmentController extends AbstractController
             'post' => $postId,
         ]);
 
-        if (empty($attachment) || $attachment->getPost()->isRemoved()) {
+        if (empty($attachment)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 

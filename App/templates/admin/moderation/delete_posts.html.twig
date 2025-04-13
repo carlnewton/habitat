@@ -1,5 +1,5 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Remove posts' %}
+{% set page_title = 'Delete posts' %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
@@ -7,18 +7,18 @@
             <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Moderation</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Posts</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Remove</li>
+            <li class="breadcrumb-item active" aria-current="page">Delete</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to remove {% if posts|length > 1 %}these posts{% else %}this post{% endif %}?</p>
+            <p class="lead">Are you sure you would like to permanently delete {% if posts|length > 1 %}these posts{% else %}this post{% endif %}?</p>
             <form method="post">
                 <input name="items" type="hidden" value="{{ post_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
-                <button type="submit" class="btn btn-danger">Remove</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
                 <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">Cancel</a>
             </form>
         </div>

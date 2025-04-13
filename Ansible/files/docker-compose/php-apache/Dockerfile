@@ -43,9 +43,6 @@ RUN echo "extension=apcu.so" > /usr/local/etc/php/php.ini
 RUN echo "apc.enable_cli=1" > /usr/local/etc/php/php.ini
 RUN echo "apc.enable=1" > /usr/local/etc/php/php.ini
 
-COPY ./habitat-cron-daily /etc/cron.daily/habitat-cron-daily
-RUN chmod ugo+x /etc/cron.daily/habitat-cron-daily
-
 # Override docker entrypoint to run app installation
 COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
 RUN chmod +x /usr/local/bin/docker-php-entrypoint

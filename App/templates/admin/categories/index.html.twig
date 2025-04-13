@@ -10,10 +10,10 @@
             </button>
             <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
                 <li>
-                    <form class="action-item-form" method="post" action="{{ path('app_admin_categories_remove') }}">
+                    <form class="action-item-form" method="post" action="{{ path('app_admin_categories_delete') }}">
                         <input name="items" type="hidden" value=""/>
                         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                        <button type="submit" class="dropdown-item checkbox-action disabled">Remove</button>
+                        <button type="submit" class="dropdown-item checkbox-action disabled">Delete</button>
                     </form>
                 </li>
             </ul>

@@ -11,10 +11,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
-class CategoriesRemovalController extends AbstractController
+class CategoriesDeleteController extends AbstractController
 {
-    #[Route(path: '/admin/categories/remove', name: 'app_admin_categories_remove', methods: ['POST'], priority: 2)]
-    public function remove(
+    #[Route(path: '/admin/categories/delete', name: 'app_admin_categories_delete', methods: ['POST'], priority: 2)]
+    public function delete(
         ?int $id,
         Request $request,
         EntityManagerInterface $entityManager,
@@ -52,7 +52,7 @@ class CategoriesRemovalController extends AbstractController
             if (count($category->getPosts()) > 0) {
                 $this->addFlash(
                     'warning',
-                    'All posts must be assigned to a different category before a category can be removed.'
+                    'All posts must be assigned to a different category before a category can be deleted.'
                 );
 
                 return $this->redirectToRoute('app_admin_categories');
@@ -60,7 +60,7 @@ class CategoriesRemovalController extends AbstractController
         }
 
         if (empty($request->get('delete'))) {
-            return $this->render('admin/categories/remove.html.twig', [
+            return $this->render('admin/categories/delete.html.twig', [
                 'category_ids' => implode(',', $categoryIds),
                 'categories' => $categories,
             ]);
@@ -71,7 +71,7 @@ class CategoriesRemovalController extends AbstractController
         }
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Categories removed');
+        $this->addFlash('notice', 'Categories deleted');
 
         return $this->redirectToRoute('app_admin_categories');
     }

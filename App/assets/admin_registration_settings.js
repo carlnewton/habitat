@@ -251,7 +251,7 @@ function buildAccordionItem(id, question) {
                     <div class="registration-question-answers">
                         ${answerFields}
                     </div>
-                    <button class="btn btn-outline-danger btn-registration-question-delete">Remove question</button>
+                    <button class="btn btn-outline-danger btn-registration-question-delete">Delete question</button>
                 </div>
             </div>
         </div>

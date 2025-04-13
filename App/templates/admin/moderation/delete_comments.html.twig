@@ -1,5 +1,5 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Remove comments' %}
+{% set page_title = 'Delete comments' %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
@@ -7,18 +7,18 @@
             <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_moderation_comments')}}">Moderation</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_moderation_comments')}}">Comments</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Remove</li>
+            <li class="breadcrumb-item active" aria-current="page">Delete</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to remove {% if comments|length > 1 %}these comments{% else %}this comment{% endif %}?</p>
+            <p class="lead">Are you sure you would like to permanently delete {% if comments|length > 1 %}these comments{% else %}this comment{% endif %}?</p>
             <form method="post">
                 <input name="items" type="hidden" value="{{ comment_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
-                <button type="submit" class="btn btn-danger">Remove</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
                 <a href="{{ path('app_moderation_comments') }}" class="btn btn-outline-primary">Cancel</a>
             </form>
         </div>

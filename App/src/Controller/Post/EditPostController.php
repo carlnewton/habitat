@@ -38,7 +38,7 @@ class EditPostController extends AbstractController
             'id' => $id,
         ]);
 
-        if (!$post || $post->isRemoved()) {
+        if (!$post) {
             throw $this->createNotFoundException('The post does not exist');
         }
 

@@ -33,9 +33,7 @@ class ListPostsController extends AbstractController
             }
         }
 
-        $filter = [
-            'removed' => false,
-        ];
+        $filter = [];
 
         $categoryRepository = $entityManager->getRepository(Category::class);
         if (!empty($request->query->get('category'))) {

@@ -16,10 +16,10 @@
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
-                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_remove') }}">
+                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_delete') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">Remove</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled">Delete</button>
                 </form>
             </li>
         </ul>
@@ -28,32 +28,14 @@
 
 {% block rows %}
     <td class="align-middle{% if sort == 'title' %} bg-light border{% endif %}">
-        {% if item.removed and filtered.removed is not defined %}
-            <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}">
-                Post removed
-            </button>
-            <div class="collapse" id="collapse-{{ item.id }}">
-                {{ item.title }}
-            </div>
-        {% else %}
-            <a href="{{ path('app_view_post', { id: item.id }) }}">
-                {{ item.title }}
-            </a>
-        {% endif %}
+        <a href="{{ path('app_view_post', { id: item.id }) }}">
+            {{ item.title }}
+        </a>
     </td>
     <td class="align-middle{% if sort == 'posted' %} bg-light border{% endif %}">{{ item.posted|date }}</td>
     <td class="align-middle">{{ item.category.name }}</td>
     <td class="align-middle">
-        {% if item.user.suspended %}
-            <button class="btn btn-link link-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-user-for-{{ item.id }}" aria-expanded="false" aria-controls="collapse-user-for-{{ item.id }}">
-                User suspended
-            </button>
-            <div class="collapse" id="collapse-user-for-{{ item.id }}">
-                <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
-            </div>
-        {% else %}
-            <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
-        {% endif %}
+        <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
     </td>
     <td class="align-middle{% if sort == 'attachments' %} bg-light border{% endif %}">{{ item.attachments|length }}</td>
     <td class="align-middle{% if sort == 'comments' %} bg-light border{% endif %}">{{ item.comments|length }}</td>

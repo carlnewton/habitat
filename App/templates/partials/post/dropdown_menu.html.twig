@@ -1,25 +1,27 @@
-{% if is_granted('ROLE_SUPER_ADMIN') %}
+{% if is_granted('ROLE_SUPER_ADMIN') or (app.user and app.user.id == post.user.id) %}
     <div class="dropdown">
         <button role="button" type="button" class="btn text-secondary fs-4" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-three-dots-vertical"></i>
         </button>
         <ul class="dropdown-menu">
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                    <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">Edit</a>
+                </li>
+                <li>
+                    <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
+                        <input name="items" type="hidden" value="{{ post.id }}"/>
+                        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                        <button type="submit" class="dropdown-item checkbox-action">Change category</button>
+                    </form>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+            {% endif %}
             <li>
-                <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">Edit</a>
-            </li>
-            <li>
-                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
-                    <input name="items" type="hidden" value="{{ post.id }}"/>
-                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action">Change category</button>
-                </form>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-                <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_remove') }}">
-                    <input name="items" type="hidden" value="{{ post.id }}"/>
-                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action">Remove</button>
+                <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .post" hx-post="/hx/delete-post">
+                    <input name="postId" type="hidden" value="{{ post.id }}"/>
+                    <input type="hidden" name="token" value="{{ csrf_token('post') }}">
+                    <button type="submit" class="dropdown-item checkbox-action">Delete</button>
                 </form>
             </li>
         </ul>
