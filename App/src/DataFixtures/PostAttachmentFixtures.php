@@ -108,22 +108,22 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
     public function load(ObjectManager $manager): void
     {
         $filesystem = new Filesystem();
-        foreach (self::ATTACHMENT_FIXTURE_FILES as $attachmentFixtureFile) {
-            if (!$filesystem->exists('/var/www/uploads/' . $attachmentFixtureFile['filename'])) {
-                $filesystem->copy('assets/img/fixtures/' . $attachmentFixtureFile['filename'], '/var/www/uploads/' . $attachmentFixtureFile['filename']);
-            }
-        }
 
         foreach (self::POST_ATTACHMENT_GROUPS as $postAttachmentGroup) {
             $post = $this->getReference('post/' . $postAttachmentGroup['post'], Post::class);
             foreach ($postAttachmentGroup['attachments'] as $attachmentPosition) {
                 $attachmentFixtureFile = self::ATTACHMENT_FIXTURE_FILES[$attachmentPosition];
+
+                if (!$filesystem->exists('/var/www/uploads/' . $postAttachmentGroup['post'] . '-' . $attachmentFixtureFile['filename'])) {
+                    $filesystem->copy('assets/img/fixtures/' . $attachmentFixtureFile['filename'], '/var/www/uploads/' . $postAttachmentGroup['post'] . '-' . $attachmentFixtureFile['filename']);
+                }
+
                 $attachmentEntity = new PostAttachment();
                 $attachmentEntity->setPost($post);
                 $attachmentEntity->setUser($post->getUser());
                 $attachmentEntity->setWidth($attachmentFixtureFile['width']);
                 $attachmentEntity->setHeight($attachmentFixtureFile['height']);
-                $attachmentEntity->setFilename($attachmentFixtureFile['filename']);
+                $attachmentEntity->setFilename($postAttachmentGroup['post'] . '-' . $attachmentFixtureFile['filename']);
 
                 $manager->persist($attachmentEntity);
             }
