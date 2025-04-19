@@ -1,17 +1,17 @@
 {% extends 'admin/moderation/base.html.twig' %}
-{% set page_title = 'User moderation' %}
+{% set page_title = 'admin.moderation.users.title' | trans %}
 
 {% block actions %}
     <div class="dropdown mt-3">
         <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
-            Actions
+            {{ 'buttons.actions' | trans }}
         </button>
         <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
             <li>
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_ban') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">Ban</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.ban' | trans }}</button>
                 </form>
             </li>
         </ul>

@@ -4,24 +4,24 @@
     <div class="col-sm-3 order-first order-md-last">
         <ul class="nav nav-pills flex-column mb-3">
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">Settings</a>
+                <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">{{ 'admin.settings.title' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') starts with 'app_moderation' %} active{% endif %}"{% if app.request.get('_route') == 'app_moderation_users' %} aria-current="page"{% endif %} href="{{ path('app_moderation_users') }}">Moderation</a>
+                <a class="nav-link{% if app.request.get('_route') starts with 'app_moderation' %} active{% endif %}"{% if app.request.get('_route') == 'app_moderation_users' %} aria-current="page"{% endif %} href="{{ path('app_moderation_users') }}">{{ 'admin.moderation.title' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">Categories</a>
+                <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">{{ 'admin.categories.title' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_user_registration' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_user_registration' %} aria-current="page"{% endif %} href="{{ path('app_admin_user_registration') }}">User registration</a>
+                <a class="nav-link{% if app.request.get('_route') == 'app_admin_user_registration' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_user_registration' %} aria-current="page"{% endif %} href="{{ path('app_admin_user_registration') }}">{{ 'admin.user_registration.title' | trans }}</a>
             </li>
             {% if setting('imageStorage') == 's3' %}
                 <li class="nav-item">
-                    <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_s3_details' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_s3_details' %} aria-current="page"{% endif %} href="{{ path('app_admin_s3_details') }}">Amazon S3 details</a>
+                    <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_s3_details' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_s3_details' %} aria-current="page"{% endif %} href="{{ path('app_admin_s3_details') }}">{{ 'admin.amazon_s3_details.title' | trans }}</a>
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_mail' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_mail' %} aria-current="page"{% endif %} href="{{ path('app_admin_mail') }}">Mail</a>
+                <a class="nav-link{% if app.request.get('_route') == 'app_admin_mail' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_mail' %} aria-current="page"{% endif %} href="{{ path('app_admin_mail') }}">{{ 'admin.mail.title' | trans }}</a>
             </li>
         </ul>
     </div>

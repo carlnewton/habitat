@@ -9,5 +9,8 @@
         <li class="nav-item">
             <a class="nav-link{% if app.request.get('_route') == 'app_moderation_comments' %} active{% endif %}" href="{{ path('app_moderation_comments') }}">Comments</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_blocked_email_addresses' %} active{% endif %}" href="{{ path('app_moderation_blocked_email_addresses') }}">Blocked email addresses</a>
+        </li>
     </ul>
 {% endblock %}

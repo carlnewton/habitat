@@ -1,0 +1,31 @@
+{% extends 'admin/base.html.twig' %}
+{% set page_title = 'buttons.block_email_address' | trans %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">Moderation</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">Blocked email addresses</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Block</li>
+        </ol>
+    </nav>
+
+    <form method="post">
+        <div class="row mb-3">
+            <label for="email" class="col-sm-3 col-form-label">{{ 'fields.email_address.title' | trans }}</label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" value="{% if blocked_email_address is defined %}{{ blocked_email_address.emailaddress }}{% endif %}" required>
+                {% if errors.email is defined %}
+                    <div class="invalid-feedback">
+                        {% for errorMessage in errors.email %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        <button type="submit" class="btn btn-primary">Block</button>
+    </form>
+{% endblock %}

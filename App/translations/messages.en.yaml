@@ -143,6 +143,10 @@ buttons:
   change: "Change"
   show_current_location: "Show your current location"
   save: "Save"
+  actions: "Actions"
+  delete: "Delete"
+  unblock: "Unblock"
+  block_email_address: "Block an email address"
 
 map:
   size_label: "Size"
@@ -183,8 +187,29 @@ measurement_units:
     label: "miles"
 
 admin:
+  actions:
+    ban: "Ban"
+    change_category: "Change category"
   settings:
     title: "Settings"
+  moderation:
+    title: "Moderation"
+    users:
+      title: "User moderation"
+    posts:
+      title: "Post moderation"
+    comments:
+      title: "Comment moderation"
+    blocked_email_addresses:
+      title: "Blocked email address moderation"
+  categories:
+    title: "Categories"
+  user_registration:
+    title: "User registration"
+  amazon_s3_details:
+    title: "Amazon S3 details"
+  mail:
+    title: "Mail"
 
 emails:
   daily_digest:

@@ -1,0 +1,26 @@
+{% extends 'admin/moderation/base.html.twig' %}
+{% set page_title = 'admin.moderation.blocked_email_addresses.title' | trans %}
+
+{% block actions %}
+    <div class="d-flex justify-content-between mt-3">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+            </button>
+            <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
+                <li>
+                    <form class="action-item-form" method="post" action="{{ path('app_moderation_blocked_email_addresses_unblock') }}">
+                        <input name="items" type="hidden" value=""/>
+                        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                        <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'buttons.unblock' | trans }}</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <a href="{{ path('app_moderation_blocked_email_addresses_add') }}" class="btn btn-primary">{{ 'buttons.block_email_address' | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block rows %}
+    <td class="align-middle{% if sort == 'email_address' %} bg-light border{% endif %}">{{ item.emailaddress }}</td>
+{% endblock %}
