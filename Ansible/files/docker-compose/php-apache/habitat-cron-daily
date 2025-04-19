@@ -1,3 +1,4 @@
 #!/bin/sh
 
 php /var/www/html/bin/console habitat:cleanup-attachments
+php /var/www/html/bin/console habitat:send-daily-digest-email

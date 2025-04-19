@@ -185,3 +185,14 @@ measurement_units:
 admin:
   settings:
     title: "Settings"
+
+emails:
+  daily_digest:
+    subject: 'New activity in your Habitat'
+    body: |
+      Hello %admin%,
+      You have new activity in your Habitat:
+    new_users: '%count% new users'
+    new_posts: '%count% new posts'
+    new_comments: '%count% new comments'
+  email_sent: 'Email sent to %email_address%'
