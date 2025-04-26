@@ -1,25 +1,46 @@
 <div class="comment"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#comment-spinner" hx-get="/hx/list-comments?post={{ post.id }}&offset={{ offset }}" hx-trigger="intersect once" hx-swap="beforeend"{% endif %}>
-    <div class="d-flex justify-content-between">
-        {% if is_granted('ROLE_SUPER_ADMIN') or (app.user and comment.user.id == app.user.id) %}
-            <h3><a class="text-secondary" href="{{ path('app_moderation_user', { id: comment.user.id }) }}">{{ comment.user.username }}</a></h3>
+    <div class="d-flex">
+        {% if app.user %}
+            <h3 class="flex-fill">
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <a class="text-secondary" href="{{ path('app_moderation_user', { id: comment.user.id }) }}">
+                        {{ comment.user.username }}
+                    </a>
+                {% else %}
+                    {{ comment.user.username }}
+                {% endif %}
+            </h3>
             <div class="dropdown">
                 <button role="button" type="button" class="btn text-secondary fs-4" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <ul class="dropdown-menu">
-                    <li>
-                        <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .comment" hx-post="/hx/delete-comment">
-                            <input name="commentId" type="hidden" value="{{ comment.id }}"/>
-                            <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
-                            <button type="submit" class="dropdown-item checkbox-action">Delete</button>
-                        </form>
-                    </li>
+                    {% set show_divider = false %}
+                    {% if app.user.id != comment.user.id %}
+                        {% set show_divider = true %}
+                        <li>
+                            <button class="dropdown-item checkbox-action" hx-get="{{ path('app_hx_report_comment', { commentId: comment.id }) }}" hx-target="#report-comment-{{ comment.id }}" hx-swap="innerHTML">Report</button>
+                        </li>
+                    {% endif %}
+                    {% if app.user.id == comment.user.id or is_granted('ROLE_SUPER_ADMIN') %}
+                        {% if show_divider %}
+                            <li><hr class="dropdown-divider"></li>
+                        {% endif %}
+                        <li>
+                            <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .comment" hx-post="/hx/delete-comment">
+                                <input name="commentId" type="hidden" value="{{ comment.id }}"/>
+                                <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
+                                <button type="submit" class="dropdown-item checkbox-action">Delete</button>
+                            </form>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         {% else %}
             <h3>{{ comment.user.username }}</h3>
         {% endif %}
     </div>
+    <div id="report-comment-{{ comment.id }}"></div>
     <p>
         {{ comment.body }}
     </p>

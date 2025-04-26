@@ -1,10 +1,12 @@
-{% if is_granted('ROLE_SUPER_ADMIN') or (app.user and app.user.id == post.user.id) %}
+{% if app.user %}
     <div class="dropdown">
         <button role="button" type="button" class="btn text-secondary fs-4" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-three-dots-vertical"></i>
         </button>
         <ul class="dropdown-menu">
+            {% set show_divider = false %}
             {% if is_granted('ROLE_SUPER_ADMIN') %}
+                {% set show_divider = true %}
                 <li>
                     <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">Edit</a>
                 </li>
@@ -15,15 +17,25 @@
                         <button type="submit" class="dropdown-item checkbox-action">Change category</button>
                     </form>
                 </li>
-                <li><hr class="dropdown-divider"></li>
             {% endif %}
-            <li>
-                <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .post" hx-post="/hx/delete-post">
-                    <input name="postId" type="hidden" value="{{ post.id }}"/>
-                    <input type="hidden" name="token" value="{{ csrf_token('post') }}">
-                    <button type="submit" class="dropdown-item checkbox-action">Delete</button>
-                </form>
-            </li>
+            {% if app.user.id != post.user.id %}
+                {% set show_divider = true %}
+                <li>
+                    <button class="dropdown-item checkbox-action" hx-get="{{ path('app_hx_report_post', { postId: post.id }) }}" hx-target="#report-post-{{ post.id }}" hx-swap="innerHTML">Report</button>
+                </li>
+            {% endif %}
+            {% if app.user.id == post.user.id or is_granted('ROLE_SUPER_ADMIN') %}
+                {% if show_divider %}
+                    <li><hr class="dropdown-divider"></li>
+                {% endif %}
+                <li>
+                    <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .post" hx-post="{{ path('app_hx_delete_post' )}}">
+                        <input name="postId" type="hidden" value="{{ post.id }}"/>
+                        <input type="hidden" name="token" value="{{ csrf_token('post') }}">
+                        <button type="submit" class="dropdown-item checkbox-action">Delete</button>
+                    </form>
+                </li>
+            {% endif %}
         </ul>
     </div>
 {% endif %}

@@ -1,0 +1,43 @@
+{% extends 'admin/moderation/base.html.twig' %}
+{% set page_title = 'admin.moderation.reports.title' | trans %}
+
+{% block actions %}
+    <div class="dropdown mt-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ 'buttons.actions' | trans }}
+        </button>
+        <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
+            <li>
+                <form class="action-item-form" method="post" action="{{ path('app_moderation_reports_dismiss') }}">
+                    <input name="items" type="hidden" value=""/>
+                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.dismiss' | trans }}</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block rows %}
+    <td class="align-middle">
+        {{ item.type | capitalize }}
+    </td>
+    <td class="align-middle{% if sort == 'date_reported' %} bg-light border{% endif %}">{{ item.reportedDate|date }}</td>
+    <td class="align-middle">
+        <a href="{{ path('app_moderation_user', { id: item.reportedBy.id }) }}">{{ item.reportedBy.username }}</a>
+    </td>
+    <td class="align-middle">{{ item.reason }}</td>
+    <td class="align-middle">
+        {% if item.type == 'post' %}
+            <a href="{{ path('app_view_post', { id: item.post.id }) }}">{{ item.post.title }}</a>
+            posted by
+            <a href="{{ path('app_moderation_user', { id: item.post.user.id }) }}">{{ item.post.user.username }}</a>
+        {% else %}
+            "<em>{{ item.comment.body | slice(0, 100) }}{% if item.comment.body | length > 100 %}...{% endif %}</em>"
+            commented by 
+            <a href="{{ path('app_moderation_user', { id: item.comment.user.id }) }}">{{ item.comment.user.username }}</a>
+            on
+            <a href="{{ path('app_view_post', { id: item.comment.post.id }) }}">{{ item.comment.post.title }}</a>
+        {% endif %}
+    </td>
+{% endblock %}

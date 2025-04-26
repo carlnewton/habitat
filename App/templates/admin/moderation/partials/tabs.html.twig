@@ -1,16 +1,19 @@
 {% block tabs %}
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_users' %} active{% endif %}" href="{{ path('app_moderation_users') }}">Users</a>
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_users' %} active{% endif %}" href="{{ path('app_moderation_users') }}">{{ 'admin.moderation.users.menu_title' | trans }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_posts' %} active{% endif %}" href="{{ path('app_moderation_posts') }}">Posts</a>
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_posts' %} active{% endif %}" href="{{ path('app_moderation_posts') }}">{{ 'admin.moderation.posts.menu_title' | trans }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_comments' %} active{% endif %}" href="{{ path('app_moderation_comments') }}">Comments</a>
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_comments' %} active{% endif %}" href="{{ path('app_moderation_comments') }}">{{ 'admin.moderation.comments.menu_title' | trans }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_blocked_email_addresses' %} active{% endif %}" href="{{ path('app_moderation_blocked_email_addresses') }}">Blocked email addresses</a>
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_reports' %} active{% endif %}" href="{{ path('app_moderation_reports') }}">{{ 'admin.moderation.reports.menu_title' | trans }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.get('_route') == 'app_moderation_blocked_email_addresses' %} active{% endif %}" href="{{ path('app_moderation_blocked_email_addresses') }}">{{ 'admin.moderation.blocked_email_addresses.menu_title' | trans }}</a>
         </li>
     </ul>
 {% endblock %}

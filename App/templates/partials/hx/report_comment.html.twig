@@ -1,0 +1,16 @@
+<form id="report-comment-form" class="mb-3" hx-post="{{ path('app_hx_report_comment', { commentId: comment_id }) }}" hx-target="#report-comment-{{ comment_id }}" hx-swap="innerHTML">
+    <div class="form-floating mb-3">
+        <textarea class="form-control form-control-lg{% if errors.reason is defined %} is-invalid{% endif %}" name="reason" style="height: 100px" placeholder="{{ 'fields.report_comment_reason.title' | trans }}">{% if values.reason is defined %}{{ values.reason }}{% endif %}</textarea>
+        <label for="reason">{{ 'fields.report_comment_reason.title' | trans }}</label>
+        {% if errors.reason is defined %}
+            <div class="invalid-feedback">
+                {% for errorMessage in errors.reason %}
+                    <p>{{ errorMessage }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <input type="hidden" name="token" value="{{ csrf_token('report') }}">
+    <input type="hidden" name="commentId" value="{{ comment_id }}">
+    <button type="submit" class="btn btn-danger">{{ 'buttons.report_this_comment' | trans }}</button>
+</form>

@@ -11,6 +11,7 @@
             <h1>{{ post.title }}</h1>
             {% include 'partials/post/dropdown_menu.html.twig' %}
         </div>
+        <div id="report-post-{{ post.id }}"></div>
         {% if show_category %}
             <div class="mb-2">
                 <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">

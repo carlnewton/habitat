@@ -98,6 +98,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserSettings::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $settings;
 
+    /**
+     * @var Collection<int, Report>
+     */
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'reported_by', orphanRemoval: true)]
+    private Collection $reports;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -106,6 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->postAttachments = new ArrayCollection();
         $this->hiddenCategories = new ArrayCollection();
         $this->settings = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -418,6 +425,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($setting->getUser() === $this) {
                 $setting->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): static
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports->add($report);
+            $report->setReportedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): static
+    {
+        if ($this->reports->removeElement($report)) {
+            // set the owning side to null (unless already changed)
+            if ($report->getReportedBy() === $this) {
+                $report->setReportedBy(null);
             }
         }
 

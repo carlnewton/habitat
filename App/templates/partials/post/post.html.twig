@@ -9,6 +9,7 @@
                 </h2>
                 {% include 'partials/post/dropdown_menu.html.twig' %}
             </div>
+            <div id="report-post-{{ post.id }}"></div>
             <div class="mb-2">
                 {% if category is not defined and show_category %}
                     <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">

@@ -137,6 +137,15 @@ fields:
     title: "Habitat name"
   location:
     title: "Location"
+  report_post_reason:
+    title: "Why are you reporting this post?"
+  report_comment_reason:
+    title: "Why are you reporting this comment?"
+
+report_post:
+  confirmation: "Thank you for reporting this post. It will be reviewed by the administrator."
+report_comment:
+  confirmation: "Thank you for reporting this comment. It will be reviewed by the administrator."
 
 buttons:
   continue: "Continue"
@@ -147,6 +156,8 @@ buttons:
   delete: "Delete"
   unblock: "Unblock"
   block_email_address: "Block an email address"
+  report_this_post: "Report this post"
+  report_this_comment: "Report this comment"
 
 map:
   size_label: "Size"
@@ -189,6 +200,7 @@ measurement_units:
 admin:
   actions:
     ban: "Ban"
+    dismiss: "Dismiss"
     change_category: "Change category"
   settings:
     title: "Settings"
@@ -196,12 +208,19 @@ admin:
     title: "Moderation"
     users:
       title: "User moderation"
+      menu_title: "Users"
     posts:
       title: "Post moderation"
+      menu_title: "Posts"
     comments:
       title: "Comment moderation"
+      menu_title: "Comments"
     blocked_email_addresses:
       title: "Blocked email address moderation"
+      menu_title: "Blocked email addresses"
+    reports:
+      title: "Report moderation"
+      menu_title: "Reports"
   categories:
     title: "Categories"
   user_registration:

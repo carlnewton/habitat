@@ -1,0 +1,61 @@
+{% extends 'admin/base.html.twig' %}
+{% set page_title = 'Dismiss reports' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_reports')}}">Moderation</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_reports')}}">Reports</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Dismiss</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header p-5 text-center">
+            <p class="lead">Are you sure you would like to dismiss {% if reports|length > 1 %}these reports{% else %}this report{% endif %}?</p>
+            <p>The {% if reports|length > 1 %}reports{% else %}report{% endif %} will be permanently deleted.</p>
+            <form method="post" action="{{ path('app_moderation_reports_dismiss') }}">
+                <input name="items" type="hidden" value="{{ report_ids }}">
+                <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                <input type="hidden" name="delete" value="1">
+                <button type="submit" class="btn btn-danger">Dismiss</button>
+                <a href="{{ path('app_moderation_reports') }}" class="btn btn-outline-primary">Cancel</a>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th>Type</th>
+                    <th>Reported by</th>
+                    <th>Reported date</th>
+                    <th>Reason</th>
+                    <th>Context</th>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.type | capitalize }}</td>
+                            <td><a href="{{ path('app_moderation_user', { id: report.reportedBy.id }) }}">{{ report.reportedBy.username }}</a></td>
+                            <td>{{ report.reportedDate|date }}</td>
+                            <td>{{ report.reason }}</td>
+                            <td>
+                                {% if report.type == 'post' %}
+                                    <a href="{{ path('app_view_post', { id: report.post.id }) }}">{{ report.post.title }}</a>
+                                    posted by
+                                    <a href="{{ path('app_moderation_user', { id: report.post.user.id }) }}">{{ report.post.user.username }}</a>
+                                {% else %}
+                                    "<em>{{ report.comment.body | slice(0, 100) }}{% if report.comment.body | length > 100 %}...{% endif %}</em>"
+                                    commented by 
+                                    <a href="{{ path('app_moderation_user', { id: report.comment.user.id }) }}">{{ report.comment.user.username }}</a>
+                                    on
+                                    <a href="{{ path('app_view_post', { id: report.comment.post.id }) }}">{{ report.comment.post.title }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
