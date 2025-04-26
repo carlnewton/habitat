@@ -239,4 +239,6 @@ emails:
     new_users: '%count% new users'
     new_posts: '%count% new posts'
     new_comments: '%count% new comments'
+    new_reports: '%count% new reports'
+    new_reports_link: 'View reported content'
   email_sent: 'Email sent to %email_address%'

@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\Report;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\Mailer;
@@ -60,7 +61,16 @@ class SendDailyDigestEmailCommand extends Command
         ;
         $output->writeln($this->translator->trans('emails.daily_digest.new_comments', ['%count%' => count($newComments)]));
 
-        if (empty($newUsers) && empty($newPosts) && empty($newComments)) {
+        $newReports = $queryBuilder->select('r')
+            ->from(Report::class, 'r')
+            ->where('r.reported_date >= :yesterday')
+            ->setParameter('yesterday', $yesterday)
+            ->getQuery()
+            ->getResult()
+        ;
+        $output->writeln($this->translator->trans('emails.daily_digest.new_reports', ['%count%' => count($newReports)]));
+
+        if (empty($newUsers) && empty($newPosts) && empty($newComments) && empty($newReports)) {
             return Command::SUCCESS;
         }
 
@@ -75,19 +85,12 @@ class SendDailyDigestEmailCommand extends Command
             '%admin%' => $admin->getUsername(),
         ]));
 
-        if (!empty($newUsers)) {
-            $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_users', ['%count%' => count($newUsers)]) . '</p>';
-            $body .= '<ul>';
-            foreach ($newUsers as $newUser) {
-                $userModerationRoute = $this->urlGenerator->generate('app_moderation_user', [
-                    'id' => $newUser->getId(),
-                ]);
-
-                $body .= '<li><a href="https://' . $domain . $userModerationRoute . '">' . $newUser->getUsername() . '</a></li>';
-            }
-            $body .= '</ul>';
+        if (!empty($newReports)) {
+            $reportsModerationRoute = $this->urlGenerator->generate('app_moderation_reports');
+            $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_reports', ['%count%' => count($newReports)]) . '</p>';
+            $body .= '<p><a href="https://' . $domain . $reportsModerationRoute . '">' . $this->translator->trans('emails.daily_digest.new_reports_link') . '</a></p>';
         }
-
+        
         if (!empty($newPosts)) {
             $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_posts', ['%count%' => count($newPosts)]) . '</p>';
             $body .= '<ul>';
@@ -110,6 +113,19 @@ class SendDailyDigestEmailCommand extends Command
                 ]);
 
                 $body .= '<li><a href="https://' . $domain . $viewPostRoute . '">' . $newComment->getBody() . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
+            }
+            $body .= '</ul>';
+        }
+
+        if (!empty($newUsers)) {
+            $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_users', ['%count%' => count($newUsers)]) . '</p>';
+            $body .= '<ul>';
+            foreach ($newUsers as $newUser) {
+                $userModerationRoute = $this->urlGenerator->generate('app_moderation_user', [
+                    'id' => $newUser->getId(),
+                ]);
+
+                $body .= '<li><a href="https://' . $domain . $userModerationRoute . '">' . $newUser->getUsername() . '</a></li>';
             }
             $body .= '</ul>';
         }
