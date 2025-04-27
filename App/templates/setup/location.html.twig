@@ -16,7 +16,7 @@
                 <div class="card-body ratio ratio-16x9">
                     <div class="rounded-top" id="map"></div>
                 </div>
-                <div class="card-body text-white bg-danger text-center d-none" id="size-warning">
+                <div class="card-body text-white bg-danger text-center d-none" id="size-warning" data-test="sizeWarning">
                     {{ 'map.warnings.area_too_large' | trans }}
                 </div>
                 <div class="card-footer">
@@ -25,9 +25,9 @@
                             <button type="button" class="btn btn-outline-secondary me-2 get-location" title="{{ 'buttons.show_current_location' | trans }}"><i class="bi bi-crosshair2"></i></button>
                             <div class="input-group">
                                 <span class="input-group-text">{{ 'map.size_label' | trans }}</span>
-                                <input type="number" step="0.1" name="locationRadius" id="locationRadius" class="form-control" autocomplete="off" min="0">
-                                <button class="btn{% if values.locationMeasurement is not defined or values.locationMeasurement == 'km' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-kms">{{ 'map.toggle_kilometers' | trans }}</button>
-                                <button class="btn{% if values.locationMeasurement is defined and values.locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-miles">{{ 'map.toggle_miles' | trans }}</button>
+                                <input type="number" step="0.1" name="locationRadius" id="locationRadius" class="form-control" autocomplete="off" min="0" data-test="radius">
+                                <button class="btn{% if values.locationMeasurement is not defined or values.locationMeasurement == 'km' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-kms" data-test="kmsBtn">{{ 'map.toggle_kilometers' | trans }}</button>
+                                <button class="btn{% if values.locationMeasurement is defined and values.locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-miles" data-test="milesBtn">{{ 'map.toggle_miles' | trans }}</button>
                             </div>
                         </div>
                     </div>
@@ -48,12 +48,12 @@
                 </ul>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
+                <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.continue' | trans }}</button>
             </div>
-            <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng ?? '' }}">
-            <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters ?? 3000 }}">
-            <input type="hidden" name="locationZoom" id="locationZoom" value="{{ values.locationZoom ?? 1 }}">
-            <input type="hidden" name="locationMeasurement" id="locationMeasurement" value="{{ values.locationMeasurement ?? 'km' }}">
+            <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng ?? '' }}" data-test="latLngInput">
+            <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters ?? 3000 }}" data-test="radiusInput">
+            <input type="hidden" name="locationZoom" id="locationZoom" value="{{ values.locationZoom ?? 1 }}" data-test="zoomInput">
+            <input type="hidden" name="locationMeasurement" id="locationMeasurement" value="{{ values.locationMeasurement ?? 'km' }}" data-test="measurementInput">
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>
     </div>

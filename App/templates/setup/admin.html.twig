@@ -20,10 +20,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control{% if errors.username is defined %} is-invalid{% endif %}" name="username" id="username" placeholder="Admin"{% if values.username is defined %} value="{{ values.username }}"{% endif %} required>
+                        <input type="text" class="form-control{% if errors.username is defined %} is-invalid{% endif %}" name="username" id="username" placeholder="Admin"{% if values.username is defined %} value="{{ values.username }}"{% endif %} data-test="username" required>
                         <label for="username">{{ 'fields.username.title' | trans }}</label>
                         {% if errors.username is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="invalidUsername">
                                 {% for errorMessage in errors.username %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" placeholder="email@example.com"{% if values.email is defined %} value="{{ values.email }}"{% endif %} required>
+                        <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" placeholder="email@example.com"{% if values.email is defined %} value="{{ values.email }}"{% endif %} data-test="email" required>
                         <label for="email">{{ 'fields.email_address.title' | trans}}</label>
                         {% if errors.email is defined %}
                             <div class="invalid-feedback">
@@ -56,7 +56,7 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control{% if errors.password is defined %} is-invalid{% endif %}" name="password" id="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                        <input type="password" class="form-control{% if errors.password is defined %} is-invalid{% endif %}" name="password" id="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" data-test="password" required>
                         <label for="password">{{ 'fields.password.title' | trans }}</label>
                         {% if errors.password is defined %}
                             <div class="invalid-feedback">
@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
+                <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>

@@ -1,0 +1,7 @@
+{
+    "adminFormData": {
+        "username": "Username",
+        "email": "email@example.com",
+        "password": "Password123"
+    }
+}

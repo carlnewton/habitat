@@ -55,12 +55,12 @@ function setLocationRadiusField() {
         case 'miles':
             document.querySelector('#measurement-kms').classList.remove('active');
             document.querySelector('#measurement-miles').classList.add('active');
-            document.querySelector('#locationRadius').value = parseFloat(locationRadiusValue * 0.00062137).toPrecision(4);
+            document.querySelector('#locationRadius').value = parseFloat(locationRadiusValue * 0.00062137).toPrecision(2);
             break;
         case 'km':
             document.querySelector('#measurement-miles').classList.remove('active');
             document.querySelector('#measurement-kms').classList.add('active');
-            document.querySelector('#locationRadius').value = parseFloat(locationRadiusValue / 1000).toPrecision(4);
+            document.querySelector('#locationRadius').value = parseFloat(locationRadiusValue / 1000).toPrecision(2);
             break;
     }
 }

@@ -19,7 +19,7 @@
             {% endfor %}
             {% if errors is defined %}
                 {% for error in errors %}
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger" role="alert" data-test="errors">
                         {{ error }}
                     </div>
                 {% endfor %}
@@ -33,14 +33,14 @@
                         </div>
                         <div>
                             <div class="form-check form-switch form-switch-lg pt-1">
-                                <input class="form-check-input" type="checkbox" name="{{ category_reference }}" role="switch" id="{{ category_reference }}"{% if selected_categories[category_reference] is defined %} checked{% endif %}>
+                                <input class="form-check-input" type="checkbox" name="{{ category_reference }}" role="switch" id="{{ category_reference }}"{% if selected_categories[category_reference] is defined %} checked{% endif %} data-test="category">
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
+                <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>
