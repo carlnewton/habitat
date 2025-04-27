@@ -19,14 +19,14 @@
             {% endfor %}
             <ul class="list-group mb-3{% if errors.storageOption is defined %} border border-danger{% endif %}">
                 <li class="list-group-item pt-3 d-flex">
-                    <input class="form-check-input me-3" type="radio" name="storageOption" value="local" id="local"{% if values.storageOption is not defined or values.storageOption == 'local' %} checked{% endif %}>
+                    <input class="form-check-input me-3" type="radio" name="storageOption" value="local" id="local"{% if values.storageOption is not defined or values.storageOption == 'local' %} checked{% endif %} data-test="local">
                     <label class="form-check-label flex-grow-1" for="local">
                         <h5>{{ 'setup.image_storage.options.local.label' | trans }}</h5>
                         <p>{{ 'setup.image_storage.options.local.description' | trans | raw }}</p>
                     </label>
                 </li>
                 <li class="list-group-item pt-3 d-flex{% if errors.s3 is defined %}border border-danger{% endif %}">
-                    <input class="form-check-input me-3" type="radio" name="storageOption" value="s3" id="s3"{% if values.storageOption is defined and values.storageOption == 's3' %} checked{% endif %}{% if encryption_key_exists == false %} disabled{% endif %}>
+                    <input class="form-check-input me-3" type="radio" name="storageOption" value="s3" id="s3"{% if values.storageOption is defined and values.storageOption == 's3' %} checked{% endif %}{% if encryption_key_exists == false %} disabled{% endif %} data-test="s3">
                     <div class="flex-grow-1">
                         <label class="form-check-label" for="s3">
                             <h5>{{ 'setup.image_storage.options.amazon_s3.label' | trans }}</h5>
@@ -39,9 +39,9 @@
                             {% endif %}
 
                         </label>
-                        <div id="s3Options" class="d-none">
+                        <div id="s3Options" class="d-none" data-test="s3Options">
                             <div class="form-floating mb-3">
-                                <select class="form-select{% if errors.region is defined %} is-invalid{% endif %}" name="region" id="region" aria-label="AWS region">
+                                <select class="form-select{% if errors.region is defined %} is-invalid{% endif %}" name="region" id="region" aria-label="AWS region" data-test="region">
                                     <option selected>{{ 'fields.amazon_s3_region.default_value' | trans }}</option>
                                     {% for region in regions %}
                                         <option value="{{ region }}"{% if values.region is defined and values.region == region %} selected{% endif %}>{{ region }}</option>
@@ -50,7 +50,7 @@
                                 <label for="region">{{ 'fields.amazon_s3_region.title' | trans }}</label>
 
                                 {% if errors.region is defined %}
-                                     <div class="invalid-feedback">
+                                     <div class="invalid-feedback" data-test="regionErrors">
                                         {% for errorMessage in errors.region %}
                                             <p>{{ errorMessage }}</p>
                                         {% endfor %}
@@ -59,10 +59,10 @@
                             </div>
                             
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control{% if errors.bucketName is defined %} is-invalid{% endif %}" id="bucketName" name="bucketName" placeholder="my-bucket"{% if values.bucketName is defined %} value="{{ values.bucketName }}{% endif %}">
+                                <input type="text" class="form-control{% if errors.bucketName is defined %} is-invalid{% endif %}" id="bucketName" name="bucketName" placeholder="my-bucket"{% if values.bucketName is defined %} value="{{ values.bucketName }}{% endif %}" data-test="bucketName">
                                 <label for="bucketName">{{ 'fields.amazon_s3_bucket_name.title' | trans }}</label>
                                 {% if errors.bucketName is defined %}
-                                     <div class="invalid-feedback">
+                                     <div class="invalid-feedback" data-test="bucketNameErrors">
                                         {% for errorMessage in errors.bucketName %}
                                             <p>{{ errorMessage }}</p>
                                         {% endfor %}
@@ -71,10 +71,10 @@
                             </div>
                             
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control{% if errors.accessKey is defined %} is-invalid{% endif %}" id="accessKey" name="accessKey" placeholder="access-key"{% if values.accessKey is defined %} value="{{ values.accessKey }}{% endif %}">
+                                <input type="text" class="form-control{% if errors.accessKey is defined %} is-invalid{% endif %}" id="accessKey" name="accessKey" placeholder="access-key"{% if values.accessKey is defined %} value="{{ values.accessKey }}{% endif %}" data-test="accessKey">
                                 <label for="accessKey">{{ 'fields.amazon_s3_access_key.title' | trans }}</label>
                                 {% if errors.accessKey is defined %}
-                                     <div class="invalid-feedback">
+                                     <div class="invalid-feedback" data-test="accessKeyErrors">
                                         {% for errorMessage in errors.accessKey %}
                                             <p>{{ errorMessage }}</p>
                                         {% endfor %}
@@ -83,10 +83,10 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="password" class="form-control{% if errors.secretKey is defined %} is-invalid{% endif %}" id="secretKey" name="secretKey" placeholder="secret-key"{% if values.secretKey is defined %} value="{{ values.secretKey }}{% endif %}">
+                                <input type="password" class="form-control{% if errors.secretKey is defined %} is-invalid{% endif %}" id="secretKey" name="secretKey" placeholder="secret-key"{% if values.secretKey is defined %} value="{{ values.secretKey }}{% endif %}" data-test="secretKey">
                                 <label for="secretKey">{{ 'fields.amazon_s3_secret_key.title' | trans }}</label>
                                 {% if errors.secretKey is defined %}
-                                     <div class="invalid-feedback">
+                                     <div class="invalid-feedback" data-test="secretKeyErrors">
                                         {% for errorMessage in errors.secretKey %}
                                             <p>{{ errorMessage }}</p>
                                         {% endfor %}
@@ -117,7 +117,7 @@
                 </div>
             {% endif %}
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
+                <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>

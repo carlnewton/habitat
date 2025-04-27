@@ -19,9 +19,10 @@ describe('setup', function() {
 
     it('prevents form submission if no username is provided', function() {
       Object.keys(this.data).forEach((key) => {
-        cy.getElement(key).type(this.data[key]);
+        if (key !== 'username') {
+          cy.getElement(key).type(this.data[key]);
+        }
       });
-      cy.getElement('username').clear();
       cy.getElement('submit').click();
       cy.getElement('username').invoke('prop', 'validity').then((validity) => {
         expect(validity.valid).to.be.false;
@@ -31,9 +32,10 @@ describe('setup', function() {
 
     it('prevents form submission if no email address is provided', function() {
       Object.keys(this.data).forEach((key) => {
-        cy.getElement(key).type(this.data[key]);
+        if (key !== 'email') {
+          cy.getElement(key).type(this.data[key]);
+        }
       });
-      cy.getElement('email').clear();
       cy.getElement('submit').click();
       cy.getElement('email').invoke('prop', 'validity').then((validity) => {
         expect(validity.valid).to.be.false;
@@ -43,9 +45,11 @@ describe('setup', function() {
 
     it('prevents form submission if email address is invalid', function() {
       Object.keys(this.data).forEach((key) => {
-        cy.getElement(key).type(this.data[key]);
+        if (key !== 'email') {
+          cy.getElement(key).type(this.data[key]);
+        }
       });
-      cy.getElement('email').clear().type('example');
+      cy.getElement('email').type('example');
       cy.getElement('submit').click();
       cy.getElement('email').invoke('prop', 'validity').then((validity) => {
         expect(validity.valid).to.be.false;
@@ -55,9 +59,10 @@ describe('setup', function() {
 
     it('prevents form submission if no password is provided', function() {
       Object.keys(this.data).forEach((key) => {
-        cy.getElement(key).type(this.data[key]);
+        if (key !== 'password') {
+          cy.getElement(key).type(this.data[key]);
+        }
       });
-      cy.getElement('password').clear();
       cy.getElement('submit').click();
       cy.getElement('password').invoke('prop', 'validity').then((validity) => {
         expect(validity.valid).to.be.false;
@@ -67,9 +72,11 @@ describe('setup', function() {
 
     it('prevents form submission if password is too weak', function() {
       Object.keys(this.data).forEach((key) => {
-        cy.getElement(key).type(this.data[key]);
+        if (key !== 'password') {
+          cy.getElement(key).type(this.data[key]);
+        }
       });
-      cy.getElement('password').clear().type('password');
+      cy.getElement('password').type('password');
       cy.getElement('submit').click();
       cy.getElement('password').invoke('prop', 'validity').then((validity) => {
         expect(validity.valid).to.be.false;
@@ -79,9 +86,11 @@ describe('setup', function() {
 
     it('produces error if username uses non-alphanum characters', function() {
       Object.keys(this.data).forEach((key) => {
-        cy.getElement(key).type(this.data[key]);
+        if (key !== 'username') {
+          cy.getElement(key).type(this.data[key]);
+        }
       });
-      cy.getElement('username').clear().type('Username!');
+      cy.getElement('username').type('Username!');
       cy.getElement('submit').click();
       cy.getElement('invalidUsername').should('be.visible');
     })
@@ -181,8 +190,14 @@ describe('setup', function() {
 
   describe('setup image storage', function() {
 
-    beforeEach(function() {
+    before(function() {
       cy.loadFixtureGroups(['setup-admin', 'setup-location', 'setup-categories']);
+    })
+
+    beforeEach(function() {
+      cy.fixture('setup').then((data) => {
+        this.data = data.s3OptionsData;
+      });
       cy.visit('/');
     })
 
@@ -190,5 +205,202 @@ describe('setup', function() {
       cy.url().should('include', '/setup/image-storage');
     })
 
+    it('displays s3 options when s3 radio button is clicked', function() {
+      cy.getElement('s3').check();
+      cy.getElement('s3Options').should('be.visible');
+      cy.getElement('local').check();
+      cy.getElement('s3Options').should('not.be.visible');
+    })
+
+    it('produces error if region is not selected', function() {
+      cy.getElement('s3').check();
+      Object.keys(this.data).forEach((key) => {
+        cy.getElement(key).type(this.data[key]);
+      });
+      cy.getElement('submit').click();
+      cy.getElement('regionErrors').should('be.visible');
+    })
+
+    it('produces error if bucket name is empty', function() {
+      cy.getElement('s3').check();
+      cy.getElement('region').select('eu-west-2');
+
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'bucketName') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+
+      cy.getElement('submit').click();
+      cy.getElement('bucketNameErrors').should('be.visible');
+    })
+
+    it('produces error if access key is empty', function() {
+      cy.getElement('s3').check();
+      cy.getElement('region').select('eu-west-2');
+
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'accessKey') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+
+      cy.getElement('submit').click();
+      cy.getElement('accessKeyErrors').should('be.visible');
+    })
+
+    it('produces error if secret key is empty', function() {
+      cy.getElement('s3').check();
+      cy.getElement('region').select('eu-west-2');
+
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'secretKey') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+
+      cy.getElement('submit').click();
+      cy.getElement('secretKeyErrors').should('be.visible');
+    })
+
+    it('submits image storage form data for local storage', function() {
+      cy.getElement('local').check();
+      cy.getElement('submit').click();
+
+      cy.url().should('include', '/setup/mail');
+    })
+
   })
+
+  describe('setup mail', function() {
+
+    before(function() {
+      cy.loadFixtureGroups([
+        'setup-admin',
+        'setup-location',
+        'setup-categories',
+        'setup-image-storage'
+      ]);
+    })
+
+    beforeEach(function() {
+      cy.fixture('setup').then((data) => {
+        this.data = data.mailFormData;
+      });
+      cy.visit('/');
+    })
+
+    it('produces error if SMTP username is not populated', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpUsername') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpUsername').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.valueMissing).to.be.true;
+      })
+    })
+
+    it('produces error if SMTP password is not populated', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpPassword') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpPassword').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.valueMissing).to.be.true;
+      })
+    })
+
+    it('produces error if SMTP server is not populated', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpServer') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpServer').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.valueMissing).to.be.true;
+      })
+    })
+
+    it('produces error if SMTP port is not populated', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpPort') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpPort').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.valueMissing).to.be.true;
+      })
+    })
+
+    it('produces error if SMTP port is not numeric', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpPort') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('smtpPort').type('non-numeric value');
+      cy.getElement('submit').click();
+      cy.getElement('smtpPortErrors').should('be.visible');
+    })
+
+    it('produces error if SMTP from email address is not populated', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpFromEmailAddress') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpFromEmailAddress').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.valueMissing).to.be.true;
+      })
+    })
+
+    it('produces error if SMTP from email address is not valid', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpFromEmailAddress') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('smtpFromEmailAddress').type('example');
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpFromEmailAddress').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.typeMismatch).to.be.true;
+      })
+    })
+
+    it('produces error if SMTP to email address is not valid', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpToEmailAddress') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('smtpToEmailAddress').type('example');
+      cy.getElement('submit').click();
+
+      cy.getElement('smtpToEmailAddress').invoke('prop', 'validity').then((validity) => {
+        expect(validity.valid).to.be.false;
+        expect(validity.typeMismatch).to.be.true;
+      })
+    })
+
+  })
+
 })

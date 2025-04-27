@@ -5,12 +5,10 @@ namespace App\DataFixtures\Setup;
 use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
 use App\Entity\Settings;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SetupCategoriesFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {

@@ -3,5 +3,18 @@
         "username": "Username",
         "email": "email@example.com",
         "password": "Password123"
+    },
+    "s3OptionsData": {
+        "bucketName": "example-bucket",
+        "accessKey": "example-access-key",
+        "secretKey": "example-secret-key"
+    },
+    "mailFormData": {
+        "smtpUsername": "email@example.com",
+        "smtpPassword": "Password123",
+        "smtpServer": "mail.example.com",
+        "smtpPort": "587",
+        "smtpFromEmailAddress": "from@example.com",
+        "smtpToEmailAddress": "to@example.com"
     }
 }

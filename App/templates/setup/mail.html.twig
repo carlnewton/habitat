@@ -31,10 +31,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" name="smtpUsername" id="smtpUsername" placeholder="admin"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}"{% endif %} required>
+                        <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" name="smtpUsername" id="smtpUsername" placeholder="admin"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}"{% endif %} required data-test="smtpUsername">
                         <label for="smtpUsername">{{ 'fields.smtp_username.title' | trans }}</label>
                         {% if errors.smtpUsername is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="smtpUsernameErrors">
                                 {% for errorMessage in errors.smtpUsername %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -49,10 +49,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" name="smtpPassword" id="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}"{% endif %} required>
+                        <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" name="smtpPassword" id="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}"{% endif %} required data-test="smtpPassword">
                         <label for="smtpPassword">{{ 'fields.smtp_password.title' | trans }}</label>
                         {% if errors.smtpPassword is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="smtpPasswordErrors">
                                 {% for errorMessage in errors.smtpPassword %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -67,10 +67,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control{% if errors.smtpServer is defined %} is-invalid{% endif %}" name="smtpServer" id="smtpServer" placeholder="smtp.example.com"{% if values.smtpServer is defined %} value="{{ values.smtpServer }}"{% endif %} required>
+                        <input type="text" class="form-control{% if errors.smtpServer is defined %} is-invalid{% endif %}" name="smtpServer" id="smtpServer" placeholder="smtp.example.com"{% if values.smtpServer is defined %} value="{{ values.smtpServer }}"{% endif %} required data-test="smtpServer">
                         <label for="smtpServer">{{ 'fields.smtp_server.title' | trans }}</label>
                         {% if errors.smtpServer is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="smtpServerErrors">
                                 {% for errorMessage in errors.smtpServer %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -85,10 +85,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control{% if errors.smtpPort is defined %} is-invalid{% endif %}" name="smtpPort" id="smtpPort" placeholder="587"{% if values.smtpPort is defined %} value="{{ values.smtpPort }}"{% endif %} required>
+                        <input type="text" class="form-control{% if errors.smtpPort is defined %} is-invalid{% endif %}" name="smtpPort" id="smtpPort" placeholder="587"{% if values.smtpPort is defined %} value="{{ values.smtpPort }}"{% endif %} required data-test="smtpPort">
                         <label for="smtpPort">{{ 'fields.smtp_port.title' | trans }}</label>
                         {% if errors.smtpPort is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="smtpPortErrors">
                                 {% for errorMessage in errors.smtpPort %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -103,10 +103,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control{% if errors.smtpFromEmailAddress is defined %} is-invalid{% endif %}" name="smtpFromEmailAddress" id="smtpFromEmailAddress" placeholder="habitat@example.com"{% if values.smtpFromEmailAddress is defined %} value="{{ values.smtpFromEmailAddress }}"{% endif %} required>
+                        <input type="email" class="form-control{% if errors.smtpFromEmailAddress is defined %} is-invalid{% endif %}" name="smtpFromEmailAddress" id="smtpFromEmailAddress" placeholder="habitat@example.com"{% if values.smtpFromEmailAddress is defined %} value="{{ values.smtpFromEmailAddress }}"{% endif %} required data-test="smtpFromEmailAddress">
                         <label for="smtpFromEmailAddress">{{ 'fields.sender_email_address.title' | trans }}</label>
                         {% if errors.smtpFromEmailAddress is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="smtpFromEmailAddressErrors">
                                 {% for errorMessage in errors.smtpFromEmailAddress %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -121,10 +121,10 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" name="smtpToEmailAddress" id="smtpToEmailAddress" placeholder="recipient@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}"{% endif %}>
+                        <input type="email" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" name="smtpToEmailAddress" id="smtpToEmailAddress" placeholder="recipient@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}"{% endif %} data-test="smtpToEmailAddress">
                         <label for="smtpToEmailAddress">{{ 'fields.test_recipient_email_address.title' | trans }}</label>
                         {% if errors.smtpToEmailAddress is defined %}
-                            <div class="invalid-feedback">
+                            <div class="invalid-feedback" data-test="smtpToEmailAddressErrors">
                                 {% for errorMessage in errors.smtpToEmailAddress %}
                                     <p>{{ errorMessage }}</p>
                                 {% endfor %}
@@ -137,7 +137,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary btn-lg">{{ 'buttons.continue' | trans }}</button>
+                <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.continue' | trans }}</button>
             </div>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>
