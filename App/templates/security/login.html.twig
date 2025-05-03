@@ -15,11 +15,11 @@
 
         <h1 class="h3 mb-3 font-weight-normal">Log in to your account</h1>
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="email_address" name="_username" value="{{ last_email_address }}" autocomplete="username" required autofocus>
+            <input type="email" class="form-control" id="email_address" name="_username" value="{{ last_email_address }}" autocomplete="username" required autofocus data-test="email_address">
             <label for="email_address">Email address</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="password" name="_password" class="form-control" id="password" autocomplete="current-password" required>
+            <input type="password" name="_password" class="form-control" id="password" autocomplete="current-password" required data-test="password">
             <label for="password">Password</label>
         </div>
 
@@ -32,7 +32,7 @@
             </label>
         </div>
 
-        <button class="btn btn-lg btn-primary" type="submit">Log in</button>
+        <button class="btn btn-lg btn-primary" type="submit" data-test="submit">Log in</button>
         <a class="btn btn-lg btn-link" href="{{ path('app_forgot_password') }}">Forgot password</a>
     </form>
 {% endblock %}

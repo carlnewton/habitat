@@ -15,3 +15,13 @@ Cypress.Commands.add('loadFixtureGroups', (fixtureGroups) => {
 Cypress.Commands.add('getElement', (dataTestValue) => {
   return cy.get(`[data-test="${dataTestValue}"]`);
 });
+
+Cypress.Commands.add('loginUser', (username) => {
+  cy.fixture('users').then((users) => {
+    const user = users[username];
+    cy.visit('/login')
+    cy.getElement('email_address').type(user.email);
+    cy.getElement('password').type(user.password);
+    cy.getElement('submit').click();
+  });
+});

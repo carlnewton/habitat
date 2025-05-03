@@ -401,6 +401,17 @@ describe('setup', function() {
       })
     })
 
+    it('submits mail form data', function() {
+      Object.keys(this.data).forEach((key) => {
+        if (key !== 'smtpToEmailAddress') {
+          cy.getElement(key).type(this.data[key]);
+        }
+      });
+      cy.getElement('submit').click();
+
+      cy.url().should('include', '/admin');
+    })
+
   })
 
 })

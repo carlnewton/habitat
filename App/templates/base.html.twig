@@ -36,23 +36,23 @@
                                 </li>
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_admin_index') }}">Admin dashboard</a>
+                                        <a class="nav-link" href="{{ path('app_admin_index') }}" data-test="admin-dashboard-link">Admin dashboard</a>
                                     </li>
                                 {% endif %}
                                 {% if app.user %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_settings') }}">Settings</a>
+                                        <a class="nav-link" href="{{ path('app_settings') }}" data-test="settings-link">Settings</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_logout') }}">Log out</a>
+                                        <a class="nav-link" href="{{ path('app_logout') }}" data-test="log-out-link">Log out</a>
                                     </li>
                                 {% else %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_login') }}">Log in</a>
+                                        <a class="nav-link" href="{{ path('app_login') }}" data-test="log-in-link">Log in</a>
                                     </li>
                                     {% if setting('registration') == 'on' %}
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('app_signup') }}">Sign up</a>
+                                            <a class="nav-link" href="{{ path('app_signup') }}" data-test="sign-up-link">Sign up</a>
                                         </li>
                                     {% endif %}
                                 {% endif %}
