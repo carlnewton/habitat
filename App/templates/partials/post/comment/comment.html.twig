@@ -41,7 +41,7 @@
         {% endif %}
     </div>
     <div id="report-comment-{{ comment.id }}"></div>
-    <p>
+    <p data-test="commentBody">
         {{ comment.body }}
     </p>
     <div class="date text-muted" title="{{ comment.posted|date }}">{{ comment.posted|time_diff }}</div>

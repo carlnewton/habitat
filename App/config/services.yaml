@@ -23,6 +23,14 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    App\EventListener\BeforePostViewedListener:
+        tags: 
+            - { name: kernel.event_listener, event: 'before.post.viewed', method: 'beforePostViewed' }
+
+    App\EventListener\AfterCommentPostedListener:
+        tags: 
+            - { name: kernel.event_listener, event: 'after.comment.posted', method: 'afterCommentPosted' }
+
     App\EventListener\RedirectToSetupRequestListener:
         tags: [kernel.event_listener]
 

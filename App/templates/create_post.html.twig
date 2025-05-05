@@ -10,10 +10,10 @@
     <h1 class="visually-hidden">Create a new post</h1>
     <form id="post-form" method="post" action="{{ path('app_create_post') }}" enctype="multipart/form-data">
         <div class="form-floating mb-3">
-            <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}">
+            <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}" data-test="title">
             <label for="title">Title</label>
             {% if errors.title is defined %}
-                <div class="invalid-feedback">
+                <div class="invalid-feedback" data-test="title-errors">
                     {% for errorMessage in errors.title %}
                         <p>{{ errorMessage }}</p>
                     {% endfor %}
@@ -21,7 +21,7 @@
             {% endif %}
         </div>
         <div class="form-floating mb-3">
-            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
+            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body" data-test="body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
             <label for="body">Body</label>
         </div>
         <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
@@ -72,7 +72,7 @@
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if values.locationLatLng is defined %}{{ values.locationLatLng }}{% endif %}">
         <input type="hidden" name="token" value="{{ csrf_token('post') }}">
         <div class="d-grid gap-2">
-            <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg">Submit post</button>
+            <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg" data-test="submit">Submit post</button>
         </div>
     </form>
     <div id="posting" class="text-center text-secondary py-5 d-none">

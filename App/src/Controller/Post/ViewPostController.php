@@ -5,6 +5,7 @@ namespace App\Controller\Post;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Event\BeforePostViewedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ViewPostController extends AbstractController
 {
@@ -22,6 +24,7 @@ class ViewPostController extends AbstractController
         #[CurrentUser] ?User $user,
         Security $security,
         EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
     ): Response {
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
@@ -42,6 +45,9 @@ class ViewPostController extends AbstractController
         }
 
         $categoryRepository = $entityManager->getRepository(Category::class);
+
+        $event = new BeforePostViewedEvent($post, $user ?? null);
+        $eventDispatcher->dispatch($event, BeforePostViewedEvent::NAME);
 
         return $this->render('view_post.html.twig', [
             'post' => $post,

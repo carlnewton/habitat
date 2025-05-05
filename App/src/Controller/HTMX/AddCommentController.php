@@ -5,6 +5,7 @@ namespace App\Controller\HTMX;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Event\AfterCommentPostedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AddCommentController extends AbstractController
 {
@@ -21,6 +23,7 @@ class AddCommentController extends AbstractController
         #[CurrentUser] ?User $user,
         Security $security,
         EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
     ): Response {
         if (null === $user) {
             return $this->render('partials/hx/must_sign_in.html.twig');
@@ -66,6 +69,9 @@ class AddCommentController extends AbstractController
 
         $entityManager->persist($comment);
         $entityManager->flush();
+
+        $event = new AfterCommentPostedEvent($comment);
+        $eventDispatcher->dispatch($event, AfterCommentPostedEvent::NAME);
 
         return $this->render('partials/hx/post_comment.html.twig', [
             'post' => $post,

@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+// TODO: Break these down into hearts per user so that we can use that particular user for dependencies
 class HeartFixtures extends Fixture implements DependentFixtureInterface
 {
     private const HEARTS = [
@@ -45,7 +46,6 @@ class HeartFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            UserFixtures::class,
             PostFixtures::class,
         ];
     }

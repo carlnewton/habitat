@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Filesystem\Filesystem;
 
+// TODO: Break these down into post attachments per post so that we can use that particular post for dependencies
 class PostAttachmentFixtures extends Fixture implements DependentFixtureInterface
 {
     private const ATTACHMENT_FIXTURE_FILES = [
@@ -135,7 +136,6 @@ class PostAttachmentFixtures extends Fixture implements DependentFixtureInterfac
     public function getDependencies(): array
     {
         return [
-            UserFixtures::class,
             PostFixtures::class,
         ];
     }

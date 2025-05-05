@@ -2,5 +2,13 @@
     "admin": {
         "email": "architect@example.com",
         "password": "Architect"
+    },
+    "neo": {
+        "email": "neo@example.com",
+        "password": "Neo"
+    },
+    "trinity": {
+        "email": "trinity@example.com",
+        "password": "Trinity"
     }
 }

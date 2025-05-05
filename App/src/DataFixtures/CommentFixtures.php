@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+// TODO: Break these down into comments per user so that we can use that particular user for dependencies
 class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
     private const COMMENTS = [
@@ -120,7 +121,6 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            UserFixtures::class,
             PostFixtures::class,
         ];
     }

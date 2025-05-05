@@ -230,6 +230,30 @@ admin:
   mail:
     title: "Mail"
 
+menus:
+  utility:
+    about:
+      title: "About"
+    admin_dashboard:
+      title: "Admin dashboard"
+    settings:
+      title: "Settings"
+    log_in:
+      title: "Log in"
+    log_out:
+      title: "Log out"
+    sign_up:
+      title: "Sign up"
+  notifications:
+    title: "Notifications"
+    messages:
+      no_new_notifications: "You have no new notifications"
+
+notifications:
+  new_post_comments:
+    title: "New comments"
+    message: "You have %count% new comments on your post"
+
 emails:
   daily_digest:
     subject: 'New activity in your Habitat'

@@ -22,54 +22,94 @@
                         <img src="/build/images/habitat_icon.svg" width="30" height="30" class="d-inline-block align-top" alt="Habitat">
                         {{ setting('habitatName', 'Habitat') }}
                     </a>
-                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                        <div class="offcanvas-header">
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_about') }}">About</a>
-                                </li>
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+                    <div id="right-navs-container" class="d-flex">
+                        {% if app.user %}
+                            <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotifications" aria-controls="offcanvasNotifications" aria-label="Toggle notifications">
+                                <i class="bi bi-bell fs-4 text-secondary position-relative">
+                                    {% if app.user and app.user.hasNotifications %}
+                                        <span class="position-absolute top-0 end-0 p-1 bg-danger border border-light rounded-circle" data-test="new-notifications-indicator">
+                                            <span class="visually-hidden">New notifications</span>
+                                        </span>
+                                    {% endif %}
+                                </i>
+                            </button>
+                        {% endif %}
+                        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Habitat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_admin_index') }}" data-test="admin-dashboard-link">Admin dashboard</a>
+                                        <a class="nav-link" href="{{ path('app_about') }}">{{ 'menus.utility.about.title' | trans }}</a>
                                     </li>
-                                {% endif %}
-                                {% if app.user %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_settings') }}" data-test="settings-link">Settings</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_logout') }}" data-test="log-out-link">Log out</a>
-                                    </li>
-                                {% else %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_login') }}" data-test="log-in-link">Log in</a>
-                                    </li>
-                                    {% if setting('registration') == 'on' %}
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('app_signup') }}" data-test="sign-up-link">Sign up</a>
+                                            <a class="nav-link" href="{{ path('app_admin_index') }}" data-test="admin-dashboard-link">{{ 'menus.utility.admin_dashboard.title' | trans }}</a>
                                         </li>
                                     {% endif %}
-                                {% endif %}
-                            </ul>
+                                    {% if app.user %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_settings') }}" data-test="settings-link">{{ 'menus.utility.settings.title' | trans }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_logout') }}" data-test="log-out-link">{{ 'menus.utility.log_out.title' | trans }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_login') }}" data-test="log-in-link">{{ 'menus.utility.log_in.title' | trans }}</a>
+                                        </li>
+                                        {% if setting('registration') == 'on' %}
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="{{ path('app_signup') }}" data-test="sign-up-link">{{ 'menus.utility.sign_up.title' | trans }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNotifications" aria-labelledby="offcanvasNotificationsLabel">
+            <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNotificationsLabel">{{ 'menus.notifications.title' | trans }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body" id="notifications" data-test="notifications">
+                {% if app.user and app.user.hasNotifications %}
+                    <div class="list-group list-group-flush">
+                        {% for notification in app.user.notifications %}
+                            {% if notification.type.message == 'new_post_comments' %}
+                                <a href="{{ path('app_view_post', { 'id': notification.post.id }) }}" class="list-group-item list-group-item-action">
+                                    <h5 class="mb-1"><i class="bi bi-chat-fill text-primary"></i> {{ 'notifications.new_post_comments.title' | trans }}</h5>
+                                    <p>{{ 'notifications.new_post_comments.message' | trans({ '%count%': notification.data.count }) }} <strong>{{ notification.post.title }}</strong></p>
+                                    <span class="float-end text-muted" title="{{ notification.date|date }}">{{ notification.date|time_diff }}</span>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ 'menus.notifications.messages.no_new_notifications' | trans }}
+                {% endif %}
+            </div>
+        </div>
+
         <div class="container mt-3">
             {% for message in app.flashes('notice') %}
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-success" role="alert" data-test="success-message">
                     {{ message }}
                 </div>
             {% endfor %}
             {% for message in app.flashes('warning') %}
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert" data-test="warning-message">
                     {{ message }}
                 </div>
             {% endfor %}

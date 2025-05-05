@@ -8,7 +8,7 @@
 {% block body %}
     <div class="post">
         <div class="d-flex justify-content-between">
-            <h1>{{ post.title }}</h1>
+            <h1 data-test="title">{{ post.title }}</h1>
             {% include 'partials/post/dropdown_menu.html.twig' %}
         </div>
         <div id="report-post-{{ post.id }}"></div>
@@ -21,7 +21,7 @@
             </div>
         {% endif %}
         {% if post.body is not empty %}
-            <p>{{ post.body }}</p>
+            <p data-test="body">{{ post.body }}</p>
         {% endif %}
         {% if post.attachments is not empty %}
             <h2 id="photos">Photos</h2>

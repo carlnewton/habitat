@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Setup\SetupCategoriesFixtures;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
@@ -9,6 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+// TODO: Break these down into posts per user so that we can use that particular user for dependencies
 class PostFixtures extends Fixture implements DependentFixtureInterface
 {
     private const DATETIME_FORMAT = 'Y/m/d H:i:s';
@@ -186,7 +188,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            UserFixtures::class,
+            SetupCategoriesFixtures::class,
         ];
     }
 }
