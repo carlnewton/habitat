@@ -86,7 +86,7 @@ class PostsChangeCategoryController extends AbstractController
                     '%from_category%' => $post->getCategory()->getName(),
                     '%to_category%' => $category->getName(),
                 ]));
-            ;
+
             $entityManager->persist($moderationLog);
 
             $post->setCategory($category);

@@ -87,6 +87,7 @@ class AbstractAdminTableController extends AbstractController
                     if (ctype_alpha($request->get($filterName))) {
                         $filters[$filterName] = $request->get($filterName);
                     }
+                    break;
                 default:
                     break;
             }

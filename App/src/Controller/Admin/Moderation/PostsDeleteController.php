@@ -41,7 +41,7 @@ class PostsDeleteController extends AbstractController
 
         $posts = $postRepository->findBy(
             [
-                'id' => $postIds
+                'id' => $postIds,
             ]
         );
 
@@ -71,7 +71,7 @@ class PostsDeleteController extends AbstractController
                     '%post_title%' => $post->getTitle(),
                     '%username%' => $post->getUser()->getUsername(),
                 ]));
-            ;
+
             $entityManager->persist($moderationLog);
 
             $entityManager->remove($post);

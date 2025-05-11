@@ -56,7 +56,6 @@ class ReportsDismissController extends AbstractController
 
         $reportsDismissed = false;
         foreach ($reports as $report) {
-
             $entityManager->remove($report);
             $reportsDismissed = true;
         }

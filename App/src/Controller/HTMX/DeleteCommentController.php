@@ -64,7 +64,7 @@ class DeleteCommentController extends AbstractController
                     '%username%' => $comment->getUser()->getUsername(),
                     '%post_title%' => $comment->getPost()->getTitle(),
                 ]));
-            ;
+
             $entityManager->persist($moderationLog);
         }
 

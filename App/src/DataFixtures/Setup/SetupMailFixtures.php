@@ -24,7 +24,7 @@ class SetupMailFixtures extends Fixture implements FixtureGroupInterface, Depend
     {
         return [
             'setup',
-            'setup-mail'
+            'setup-mail',
         ];
     }
 
@@ -39,7 +39,6 @@ class SetupMailFixtures extends Fixture implements FixtureGroupInterface, Depend
     {
         $settingsRepository = $manager->getRepository(Settings::class);
         foreach (self::SETTINGS as $name => $value) {
-
             $setting = $settingsRepository->findOneBy(['name' => $name]);
             if (is_null($setting)) {
                 $setting = new Settings();

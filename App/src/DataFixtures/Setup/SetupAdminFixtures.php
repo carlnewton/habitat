@@ -29,7 +29,7 @@ class SetupAdminFixtures extends Fixture implements FixtureGroupInterface
     {
         return [
             'setup',
-            'setup-admin'
+            'setup-admin',
         ];
     }
 

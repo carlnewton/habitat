@@ -32,6 +32,7 @@ abstract class AbstractUserFixture extends Fixture implements DependentFixtureIn
             SetupMailFixtures::class,
         ];
     }
+
     public function load(ObjectManager $manager): void
     {
         foreach (static::USERS as $user) {

@@ -39,10 +39,9 @@ class AfterCommentPostedListener
                 ->setData([
                     'count' => 1,
                 ]);
-            ;
         } else {
             $notificationData = $notification->getData();
-            $notificationData['count']++;
+            ++$notificationData['count'];
             $notification
                 ->setData($notificationData)
                 ->setDate(new \DateTimeImmutable())

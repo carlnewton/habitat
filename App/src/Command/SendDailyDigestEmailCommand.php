@@ -8,7 +8,6 @@ use App\Entity\Report;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\Mailer;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -31,7 +30,7 @@ class SendDailyDigestEmailCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $yesterday = (new DateTime())->modify('-1 day');
+        $yesterday = (new \DateTime())->modify('-1 day');
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
         $newUsers = $queryBuilder->select('u')
@@ -90,7 +89,7 @@ class SendDailyDigestEmailCommand extends Command
             $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_reports', ['%count%' => count($newReports)]) . '</p>';
             $body .= '<p><a href="https://' . $domain . $reportsModerationRoute . '">' . $this->translator->trans('emails.daily_digest.new_reports_link') . '</a></p>';
         }
-        
+
         if (!empty($newPosts)) {
             $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_posts', ['%count%' => count($newPosts)]) . '</p>';
             $body .= '<ul>';

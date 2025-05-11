@@ -41,7 +41,7 @@ class CommentsDeleteController extends AbstractController
 
         $comments = $commentRepository->findBy(
             [
-                'id' => $commentIds
+                'id' => $commentIds,
             ]
         );
 
@@ -71,7 +71,7 @@ class CommentsDeleteController extends AbstractController
                     '%username%' => $comment->getUser()->getUsername(),
                     '%post_title%' => $comment->getPost()->getTitle(),
                 ]));
-            ;
+
             $entityManager->persist($moderationLog);
 
             $entityManager->remove($comment);

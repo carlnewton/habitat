@@ -2,8 +2,8 @@
 
 namespace App\Controller\HTMX;
 
-use App\Entity\Post;
 use App\Entity\ModerationLog;
+use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -63,7 +63,7 @@ class DeletePostController extends AbstractController
                     '%post_title%' => $post->getTitle(),
                     '%username%' => $post->getUser()->getUsername(),
                 ]));
-            ;
+
             $entityManager->persist($moderationLog);
         }
 

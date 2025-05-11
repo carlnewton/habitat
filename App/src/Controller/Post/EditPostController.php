@@ -158,7 +158,7 @@ class EditPostController extends AbstractController
                         '%post_title%' => $post->getTitle(),
                         '%username%' => $post->getUser()->getUsername(),
                     ]));
-                ;
+
                 $this->entityManager->persist($moderationLog);
             }
 

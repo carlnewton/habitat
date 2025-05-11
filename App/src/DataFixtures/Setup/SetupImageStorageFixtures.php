@@ -14,7 +14,7 @@ class SetupImageStorageFixtures extends Fixture implements FixtureGroupInterface
     {
         return [
             'setup',
-            'setup-image-storage'
+            'setup-image-storage',
         ];
     }
 

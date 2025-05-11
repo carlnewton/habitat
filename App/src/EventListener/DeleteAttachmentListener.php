@@ -42,7 +42,7 @@ class DeleteAttachmentListener
         $filesToDelete = [
             $this->uploadPrefix . $filename,
         ];
-        
+
         foreach (self::THUMBNAIL_WIDTHS as $width) {
             $filesToDelete[] = $this->uploadPrefix . $width . '.' . $filename;
         }

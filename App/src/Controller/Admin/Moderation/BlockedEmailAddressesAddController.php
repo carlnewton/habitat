@@ -3,11 +3,9 @@
 namespace App\Controller\Admin\Moderation;
 
 use App\Entity\BlockedEmailAddress;
-use App\Entity\Category;
 use App\Entity\User;
 use App\Repository\BlockedEmailAddressRepository;
 use App\Repository\UserRepository;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +65,8 @@ class BlockedEmailAddressesAddController extends AbstractController
         ]);
     }
 
-    protected function validateRequest(Request $request) {
+    protected function validateRequest(Request $request)
+    {
         $errors = [];
 
         if (empty($request->get('email')) || !filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {

@@ -3,16 +3,11 @@
 namespace App\Command;
 
 use App\Entity\ModerationLog;
-use App\Entity\PostAttachment;
-use App\Entity\Settings;
-use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 #[AsCommand(name: 'habitat:expire-moderation-logs')]
 class ExpireModerationLogsCommand extends Command
@@ -42,11 +37,12 @@ class ExpireModerationLogsCommand extends Command
         $deletedCount = 0;
         foreach ($moderationLogs as $moderationLog) {
             $this->entityManager->remove($moderationLog);
-            $deletedCount++;
+            ++$deletedCount;
         }
         $this->entityManager->flush();
 
         $output->writeln(sprintf('Deleted %d moderation logs', $deletedCount));
+
         return Command::SUCCESS;
     }
 }

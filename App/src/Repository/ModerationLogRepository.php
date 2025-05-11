@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\ModerationLog;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,7 +16,7 @@ class ModerationLogRepository extends ServiceEntityRepository
         parent::__construct($registry, ModerationLog::class);
     }
 
-    public function findBeforeDateTime(DateTime $datetime): array
+    public function findBeforeDateTime(\DateTime $datetime): array
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.date <= :dateTime')

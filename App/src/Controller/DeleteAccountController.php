@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\SettingsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -43,13 +42,13 @@ class DeleteAccountController extends AbstractController
 
         if (trim($request->get('email_address')) !== $user->getEmailAddress()) {
             return $this->render('security/delete_account.html.twig', [
-                'error' => $translator->trans('fields.email_address.validations.non_matching_email_address')
+                'error' => $translator->trans('fields.email_address.validations.non_matching_email_address'),
             ]);
         }
 
         if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             return $this->render('security/delete_account.html.twig', [
-                'error' => $translator->trans('user_settings.delete_account.validations.admin_account')
+                'error' => $translator->trans('user_settings.delete_account.validations.admin_account'),
             ]);
         }
 

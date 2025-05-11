@@ -63,7 +63,7 @@ class ReportPostController extends AbstractController
 
         return $this->render('partials/hx/alert.html.twig', [
             'type' => 'success',
-            'message' => $translator->trans('report_post.confirmation')
+            'message' => $translator->trans('report_post.confirmation'),
         ]);
     }
 }

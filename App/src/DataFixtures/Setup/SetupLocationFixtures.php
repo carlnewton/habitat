@@ -23,7 +23,7 @@ class SetupLocationFixtures extends Fixture implements FixtureGroupInterface, De
     {
         return [
             'setup',
-            'setup-location'
+            'setup-location',
         ];
     }
 
@@ -38,7 +38,6 @@ class SetupLocationFixtures extends Fixture implements FixtureGroupInterface, De
     {
         $settingsRepository = $manager->getRepository(Settings::class);
         foreach (self::SETTINGS as $name => $value) {
-
             $setting = $settingsRepository->findOneBy(['name' => $name]);
             if (is_null($setting)) {
                 $setting = new Settings();

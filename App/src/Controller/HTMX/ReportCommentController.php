@@ -63,7 +63,7 @@ class ReportCommentController extends AbstractController
 
         return $this->render('partials/hx/alert.html.twig', [
             'type' => 'success',
-            'message' => $translator->trans('report_comment.confirmation')
+            'message' => $translator->trans('report_comment.confirmation'),
         ]);
     }
 }

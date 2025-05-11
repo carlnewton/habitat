@@ -57,7 +57,7 @@ class SetupCategoriesFixtures extends Fixture implements FixtureGroupInterface, 
     {
         return [
             'setup',
-            'setup-categories'
+            'setup-categories',
         ];
     }
 
