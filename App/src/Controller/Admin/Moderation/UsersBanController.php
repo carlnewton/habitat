@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Moderation;
 
 use App\Entity\BlockedEmailAddress;
+use App\Entity\ModerationLog;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,11 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class UsersBanController extends AbstractController
 {
-    protected EntityManagerInterface $entityManager;
+    public function __construct(
+        private TranslatorInterface $translator,
+    ) {
+    }
 
     #[Route(path: '/admin/moderation/users/ban', name: 'app_moderation_users_ban', methods: ['POST'], priority: 2)]
     public function index(
@@ -72,6 +77,14 @@ class UsersBanController extends AbstractController
                 $blockedEmailAddress->setEmailAddress($user->getEmailAddress());
                 $entityManager->persist($blockedEmailAddress);
             }
+
+            $moderationLog = new ModerationLog();
+            $moderationLog
+                ->setUser($this->getUser())
+                ->setDate(new \DateTimeImmutable())
+                ->setAction($this->translator->trans('moderation_log.actions.ban', ['%username%' => $user->getUsername()]))
+            ;
+            $entityManager->persist($moderationLog);
 
             $entityManager->remove($user);
             $usersBanned = true;

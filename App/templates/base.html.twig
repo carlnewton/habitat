@@ -48,6 +48,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ path('app_about') }}">{{ 'menus.utility.about.title' | trans }}</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_moderation_log') }}" data-test="moderation-log-link">{{ 'menus.utility.moderation_log.title' | trans }}</a>
+                                    </li>
                                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_admin_index') }}" data-test="admin-dashboard-link">{{ 'menus.utility.admin_dashboard.title' | trans }}</a>

@@ -1,4 +1,5 @@
 #!/bin/sh
 
-php /var/www/html/bin/console habitat:cleanup-attachments
+php /var/www/html/bin/console habitat:expire-moderation-logs
 php /var/www/html/bin/console habitat:send-daily-digest-email
+php /var/www/html/bin/console habitat:cleanup-attachments

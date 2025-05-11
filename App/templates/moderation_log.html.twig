@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% set page_title = 'moderation_log.title' | trans %}
+
+{% block body %}
+    <h1>{{ 'moderation_log.title' | trans }}</h1>
+    <p class="lead">{{ 'moderation_log.record_of_actions' | trans }}</p>
+    <p class="lead">{{ 'moderation_log.days_available' | trans }}</p>
+    <div class="alert alert-danger">{{ 'moderation_log.sensitive_content_warning' | trans }}</div>
+    <div class="card">
+        {% if logs is empty %}
+            <div class="card-body p-5">
+                <p class="lead text-center">{{ 'moderation_log.no_logs' | trans }}</p>
+            </div>
+        {% else %}
+            <div class="table-responsive rounded">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Moderator</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                            <tr{% if loop is defined and loop.last and offset is defined %} hx-get="/hx/list-moderation-logs?offset={{ offset }}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
+                                <td class="text-nowrap" title="{{ log.date|date }}">{{ log.date|time_diff }}</td>
+                                <td class="text-nowrap">{{ log.user.username }}</td>
+                                <td>{{ log.action }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

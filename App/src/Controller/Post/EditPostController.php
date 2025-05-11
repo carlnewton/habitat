@@ -4,6 +4,7 @@ namespace App\Controller\Post;
 
 use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
+use App\Entity\ModerationLog;
 use App\Entity\Post;
 use App\Entity\PostAttachment;
 use App\Entity\User;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class EditPostController extends AbstractController
@@ -23,6 +25,7 @@ class EditPostController extends AbstractController
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -142,6 +145,21 @@ class EditPostController extends AbstractController
                     $removedAttachment->setPost(null);
                     $this->entityManager->persist($removedAttachment);
                 }
+            }
+
+            // Edit functionality is currently only available to admins, but this might change, so I'm putting this
+            // extra check in now just in case it's latter forgotten.
+            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $moderationLog = new ModerationLog();
+                $moderationLog
+                    ->setUser($user)
+                    ->setDate(new \DateTimeImmutable())
+                    ->setAction($this->translator->trans('moderation_log.actions.edit_post', [
+                        '%post_title%' => $post->getTitle(),
+                        '%username%' => $post->getUser()->getUsername(),
+                    ]));
+                ;
+                $this->entityManager->persist($moderationLog);
             }
 
             $this->entityManager->flush();

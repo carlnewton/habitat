@@ -238,6 +238,8 @@ menus:
       title: "Admin dashboard"
     settings:
       title: "Settings"
+    moderation_log:
+      title: "Moderation log"
     log_in:
       title: "Log in"
     log_out:
@@ -253,6 +255,20 @@ notifications:
   new_post_comments:
     title: "New comments"
     message: "You have %count% new comments on your post"
+
+moderation_log:
+  title: "Moderation log"
+  no_logs: "No moderation actions have been logged in the past 30 days"
+  record_of_actions: The Moderation log is a publicly accessible record of moderation actions taken within this instance of Habitat to ensure accountability and transparency.
+  days_available: These records are available for 30 days from the date of the action taken.
+  sensitive_content_warning: Some of the logs may contain content of a sensitive nature. This could include obscene material, spam, or URLs that may pose a danger. You are encouraged to exercise caution when viewing the logs and to be mindful of the potentially harmful content you may encounter.
+    
+  actions:
+    ban: "Banned user '%username%'"
+    delete_post: "Deleted post '%post_title%' by '%username%'"
+    edit_post: "Edited post '%post_title%' by '%username%'"
+    delete_comment: "Deleted comment '%comment%' by '%username%' from post '%post_title%'"
+    change_category: "Moved post '%post_title%' from '%from_category%' to '%to_category%'"
 
 emails:
   daily_digest:

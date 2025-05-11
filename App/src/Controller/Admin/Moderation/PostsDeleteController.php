@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Moderation;
 
+use App\Entity\ModerationLog;
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,11 +10,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class PostsDeleteController extends AbstractController
 {
-    protected EntityManagerInterface $entityManager;
+    public function __construct(
+        private TranslatorInterface $translator,
+    ) {
+    }
 
     #[Route(path: '/admin/moderation/posts/delete', name: 'app_moderation_posts_delete', methods: ['POST'])]
     public function index(
@@ -58,6 +63,17 @@ class PostsDeleteController extends AbstractController
         }
 
         foreach ($posts as $post) {
+            $moderationLog = new ModerationLog();
+            $moderationLog
+                ->setUser($this->getUser())
+                ->setDate(new \DateTimeImmutable())
+                ->setAction($this->translator->trans('moderation_log.actions.delete_post', [
+                    '%post_title%' => $post->getTitle(),
+                    '%username%' => $post->getUser()->getUsername(),
+                ]));
+            ;
+            $entityManager->persist($moderationLog);
+
             $entityManager->remove($post);
         }
         $entityManager->flush();
