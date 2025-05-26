@@ -27,6 +27,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('admin_map', './assets/admin_map.js')
+    .addEntry('tt_editor', './assets/tt_editor.js')
     .addEntry('admin_table', './assets/admin_table.js')
     .addEntry('admin_registration_settings', './assets/admin_registration_settings.js')
     .addEntry('create_post', './assets/create_post.js')

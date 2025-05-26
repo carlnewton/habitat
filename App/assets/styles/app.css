@@ -12,6 +12,10 @@ body {
     color: var(--bs-blue) !important;
 }
 
+.drawer-padding {
+  padding-bottom: 80px;
+}
+
 .comment.htmx-added, .post.htmx-added {
   opacity: 0;
 }

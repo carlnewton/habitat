@@ -141,6 +141,10 @@ fields:
     title: "Why are you reporting this post?"
   report_comment_reason:
     title: "Why are you reporting this comment?"
+  sidebar_content:
+    title: "Sidebar content"
+  link_url:
+    title: "Link URL"
 
 report_post:
   confirmation: "Thank you for reporting this post. It will be reviewed by the administrator."
@@ -152,8 +156,11 @@ buttons:
   change: "Change"
   show_current_location: "Show your current location"
   save: "Save"
+  insert: "Insert"
+  update: "Update"
   actions: "Actions"
   delete: "Delete"
+  remove: "Remove"
   unblock: "Unblock"
   block_email_address: "Block an email address"
   report_this_post: "Report this post"
@@ -204,6 +211,11 @@ admin:
     change_category: "Change category"
   settings:
     title: "Settings"
+    validations:
+      habitat_name:
+        max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
+      sidebar_content:
+        disallowed_html_tags: "The sidebar content contains disallowed HTML tags"
   moderation:
     title: "Moderation"
     users:
@@ -229,6 +241,13 @@ admin:
     title: "Amazon S3 details"
   mail:
     title: "Mail"
+
+modals:
+  insert_hyperlink:
+    title: 'Insert hyperlink'
+  update_hyperlink:
+    title: 'Update hyperlink'
+  cancel: Cancel
 
 menus:
   utility:

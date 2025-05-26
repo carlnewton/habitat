@@ -74,6 +74,8 @@
                                         {% endif %}
                                     {% endif %}
                                 </ul>
+                                <hr>
+                                <div id="offcanvas-sidebar-container"></div>
                             </div>
                         </div>
                     </div>
@@ -140,6 +142,11 @@
                                     </a>
                                 </li>
                             </ul> 
+                            <div id="sidebar-container">
+                                <div id="sidebar">
+                                    {{ component('Sidebar') }}
+                                </div>
+                            </div>
                         </div>
                     {% endblock %}
                 {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Settings;
+use App\Entity\SidebarContent;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,26 +11,39 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class SettingsController extends AbstractController
 {
+    public function __construct(
+        private TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route(path: '/admin', name: 'app_admin_index', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
     ): Response {
         $settingsRepository = $entityManager->getRepository(Settings::class);
+        $sidebarContentRepository = $entityManager->getRepository(SidebarContent::class);
+        $sidebarContent = $sidebarContentRepository->findOneBy(['id' => 1]);
+        if (!$sidebarContent) {
+            $sidebarContent = new SidebarContent();
+        }
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
             if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
                 $this->addFlash(
                     'warning',
-                    'Something went wrong, please try again.'
+                    $this->translator->trans('fields.csrf_token.validations.invalid'),
                 );
 
-                return $this->render('admin/index.html.twig');
+                return $this->render('admin/index.html.twig', [
+                    'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
+                ]);
             }
 
             $fieldErrors = $this->validateRequest($request);
@@ -43,6 +57,7 @@ class SettingsController extends AbstractController
                         'locationMeasurement' => $request->get('locationMeasurement'),
                         'locationRadiusMeters' => $request->get('locationRadiusMeters'),
                         'locationZoom' => $request->get('locationZoom'),
+                        'sidebarContent' => $request->get('sidebarContent'),
                     ],
                 ]);
             }
@@ -88,6 +103,9 @@ class SettingsController extends AbstractController
             $locationLatLngSetting->setValue($request->get('locationLatLng'));
             $entityManager->persist($locationLatLngSetting);
 
+            $sidebarContent->setContent($request->get('sidebarContent'));
+            $entityManager->persist($sidebarContent);
+
             $entityManager->flush();
 
             $this->addFlash(
@@ -111,6 +129,7 @@ class SettingsController extends AbstractController
                 'locationZoom' => ($locationZoomSetting) ? $locationZoomSetting->getValue() : '3',
                 'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'km',
                 'locationRadiusMeters' => ($locationRadiusSetting) ? $locationRadiusSetting->getValue() : '3000',
+                'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
             ],
         ]);
     }
@@ -120,14 +139,19 @@ class SettingsController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->get('habitatName')) > Settings::HABITAT_NAME_MAX_LENGTH) {
-            $errors['habitatName'][] = 'Your Habitat name must be a maximum of ' . Settings::HABITAT_NAME_MAX_LENGTH . ' characters';
+            $errors['habitatName'][] = $this->translator->trans(
+                'admin.settings.validations.habitat_name.max_characters',
+                [
+                    '%max_characters%' => Settings::HABITAT_NAME_MAX_LENGTH
+                ]
+            );
         }
 
         if (
             empty($request->get('locationLatLng'))
             || !LatLong::isValidLatLong($request->get('locationLatLng'))
         ) {
-            $errors['location'][] = 'You must choose a valid location';
+            $errors['location'][] = $this->translator->trans('map.validations.invalid_location');
         }
 
         if (
@@ -136,7 +160,11 @@ class SettingsController extends AbstractController
             || $request->get('locationRadiusMeters') != (int) $request->get('locationRadiusMeters')
             || $request->get('locationRadiusMeters') < 1
         ) {
-            $errors['location'][] = 'You must choose a valid location size';
+            $errors['location'][] = $this->translator->trans('map.validations.invalid_location_size');
+        }
+
+        if (SidebarContent::stripTags($request->get('sidebarContent')) !== $request->get('sidebarContent')) {
+            $errors['sidebarContent'][] = $this->translator->trans('admin.settings.validations.sidebar_content.disallowed_html_tags');
         }
 
         return $errors;
