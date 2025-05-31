@@ -61,17 +61,6 @@ class ListPostsController extends AbstractController
             );
         }
 
-        if (null !== $user) {
-            foreach ($posts as $post) {
-                foreach ($post->getHearts() as $heart) {
-                    if ($heart->getUser()->getId() === $user->getId()) {
-                        $post->setCurrentUserHearted(true);
-                        break;
-                    }
-                }
-            }
-        }
-
         $renderArray['posts'] = $posts;
         $renderArray['offset'] = $offset + self::MAX_RESULTS_PER_PAGE;
         $renderArray['show_category'] = $categoryRepository->count() > 1;

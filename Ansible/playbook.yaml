@@ -226,6 +226,11 @@
         path: "/tmp/{{ habitat_unarchive.files[0] }}"
         state: absent
 
+    - name: Stop docker compose services
+      community.docker.docker_compose_v2:
+        project_src: /opt/habitat/docker-compose
+        state: stopped
+
     - name: Generate SSL certificate
       shell: |
         certbot certonly --standalone --non-interactive --agree-tos --email {{ email_address }} -d {{ domain }}
@@ -244,6 +249,7 @@
     - name: Run docker compose up
       community.docker.docker_compose_v2:
         project_src: /opt/habitat/docker-compose
+        state: present
 
   handlers:
     - name: Update apt repository index

@@ -10,7 +10,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class Sidebar
 {
     public function __construct(
-        private SidebarContentRepository $sidebarContentRepository
+        private SidebarContentRepository $sidebarContentRepository,
     ) {
     }
 

@@ -35,15 +35,6 @@ class ViewPostController extends AbstractController
             throw $this->createNotFoundException('The post does not exist');
         }
 
-        if (null !== $user) {
-            foreach ($post->getHearts() as $heart) {
-                if ($heart->getUser()->getId() === $user->getId()) {
-                    $post->setCurrentUserHearted(true);
-                    break;
-                }
-            }
-        }
-
         $categoryRepository = $entityManager->getRepository(Category::class);
 
         $event = new BeforePostViewedEvent($post, $user ?? null);

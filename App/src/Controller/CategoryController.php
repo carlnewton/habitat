@@ -44,14 +44,6 @@ class CategoryController extends AbstractController
         $categoryHidden = false;
         if (null !== $user) {
             $categoryHidden = $user->hasHiddenCategory($category->getId());
-            foreach ($posts as $post) {
-                foreach ($post->getHearts() as $heart) {
-                    if ($heart->getUser()->getId() === $user->getId()) {
-                        $post->setCurrentUserHearted(true);
-                        break;
-                    }
-                }
-            }
         }
 
         return $this->render('category.html.twig', [

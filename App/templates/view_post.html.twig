@@ -74,9 +74,7 @@
             {% endif %}
             <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span>
         </p>
-        <button id="hearts-{{ post.id }}" class="border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} fs-4 mb-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
-            <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
-        </button>
+        <span class="fs-4 mb-3">{{ component('Heart', {'post': post}) }}</span>
         <h2 id="comments">Comments</h2>
 
         {% if app.user %}
@@ -97,7 +95,4 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('view_post') }}
-    {% if app.user %}
-        {{ encore_entry_script_tags('heart') }}
-    {% endif %}
 {% endblock %}

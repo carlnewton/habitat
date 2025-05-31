@@ -15,7 +15,4 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('nearby') }}
-    {% if app.user %}
-        {{ encore_entry_script_tags('heart') }}
-    {% endif %}
 {% endblock %}

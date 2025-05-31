@@ -1,0 +1,7 @@
+{% set hearted = this.hearted(post, app.user) %}
+<form id="hearts-{{ post.id }}" hx-post="{{ path('app_hx_heart_post', { postId: post.id }) }}" hx-swap="outerHTML">
+    <button class="border-0 bg-transparent{% if hearted %} text-danger{% else %} text-muted{% endif %}">
+        <i class="bi bi-heart{% if hearted %}-fill{% endif %}"></i> <span class="heart-count">{{ this.heartsCount(post) }}</span>
+    </button>
+    <input type="hidden" name="token" value="{{ csrf_token('heart') }}">
+</form>

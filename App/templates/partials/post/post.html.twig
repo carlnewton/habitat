@@ -52,9 +52,7 @@
             </div>
         {% endif %}
         <div class="card-body">
-            <button id="hearts-{{ post.id }}" class="float-start border-0 bg-transparent{% if app.user and post.currentUserHearted %} text-danger{% else %} text-muted{% endif %} pe-3"{% if app.user %} onclick="toggleHeart({{ post.id }})"{% endif %}>
-                <i class="bi bi-heart{% if app.user and post.currentUserHearted %}-fill{% endif %}"></i> <span class="heart-count">{{ post.heartCount }}</span>
-            </button>
+            <span class="float-start pe-3">{{ component('Heart', {'post': post}) }}</span>
             <a class="text-muted" href="{{ path('app_view_post', { id: post.id })}}#comments">
                 <i class="bi bi-chat"></i> {{ post.commentCount }}
             </a>

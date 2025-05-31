@@ -142,7 +142,7 @@ class SettingsController extends AbstractController
             $errors['habitatName'][] = $this->translator->trans(
                 'admin.settings.validations.habitat_name.max_characters',
                 [
-                    '%max_characters%' => Settings::HABITAT_NAME_MAX_LENGTH
+                    '%max_characters%' => Settings::HABITAT_NAME_MAX_LENGTH,
                 ]
             );
         }

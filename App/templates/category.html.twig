@@ -25,7 +25,6 @@
 {% block javascripts %}
     {{ parent() }}
     {% if app.user %}
-        {{ encore_entry_script_tags('heart') }}
         {{ encore_entry_script_tags('category') }}
     {% endif %}
 {% endblock %}

@@ -43,7 +43,7 @@ class SidebarContent
         }
 
         $content = trim($content);
-        if ($content === '' || $content === '<p></p>') {
+        if ('' === $content || '<p></p>' === $content) {
             return '';
         }
 

@@ -14,10 +14,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% if app.user %}
-        {{ encore_entry_script_tags('heart') }}
-    {% endif %}
-{% endblock %}

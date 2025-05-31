@@ -47,8 +47,6 @@ class Post
     #[ORM\OrderBy(['posted' => 'DESC'])]
     private Collection $comments;
 
-    private bool $currentUserHearted = false;
-
     /**
      * @var Collection<int, PostAttachment>
      */
@@ -175,11 +173,6 @@ class Post
         return $this->hearts;
     }
 
-    public function getHeartCount(): int
-    {
-        return $this->hearts->count();
-    }
-
     public function addHeart(Heart $heart): static
     {
         if (!$this->hearts->contains($heart)) {
@@ -200,18 +193,6 @@ class Post
         }
 
         return $this;
-    }
-
-    public function setCurrentUserHearted(bool $currentUserHearted): static
-    {
-        $this->currentUserHearted = $currentUserHearted;
-
-        return $this;
-    }
-
-    public function getCurrentUserHearted(): bool
-    {
-        return $this->currentUserHearted;
     }
 
     /**

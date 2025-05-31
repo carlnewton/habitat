@@ -1,28 +1,33 @@
 <?php
 
-namespace App\Controller\API;
+namespace App\Controller\HTMX;
 
 use App\Entity\Heart;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class ToggleHeartController extends AbstractController
+class HeartPostController extends AbstractController
 {
-    #[Route(path: '/api/heart/{postId}', name: 'app_toggle_heart', methods: ['POST'])]
+    #[Route(path: '/hx/heart-post/{postId}', name: 'app_hx_heart_post', methods: ['POST'])]
     public function index(
         int $postId,
-        #[CurrentUser] ?User $user,
         Request $request,
+        #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager,
-    ): JsonResponse {
+    ): Response {
         if (null === $user) {
-            throw $this->createAccessDeniedException('User is not signed in');
+            return new Response('', Response::HTTP_FORBIDDEN);
+        }
+
+        $submittedToken = $request->getPayload()->get('token');
+        if (!$this->isCsrfTokenValid('heart', $submittedToken)) {
+            return new Response('', Response::HTTP_FORBIDDEN);
         }
 
         $postRepository = $entityManager->getRepository(Post::class);
@@ -31,7 +36,7 @@ class ToggleHeartController extends AbstractController
         ]);
 
         if (null === $post) {
-            throw $this->createNotFoundException('The post does not exist');
+            return new Response('', Response::HTTP_NOT_FOUND);
         }
 
         $heartRepository = $entityManager->getRepository(Heart::class);
@@ -41,10 +46,8 @@ class ToggleHeartController extends AbstractController
             'post' => $post,
         ]);
 
-        $actionTaken = 'added';
         if ($existingHeart) {
             $entityManager->remove($existingHeart);
-            $actionTaken = 'removed';
         } else {
             $heart = new Heart();
             $heart->setUser($user);
@@ -53,11 +56,8 @@ class ToggleHeartController extends AbstractController
         }
         $entityManager->flush();
 
-        return new JsonResponse(
-            [
-                'result' => $actionTaken,
-                'count' => $post->getHeartCount(),
-            ]
-        );
+        return $this->render('partials/hx/heart.html.twig', [
+            'post' => $post,
+        ]);
     }
 }

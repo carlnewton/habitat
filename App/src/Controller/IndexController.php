@@ -31,17 +31,6 @@ class IndexController extends AbstractController
             (null !== $user) ? $user->getId() : null,
         );
 
-        if (null !== $user) {
-            foreach ($posts as $post) {
-                foreach ($post->getHearts() as $heart) {
-                    if ($heart->getUser()->getId() === $user->getId()) {
-                        $post->setCurrentUserHearted(true);
-                        break;
-                    }
-                }
-            }
-        }
-
         $categoryRepository = $entityManager->getRepository(Category::class);
 
         return $this->render('index.html.twig', [
