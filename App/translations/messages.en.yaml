@@ -207,6 +207,7 @@ measurement_units:
 admin:
   actions:
     ban: "Ban"
+    freeze: "Freeze"
     dismiss: "Dismiss"
     change_category: "Change category"
   settings:
@@ -221,6 +222,8 @@ admin:
     users:
       title: "User moderation"
       menu_title: "Users"
+      validations:
+        users_not_found: "The users could not be found"
     posts:
       title: "Post moderation"
       menu_title: "Posts"
@@ -270,6 +273,9 @@ menus:
     messages:
       no_new_notifications: "You have no new notifications"
 
+flash_messages:
+  account_frozen: "You cannot perform this action because your account has been frozen until %unfreeze_datetime%. Reason: %reason%"
+
 notifications:
   new_post_comments:
     title: "New comments"
@@ -284,6 +290,7 @@ moderation_log:
     
   actions:
     ban: "Banned user '%username%'"
+    freeze: "Frozen user '%username%' for %freeze_value% %freeze_interval%. Reason: %reason%"
     delete_post: "Deleted post '%post_title%' by '%username%'"
     edit_post: "Edited post '%post_title%' by '%username%'"
     delete_comment: "Deleted comment '%comment%' by '%username%' from post '%post_title%'"

@@ -110,6 +110,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $notifications;
 
+    /**
+     * @var Collection<int, UserFreezeLog>
+     */
+    #[ORM\OneToMany(targetEntity: UserFreezeLog::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $freezeLogs;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -120,6 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->settings = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->freezeLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -497,6 +504,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($notification->getUser() === $this) {
                 $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFreezeLog>
+     */
+    public function getFreezeLogs(): Collection
+    {
+        return $this->freezeLogs;
+    }
+
+    public function isFrozen(): bool
+    {
+        $freezeLogs = $this->getFreezeLogs();
+        if (empty($freezeLogs)) {
+            return false;
+        }
+
+        foreach ($freezeLogs as $freezeLog) {
+            if ($freezeLog->getUnfreezeDate() > new \DateTimeImmutable()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getFrozenLog(): ?UserFreezeLog
+    {
+        $freezeLogs = $this->getFreezeLogs();
+        foreach ($freezeLogs as $freezeLog) {
+            if ($freezeLog->getUnfreezeDate() > new \DateTimeImmutable()) {
+                return $freezeLog;
+            }
+        }
+    }
+
+    public function addFreezeLog(UserFreezeLog $freezeLog): static
+    {
+        if (!$this->freezeLogs->contains($freezeLog)) {
+            $this->freezeLogs->add($freezeLog);
+            $freezeLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFreezeLog(UserFreezeLog $freezeLog): static
+    {
+        if ($this->freezeLogs->removeElement($freezeLog)) {
+            // set the owning side to null (unless already changed)
+            if ($freezeLog->getUser() === $this) {
+                $freezeLog->setUser(null);
             }
         }
 

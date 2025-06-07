@@ -14,13 +14,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreatePostController extends AbstractController
 {
     protected array $categories = [];
 
     public function __construct(
-        protected EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -32,6 +34,19 @@ class CreatePostController extends AbstractController
     ): Response {
         if (null === $user) {
             return $this->redirectToRoute('app_login');
+        }
+
+        if ($user->isFrozen()) {
+            $freezeLog = $user->getFrozenLog();
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('flash_messages.account_frozen', [
+                    '%unfreeze_datetime%' => $freezeLog->getUnfreezeDate()->format('F jS Y H:i'),
+                    '%reason%' => $freezeLog->getReason(),
+                ])
+            );
+
+            return $this->redirectToRoute('app_index_index');
         }
 
         $postRepository = $this->entityManager->getRepository(Post::class);

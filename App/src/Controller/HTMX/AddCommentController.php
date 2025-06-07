@@ -14,9 +14,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddCommentController extends AbstractController
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+    }
+
     #[Route(path: '/hx/add-comment', name: 'app_hx_add_comment', methods: ['POST'])]
     public function index(
         Request $request,
@@ -27,6 +32,20 @@ class AddCommentController extends AbstractController
     ): Response {
         if (null === $user) {
             return $this->render('partials/hx/must_sign_in.html.twig');
+        }
+
+        if ($user->isFrozen()) {
+            $freezeLog = $user->getFrozenLog();
+
+            return $this->render('partials/hx/alert.html.twig', [
+                'type' => 'danger',
+                'message' => $this->translator->trans('flash_messages.account_frozen', [
+                    '%unfreeze_datetime%' => $freezeLog->getUnfreezeDate()->format('F jS Y H:i'),
+                    '%reason%' => $freezeLog->getReason(),
+                ]),
+            ]);
+
+            return $this->redirectToRoute('app_index_index');
         }
 
         if (empty($request->get('postId'))) {
