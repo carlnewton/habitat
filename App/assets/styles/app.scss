@@ -1,6 +1,12 @@
 body { 
   padding-top: 60px;
-  padding-bottom: 80px; 
+  padding-bottom: 40px;
+}
+
+@include media-breakpoint-down(md) {
+  body {
+    padding-bottom: 80px;
+  }
 }
 
 #map { height: 100%; }
