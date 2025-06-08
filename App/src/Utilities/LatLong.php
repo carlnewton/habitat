@@ -4,6 +4,8 @@ namespace App\Utilities;
 
 class LatLong
 {
+    public const EARTH_RADIUS_METERS = 6371000;
+
     public float $latitude;
     public float $longitude;
 
@@ -28,7 +30,7 @@ class LatLong
         return $this->latitude . ',' . $this->longitude;
     }
 
-    public static function isValidLatLong(string $latLong): bool
+    public static function isValidLatLong(string $latLong, ?string $withinBoundsLatLong = null, ?int $withinBoundsRadiusMeters = null): bool
     {
         if (!str_contains($latLong, ',')) {
             return false;
@@ -63,6 +65,29 @@ class LatLong
             return false;
         }
 
-        return true;
+        if (null === $withinBoundsLatLong || null === $withinBoundsRadiusMeters) {
+            return true;
+        }
+
+        // The Haversine Formula
+        $latitude = deg2rad($latitude);
+        $longitude = deg2rad($longitude);
+
+        $withinBoundsLatLongArr = explode(',', $withinBoundsLatLong);
+        $withinBoundsLatitude = deg2rad($withinBoundsLatLongArr[0]);
+        $withinBoundsLongitude = deg2rad($withinBoundsLatLongArr[1]);
+
+        $latitudeDistance = $withinBoundsLatitude - $latitude;
+        $longitudeDistance = $withinBoundsLongitude - $longitude;
+
+        $a = sin($latitudeDistance / 2) * sin($latitudeDistance / 2)
+            + cos($latitude) * cos($withinBoundsLatitude)
+            * sin($longitudeDistance / 2) * sin($longitudeDistance / 2)
+        ;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = self::EARTH_RADIUS_METERS * $c;
+
+        return $distance <= $withinBoundsRadiusMeters;
     }
 }

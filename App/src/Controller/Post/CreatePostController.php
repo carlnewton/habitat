@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\CategoryLocationOptionsEnum;
 use App\Entity\Post;
 use App\Entity\PostAttachment;
+use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
@@ -193,6 +194,9 @@ class CreatePostController extends AbstractController
                 }
             }
 
+            $settingsRepository = $this->entityManager->getRepository(Settings::class);
+            $radiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
+            $latLngSetting = $settingsRepository->getSettingByName('locationLatLng');
             if (is_null($foundCategory)) {
                 $errors['category'][] = 'You must choose a category';
             } elseif (
@@ -200,12 +204,20 @@ class CreatePostController extends AbstractController
                     CategoryLocationOptionsEnum::REQUIRED === $foundCategory->getLocation()
                     && (
                         empty($request->get('locationLatLng'))
-                        || !LatLong::isValidLatLong($request->get('locationLatLng'))
+                        || !LatLong::isValidLatLong(
+                            $request->get('locationLatLng'),
+                            $latLngSetting->getValue(),
+                            $radiusSetting->getValue()
+                        )
                     )
                 ) || (
                     CategoryLocationOptionsEnum::OPTIONAL === $foundCategory->getLocation()
                     && !empty($request->get('locationLatLng'))
-                    && !LatLong::isValidLatLong($request->get('locationLatLng'))
+                    && !LatLong::isValidLatLong(
+                        $request->get('locationLatLng'),
+                        $latLngSetting->getValue(),
+                        $radiusSetting->getValue()
+                    )
                 )
             ) {
                 $errors['location'][] = 'You must choose a location';
