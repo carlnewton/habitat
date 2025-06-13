@@ -14,7 +14,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     public function __construct(
         private RouterInterface $router,
-        private Security $security
+        private Security $security,
     ) {
     }
 
@@ -26,10 +26,9 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
             $this->security->logout(false);
             $request->getSession()->invalidate();
 
-
             return new RedirectResponse(
                 $this->router->generate('app_login', [
-                    'email_verification_failed' => true
+                    'email_verification_failed' => true,
                 ]), RedirectResponse::HTTP_FOUND
             );
         }

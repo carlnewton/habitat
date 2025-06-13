@@ -8,7 +8,7 @@
         {% endif %}
 
         {% if email_verification_failed %}
-            <div class="alert alert-danger">{{ 'flash_messages.email_verification_failed' | trans }}</div>
+            <div class="alert alert-danger" data-test="email-verification-failed">{{ 'flash_messages.email_verification_failed' | trans }}</div>
         {% endif %}
 
         {% if app.user %}

@@ -31,7 +31,7 @@ class ChangeUsernameController extends AbstractController
             return new Response('', Response::HTTP_FORBIDDEN);
         }
 
-        if ($user->getUsername() === $request->get('username')) {
+        if ($user->getUsername() === trim($request->get('username'))) {
             return $this->render('partials/hx/change_username.html.twig', [
                 'username' => $user->getUsername(),
             ]);
@@ -41,24 +41,24 @@ class ChangeUsernameController extends AbstractController
 
         if (!empty($errors)) {
             return $this->render('partials/hx/change_username.html.twig', [
-                'username' => $request->get('username'),
+                'username' => trim($request->get('username')),
                 'errors' => $errors,
             ]);
         }
 
         $existingUser = $userRepository->findOneBy([
-            'username' => $request->get('username'),
+            'username' => trim($request->get('username')),
         ]);
         if ($existingUser) {
             return $this->render('partials/hx/change_username.html.twig', [
-                'username' => $request->get('username'),
+                'username' => trim($request->get('username')),
                 'errors' => [
                     $translator->trans('fields.username.validations.already_taken'),
                 ],
             ]);
         }
 
-        $user->setUsername($request->get('username'));
+        $user->setUsername(trim($request->get('username')));
         $entityManager->persist($user);
         $entityManager->flush();
 
@@ -72,7 +72,7 @@ class ChangeUsernameController extends AbstractController
     {
         $errors = [];
 
-        if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
+        if (empty(trim($request->get('username'))) || mb_strlen(trim($request->get('username'))) < User::USERNAME_MIN_LENGTH) {
             $errors[] = $translator->trans(
                 'fields.username.validations.minimum_characters',
                 [
@@ -81,7 +81,7 @@ class ChangeUsernameController extends AbstractController
             );
         }
 
-        if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
+        if (mb_strlen(trim($request->get('username'))) > User::USERNAME_MAX_LENGTH) {
             $errors[] = $translator->trans(
                 'fields.username.validations.maximum_characters',
                 [
@@ -90,7 +90,7 @@ class ChangeUsernameController extends AbstractController
             );
         }
 
-        if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
+        if (!empty(trim($request->get('username')) && !ctype_alnum(trim($request->get('username'))))) {
             $errors[] = $translator->trans('fields.username.validations.alphabetic_numeric');
         }
 

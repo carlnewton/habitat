@@ -5,6 +5,7 @@ namespace App\Utilities;
 use App\Entity\Settings;
 use App\Repository\SettingsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Mailer as SymfonyMailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
@@ -16,8 +17,10 @@ class Mailer
 
     private SymfonyMailer $symfonyMailer;
 
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ParameterBagInterface $params,
+    ) {
         $this->settingsRepository = $entityManager->getRepository(Settings::class);
     }
 
@@ -44,17 +47,21 @@ class Mailer
 
     public function send(string $to, string $from, string $subject, string $body)
     {
-        $username = $this->settingsRepository->getSettingByName('smtpUsername');
-        $password = $this->settingsRepository->getSettingByName('smtpPassword');
-        $server = $this->settingsRepository->getSettingByName('smtpServer');
-        $port = $this->settingsRepository->getSettingByName('smtpPort');
+        if ('dev' === getenv('APP_ENV')) {
+            $transport = Transport::fromDsn(getenv('MAILER_DSN'));
+        } else {
+            $username = $this->settingsRepository->getSettingByName('smtpUsername');
+            $password = $this->settingsRepository->getSettingByName('smtpPassword');
+            $server = $this->settingsRepository->getSettingByName('smtpServer');
+            $port = $this->settingsRepository->getSettingByName('smtpPort');
 
-        $transport = Transport::fromDsn(sprintf('smtp://%s:%s@%s:%s',
-            $username->getValue(),
-            $password->getEncryptedValue(),
-            $server->getValue(),
-            $port->getValue()
-        ));
+            $transport = Transport::fromDsn(sprintf('smtp://%s:%s@%s:%s',
+                $username->getValue(),
+                $password->getEncryptedValue(),
+                $server->getValue(),
+                $port->getValue()
+            ));
+        }
 
         $this->symfonyMailer = new SymfonyMailer($transport);
 

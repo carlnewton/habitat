@@ -53,8 +53,8 @@
                             <div class="form-group mb-2" id="hx-change-username">
                                 <label for="changeUsername">{{ 'fields.username.title' | trans }}</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" value="{{ user.username }}" name="username" id="changeUsername">
-                                    <button class="btn btn-outline-secondary" type="submit">{{ 'buttons.change' | trans }}</button>
+                                    <input type="text" class="form-control" value="{{ user.username }}" name="username" id="changeUsername" data-test="change-username">
+                                    <button class="btn btn-outline-secondary" type="submit" data-test="change-username-submit">{{ 'buttons.change' | trans }}</button>
                                 </div>
                             </div>
                             <input type="hidden" name="token" value="{{ csrf_token('change_username') }}">

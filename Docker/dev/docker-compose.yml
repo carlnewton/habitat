@@ -13,6 +13,8 @@ services:
       - APP_SECRET=${APP_SECRET}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - HABITAT_DOMAIN=${HABITAT_DOMAIN}
+      - APP_ENV=${APP_ENV}
+      - MAILER_DSN=${MAILER_DSN}
     volumes:
       - ${PATH_TO_SYMFONY_PROJECT}:/var/www/html
     ports:

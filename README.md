@@ -1,6 +1,6 @@
 # Habitat
 
-This project is currently in very early development. For information on the purpose of Habitat,
+This project is currently in early development. For information on the purpose of Habitat,
 [read the blog post](https://carlnewton.github.io/posts/location-based-social-network/).
 
 ## Getting Started

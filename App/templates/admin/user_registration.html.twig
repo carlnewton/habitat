@@ -7,7 +7,7 @@
             <label for="enable-registration" class="col-sm-3 col-form-label">Allow users to register</label>
             <div class="col-sm-9">
                 <div class="form-check form-switch form-switch-lg">
-                    <input class="form-check-input" type="checkbox" name="enable-registration" role="switch" id="enable_registration"{% if values.registration is defined and values.registration == 'on' %} checked{% endif %}>
+                    <input class="form-check-input" type="checkbox" name="enable-registration" role="switch" id="enable_registration"{% if values.registration is defined and values.registration == 'on' %} checked{% endif %} data-test="enable-registration-checkbox">
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <button id="registration-challenge-add-question-btn" type="button" class="btn btn-outline-primary">Add a question</button>
         </div>
         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary" data-test="submit">Save</button>
     </form>
 {% endblock %}
 

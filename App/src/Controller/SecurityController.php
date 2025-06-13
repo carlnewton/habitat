@@ -91,8 +91,8 @@ class SecurityController extends AbstractController
                 'errors' => $fieldErrors,
                 'question' => $newRegistrationQuestion,
                 'values' => [
-                    'username' => $request->get('username'),
-                    'email' => $request->get('email'),
+                    'username' => trim($request->get('username')),
+                    'email' => trim($request->get('email')),
                 ],
             ]);
         }
@@ -103,20 +103,20 @@ class SecurityController extends AbstractController
         // experience so as to prevent email address harvesting.
 
         $existingEmailAddress = $this->userRepository->findOneBy([
-            'email_address' => $request->get('email'),
+            'email_address' => trim($request->get('email')),
         ]);
 
         $blockedEmailAddressRepository = $this->entityManager->getRepository(BlockedEmailAddress::class);
         $blockedEmailAddress = $blockedEmailAddressRepository->findOneBy([
-            'email_address' => $request->get('email'),
+            'email_address' => trim($request->get('email')),
         ]);
 
         if (empty($existingEmailAddress) && empty($blockedEmailAddress)) {
             $user = new User();
             $user
-                ->setUsername($request->get('username'))
+                ->setUsername(trim($request->get('username')))
                 ->setCreated(new \DateTimeImmutable())
-                ->setEmailAddress($request->get('email'))
+                ->setEmailAddress(trim($request->get('email')))
                 ->setEmailVerificationString($emailVerificationString)
             ;
 
@@ -161,27 +161,27 @@ class SecurityController extends AbstractController
     {
         $errors = [];
 
-        if (empty($request->get('username')) || mb_strlen($request->get('username')) < User::USERNAME_MIN_LENGTH) {
+        if (empty(trim($request->get('username'))) || mb_strlen(trim($request->get('username'))) < User::USERNAME_MIN_LENGTH) {
             $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
         }
 
-        if (mb_strlen($request->get('username')) > User::USERNAME_MAX_LENGTH) {
+        if (mb_strlen(trim($request->get('username'))) > User::USERNAME_MAX_LENGTH) {
             $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
         }
 
-        if (!empty($request->get('username') && !ctype_alnum($request->get('username')))) {
+        if (!empty(trim($request->get('username')) && !ctype_alnum(trim($request->get('username'))))) {
             $errors['username'][] = 'Your username must only use alphabetic and numeric characters';
         }
 
         $existingUser = $this->userRepository->findOneBy([
-            'username' => $request->get('username'),
+            'username' => trim($request->get('username')),
         ]);
 
         if ($existingUser) {
             $errors['username'][] = 'This username is already taken';
         }
 
-        if (empty($request->get('email')) || !filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
+        if (empty(trim($request->get('email'))) || !filter_var(trim($request->get('email')), FILTER_VALIDATE_EMAIL)) {
             $errors['email'][] = 'This is not a valid email address';
         }
 
@@ -285,7 +285,7 @@ class SecurityController extends AbstractController
             return $this->render('security/forgot_password.html.twig');
         }
 
-        $emailAddress = $request->get('email');
+        $emailAddress = trim($request->get('email'));
 
         $user = $this->userRepository->findOneBy([
             'email_address' => $emailAddress,
