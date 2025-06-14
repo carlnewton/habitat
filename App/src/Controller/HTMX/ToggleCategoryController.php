@@ -1,28 +1,33 @@
 <?php
 
-namespace App\Controller\API;
+namespace App\Controller\HTMX;
 
 use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\UserHiddenCategory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class ToggleCategoryController extends AbstractController
 {
-    #[Route(path: '/api/category/{categoryId}', name: 'app_toggle_category', methods: ['POST'])]
+    #[Route(path: '/hx/toggle_category/{categoryId}', name: 'app_hx_toggle_category', methods: ['POST'])]
     public function index(
         int $categoryId,
-        #[CurrentUser] ?User $user,
         Request $request,
+        #[CurrentUser] ?User $user,
         EntityManagerInterface $entityManager,
-    ): JsonResponse {
+    ): Response {
         if (null === $user) {
-            throw $this->createAccessDeniedException('User is not signed in');
+            return new Response('', Response::HTTP_FORBIDDEN);
+        }
+
+        $submittedToken = $request->getPayload()->get('token');
+        if (!$this->isCsrfTokenValid('toggle_category', $submittedToken)) {
+            return new Response('', Response::HTTP_FORBIDDEN);
         }
 
         $categoryRepository = $entityManager->getRepository(Category::class);
@@ -31,32 +36,31 @@ class ToggleCategoryController extends AbstractController
         ]);
 
         if (null === $category) {
-            throw $this->createNotFoundException('The category does not exist');
+            return new Response('', Response::HTTP_NOT_FOUND);
         }
 
+        $categoryHidden = $user->hasHiddenCategory($category->getId());
         $hiddenCategoryRepository = $entityManager->getRepository(UserHiddenCategory::class);
 
-        $existingHiddenCategory = $hiddenCategoryRepository->findOneBy([
-            'user' => $user,
-            'category' => $category,
-        ]);
+        if ($categoryHidden) {
+            $existingHiddenCategory = $hiddenCategoryRepository->findOneBy([
+                'user' => $user,
+                'category' => $category,
+            ]);
 
-        $showPosts = false;
-        if ($existingHiddenCategory) {
             $entityManager->remove($existingHiddenCategory);
-            $showPosts = true;
         } else {
             $hiddenCategory = new UserHiddenCategory();
             $hiddenCategory->setUser($user);
             $hiddenCategory->setCategory($category);
             $entityManager->persist($hiddenCategory);
         }
+
         $entityManager->flush();
 
-        return new JsonResponse(
-            [
-                'showPosts' => $showPosts,
-            ]
-        );
+        return $this->render('partials/hx/toggle_category.html.twig', [
+            'category' => $category,
+            'categoryHidden' => !$categoryHidden,
+        ]);
     }
 }

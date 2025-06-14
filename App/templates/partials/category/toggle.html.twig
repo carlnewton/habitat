@@ -1,0 +1,16 @@
+<div class="form-check form-switch mb-3" id="toggleCategoryContainer">
+    <input 
+        class="form-check-input"
+        type="checkbox"
+        hx-trigger="change"
+        hx-target="#toggleCategoryContainer"
+        hx-swap="outerHTML"
+        hx-post="{{ path('app_hx_toggle_category', { categoryId: category.id }) }}"
+        hx-include="#toggleCategoryToken"
+        role="switch"
+        id="toggleCategory"
+        {% if categoryHidden == false %} checked{% endif %}
+    >
+    <input type="hidden" id="toggleCategoryToken" name="token" value="{{ csrf_token('toggle_category') }}">
+    <label class="form-check-label text-secondary" for="toggleCategory">{% if categoryHidden %}{{ 'fields.toggle_category.disabled' | trans }}{% else %}{{ 'fields.toggle_category.enabled' | trans }}{% endif %}</label>
+</div>

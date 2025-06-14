@@ -145,6 +145,9 @@ fields:
     title: "Sidebar content"
   link_url:
     title: "Link URL"
+  toggle_category:
+    enabled: Posts from this category appear in your feed
+    disabled: Posts from this category are hidden from your feed
 
 report_post:
   confirmation: "Thank you for reporting this post. It will be reviewed by the administrator."
