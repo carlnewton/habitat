@@ -250,12 +250,20 @@ admin:
 
 modals:
   insert_hyperlink:
-    title: 'Insert hyperlink'
+    title: "Insert hyperlink"
   update_hyperlink:
-    title: 'Update hyperlink'
+    title: "Update hyperlink"
   cancel: Cancel
 
 menus:
+  main:
+    home:
+      title: Home
+    post:
+      title: Post
+    nearby:
+      title: Nearby
+      error: "You need to enable access to your location to see what's nearby"
   utility:
     about:
       title: "About"
@@ -302,13 +310,13 @@ moderation_log:
 
 emails:
   daily_digest:
-    subject: 'New activity in your Habitat'
+    subject: "New activity in your Habitat"
     body: |
       Hello %admin%,
       You have new activity in your Habitat:
-    new_users: '%count% new users'
-    new_posts: '%count% new posts'
-    new_comments: '%count% new comments'
-    new_reports: '%count% new reports'
-    new_reports_link: 'View reported content'
-  email_sent: 'Email sent to %email_address%'
+    new_users: "%count% new users"
+    new_posts: "%count% new posts"
+    new_comments: "%count% new comments"
+    new_reports: "%count% new reports"
+    new_reports_link: "View reported content"
+  email_sent: "Email sent to %email_address%"

@@ -111,6 +111,8 @@ class SecurityController extends AbstractController
             'email_address' => trim($request->get('email')),
         ]);
 
+        // Do not attempt to invert this to reduce indentation, we want the same flash message (and any other behaviour)
+        // we add at the end.
         if (empty($existingEmailAddress) && empty($blockedEmailAddress)) {
             $user = new User();
             $user

@@ -1,0 +1,9 @@
+<h1 class="visually-hidden">{{ 'menus.main.nearby.title' | trans }}</h1>
+
+<div id="posts-list" hx-trigger="{% if htmx is defined %}revealed{% else %}hasLocation{% endif %}" hx-get="/hx/list-nearby{% if htmx is defined %}?latLng={{ latLng }}{% endif %}" hx-swap="afterbegin">
+    <div class="d-flex justify-content-center htmx-indicator" id="post-spinner">
+        <div class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>

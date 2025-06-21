@@ -11,6 +11,8 @@
         {% endblock %}
 
         {% block javascripts %}
+            {# This is to prevent the flash of unstyled content: https://bugzilla.mozilla.org/show_bug.cgi?id=1404468 #}
+            <script>(_=>{let a})()</script>
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
@@ -120,25 +122,33 @@
             {% endfor %}
             <div class="row">
                 {% block outer_body %}
-                    <div class="col-xs-12 col-md-9">
+                    <div class="col-xs-12 col-md-9" id="hx-body">
                         {% block body %}{% endblock %}
                     </div>
                     {% block sidebar %}
                         <div class="col-sm-3 d-none d-md-block">
                             <div class="d-grid mb-3">
-                                <a href="{{ path('app_create_post')}}{% if category is defined %}?category={{ category.id }}{% endif %}" class="btn btn-outline-primary btn-lg">Post</a>
+                                <a href="{{ path('app_create_post')}}{% if category is defined %}?category={{ category.id }}{% endif %}" class="btn btn-outline-primary btn-lg">{{ 'menus.main.post.title' | trans }}</a>
                             </div>
                             <ul class="nav nav-pills flex-column mb-3">
                                 <li class="nav-item">
-                                    <a href="{{ path('app_index_index') }}" class="fs-5 nav-link{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
+                                    <a href="{{ path('app_index_index') }}" class="fs-5 home-link nav-link{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
                                         <i class="bi bi-house{% if app.request.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>
-                                        Home
+                                        {{ 'menus.main.home.title' | trans }}
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ path('app_nearby_nearby') }}" class="fs-5 nav-link{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
+                                    <a
+                                        href="{{ path('app_nearby_nearby') }}"
+                                        hx-post="{{ path('app_nearby_nearby') }}"
+                                        hx-target="#hx-body"
+                                        hx-replace-url="true"
+                                        class="fs-5 nearby-link nav-link{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}"
+                                        data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ setting('habitatName', 'Habitat') }}"
+                                        data-errormessage="{{ 'menus.main.nearby.error' | trans }}"
+                                    >
                                         <i class="bi bi-geo-alt{% if app.request.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
-                                        Nearby
+                                        {{ 'menus.main.nearby.title' | trans }}
                                     </a>
                                 </li>
                             </ul> 
@@ -154,20 +164,28 @@
         </div>
         <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top shadow-lg">
             <div class="container-fluid">
-                <a href="{{ path('app_index_index') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
+                <a href="{{ path('app_index_index') }}" class="text-center home-link col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_index_index' %} active{% endif %}">
                     <i class="h3 bi bi-house{% if app.request.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>
                     <br>
-                    <small>Home</small>
+                    <small>{{ 'menus.main.home.title' | trans }}</small>
                 </a>
                 <a href="{{ path('app_create_post') }}{% if category is defined %}?category={{ category.id }}{% endif %}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_create_post' %} active{% endif %}">
                     <i class="h3 bi bi-plus-circle{% if app.request.get('_route') == 'app_create_post' %}-fill{% endif %}"></i>
                     <br>
-                    <small>Post</small>
+                    <small>{{ 'menus.main.post.title' | trans }}</small>
                 </a>
-                <a href="{{ path('app_nearby_nearby') }}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}">
+                <a
+                    href="{{ path('app_nearby_nearby') }}"
+                    hx-post="{{ path('app_nearby_nearby') }}"
+                    hx-target="#hx-body"
+                    hx-replace-url="true"
+                    class="text-center col col-sm-4 nearby-link text-secondary text-decoration-none{% if app.request.get('_route') == 'app_nearby_nearby' %} active{% endif %}"
+                    data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ setting('habitatName', 'Habitat') }}"
+                    data-errormessage="{{ 'menus.main.nearby.error' | trans }}"
+                >
                     <i class="h3 bi bi-geo-alt{% if app.request.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
                     <br>
-                    <small>Nearby</small>
+                    <small>{{ 'menus.main.nearby.title' | trans }}</small>
                 </a>
             </div>
         </nav>
