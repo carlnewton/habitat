@@ -32,6 +32,9 @@ for (let i = 0; i < nearbyLinks.length; i++) {
     nearbyLinks[i].addEventListener('htmx:confirm', async function(event) {
         event.preventDefault();
 
+        let bodyContent = document.getElementById('hx-body').innerHTML;
+        document.getElementById('hx-body').innerHTML = '<div class="d-flex justify-content-center opacity-100 htmx-indicator"><div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 let homeLinks = document.querySelectorAll('.home-link');
@@ -52,6 +55,7 @@ for (let i = 0; i < nearbyLinks.length; i++) {
             },
             (error) => {
                 alert(event.srcElement.dataset.errormessage)
+                document.getElementById('hx-body').innerHTML = bodyContent;
             },
         );
     });
