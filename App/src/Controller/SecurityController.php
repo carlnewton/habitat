@@ -226,7 +226,7 @@ class SecurityController extends AbstractController
             return false;
         }
 
-        if (mb_strlen($password < User::PASSWORD_MIN_LENGTH)) {
+        if (mb_strlen($password) < User::PASSWORD_MIN_LENGTH) {
             return false;
         }
 
