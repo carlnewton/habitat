@@ -1,0 +1,36 @@
+{% if this.announcement %}
+    {% if this.collapsed %}
+    <div class="accordion mb-3" id="announcementAccordion">
+        <div class="accordion-item border border-{{ this.announcement.type.machineName }}-subtle">
+            <h4 class="accordion-header">
+                <button
+                    class="accordion-button bg-{{ this.announcement.type.machineName }}-subtle collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#announcementAccordionContent"
+                    aria-expanded="true"
+                    aria-controls="announcementAccordionContent"
+                >
+                    {{ this.announcement.title }}
+                </button>
+            </h4>
+            <div id="announcementAccordionContent" class="accordion-collapse collapse" data-bs-parent="#announcementAccordion">
+                <div class="accordion-body bg-{{ this.announcement.type.machineName }}-subtle">
+                    {{ this.announcement.content | raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div class="alert alert-{{ this.announcement.type.machineName }} pb-0" role="alert">
+            {% if this.announcement.title is not empty %}
+                <h4 class="alert-heading">
+                    {{ this.announcement.title }}
+                </h4>
+            {% endif %}
+            {% if this.announcement.content is not empty %}
+                {{ this.announcement.content | raw }}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endif %}

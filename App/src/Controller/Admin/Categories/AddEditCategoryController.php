@@ -94,7 +94,7 @@ class AddEditCategoryController extends AbstractController
             $errors['name'] = 'This field is required';
         }
 
-        if (is_null($request->get('location') || empty(CategoryLocationOptionsEnum::from($request->get('location'))))) {
+        if (is_null($request->get('location')) || empty(CategoryLocationOptionsEnum::from($request->get('location')))) {
             $errors['location'] = 'This field is required';
         }
 

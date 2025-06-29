@@ -13,6 +13,9 @@
                 <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">{{ 'admin.categories.title' | trans }}</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_announcements' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_announcements' %} aria-current="page"{% endif %} href="{{ path('app_admin_announcements') }}">{{ 'admin.announcements.title' | trans }}</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link{% if app.request.get('_route') == 'app_admin_user_registration' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_user_registration' %} aria-current="page"{% endif %} href="{{ path('app_admin_user_registration') }}">{{ 'admin.user_registration.title' | trans }}</a>
             </li>
             {% if setting('imageStorage') == 's3' %}

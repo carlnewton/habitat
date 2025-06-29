@@ -1,0 +1,23 @@
+<div class="modal" id="linkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="insertUpdateHyperlinkTitle" class="modal-title" data-insert="{{ 'modals.insert_hyperlink.title' | trans }}" data-update="{{ 'modals.update_hyperlink.title' | trans }}">{{ 'modals.insert_hyperlink.title' | trans }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'modals.cancel' | trans }}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="linkUrl" class="form-label">{{ 'fields.link_url.title' | trans }}</label>
+                    <input type="text" class="form-control" name="linkUrl" id="linkUrl" value="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="flex-fill">
+                    <button type="button" class="btn btn-outline-danger d-none" data-bs-dismiss="modal" id="ttBtnARemove">{{ 'buttons.remove' | trans }}</button>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'modals.cancel' | trans }}</button>
+                <button data-insert="{{ 'buttons.insert' | trans }}" data-update="{{ 'buttons.update' | trans }}" type="button" class="btn btn-primary" data-bs-dismiss="modal" id="ttBtnASubmit">{{ 'buttons.insert' | trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>

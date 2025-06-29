@@ -1,0 +1,107 @@
+{% extends 'admin/base.html.twig' %}
+{% set page_title = 'admin.announcements.title' | trans %}
+
+{% block body %}
+    <form method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">{{ 'fields.title.title' | trans }}</label>
+            <input type="text" class="form-control{% if errors.title is defined %} is-invalid{% endif %}" name="title" id="title" value="{{ values.title }}">
+            {% if errors.title is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.title %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">{{ 'fields.content.title' | trans }}</label>
+            <div class="card{% if errors.content is defined %} border-danger{% endif %}">
+                <div class="card-header">
+                    <button type="button" class="ttBtnUl btn"><i class="bi bi-list-ul"></i></button>
+                    <button type="button" class="ttBtnA btn"><i class="bi bi-link"></i></button>
+                </div>
+                <div class="card-body editor"></div>
+            </div>
+            {% if errors.content is defined %}
+                <div class="text-danger">
+                    {% for errorMessage in errors.content %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <input type="hidden" name="content" id="ttContent" value="{{ values.content }}">
+        </div>
+        <div class="mb-3">
+            <label for="collapse" class="form-label">{{ 'fields.collapse_content.title' | trans }}</label>
+            <div class="form-check form-switch form-switch-lg">
+                <input class="form-check-input{% if errors.collapse is defined %} is-invalid{% endif %}" type="checkbox" name="collapse" role="switch" id="collapse"{% if values.collapse is defined and values.collapse == 'on' %} checked{% endif %} data-test="collapse-checkbox">
+            </div>
+            {% if errors.collapse is defined %}
+                <div class="text-danger">
+                    {% for errorMessage in errors.collapse %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label">{{ 'fields.type.title' | trans }}</label>
+            <ul class="list-group{% if errors.type is defined %} border border-danger{% endif %}">
+                {% for type in types %}
+                    <li class="list-group-item list-group-item-{{ type.machineName }}">
+                        <input
+                            class="form-check-input me-1"
+                            type="radio"
+                            name="type"
+                            value="{{ type.value }}"
+                            id="type-{{ type.machineName }}"
+                            {% if values.type.value is defined and values.type.value == type.value %}
+                                checked
+                            {% endif %}
+                        >
+                        <label class="form-check-label" for="type-{{ type.machineName }}">{{ type.label }}</label>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if errors.type is defined %}
+                <div class="text-danger">
+                    {% for errorMessage in errors.type %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="show-date" class="form-label">{{ 'fields.show_date.title' | trans }}</label>
+            <input type="datetime-local" class="form-control{% if errors.showDate is defined %} is-invalid{% endif %}" name="showDate" id="showDate" value="{{ values.showDate }}">
+            {% if errors.showDate is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.showDate %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="hide-date" class="form-label">{{ 'fields.hide_date.title' | trans }}</label>
+            <input type="datetime-local" class="form-control{% if errors.hideDate is defined %} is-invalid{% endif %}" name="hideDate" id="hideDate" value="{{ values.hideDate }}">
+            {% if errors.hideDate is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.hideDate %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+        <button type="submit" class="btn btn-primary">{{ 'buttons.save' | trans }}</button>
+    </form>
+
+    {% include 'partials/tt_editor/link_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('tt_editor') }}
+{% endblock %}

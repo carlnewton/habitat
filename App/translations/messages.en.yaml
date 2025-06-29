@@ -143,6 +143,26 @@ fields:
     title: "Why are you reporting this comment?"
   sidebar_content:
     title: "Sidebar content"
+  collapse_content:
+    title: "Collapse content"
+  content:
+    title: "Content"
+  title:
+    title: "Title"
+  type:
+    title: "Type"
+    validations:
+      invalid: "You must choose a valid type"
+  show_date:
+    title: "Show date"
+    validations:
+      invalid: "You must enter a valid date"
+      gte_hide_date: "The show date must be earlier than the hide date if set"
+  hide_date:
+    title: "Hide date"
+    validations:
+      invalid: "You must enter a valid date"
+      lt_hide_date: "The hide date must be later than the show date if set"
   link_url:
     title: "Link URL"
   toggle_category:
@@ -241,6 +261,11 @@ admin:
       menu_title: "Reports"
   categories:
     title: "Categories"
+  announcements:
+    title: "Announcements"
+    validations:
+      content:
+        disallowed_html_tags: "The announcement content contains disallowed HTML tags"
   user_registration:
     title: "User registration"
   amazon_s3_details:

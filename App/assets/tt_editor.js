@@ -5,7 +5,7 @@ import { Modal } from 'bootstrap'
 
 const tteditor = new Editor({
     element: document.querySelector('.editor'),
-    content: document.getElementById('sidebarContent').value,
+    content: document.getElementById('ttContent').value,
     extensions: [
         StarterKit,
         Link.configure({
@@ -24,45 +24,52 @@ const tteditor = new Editor({
         },
     },
     onUpdate({ editor }) {
-        let sidebarContent = editor.getHTML();
-        if (sidebarContent.trim() === '<p></p>') {
-            sidebarContent = '';
+        let ttContent = editor.getHTML();
+        if (ttContent.trim() === '<p></p>') {
+            ttContent = '';
         }
-        document.getElementById('sidebarContent').value = sidebarContent;
+        document.getElementById('ttContent').value = ttContent;
     },
 })
-
-document.querySelector('.ttBtnH3').onclick = function() {
-    tteditor.chain().focus().toggleHeading({ level: 3 }).run();
-}
-
-document.querySelector('.ttBtnUl').onclick = function() {
-    tteditor.chain().focus().toggleBulletList().run();
-}
-
-document.querySelector('.ttBtnA').onclick = function() {
-    let linkUrlField = document.getElementById('linkUrl');
-    let linkModal = new Modal(document.getElementById('linkModal'));
-    let existingLink = tteditor.getAttributes('link');
-    let title = document.getElementById('insertUpdateHyperlinkTitle');
-    let submitBtn = document.getElementById('ttBtnASubmit');
-    let removeBtn = document.getElementById('ttBtnARemove');
-
-
-    if (existingLink.href === undefined) {
-        title.textContent = title.dataset.insert;
-        submitBtn.textContent = submitBtn.dataset.insert;
-        removeBtn.classList.add('d-none');
-        linkUrlField.value = '';
-    } else {
-        title.textContent = title.dataset.update;
-        submitBtn.textContent = submitBtn.dataset.update;
-        linkUrlField.value = existingLink.href;
-        removeBtn.classList.remove('d-none');
+let ttBtnH3 = document.querySelector('.ttBtnH3')
+if (ttBtnH3) {
+    ttBtnH3.onclick = function() {
+        tteditor.chain().focus().toggleHeading({ level: 3 }).run();
     }
+}
 
-    linkModal.show();
-    linkUrlField.focus();
+let ttBtnUl = document.querySelector('.ttBtnUl')
+if (ttBtnUl) {
+    ttBtnUl.onclick = function() {
+        tteditor.chain().focus().toggleBulletList().run();
+    }
+}
+
+let ttBtnA = document.querySelector('.ttBtnA')
+if (ttBtnA) {
+    ttBtnA.onclick = function() {
+        let linkUrlField = document.getElementById('linkUrl');
+        let linkModal = new Modal(document.getElementById('linkModal'));
+        let existingLink = tteditor.getAttributes('link');
+        let title = document.getElementById('insertUpdateHyperlinkTitle');
+        let submitBtn = document.getElementById('ttBtnASubmit');
+        let removeBtn = document.getElementById('ttBtnARemove');
+    
+        if (existingLink.href === undefined) {
+            title.textContent = title.dataset.insert;
+            submitBtn.textContent = submitBtn.dataset.insert;
+            removeBtn.classList.add('d-none');
+            linkUrlField.value = '';
+        } else {
+            title.textContent = title.dataset.update;
+            submitBtn.textContent = submitBtn.dataset.update;
+            linkUrlField.value = existingLink.href;
+            removeBtn.classList.remove('d-none');
+        }
+    
+        linkModal.show();
+        linkUrlField.focus();
+    }
 }
 
 document.getElementById('ttBtnASubmit').onclick = function() {
