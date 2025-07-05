@@ -32,7 +32,8 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
         controller_resolver:
-            auto_mapping: true
+            enabled: false
+            auto_mapping: false
 
 when@test:
     doctrine:
