@@ -29,13 +29,6 @@
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <div class="form-check mb-3">
-            <input class="form-check-input" name="_remember_me" type="checkbox" id="rememberMe">
-            <label class="form-check-label" for="rememberMe">
-                Remember me
-            </label>
-        </div>
-
         <button class="btn btn-lg btn-primary" type="submit" data-test="submit">Log in</button>
         <a class="btn btn-lg btn-link" href="{{ path('app_forgot_password') }}">Forgot password</a>
     </form>

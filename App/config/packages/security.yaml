@@ -24,9 +24,7 @@ security:
                 enable_csrf: true
                 success_handler: App\Security\LoginSuccessHandler
             remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800 # 1 week in seconds
-                # TODO: Consider always_remember_me option if this works well
+                always_remember_me: true
             logout:
                 path: app_logout
                 # where to redirect after logout
