@@ -2,3 +2,4 @@ habitat_repo_url: https://github.com/carlnewton/habitat
 habitat_repo_version: main
 email_address: email@example.com
 domain: example.com
+timezone: Etc/UTC

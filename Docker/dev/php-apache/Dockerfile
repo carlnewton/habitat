@@ -11,6 +11,7 @@ RUN chown -R www-data:www-data /var/www/uploads
 # ini files
 COPY ./opcache.ini "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
 COPY ./file_uploads.ini "$PHP_INI_DIR/conf.d/file_uploads.ini"
+COPY ./timezone.ini "$PHP_INI_DIR/conf.d/timezone.ini"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Install Packages

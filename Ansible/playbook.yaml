@@ -188,6 +188,13 @@
         dest: /opt/habitat/
         mode: 0755
 
+    - name: Set timezone
+      lineinfile:
+        path: /opt/habitat/docker-compose/php-apache/timezone.ini
+        state: present
+        regexp: "^date.timezone="
+        line: "date.timezone={{ timezone }}"
+
     - name: Delete Habitat app directory
       file:
         path: /opt/habitat/app

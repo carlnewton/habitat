@@ -12,6 +12,7 @@ RUN sed -ri -e 's!SSLCertificateKeyFile.*!SSLCertificateKeyFile /etc/letsencrypt
 
 # ini files
 COPY ./opcache.ini "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
+COPY ./timezone.ini "$PHP_INI_DIR/conf.d/timezone.ini"
 COPY ./file_uploads.ini "$PHP_INI_DIR/conf.d/file_uploads.ini"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
