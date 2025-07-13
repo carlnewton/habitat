@@ -257,6 +257,7 @@
       community.docker.docker_compose_v2:
         project_src: /opt/habitat/docker-compose
         state: present
+        # build: always // TODO: safely test this on a UAT instance
 
   handlers:
     - name: Update apt repository index
