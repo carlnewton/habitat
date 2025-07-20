@@ -27,11 +27,19 @@
                             <li><hr class="dropdown-divider"></li>
                         {% endif %}
                         <li>
-                            <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .comment" hx-post="/hx/delete-comment">
-                                <input name="commentId" type="hidden" value="{{ comment.id }}"/>
-                                <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
-                                <button type="submit" class="dropdown-item checkbox-action">Delete</button>
-                            </form>
+                            {% if app.user.id == comment.user.id %}
+                                <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .comment" hx-post="/hx/delete-comment">
+                                    <input name="commentId" type="hidden" value="{{ comment.id }}"/>
+                                    <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
+                                    <button type="submit" class="dropdown-item checkbox-action">Delete</button>
+                                </form>
+                            {% elseif is_granted('ROLE_SUPER_ADMIN') %}
+                                <form class="action-item-form" method="post" action="{{ path('app_moderation_comments_delete') }}">
+                                    <input name="items" type="hidden" value="{{ comment.id }}"/>
+                                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                                    <button type="submit" class="dropdown-item checkbox-action">Delete</button>
+                                </form>
+                            {% endif %}
                         </li>
                     {% endif %}
                 </ul>

@@ -3,7 +3,6 @@
 namespace App\Controller\HTMX;
 
 use App\Entity\Comment;
-use App\Entity\ModerationLog;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,20 +51,6 @@ class DeleteCommentController extends AbstractController
 
         if ($comment->getUser()->getId() !== $user->getId() && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             return new Response('', Response::HTTP_FORBIDDEN);
-        }
-
-        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $moderationLog = new ModerationLog();
-            $moderationLog
-                ->setUser($user)
-                ->setDate(new \DateTimeImmutable())
-                ->setAction($this->translator->trans('moderation_log.actions.delete_comment', [
-                    '%comment%' => $comment->getBody(),
-                    '%username%' => $comment->getUser()->getUsername(),
-                    '%post_title%' => $comment->getPost()->getTitle(),
-                ]));
-
-            $entityManager->persist($moderationLog);
         }
 
         $entityManager->remove($comment);

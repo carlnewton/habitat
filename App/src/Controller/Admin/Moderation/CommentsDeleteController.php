@@ -61,6 +61,19 @@ class CommentsDeleteController extends AbstractController
             ]);
         }
 
+        $fieldErrors = $this->validate($request);
+
+        if (!empty($fieldErrors)) {
+            return $this->render('admin/moderation/delete_comments.html.twig', [
+                'comment_ids' => implode(',', $commentIds),
+                'comments' => $comments,
+                'errors' => $fieldErrors,
+                'values' => [
+                    'reason' => $request->get('reason'),
+                ],
+            ]);
+        }
+
         foreach ($comments as $comment) {
             $moderationLog = new ModerationLog();
             $moderationLog
@@ -70,6 +83,7 @@ class CommentsDeleteController extends AbstractController
                     '%comment%' => $comment->getBody(),
                     '%username%' => $comment->getUser()->getUsername(),
                     '%post_title%' => $comment->getPost()->getTitle(),
+                    '%reason%' => $request->get('reason'),
                 ]));
 
             $entityManager->persist($moderationLog);
@@ -81,5 +95,18 @@ class CommentsDeleteController extends AbstractController
         $this->addFlash('notice', 'Comments deleted');
 
         return $this->redirectToRoute('app_moderation_comments');
+    }
+
+    private function validate(Request $request): array
+    {
+        $errors = [];
+
+        if (strlen($request->get('reason')) > 255) {
+            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+        } elseif (empty(trim($request->get('reason')))) {
+            $errors['reason'][] = 'This is a required field';
+        }
+
+        return $errors;
     }
 }
