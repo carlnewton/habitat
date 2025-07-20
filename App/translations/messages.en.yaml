@@ -334,7 +334,7 @@ moderation_log:
   sensitive_content_warning: Some of the logs may contain content of a sensitive nature. This could include obscene material, spam, or URLs that may pose a danger. You are encouraged to exercise caution when viewing the logs and to be mindful of the potentially harmful content you may encounter.
     
   actions:
-    ban: "Banned user '%username%'"
+    ban: "Banned user '%username%'. Reason: %reason%"
     freeze: "Frozen user '%username%' for %freeze_value% %freeze_interval%. Reason: %reason%"
     delete_post: "Deleted post '%post_title%' by '%username%'"
     edit_post: "Edited post '%post_title%' by '%username%'"

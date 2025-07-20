@@ -60,6 +60,19 @@ class UsersBanController extends AbstractController
             ]);
         }
 
+        $fieldErrors = $this->validate($request);
+
+        if (!empty($fieldErrors)) {
+            return $this->render('admin/moderation/ban_users.html.twig', [
+                'user_ids' => implode(',', $userIds),
+                'users' => $users,
+                'errors' => $fieldErrors,
+                'values' => [
+                    'reason' => $request->get('reason'),
+                ],
+            ]);
+        }
+
         $usersBanned = false;
         $blockedEmailAddressRepository = $entityManager->getRepository(BlockedEmailAddress::class);
         foreach ($users as $user) {
@@ -82,7 +95,10 @@ class UsersBanController extends AbstractController
             $moderationLog
                 ->setUser($this->getUser())
                 ->setDate(new \DateTimeImmutable())
-                ->setAction($this->translator->trans('moderation_log.actions.ban', ['%username%' => $user->getUsername()]))
+                ->setAction($this->translator->trans('moderation_log.actions.ban', [
+                    '%username%' => $user->getUsername(),
+                    '%reason%' => $request->get('reason'),
+                ]))
             ;
             $entityManager->persist($moderationLog);
 
@@ -96,5 +112,18 @@ class UsersBanController extends AbstractController
         }
 
         return $this->redirectToRoute('app_moderation_users');
+    }
+
+    private function validate(Request $request): array
+    {
+        $errors = [];
+
+        if (strlen($request->get('reason')) > 255) {
+            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+        } elseif (empty(trim($request->get('reason')))) {
+            $errors['reason'][] = 'This is a required field';
+        }
+
+        return $errors;
     }
 }
