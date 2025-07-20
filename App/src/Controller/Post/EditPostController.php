@@ -93,6 +93,7 @@ class EditPostController extends AbstractController
                     'post' => $post,
                     'categories' => $this->categories,
                     'attachmentIds' => implode(',', $attachmentIds),
+                    'reason' => $request->get('reason'),
                 ]);
             }
 
@@ -158,6 +159,7 @@ class EditPostController extends AbstractController
                     ->setAction($this->translator->trans('moderation_log.actions.edit_post', [
                         '%post_title%' => $post->getTitle(),
                         '%username%' => $post->getUser()->getUsername(),
+                        '%reason%' => $request->get('reason'),
                     ]));
 
                 $this->entityManager->persist($moderationLog);
@@ -227,6 +229,12 @@ class EditPostController extends AbstractController
             $errors['title'][] = 'The title must be a maximum of ' . Post::TITLE_MAX_LENGTH . ' characters';
         } elseif (empty(trim($request->get('title')))) {
             $errors['title'][] = 'The title cannot be empty';
+        }
+
+        if (strlen($request->get('reason')) > 255) {
+            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+        } elseif (empty(trim($request->get('reason')))) {
+            $errors['reason'][] = 'This is a required field';
         }
 
         if (empty($request->get('category'))) {

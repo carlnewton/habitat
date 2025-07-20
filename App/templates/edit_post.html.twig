@@ -70,6 +70,17 @@
             </div>
         {% endif %}
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if post.latitude is defined and post.longitude is defined %}{{ post.latitude }},{{ post.longitude }}{% endif %}">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control form-control-lg{% if errors.reason is defined %} is-invalid{% endif %}" name="reason" placeholder="Reason for edit" value="{% if reason is defined %}{{ reason }}{% endif %}">
+            <label for="reason">Reason for edit</label>
+            {% if errors.reason is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.reason %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
         <input type="hidden" name="token" value="{{ csrf_token('edit') }}">
         <div class="d-grid gap-2">
             <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg">Submit post</button>
