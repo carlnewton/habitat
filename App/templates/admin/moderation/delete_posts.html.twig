@@ -18,6 +18,19 @@
                 <input name="items" type="hidden" value="{{ post_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
+                <div class="row mb-3 text-start">
+                    <label for="reason" class="form-label col-sm-3 col-lg-2">Reason</label>
+                    <div class="col">
+                        <input type="text" class="form-control{% if errors.reason is defined %} is-invalid{% endif %}" name="reason" value="{% if values.reason is defined %}{{ values.reason }}{% endif %}" required>
+                        {% if errors.reason is defined %}
+                            <div class="invalid-feedback">
+                                {% for errorMessage in errors.reason %}
+                                    <p>{{ errorMessage }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-danger">Delete</button>
                 <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">Cancel</a>
             </form>

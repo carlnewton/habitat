@@ -2,7 +2,6 @@
 
 namespace App\Controller\HTMX;
 
-use App\Entity\ModerationLog;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,19 +51,6 @@ class DeletePostController extends AbstractController
 
         if ($post->getUser()->getId() !== $user->getId() && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             return new Response('', Response::HTTP_FORBIDDEN);
-        }
-
-        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $moderationLog = new ModerationLog();
-            $moderationLog
-                ->setUser($user)
-                ->setDate(new \DateTimeImmutable())
-                ->setAction($this->translator->trans('moderation_log.actions.delete_post', [
-                    '%post_title%' => $post->getTitle(),
-                    '%username%' => $post->getUser()->getUsername(),
-                ]));
-
-            $entityManager->persist($moderationLog);
         }
 
         $entityManager->remove($post);

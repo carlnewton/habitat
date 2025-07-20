@@ -336,7 +336,7 @@ moderation_log:
   actions:
     ban: "Banned user '%username%'. Reason: %reason%"
     freeze: "Frozen user '%username%' for %freeze_value% %freeze_interval%. Reason: %reason%"
-    delete_post: "Deleted post '%post_title%' by '%username%'"
+    delete_post: "Deleted post '%post_title%' by '%username%'. Reason: %reason%"
     edit_post: "Edited post '%post_title%' by '%username%'"
     delete_comment: "Deleted comment '%comment%' by '%username%' from post '%post_title%'"
     change_category: "Moved post '%post_title%' from '%from_category%' to '%to_category%'"

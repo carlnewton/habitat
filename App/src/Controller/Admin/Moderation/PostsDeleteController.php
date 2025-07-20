@@ -62,6 +62,20 @@ class PostsDeleteController extends AbstractController
             ]);
         }
 
+        $fieldErrors = $this->validate($request);
+
+        if (!empty($fieldErrors)) {
+            return $this->render('admin/moderation/delete_posts.html.twig', [
+                'post_ids' => implode(',', $postIds),
+                'posts' => $posts,
+                'show_category' => true,
+                'errors' => $fieldErrors,
+                'values' => [
+                    'reason' => $request->get('reason'),
+                ],
+            ]);
+        }
+
         foreach ($posts as $post) {
             $moderationLog = new ModerationLog();
             $moderationLog
@@ -70,6 +84,7 @@ class PostsDeleteController extends AbstractController
                 ->setAction($this->translator->trans('moderation_log.actions.delete_post', [
                     '%post_title%' => $post->getTitle(),
                     '%username%' => $post->getUser()->getUsername(),
+                    '%reason%' => $request->get('reason'),
                 ]));
 
             $entityManager->persist($moderationLog);
@@ -81,5 +96,18 @@ class PostsDeleteController extends AbstractController
         $this->addFlash('notice', 'Posts deleted');
 
         return $this->redirectToRoute('app_moderation_posts');
+    }
+
+    private function validate(Request $request): array
+    {
+        $errors = [];
+
+        if (strlen($request->get('reason')) > 255) {
+            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+        } elseif (empty(trim($request->get('reason')))) {
+            $errors['reason'][] = 'This is a required field';
+        }
+
+        return $errors;
     }
 }
