@@ -1,13 +1,33 @@
 {% extends 'base.html.twig' %}
 
 {% block sidebar %}
-    <div class="col-sm-3 order-first order-md-last">
+    <div class="col-md-3 order-first order-md-last">
         <ul class="nav nav-pills flex-column mb-3">
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">{{ 'admin.settings.title' | trans }}</a>
+                <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">{{ 'admin.overview.title' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') starts with 'app_moderation' %} active{% endif %}"{% if app.request.get('_route') == 'app_moderation_users' %} aria-current="page"{% endif %} href="{{ path('app_moderation_users') }}">{{ 'admin.moderation.title' | trans }}</a>
+                <a class="nav-link{% if app.request.get('_route') == 'app_admin_settings' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_settings' %} aria-current="page"{% endif %} href="{{ path('app_admin_settings') }}">{{ 'admin.settings.title' | trans }}</a>
+            </li>
+            <li class="nav-item{% if not (app.request.get('_route') starts with 'app_moderation') %} dropdown{% endif %}">
+                <a class="nav-link {% if not (app.request.get('_route') starts with 'app_moderation') %} dropdown-toggle{% else %} disabled{% endif %}" href="#"{% if not (app.request.get('_route') starts with 'app_moderation') %} role="button" data-bs-toggle="dropdown" area-expanded="false"{% endif %}>{{ 'admin.moderation.title' | trans }}</a>
+                <ul class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-menu{% else %}nav nav-pills flex-column ps-4{% endif %}">
+                    <li>
+                        <a class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-item{% else %}nav-link{% endif %}{% if app.request.get('_route') == 'app_moderation_users' %} active{% endif %}" href="{{ path('app_moderation_users') }}">{{ 'admin.moderation.users.menu_title' | trans }}</a>
+                    </li>
+                    <li>
+                        <a class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-item{% else %}nav-link{% endif %}{% if app.request.get('_route') == 'app_moderation_posts' %} active{% endif %}" href="{{ path('app_moderation_posts') }}">{{ 'admin.moderation.posts.menu_title' | trans }}</a>
+                    </li>
+                    <li>
+                        <a class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-item{% else %}nav-link{% endif %}{% if app.request.get('_route') == 'app_moderation_comments' %} active{% endif %}" href="{{ path('app_moderation_comments') }}">{{ 'admin.moderation.comments.menu_title' | trans }}</a>
+                    </li>
+                    <li>
+                        <a class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-item{% else %}nav-link{% endif %}{% if app.request.get('_route') == 'app_moderation_reports' %} active{% endif %}" href="{{ path('app_moderation_reports') }}">{{ 'admin.moderation.reports.menu_title' | trans }}</a>
+                    </li>
+                    <li>
+                        <a class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-item{% else %}nav-link{% endif %}{% if app.request.get('_route') == 'app_moderation_blocked_email_addresses' %} active{% endif %}" href="{{ path('app_moderation_blocked_email_addresses') }}">{{ 'admin.moderation.blocked_email_addresses.menu_title' | trans }}</a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">{{ 'admin.categories.title' | trans }}</a>

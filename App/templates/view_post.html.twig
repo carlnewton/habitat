@@ -66,7 +66,7 @@
             </div>
         {% endif %}
         <p class="text-muted float-end">
-            Posted by 
+            {{ 'post.posted_by' | trans }}
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <a class="text-secondary" href="{{ path('app_moderation_user', { id: post.user.id }) }}">{{ post.user.username }}</a>
             {% else %}

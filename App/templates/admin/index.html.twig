@@ -1,83 +1,112 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'admin.settings.title' | trans %}
+{% set page_title = 'admin.overview.title' | trans %}
 
 {% block body %}
-    <form method="post">
-        <div class="mb-3">
-            <label for="habitatName" class="form-label">{{ 'fields.habitat_name.title' | trans }}</label>
-            <input type="text" class="form-control{% if errors.habitatName is defined %} is-invalid{% endif %}" name="habitatName" id="habitatName" value="{{ values.habitatName }}">
-            {% if errors.habitatName is defined %}
-                <div class="invalid-feedback">
-                    {% for errorMessage in errors.habitatName %}
-                        <p>{{ errorMessage }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="location" class="form-label">{{ 'fields.location.title' | trans }}</label>
-            <div class="card{% if errors.location is defined %} border-danger{% endif %}">
-                <div class="card-body ratio ratio-16x9">
-                    <div class="rounded-top" id="map"></div>
-                </div>
-                <div class="card-body text-white bg-danger text-center fw-bold d-none" id="size-warning">
-                    {{ 'map.warnings.area_too_large' | trans }}
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="d-flex gx-2">
-                            <button type="button" class="btn btn-outline-secondary me-2 get-location" title="{{ 'buttons.show_current_location' | trans }}"><i class="bi bi-crosshair2"></i></button>
-                            <div class="input-group">
-                                <span class="input-group-text">{{ 'map.size_label' | trans }}</span>
-                                <input type="number" step="0.1" name="locationRadius" id="locationRadius" class="form-control" autocomplete="off" min="0">
-                                <button class="btn{% if values.locationMeasurement == "km" %} active{% endif %} btn-outline-secondary" type="button" id="measurement-kms">{{ 'map.toggle_kilometers' | trans }}</button>
-                                <button class="btn{% if values.locationMeasurement == 'miles' %} active{% endif %} btn-outline-secondary" type="button" id="measurement-miles">{{ 'map.toggle_miles' | trans }}</button>
-                            </div>
-                        </div>
+    <div class="row row-cols-1 row-cols-md-2">
+        {% if user_count > 0 %}
+            <div class="col">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person"></i> {{ user_count }} {{ 'admin.moderation.users.menu_title' | trans }}
+                        </h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for user in recent_users %}
+                            <a href="{{ path('app_moderation_user', { id: user.id }) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ user.username }}</h6>
+                                    <small class="text-body-secondary">{{ user.created|time_diff }}</small>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('app_moderation_users') }}" class="text-decoration-none">{{ 'admin.overview.view_more' | trans }}</a>
                     </div>
                 </div>
             </div>
-            {% if errors.location is defined %}
-                <div class="text-danger">
-                    {% for errorMessage in errors.location %}
-                        <p>{{ errorMessage }}</p>
-                    {% endfor %}
+        {% endif %}
+        {% if post_count > 0 %}
+            <div class="col">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-file-richtext"></i> {{ post_count }} {{ 'admin.moderation.posts.menu_title' | trans }}
+                        </h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for post in recent_posts %}
+                            <a href="{{ path('app_view_post', { id: post.id }) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ post.title }}</h6>
+                                    <small class="text-body-secondary">{{ post.posted|time_diff }}</small>
+                                </div>
+                                <p class="card-text">{{ 'post.posted_by' | trans }} {{ post.user.username }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('app_moderation_posts') }}" class="text-decoration-none">{{ 'admin.overview.view_more' | trans }}</a>
+                    </div>
                 </div>
-            {% endif %}
-            <div class="form-text">Users will be able to create posts in any location inside the circle</div>
-            <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng }}">
-            <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters }}">
-            <input type="hidden" name="locationZoom" id="locationZoom" value="{{ values.locationZoom }}">
-            <input type="hidden" name="locationMeasurement" id="locationMeasurement" value="{{ values.locationMeasurement }}">
-        </div>
-        <div class="mb-3">
-            <label for="sidebarContent" class="form-label">{{ 'fields.sidebar_content.title' | trans }}</label>
-            <div class="card{% if errors.sidebarContent is defined %} border-danger{% endif %}">
-                <div class="card-header">
-                    <button type="button" class="ttBtnH3 btn">H</button>
-                    <button type="button" class="ttBtnUl btn"><i class="bi bi-list-ul"></i></button>
-                    <button type="button" class="ttBtnA btn"><i class="bi bi-link"></i></button>
-                </div>
-                <div class="card-body editor"></div>
             </div>
-            {% if errors.sidebarContent is defined %}
-                <div class="text-danger">
-                    {% for errorMessage in errors.sidebarContent %}
-                        <p>{{ errorMessage }}</p>
-                    {% endfor %}
+        {% endif %}
+        {% if comment_count > 0 %}
+            <div class="col">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-chat"></i> {{ comment_count }} {{ 'admin.moderation.comments.menu_title' | trans }}
+                        </h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for comment in recent_comments %}
+                            <a href="{{ path('app_view_post', { id: comment.post.id }) }}#comments" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ comment.user.username }}</h6>
+                                    <small class="text-body-secondary">{{ comment.posted|time_diff }}</small>
+                                </div>
+                                <p class="card-text">{{ comment.body }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('app_moderation_comments') }}" class="text-decoration-none">{{ 'admin.overview.view_more' | trans }}</a>
+                    </div>
                 </div>
-            {% endif %}
-            <input type="hidden" name="sidebarContent" id="ttContent" value="{{ values.sidebarContent }}">
-        </div>
-        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-        <button type="submit" class="btn btn-primary">{{ 'buttons.save' | trans }}</button>
-    </form>
-
-    {% include 'partials/tt_editor/link_modal.html.twig' %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('admin_map') }}
-    {{ encore_entry_script_tags('tt_editor') }}
+            </div>
+        {% endif %}
+        {% if report_count > 0 %}
+            <div class="col">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-megaphone"></i> {{ report_count }} {{ 'admin.moderation.reports.menu_title' | trans }}
+                        </h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for report in recent_reports %}
+                            <a href="{{ path('app_moderation_reports') }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ report.reportedBy.username }}</h6>
+                                    <small class="text-body-secondary">{{ report.reportedDate|time_diff }}</small>
+                                </div>
+                                <p class="card-text">
+                                    {% if report.type == 'post' %}
+                                        {{ 'report_post.reported' | trans }}
+                                    {% else %}
+                                        {{ 'report_comment.reported' | trans }}
+                                    {% endif %}
+                                </p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('app_moderation_reports') }}" class="text-decoration-none">{{ 'admin.overview.view_more' | trans }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

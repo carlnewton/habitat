@@ -42,7 +42,7 @@
                             <td>
                                 {% if report.type == 'post' %}
                                     <a href="{{ path('app_view_post', { id: report.post.id }) }}">{{ report.post.title }}</a>
-                                    posted by
+                                    {{ 'post.posted_by' | trans }}
                                     <a href="{{ path('app_moderation_user', { id: report.post.user.id }) }}">{{ report.post.user.username }}</a>
                                 {% else %}
                                     "<em>{{ report.comment.body | slice(0, 100) }}{% if report.comment.body | length > 100 %}...{% endif %}</em>"

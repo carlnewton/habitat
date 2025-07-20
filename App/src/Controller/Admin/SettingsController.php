@@ -21,7 +21,7 @@ class SettingsController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/admin', name: 'app_admin_index', methods: ['GET', 'POST'])]
+    #[Route(path: '/admin/settings', name: 'app_admin_settings', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -41,7 +41,7 @@ class SettingsController extends AbstractController
                     $this->translator->trans('fields.csrf_token.validations.invalid'),
                 );
 
-                return $this->render('admin/index.html.twig', [
+                return $this->render('admin/settings.html.twig', [
                     'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
                 ]);
             }
@@ -49,7 +49,7 @@ class SettingsController extends AbstractController
             $fieldErrors = $this->validateRequest($request);
 
             if (!empty($fieldErrors)) {
-                return $this->render('admin/index.html.twig', [
+                return $this->render('admin/settings.html.twig', [
                     'errors' => $fieldErrors,
                     'values' => [
                         'habitatName' => $request->get('habitatName'),
@@ -113,7 +113,7 @@ class SettingsController extends AbstractController
                 'Settings saved'
             );
 
-            return $this->redirectToRoute('app_admin_index');
+            return $this->redirectToRoute('app_admin_settings');
         }
 
         $habitatNameSetting = $settingsRepository->getSettingByName('habitatName');
@@ -122,7 +122,7 @@ class SettingsController extends AbstractController
         $locationMeasurementSetting = $settingsRepository->getSettingByName('locationMeasurement');
         $locationRadiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
 
-        return $this->render('admin/index.html.twig', [
+        return $this->render('admin/settings.html.twig', [
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
                 'locationLatLng' => ($locationLatLngSetting) ? $locationLatLngSetting->getValue() : '51,0',

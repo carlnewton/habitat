@@ -169,9 +169,14 @@ fields:
     enabled: Posts from this category appear in your feed
     disabled: Posts from this category are hidden from your feed
 
+post:
+  posted_by: "Posted by"
+
 report_post:
+  reported: "Reported a post"
   confirmation: "Thank you for reporting this post. It will be reviewed by the administrator."
 report_comment:
+  reported: "Reported a comment"
   confirmation: "Thank you for reporting this comment. It will be reviewed by the administrator."
 
 buttons:
@@ -233,6 +238,9 @@ admin:
     freeze: "Freeze"
     dismiss: "Dismiss"
     change_category: "Change category"
+  overview:
+    title: "Overview"
+    view_more: "View more"
   settings:
     title: "Settings"
     validations:
