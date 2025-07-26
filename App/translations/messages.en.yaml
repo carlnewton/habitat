@@ -236,6 +236,7 @@ admin:
   actions:
     ban: "Ban"
     freeze: "Freeze"
+    unfreeze: "Unfreeze"
     dismiss: "Dismiss"
     change_category: "Change category"
   overview:

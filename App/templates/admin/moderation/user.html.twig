@@ -22,9 +22,25 @@
                 {% if user.posts|length > 0 %}
                     <a href="{{ path('app_moderation_posts', { user: user.id }) }}" class="dropdown-item">View posts</a>
                 {% endif %}
+            </li>
+            <li>
                 {% if user.comments|length > 0 %}
                     <a href="{{ path('app_moderation_comments', { user: user.id }) }}" class="dropdown-item">View comments</a>
                 {% endif %}
+            </li>
+            <li>
+                <form class="action-item-form" method="post" action="{% if user.frozen %}{{ path('app_moderation_users_unfreeze') }}{% else %}{{ path('app_moderation_users_freeze') }}{% endif %}">
+                    <input name="items" type="hidden" value="{{ user.id }}"/>
+                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                    <button type="submit" class="dropdown-item checkbox-action">{% if user.frozen %}{{ 'admin.actions.unfreeze' | trans }}{% else %}{{ 'admin.actions.freeze' | trans }}{% endif %}</button>
+                </form>
+            </li>
+            <li>
+                <form class="action-item-form" method="post" action="{{ path('app_moderation_users_ban') }}">
+                    <input name="items" type="hidden" value="{{ user.id }}"/>
+                    <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                    <button type="submit" class="dropdown-item checkbox-action">{{ 'admin.actions.ban' | trans }}</button>
+                </form>
             </li>
         </ul>
     </div>
@@ -36,22 +52,22 @@
                 <td>{{ user.username }}</td>
             </tr>
             <tr>
-                <th>Roles</th>
-                <td>
-                    <ul>
-                        {% for role in user.roles %}
-                            <li>{{ role }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
                 <th>Email address</th>
                 <td>{{ user.emailaddress }}</td>
             </tr>
             <tr>
                 <th>Created</th>
                 <td>{{ user.created|date }}</td>
+            </tr>
+            <tr>
+                <th>Freeze status</th>
+                <td>
+                    {% if user.frozen %}
+                        Currently frozen. This user will be unfrozen {{ user.frozenLog.unfreezeDate|time_diff }}.
+                    {% else %}
+                        Not frozen
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Posts</th>
