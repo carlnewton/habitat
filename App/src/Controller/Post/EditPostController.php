@@ -19,6 +19,9 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Note: If ever opening this up to generic users, ensure not to allow frozen accounts to edit posts.
+ */
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class EditPostController extends AbstractController
 {

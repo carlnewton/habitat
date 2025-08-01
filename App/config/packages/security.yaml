@@ -22,7 +22,6 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                success_handler: App\Security\LoginSuccessHandler
             remember_me:
                 always_remember_me: true
             logout:

@@ -50,6 +50,15 @@ class CreatePostController extends AbstractController
             return $this->redirectToRoute('app_index_index');
         }
 
+        if (!$user->isEmailVerified()) {
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('flash_messages.prevent_action_account_unverified'),
+            );
+
+            return $this->redirectToRoute('app_index_index');
+        }
+
         $postRepository = $this->entityManager->getRepository(Post::class);
         $categoryRepository = $this->entityManager->getRepository(Category::class);
         $this->categories = $categoryRepository->findBy(

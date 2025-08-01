@@ -320,7 +320,8 @@ menus:
 
 flash_messages:
   account_frozen: "You cannot perform this action because your account has been frozen until %unfreeze_datetime%. Reason: %reason%"
-  email_verification_failed: "You must verify your email address before logging in."
+  prevent_action_account_unverified: "You cannot perform this action because your email address has not yet been verified."
+  account_unverified: "Your email address has not yet been verified. Check your emails to verify your email address."
 
 notifications:
   new_post_comments:

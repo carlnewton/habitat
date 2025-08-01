@@ -7,10 +7,6 @@
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        {% if email_verification_failed %}
-            <div class="alert alert-danger" data-test="email-verification-failed">{{ 'flash_messages.email_verification_failed' | trans }}</div>
-        {% endif %}
-
         {% if app.user %}
             <div class="mb-3">
                 You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>

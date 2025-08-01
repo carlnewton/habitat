@@ -44,8 +44,13 @@ class AddCommentController extends AbstractController
                     '%reason%' => $freezeLog->getReason(),
                 ]),
             ]);
+        }
 
-            return $this->redirectToRoute('app_index_index');
+        if (!$user->isEmailVerified()) {
+            return $this->render('partials/hx/alert.html.twig', [
+                'type' => 'danger',
+                'message' => $this->translator->trans('flash_messages.prevent_action_account_unverified'),
+            ]);
         }
 
         if (empty($request->get('postId'))) {

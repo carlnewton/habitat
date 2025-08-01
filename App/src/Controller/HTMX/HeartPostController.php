@@ -30,6 +30,10 @@ class HeartPostController extends AbstractController
             return new Response('', Response::HTTP_FORBIDDEN);
         }
 
+        if ($user->isFrozen() || !$user->isEmailVerified()) {
+            return new Response('', Response::HTTP_FORBIDDEN);
+        }
+
         $postRepository = $entityManager->getRepository(Post::class);
         $post = $postRepository->findOneBy([
             'id' => $postId,

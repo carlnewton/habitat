@@ -42,8 +42,6 @@ class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_email_address' => $lastEmailAddress,
-            // Unsure how to better deal with this. It would be nice to be able to set that last authentication error
-            'email_verification_failed' => $request->get('email_verification_failed', false),
             'error' => $error,
         ]);
     }

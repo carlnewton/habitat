@@ -121,6 +121,12 @@
                 </div>
             {% endfor %}
 
+            {% if app.user and not app.user.emailVerified %}
+                <div class="alert alert-warning" role="alert" data-test="email-unverified-message">
+                    {{ 'flash_messages.account_unverified' | trans }}
+                </div>
+            {% endif %}
+
             {{ component('Announcement') }}
 
             <div class="row">

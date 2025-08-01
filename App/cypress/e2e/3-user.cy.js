@@ -219,23 +219,6 @@ describe('user', function() {
       cy.getElement('success-message').contains('Check your emails to verify your email address');
     })
 
-    it('does not allow sign in when unverified', function() {
-      cy.visit('/signup');
-      cy.getElement('username').type('UnverifiedUser');
-      cy.getElement('email').type('UnverifiedUser@example.com');
-      cy.getElement('password').type('Password123');
-      cy.getElement('submit').click();
-
-      cy.getElement('success-message').contains('Check your emails to verify your email address');
-
-      cy.visit('/login')
-      cy.getElement('email_address').type('UnverifiedUser@example.com');
-      cy.getElement('password').type('Password123');
-      cy.getElement('submit').click();
-
-      cy.getElement('email-verification-failed').should('be.visible');
-    })
-
   })
 
   describe('user signed up', function() {
