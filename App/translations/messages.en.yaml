@@ -193,6 +193,7 @@ buttons:
   block_email_address: "Block an email address"
   report_this_post: "Report this post"
   report_this_comment: "Report this comment"
+  resend_verification_email: "Resend verification email"
 
 map:
   size_label: "Size"

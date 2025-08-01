@@ -124,6 +124,13 @@
             {% if app.user and not app.user.emailVerified %}
                 <div class="alert alert-warning" role="alert" data-test="email-unverified-message">
                     {{ 'flash_messages.account_unverified' | trans }}
+
+                    <form id="resend-verification" hx-post="{{ path('app_hx_resend_verification_email') }}" hx-swap="outerHTML">
+                        <button class="btn btn-warning mt-3">
+                            {{ 'buttons.resend_verification_email' | trans }}
+                        </button>
+                        <input type="hidden" name="token" value="{{ csrf_token('resend_verification_email') }}">
+                    </form>
                 </div>
             {% endif %}
 
