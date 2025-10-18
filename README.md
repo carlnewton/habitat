@@ -1,12 +1,14 @@
 # Habitat
 
-This project is currently in early development. For information on the purpose of Habitat,
-[read the blog post](https://carlnewton.github.io/posts/location-based-social-network/).
+Habitat is a free and open source, self-hosted platform for communities to discover and discuss their local area.
+
+Locals can create posts linked to a specific location on a map, making it easy for others to find and join the
+conversation about their local area.
 
 ## Getting Started
 
 Fork this repository to create your own instance of Habitat. To adhere to the AGPL license, your fork must be a public
-repository, so be careful not to ever commit any secrets to your fork.
+repository, so be careful not to ever commit any secrets.
 
 ## Linux Server Hosting
 
@@ -30,3 +32,8 @@ docker exec -it habitat-apache-php bash
 ```
 
 Habitat can be loaded in the web browser from [localhost](http://localhost).
+
+## Further Information
+
+- [Could We Build a Decentralised Social Platform Rooted in Place?](https://carlnewton.github.io/posts/location-based-social-network/)
+- [I'm Building Habitat](https://carlnewton.github.io/posts/building-habitat/)

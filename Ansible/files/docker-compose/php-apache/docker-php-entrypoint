@@ -19,6 +19,9 @@ if [ -f /var/www/html/.install ]; then
     rm -f /var/www/html/.install
 fi
 
+# The session that runs the cron job also needs these vars.
+env | grep -E '^(DB_|MARIADB_|APP_|MAILER_DSN|ENCRYPTION_KEY|HABITAT_DOMAIN)' > /etc/container_env
+chmod 600 /etc/container_env
 service cron start
 
 if [ "${1#-}" != "$1" ]; then
