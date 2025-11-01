@@ -25,6 +25,7 @@ jobs:
         php composer-setup.php --quiet
         RESULT=$?
         rm composer-setup.php
+        ls -la
         exit $RESULT
 
     - name: Composer dependencies
