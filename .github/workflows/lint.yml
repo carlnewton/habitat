@@ -9,7 +9,22 @@ jobs:
     - uses: actions/checkout@v5
 
     - name: Install composer
-      run: wget https://raw.githubusercontent.com/composer/getcomposer.org/f3108f64b4e1c1ce6eb462b159956461592b3e3e/web/installer -O - -q | php -- --quiet
+      run: |
+        EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+        ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+        if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+        then
+          >&2 echo 'ERROR: Invalid installer checksum'
+          rm composer-setup.php
+          exit 1
+        fi
+
+        php composer-setup.php --quiet
+        RESULT=$?
+        rm composer-setup.php
+        exit $RESULT
 
     - name: Composer dependencies
       working-directory: ./App
