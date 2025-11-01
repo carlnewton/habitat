@@ -8,6 +8,9 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
+    - name: Install git
+      run: apt-get install git-all
+
     - name: Install composer
       working-directory: ./App
       run: |
@@ -30,7 +33,6 @@ jobs:
     - name: Composer dependencies
       working-directory: ./App
       run: |
-        ls -la
         ./composer.phar install
 
     - name: PHP CS Fix
