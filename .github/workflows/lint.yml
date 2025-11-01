@@ -8,6 +8,9 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
+    - name: Install composer
+      run: wget https://raw.githubusercontent.com/composer/getcomposer.org/f3108f64b4e1c1ce6eb462b159956461592b3e3e/web/installer -O - -q | php -- --quiet
+
     - name: Composer dependencies
       working-directory: ./App
       run: composer install
