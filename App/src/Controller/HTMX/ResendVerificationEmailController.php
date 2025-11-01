@@ -4,7 +4,6 @@ namespace App\Controller\HTMX;
 
 use App\Entity\Settings;
 use App\Entity\User;
-use App\Entity\UserHiddenCategory;
 use App\Utilities\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
