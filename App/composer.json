@@ -14,22 +14,22 @@
         "doctrine/orm": "^3.1",
         "knplabs/knp-time-bundle": "^2.2",
         "symfony/apache-pack": "^1.0",
-        "symfony/console": "7.2.*",
-        "symfony/dotenv": "7.2.*",
+        "symfony/console": "7.3.*",
+        "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "7.2.*",
-        "symfony/mailer": "7.2.*",
-        "symfony/mime": "7.2.*",
-        "symfony/rate-limiter": "7.2.*",
-        "symfony/runtime": "7.2.*",
-        "symfony/security-bundle": "7.2.*",
-        "symfony/security-csrf": "7.2.*",
-        "symfony/translation": "7.2.*",
-        "symfony/twig-bundle": "7.2.*",
+        "symfony/framework-bundle": "7.3.*",
+        "symfony/mailer": "7.3.*",
+        "symfony/mime": "7.3.*",
+        "symfony/rate-limiter": "7.3.*",
+        "symfony/runtime": "7.3.*",
+        "symfony/security-bundle": "7.3.*",
+        "symfony/security-csrf": "7.3.*",
+        "symfony/translation": "7.3.*",
+        "symfony/twig-bundle": "7.3.*",
         "symfony/ux-twig-component": "^2.17",
-        "symfony/validator": "7.2.*",
+        "symfony/validator": "7.3.*",
         "symfony/webpack-encore-bundle": "^2.1",
-        "symfony/yaml": "7.2.*",
+        "symfony/yaml": "7.3.*",
         "symfonycasts/sass-bundle": "^0.6.0",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
@@ -81,7 +81,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.2.*"
+            "require": "7.3.*"
         }
     },
     "require-dev": {
@@ -89,11 +89,11 @@
         "doctrine/doctrine-fixtures-bundle": "^3.6",
         "friendsofphp/php-cs-fixer": "^3.59",
         "phpunit/phpunit": "^9.5",
-        "symfony/browser-kit": "7.2.*",
-        "symfony/css-selector": "7.2.*",
+        "symfony/browser-kit": "7.3.*",
+        "symfony/css-selector": "7.3.*",
         "symfony/maker-bundle": "^1.58",
         "symfony/phpunit-bridge": "^7.0",
-        "symfony/stopwatch": "7.2.*",
-        "symfony/web-profiler-bundle": "7.2.*"
+        "symfony/stopwatch": "7.3.*",
+        "symfony/web-profiler-bundle": "7.3.*"
     }
 }
