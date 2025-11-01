@@ -7,7 +7,10 @@ jobs:
       image: php:8.3-apache
     steps:
     - uses: actions/checkout@v5
-    - name: PHP-CS-Fixer
       working-directory: ./App
-    - run: composer install
-    - run: php vendor/bin/php-cs-fixer fix --dry-run
+
+    - name: Composer dependencies
+      run: composer install
+
+    - name: PHP CS Fix
+      run: php vendor/bin/php-cs-fixer fix --dry-run
