@@ -11,7 +11,7 @@ jobs:
     - name: Install git
       run: |
         apt-get update -y
-        apt-get install git
+        apt-get install git -y
 
     - name: Install composer
       working-directory: ./App
