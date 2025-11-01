@@ -25,12 +25,13 @@ jobs:
         php composer-setup.php --quiet
         RESULT=$?
         rm composer-setup.php
-        ls -la
         exit $RESULT
 
     - name: Composer dependencies
       working-directory: ./App
-      run: composer.phar install
+      run: |
+        ls -la
+        ./composer.phar install
 
     - name: PHP CS Fix
       working-directory: ./App
