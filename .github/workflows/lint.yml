@@ -3,11 +3,11 @@ name: Lint
 jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
+    container:
+      image: php:8.3-apache
     steps:
     - uses: actions/checkout@v5
     - name: PHP-CS-Fixer
       working-directory: ./App
-      with:
-        php-version: 8.2
     - run: composer install
     - run: php vendor/bin/php-cs-fixer fix --dry-run
