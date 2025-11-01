@@ -9,6 +9,7 @@ jobs:
     - uses: actions/checkout@v5
 
     - name: Install composer
+      working-directory: ./App
       run: |
         EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -28,7 +29,7 @@ jobs:
 
     - name: Composer dependencies
       working-directory: ./App
-      run: composer install
+      run: composer.phar install
 
     - name: PHP CS Fix
       working-directory: ./App
