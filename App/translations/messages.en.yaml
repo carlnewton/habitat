@@ -179,6 +179,24 @@ report_comment:
   reported: "Reported a comment"
   confirmation: "Thank you for reporting this comment. It will be reviewed by the administrator."
 
+account:
+  login:
+    title: "Log in to your account"
+    logged_in_message: "You are logged in as %username%,"
+
+about:
+  title: "About Habitat"
+  what_is_habitat:
+    title: "What is Habitat?"
+    1: "Habitat is a free and open-source social platform for people to discover what there is to see and do in their local area."
+    2: "Small communities, such as towns and villages, are able to create their own instances of Habitat to share information about local places of interest."
+    3: "is one such instance."
+  who_runs_habitat:
+    title: "Who runs Habitat?"
+    1: "Each Habitat community operates independently, with its own dedicated administrator overseeing the instance."
+    2: "This particular instance is managed by"
+    3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
+
 buttons:
   continue: "Continue"
   change: "Change"
@@ -194,7 +212,10 @@ buttons:
   report_this_post: "Report this post"
   report_this_comment: "Report this comment"
   resend_verification_email: "Resend verification email"
-
+  login: "Log in"
+  logout: "Log out"
+  forgot_password: "Forgot password"
+  find_out_more: "Find out more"
 map:
   size_label: "Size"
   toggle_miles: "miles"

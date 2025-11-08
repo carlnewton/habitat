@@ -44,7 +44,7 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <div class="form-text">Users will be able to create posts in any location inside the circle</div>
+            <div class="form-text">{{ 'setup.set_location.info.post_inside_circle' | trans }}</div>
             <input type="hidden" name="locationLatLng" id="locationLatLng" value="{{ values.locationLatLng }}">
             <input type="hidden" name="locationRadiusMeters" id="locationRadiusMeters" value="{{ values.locationRadiusMeters }}">
             <input type="hidden" name="locationZoom" id="locationZoom" value="{{ values.locationZoom }}">

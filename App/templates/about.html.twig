@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
-{% set page_title = 'About Habitat' %}
+{% set page_title = 'about.title' | trans %}
 
 {% block outer_body %}
     <div class="col-12 text-center">
         <div class="pt-5">
             <img src="/build/images/habitat_icon.svg" width="100" height="100" alt="Habitat">
         </div>
-        <h1 class="display-2 pt-3 pb-5">About Habitat</h1>
+        <h1 class="display-2 pt-3 pb-5">{{ 'about.title' | trans }}</h1>
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <!-- Illustration by manypixels.co -->
@@ -89,15 +89,15 @@
                 </svg>
             </div>
             <div class="col-xs-12 col-md-8 text-md-start align-self-center">
-                <h2 class="display-5">What is Habitat?</h2>
+                <h2 class="display-5">{{ 'about.what_is_habitat.title' | trans }}</h2>
                 <p class="fs-4 fw-light">
-                    Habitat is a free and open-source social platform for people to discover what there is to see and do in their local area.
+                    {{ 'about.what_is_habitat.1' | trans }}
                 </p>
                 <p class="fs-4 fw-light">
-                    Small communities, such as towns and villages, are able to create their own instances of Habitat to share information about local places of interest.
+                    {{ 'about.what_is_habitat.2' | trans }}
                 </p>
                 <p class="fs-4 fw-light">
-                    <strong>{{ domain }}</strong> is one such instance.
+                    <strong>{{ domain }}</strong> {{ 'about.what_is_habitat.3' | trans }}
                 </p>
             </div>
         </div>
@@ -244,21 +244,21 @@
                 </svg>
             </div>
             <div class="col-xs-12 col-md-8 text-md-end align-self-center order-md-first">
-                <h2 class="display-5">Who runs Habitat?</h2>
+                <h2 class="display-5">{{ 'about.who_runs_habitat.title' | trans }}</h2>
                 <p class="fs-4 fw-light">
-                    Each Habitat community operates independently, with its own dedicated administrator overseeing the instance.
+                    {{ 'about.who_runs_habitat.1' | trans }}
                 </p>
                 <p class="fs-4 fw-light">
-                    This particular instance is managed by <strong>{{ admin.username }}</strong>.
+                    {{ 'about.who_runs_habitat.2' | trans }} <strong>{{ admin.username }}</strong>.
                 </p>
                 <p class="fs-4 fw-light">
-                    If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance.
+                    {{ 'about.who_runs_habitat.3' | trans }}
                 </p>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <a href="https://github.com/carlnewton/habitat" class="btn btn-lg btn-primary">Find out more</a>
+                <a href="https://github.com/carlnewton/habitat" class="btn btn-lg btn-primary">{{ 'buttons.find_out_more' | trans }}</a>
             </div>
         </div>
     </div>

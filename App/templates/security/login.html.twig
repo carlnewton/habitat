@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% set page_title = 'Log in to your account' %}
+{% set page_title = 'account.login.title' | trans %}
 
 {% block body %}
     <form method="post">
@@ -9,23 +9,24 @@
 
         {% if app.user %}
             <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                {{ 'account.login.logged_in_message' | trans({ '%username%': app.user.username }) }}
+                <a href="{{ path('app_logout') }}">{{ 'buttons.logout' | trans}}</a>
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Log in to your account</h1>
+        <h1 class="h3 mb-3 font-weight-normal">{{ 'account.login.title' | trans }}</h1>
         <div class="form-floating mb-3">
             <input type="email" class="form-control" id="email_address" name="_username" value="{{ last_email_address }}" autocomplete="username" required autofocus data-test="email_address">
-            <label for="email_address">Email address</label>
+            <label for="email_address">{{ 'fields.email_address.title' | trans }}</label>
         </div>
         <div class="form-floating mb-3">
             <input type="password" name="_password" class="form-control" id="password" autocomplete="current-password" required data-test="password">
-            <label for="password">Password</label>
+            <label for="password">{{ 'fields.password.title' | trans }}</label>
         </div>
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <button class="btn btn-lg btn-primary" type="submit" data-test="submit">Log in</button>
-        <a class="btn btn-lg btn-link" href="{{ path('app_forgot_password') }}">Forgot password</a>
+        <button class="btn btn-lg btn-primary" type="submit" data-test="submit">{{ 'buttons.login' | trans }}</button>
+        <a class="btn btn-lg btn-link" href="{{ path('app_forgot_password') }}">{{ 'buttons.forgot_password' | trans }}</a>
     </form>
 {% endblock %}
