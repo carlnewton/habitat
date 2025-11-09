@@ -216,6 +216,8 @@ buttons:
   logout: "Log out"
   forgot_password: "Forgot password"
   find_out_more: "Find out more"
+  add_a_category: "Add a category"
+  add_a_question: "Add a question"
 map:
   size_label: "Size"
   toggle_miles: "miles"
@@ -271,6 +273,12 @@ admin:
         max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
       sidebar_content:
         disallowed_html_tags: "The sidebar content contains disallowed HTML tags"
+  tables:
+    summary: "Displaying %item_count% of %total_item_count%"
+    filtered_summary: "Displaying %item_count% of %filtered_item_count% filtered from %total_item_count%"
+    no_matching_items: "No matching %item_name% found"
+    per_page: "%item_name% per page"
+
   moderation:
     title: "Moderation"
     users:
@@ -299,6 +307,10 @@ admin:
         disallowed_html_tags: "The announcement content contains disallowed HTML tags"
   user_registration:
     title: "User registration"
+    allow_registration: "Allow users to register"
+    registration_challenge:
+      title: "Registration challenge"
+      help_text: "You can create questions which the user must answer correctly in order to create an account. If creating multiple questions, the user will be required to answer one question at random when registering for an account."
   amazon_s3_details:
     title: "Amazon S3 details"
   mail:

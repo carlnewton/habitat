@@ -1,24 +1,24 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Categories' %}
+{% set page_title = 'admin.categories.title' | trans %}
 
 {% block body %}
 
     <div class="d-flex justify-content-between">
         <div class="dropdown">
             <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
-                Actions
+                {{ 'buttons.actions' | trans }}
             </button>
             <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
                 <li>
                     <form class="action-item-form" method="post" action="{{ path('app_admin_categories_delete') }}">
                         <input name="items" type="hidden" value=""/>
                         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                        <button type="submit" class="dropdown-item checkbox-action disabled">Delete</button>
+                        <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'buttons.delete' | trans }}</button>
                     </form>
                 </li>
             </ul>
         </div>
-        <a href="{{ path('app_admin_categories_add') }}" class="btn btn-primary">Add a Category</a>
+        <a href="{{ path('app_admin_categories_add') }}" class="btn btn-primary">{{ 'buttons.add_a_category' | trans }}</a>
     </div>
 
     <div class="card my-3">
@@ -73,12 +73,15 @@
                             </tr>
                         {% endfor %}
                     </tbody>
-                    <caption class="p-3">Displaying {{ items|length }} of {{ total_items }}{% if filtered is not empty %} filtered from {{ total_items_unfiltered }}{% endif %} {{ label|default('items') }}</caption>
+                    <caption class="p-3">
+                        {{ 'admin.tables.summary' | trans({ '%item_count%': items|length, '%total_item_count%': total_items}) }}
+                        {{ 'admin.categories.title' | trans | lower }}
+                    </caption>
                 </table>
             </div>
         {% else %}
             <div class="card-body p-5">
-                <p class="lead text-center">No matching {{ label|default('items') }} found</p>
+                <p class="lead text-center">{{ 'admin.tables.no_matching_items' | trans({'%item_name%': label|default('items')}) }}</p>
             </div>
         {% endif %}
     </div>
@@ -103,7 +106,9 @@
     {% endif %}
     <div class="float-end">
         <div class="input-group">
-            <span class="input-group-text">{{ label|capitalize|default('Items') }} per page</span>
+            <span class="input-group-text">
+                {{ 'admin.tables.per_page' | trans({'%item_name%': 'admin.categories.title' | trans }) }}
+            </span>
             <select class="form-select" onchange="window.location.href=this.value">
                 {% for items_per_page_option in items_per_page_options %}
                     <option value="{{ path(app.request.get('_route'), { 'perPage': items_per_page_option, 'sort': sort, 'order': order }) }}"{% if items_per_page_option == items_per_page %} selected{% endif %}>{{ items_per_page_option }}</option>
