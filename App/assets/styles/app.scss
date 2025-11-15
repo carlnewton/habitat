@@ -15,7 +15,7 @@ body {
 }
 
 #drawer .active {
-    color: var(--bs-blue) !important;
+    color: var(--bs-primary) !important;
 }
 
 .drawer-padding {
@@ -33,7 +33,7 @@ body {
 div.dropzone {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius-lg);
-  color: var(--bs-blue);
+  color: var(--bs-primary);
 }
 
 .form-switch.form-switch-lg {

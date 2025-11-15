@@ -29,8 +29,8 @@ function setLocation() {
         map.removeLayer(location);
     }
     location = L.circle(latlng, {
-        color: '#0d6efd',
-        fillColor: '#0d6efd',
+        color: '#177bba',
+        fillColor: '#177bba',
         fillOpacity: 0.3,
         radius: document.querySelector('#locationRadiusMeters').value
     });
