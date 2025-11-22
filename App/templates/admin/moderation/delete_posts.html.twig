@@ -1,25 +1,32 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Delete posts' %}
+
+{% set subject = ((posts|length == 1) ? 'admin.moderation.posts.singular' : 'admin.moderation.posts.plural') | trans %}
+{% set page_title = ('buttons.delete' | trans) ~ ' ' ~ subject %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Posts</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Delete</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">{{ 'admin.moderation.posts.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'buttons.delete' | trans }}</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to permanently delete {% if posts|length > 1 %}these posts{% else %}this post{% endif %}?</p>
+            <p class="lead">
+                {{ 'admin.actions.confirmation_message' | trans({
+                    '%action%': 'buttons.delete' | trans | lower,
+                    '%subject%': subject,
+                }) }}
+            </p>
             <form method="post">
                 <input name="items" type="hidden" value="{{ post_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
                 <div class="row mb-3 text-start">
-                    <label for="reason" class="form-label col-sm-3 col-lg-2">Reason</label>
+                    <label for="reason" class="form-label col-sm-3 col-lg-2">{{ 'admin.actions.reason' | trans }}</label>
                     <div class="col">
                         <input type="text" class="form-control{% if errors.reason is defined %} is-invalid{% endif %}" name="reason" value="{% if values.reason is defined %}{{ values.reason }}{% endif %}" required>
                         {% if errors.reason is defined %}
@@ -31,8 +38,8 @@
                         {% endif %}
                     </div>
                 </div>
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">Cancel</a>
+                <button type="submit" class="btn btn-danger">{{ 'buttons.delete' | trans }}</button>
+                <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
             </form>
         </div>
         <div class="card-body">

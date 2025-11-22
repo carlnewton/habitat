@@ -11,7 +11,7 @@
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.change_category' | trans }}</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.change_category.title' | trans }}</button>
                 </form>
             </li>
             <li><hr class="dropdown-divider"></li>

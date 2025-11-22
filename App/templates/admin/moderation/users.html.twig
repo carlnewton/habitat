@@ -11,14 +11,14 @@
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_freeze') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.freeze' | trans }}</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.freeze.title' | trans }}</button>
                 </form>
             </li>
             <li>
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_ban') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.ban' | trans }}</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.ban.title' | trans }}</button>
                 </form>
             </li>
         </ul>

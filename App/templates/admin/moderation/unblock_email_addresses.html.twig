@@ -1,31 +1,38 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Unblock email addresses' %}
+
+{% set subject = ((blocked_email_addresses|length == 1) ? 'admin.moderation.blocked_email_addresses.singular' : 'admin.moderation.blocked_email_addresses.plural') | trans %}
+{% set page_title = ('buttons.unblock' | trans) ~ ' ' ~ subject %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">Blocked email addresses</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Unblock</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">{{ 'admin.moderation.blocked_email_addresses.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'buttons.unblock' | trans }}</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to unblock {% if blocked_email_addresses|length > 1 %}these email addresses{% else %}this email address{% endif %}?</p>
+            <p class="lead">
+                {{ 'admin.actions.confirmation_message' | trans({
+                    '%action%': 'buttons.unblock' | trans | lower,
+                    '%subject%': subject,
+                }) }}
+            </p>
             <form method="post">
                 <input name="items" type="hidden" value="{{ blocked_email_address_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
-                <button type="submit" class="btn btn-danger">Unblock</button>
-                <a href="{{ path('app_moderation_blocked_email_addresses') }}" class="btn btn-outline-primary">Cancel</a>
+                <button type="submit" class="btn btn-danger">{{ 'buttons.unblock' | trans }}</button>
+                <a href="{{ path('app_moderation_blocked_email_addresses') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
             </form>
         </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
-                    <th>Email address</th>
+                    <th>{{ 'fields.email_address.title' | trans }}</th>
                 </thead>
                 <tbody>
                     {% for email_address in blocked_email_addresses %}

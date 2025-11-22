@@ -61,6 +61,8 @@ setup:
       test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
 
 fields:
+  created:
+    title: "Created"
   username:
     title: "Username"
     help_text: "Your username will be publicly visible. You are recommended to choose a nickname."
@@ -149,6 +151,12 @@ fields:
     title: "Content"
   title:
     title: "Title"
+  reported_by:
+    title: "Reported by"
+  context:
+    title: "Context"
+  reported_date:
+    title: "Reported date"
   type:
     title: "Type"
     validations:
@@ -206,8 +214,10 @@ buttons:
   update: "Update"
   actions: "Actions"
   delete: "Delete"
+  cancel: Cancel
   remove: "Remove"
   unblock: "Unblock"
+  block: "Block"
   block_email_address: "Block an email address"
   report_this_post: "Report this post"
   report_this_comment: "Report this comment"
@@ -258,11 +268,26 @@ measurement_units:
 
 admin:
   actions:
-    ban: "Ban"
-    freeze: "Freeze"
+    reason: "Reason"
+    confirmation_message: "Are you sure you would like to %action% the selected %subject%?"
+    ban:
+      title: "Ban"
+      messages:
+        content_deleted: "All content created by the selected %subject% will be permanently deleted"
+    freeze:
+      title: "Freeze"
+      freeze_for: "Freeze for"
+      messages:
+        unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
-    dismiss: "Dismiss"
-    change_category: "Change category"
+    dismiss:
+      title: "Dismiss"
+      messages:
+        reports_deleted: "The %subject% will be permanently deleted"
+    change_category:
+      title: "Change category"
+      messages:
+        choose_new: "Choose a new category for the selected %subject%"
   overview:
     title: "Overview"
     view_more: "View more"
@@ -282,20 +307,30 @@ admin:
   moderation:
     title: "Moderation"
     users:
+      singular: "user"
+      plural: "users"
       title: "User moderation"
       menu_title: "Users"
       validations:
         users_not_found: "The users could not be found"
     posts:
+      singular: "post"
+      plural: "posts"
       title: "Post moderation"
       menu_title: "Posts"
     comments:
+      singular: "comment"
+      plural: "comments"
       title: "Comment moderation"
       menu_title: "Comments"
     blocked_email_addresses:
+      singular: "email address"
+      plural: "email addresses"
       title: "Blocked email address moderation"
       menu_title: "Blocked email addresses"
     reports:
+      singular: "report"
+      plural: "reports"
       title: "Report moderation"
       menu_title: "Reports"
   categories:

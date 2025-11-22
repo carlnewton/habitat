@@ -1,26 +1,35 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Freeze users' %}
+
+{% set subject = ((users|length == 1) ? 'admin.moderation.users.singular' : 'admin.moderation.users.plural') | trans %}
+{% set page_title = ('admin.actions.freeze.title' | trans) ~ ' ' ~ subject %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Freeze</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">{{ 'admin.moderation.users.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'admin.actions.freeze.title' | trans }}</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to freeze {% if users|length > 1 %}these users{% else %}this user{% endif %}?</p>
-            <p>The user{% if users|length > 1 %}s{% endif %} will not be able to post or comment until the unfreeze time has passed.</p>
+            <p class="lead">
+                {{ 'admin.actions.confirmation_message' | trans({
+                    '%action%': 'admin.actions.freeze.title' | trans | lower,
+                    '%subject%': subject,
+                }) }}
+            </p>
+            <p>
+                {{ 'admin.actions.freeze.messages.unable_post_comment' | trans({ '%subject%': subject }) }}
+            </p>
             <form method="post" action="{{ path('app_moderation_users_freeze') }}">
                 <input name="items" type="hidden" value="{{ user_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="freeze" value="1">
                 <div class="row mb-3 text-start">
-                    <label for="freezeForValue" class="form-label col-sm-3 col-lg-2">Freeze for</label>
+                    <label for="freezeForValue" class="form-label col-sm-3 col-lg-2">{{ 'admin.actions.freeze.freeze_for' | trans }}</label>
                     <div class="input-group col">
                         <input type="number" class="form-control{% if errors.freezeFor is defined %} is-invalid{% endif %}" name="freezeForValue" min="1" value="{% if values.freezeForValue is defined %}{{ values.freezeForValue }}{% else %}10{% endif %}">
                         <select class="form-select{% if errors.freezeFor is defined %} is-invalid{% endif %}" name="freezeForInterval" id="freezeFormInterval">
@@ -38,7 +47,7 @@
                     </div>
                 </div>
                 <div class="row mb-3 text-start">
-                    <label for="reason" class="form-label col-sm-3 col-lg-2">Reason</label>
+                    <label for="reason" class="form-label col-sm-3 col-lg-2">{{ 'admin.actions.reason' | trans }}</label>
                     <div class="col">
                         <input type="text" class="form-control{% if errors.reason is defined %} is-invalid{% endif %}" name="reason" value="{% if values.reason is defined %}{{ values.reason }}{% endif %}" required>
                         {% if errors.reason is defined %}
@@ -51,18 +60,18 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-danger">Freeze</button>
-                <a href="{{ path('app_moderation_users') }}" class="btn btn-outline-primary">Cancel</a>
+                <button type="submit" class="btn btn-danger">{{ 'admin.actions.freeze.title' | trans }}</button>
+                <a href="{{ path('app_moderation_users') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
             </form>
         </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
-                    <th>Username</th>
-                    <th>Email address</th>
-                    <th>Created</th>
-                    <th>Posts</th>
-                    <th>Comments</th>
+                    <th>{{ 'fields.username.title' | trans }}</th>
+                    <th>{{ 'fields.email_address.title' | trans }}</th>
+                    <th>{{ 'fields.created.title' | trans }}</th>
+                    <th>{{ 'admin.moderation.posts.menu_title' | trans }}</th>
+                    <th>{{ 'admin.moderation.comments.menu_title' | trans }}</th>
                 </thead>
                 <tbody>
                     {% for user in users %}

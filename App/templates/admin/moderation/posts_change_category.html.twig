@@ -1,19 +1,24 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Change category' %}
+{% set page_title = 'admin.actions.change_category.title' | trans %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">Posts</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Change category</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_posts')}}">{{ 'admin.moderation.posts.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'admin.actions.change_category.title' | trans }}</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Select a new category for {% if posts|length > 1 %}these posts{% else %}this post{% endif %}</p>
+            <p class="lead">
+                {{ 'admin.actions.change_category.messages.choose_new' | trans({
+                    '%subject%': ((posts|length == 1) ? 'admin.moderation.posts.singular' : 'admin.moderation.posts.plural') | trans
+                }) }}
+            </p>
+
             <form method="post">
                 <input name="items" type="hidden" value="{{ post_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
@@ -22,8 +27,8 @@
                         <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" class="btn btn-danger">Update</button>
-                <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">Cancel</a>
+                <button type="submit" class="btn btn-danger">{{ 'buttons.update' | trans }}</button>
+                <a href="{{ path('app_moderation_posts') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
             </form>
         </div>
         <div class="card-body">

@@ -1,36 +1,45 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Dismiss reports' %}
+
+{% set subject = ((reports|length == 1) ? 'admin.moderation.reports.singular' : 'admin.moderation.reports.plural') | trans %}
+{% set page_title = ('admin.actions.dismiss.title' | trans) ~ ' ' ~ subject %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_reports')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_reports')}}">Reports</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Dismiss</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_reports')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_reports')}}">{{ 'admin.moderation.reports.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'admin.actions.dismiss.title' | trans }}</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to dismiss {% if reports|length > 1 %}these reports{% else %}this report{% endif %}?</p>
-            <p>The {% if reports|length > 1 %}reports{% else %}report{% endif %} will be permanently deleted.</p>
+            <p class="lead">
+                {{ 'admin.actions.confirmation_message' | trans({
+                    '%action%': 'admin.actions.dismiss.title' | trans | lower,
+                    '%subject%': subject,
+                }) }}
+            </p>
+            <p>
+                {{ 'admin.actions.dismiss.messages.reports_deleted' | trans({ '%subject%': subject, }) }}
+            </p>
             <form method="post" action="{{ path('app_moderation_reports_dismiss') }}">
                 <input name="items" type="hidden" value="{{ report_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="delete" value="1">
-                <button type="submit" class="btn btn-danger">Dismiss</button>
-                <a href="{{ path('app_moderation_reports') }}" class="btn btn-outline-primary">Cancel</a>
+                <button type="submit" class="btn btn-danger">{{ 'admin.actions.dismiss.title' | trans }}</button>
+                <a href="{{ path('app_moderation_reports') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
             </form>
         </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
-                    <th>Type</th>
-                    <th>Reported by</th>
-                    <th>Reported date</th>
-                    <th>Reason</th>
-                    <th>Context</th>
+                    <th>{{ 'fields.type.title' | trans }}</th>
+                    <th>{{ 'fields.reported_by.title' | trans }}</th>
+                    <th>{{ 'fields.reported_date.title' | trans }}</th>
+                    <th>{{ 'admin.actions.reason' | trans }}</th>
+                    <th>{{ 'fields.context.title' | trans }}</th>
                 </thead>
                 <tbody>
                     {% for report in reports %}

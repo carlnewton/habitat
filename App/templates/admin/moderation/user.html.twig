@@ -4,9 +4,9 @@
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">Users</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">{{ 'admin.moderation.users.menu_title' | trans }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</li>
         </ol>
     </nav>
@@ -32,14 +32,14 @@
                 <form class="action-item-form" method="post" action="{% if user.frozen %}{{ path('app_moderation_users_unfreeze') }}{% else %}{{ path('app_moderation_users_freeze') }}{% endif %}">
                     <input name="items" type="hidden" value="{{ user.id }}"/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action">{% if user.frozen %}{{ 'admin.actions.unfreeze' | trans }}{% else %}{{ 'admin.actions.freeze' | trans }}{% endif %}</button>
+                    <button type="submit" class="dropdown-item checkbox-action">{% if user.frozen %}{{ 'admin.actions.unfreeze' | trans }}{% else %}{{ 'admin.actions.freeze.title' | trans }}{% endif %}</button>
                 </form>
             </li>
             <li>
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_ban') }}">
                     <input name="items" type="hidden" value="{{ user.id }}"/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action">{{ 'admin.actions.ban' | trans }}</button>
+                    <button type="submit" class="dropdown-item checkbox-action">{{ 'admin.actions.ban.title' | trans }}</button>
                 </form>
             </li>
         </ul>

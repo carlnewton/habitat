@@ -4,10 +4,10 @@
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">Moderation</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">Blocked email addresses</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Block</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_blocked_email_addresses')}}">{{ 'admin.moderation.blocked_email_addresses.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'buttons.block' | trans }}</li>
         </ol>
     </nav>
 
@@ -26,6 +26,6 @@
             </div>
         </div>
         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-        <button type="submit" class="btn btn-primary">Block</button>
+        <button type="submit" class="btn btn-primary">{{ 'buttons.block' | trans }}</button>
     </form>
 {% endblock %}
