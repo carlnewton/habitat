@@ -1,7 +1,15 @@
 {% for log in logs %}
     <tr{% if loop is defined and loop.last and offset is defined %} hx-get="/hx/list-moderation-logs?offset={{ offset }}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
         <td class="text-nowrap" title="{{ log.date|date }}">{{ log.date|time_diff }}</td>
-        <td class="text-nowrap">{{ log.user.username }}</td>
+        <td class="text-nowrap">
+            {% if log.user %}
+                {{ log.user.username }}
+            {% else %}
+                <span class="badge rounded-pill text-bg-secondary">
+                    {{ 'admin.actions.deleted' | trans }}
+                </span>
+            {% endif %}
+        </td>
         <td>{{ log.action }}</td>
     </tr>
 {% endfor %}
