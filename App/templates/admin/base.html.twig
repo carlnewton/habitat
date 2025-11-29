@@ -6,9 +6,12 @@
             <li class="nav-item">
                 <a class="nav-link{% if app.request.get('_route') == 'app_admin_index' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_index' %} aria-current="page"{% endif %} href="{{ path('app_admin_index') }}">{{ 'admin.overview.title' | trans }}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_settings' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_settings' %} aria-current="page"{% endif %} href="{{ path('app_admin_settings') }}">{{ 'admin.settings.title' | trans }}</a>
-            </li>
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') == 'app_admin_settings' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_settings' %} aria-current="page"{% endif %} href="{{ path('app_admin_settings') }}">{{ 'admin.settings.title' | trans }}</a>
+                </li>
+            {% endif %}
             <li class="nav-item{% if not (app.request.get('_route') starts with 'app_moderation') %} dropdown{% endif %}">
                 <a class="nav-link {% if not (app.request.get('_route') starts with 'app_moderation') %} dropdown-toggle{% else %} disabled{% endif %}" href="#"{% if not (app.request.get('_route') starts with 'app_moderation') %} role="button" data-bs-toggle="dropdown" area-expanded="false"{% endif %}>{{ 'admin.moderation.title' | trans }}</a>
                 <ul class="{% if not (app.request.get('_route') starts with 'app_moderation') %}dropdown-menu{% else %}nav nav-pills flex-column ps-4{% endif %}">
@@ -29,23 +32,25 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">{{ 'admin.categories.title' | trans }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_announcements' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_announcements' %} aria-current="page"{% endif %} href="{{ path('app_admin_announcements') }}">{{ 'admin.announcements.title' | trans }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_user_registration' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_user_registration' %} aria-current="page"{% endif %} href="{{ path('app_admin_user_registration') }}">{{ 'admin.user_registration.title' | trans }}</a>
-            </li>
-            {% if setting('imageStorage') == 's3' %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <li class="nav-item">
-                    <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_s3_details' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_s3_details' %} aria-current="page"{% endif %} href="{{ path('app_admin_s3_details') }}">{{ 'admin.amazon_s3_details.title' | trans }}</a>
+                    <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_categories' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_categories' %} aria-current="page"{% endif %} href="{{ path('app_admin_categories') }}">{{ 'admin.categories.title' | trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_announcements' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_announcements' %} aria-current="page"{% endif %} href="{{ path('app_admin_announcements') }}">{{ 'admin.announcements.title' | trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') == 'app_admin_user_registration' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_user_registration' %} aria-current="page"{% endif %} href="{{ path('app_admin_user_registration') }}">{{ 'admin.user_registration.title' | trans }}</a>
+                </li>
+                {% if setting('imageStorage') == 's3' %}
+                    <li class="nav-item">
+                        <a class="nav-link{% if app.request.get('_route') starts with 'app_admin_s3_details' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_s3_details' %} aria-current="page"{% endif %} href="{{ path('app_admin_s3_details') }}">{{ 'admin.amazon_s3_details.title' | trans }}</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link{% if app.request.get('_route') == 'app_admin_mail' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_mail' %} aria-current="page"{% endif %} href="{{ path('app_admin_mail') }}">{{ 'admin.mail.title' | trans }}</a>
                 </li>
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link{% if app.request.get('_route') == 'app_admin_mail' %} active{% endif %}"{% if app.request.get('_route') == 'app_admin_mail' %} aria-current="page"{% endif %} href="{{ path('app_admin_mail') }}">{{ 'admin.mail.title' | trans }}</a>
-            </li>
         </ul>
     </div>
 {% endblock %}

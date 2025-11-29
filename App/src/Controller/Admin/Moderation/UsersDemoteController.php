@@ -2,25 +2,25 @@
 
 namespace App\Controller\Admin\Moderation;
 
+use App\Entity\ModerationLog;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
-class UsersUnfreezeController extends AbstractController
+#[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
+class UsersDemoteController extends AbstractController
 {
     public function __construct(
         private TranslatorInterface $translator,
     ) {
     }
 
-    #[Route(path: '/admin/moderation/users/unfreeze', name: 'app_moderation_users_unfreeze', methods: ['POST'], priority: 2)]
+    #[Route(path: '/admin/moderation/users/demote', name: 'app_moderation_users_demote', methods: ['POST'], priority: 2)]
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -52,29 +52,44 @@ class UsersUnfreezeController extends AbstractController
             return $this->redirectToRoute('app_moderation_users');
         }
 
-        if (empty($request->get('unfreeze'))) {
-            return $this->render('admin/moderation/unfreeze_users.html.twig', [
+        if (empty($request->get('demote'))) {
+            return $this->render('admin/moderation/demote_users.html.twig', [
                 'user_ids' => implode(',', $userIds),
                 'users' => $users,
             ]);
         }
 
-        $usersUnfrozen = false;
+        $usersDemoted = false;
         foreach ($users as $user) {
-            if (!$user->isFrozen()) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be unfrozen because they are not frozen.');
+            if (!in_array('ROLE_MODERATOR', $user->getRoles())) {
+                $this->addFlash('warning', $user->getUsername() . ' could not be demoted because they are not a moderator.');
                 continue;
             }
 
-            $freezeLog = $user->getFrozenLog();
-            $freezeLog->setUnfreezeDate(new \DateTimeImmutable());
-            $entityManager->persist($freezeLog);
-            $usersUnfrozen = true;
+            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $this->addFlash('warning', $user->getUsername() . ' could not be demoted because they are the administrator.');
+                continue;
+            }
+
+            $user->setRoles([]);
+            $entityManager->persist($user);
+
+            $moderationLog = new ModerationLog();
+            $moderationLog
+                ->setUser($this->getUser())
+                ->setDate(new \DateTimeImmutable())
+                ->setAction($this->translator->trans('moderation_log.actions.demote', [
+                    '%username%' => $user->getUsername(),
+                ]))
+            ;
+            $entityManager->persist($moderationLog);
+
+            $usersDemoted = true;
         }
 
-        if ($usersUnfrozen) {
+        if ($usersDemoted) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users unfrozen');
+            $this->addFlash('notice', 'Users demoted');
         }
 
         return $this->redirectToRoute('app_moderation_users');

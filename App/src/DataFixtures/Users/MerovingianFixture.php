@@ -9,6 +9,7 @@ class MerovingianFixture extends AbstractUserFixture
             'username' => 'Merovingian',
             'email' => 'merovingian@example.com',
             'created' => '2024/03/03 03:03:03',
+            'roles' => ['ROLE_MODERATOR'],
         ],
     ];
 

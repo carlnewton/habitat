@@ -7,6 +7,16 @@
             {{ 'buttons.actions' | trans }}
         </button>
         <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                    <form class="action-item-form" method="post" action="{{ path('app_moderation_users_promote') }}">
+                        <input name="items" type="hidden" value=""/>
+                        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                        <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.promote.title' | trans }}</button>
+                    </form>
+                </li>
+            {% endif %}
             <li>
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_freeze') }}">
                     <input name="items" type="hidden" value=""/>
@@ -31,7 +41,15 @@
             {{ item.username }}
         </a>
     </td>
-    <td class="align-middle{% if sort == 'email_address' %} bg-light border{% endif %}">{{ item.emailaddress }}</td>
+    <td class="align-middle">
+        {% if 'ROLE_SUPER_ADMIN' in item.roles %}
+            {{ 'users.roles.administrator' | trans }}
+        {% elseif 'ROLE_MODERATOR' in item.roles %}
+            {{ 'users.roles.moderator' | trans }}
+        {% else %}
+            {{ 'users.roles.user' | trans }}
+        {% endif %}
+    </td>
     <td class="align-middle{% if sort == 'verified' %} bg-light border{% endif %}">
         {% if item.emailVerified %}
             <i class="bi bi-check-lg fs-4 text-success"></i>

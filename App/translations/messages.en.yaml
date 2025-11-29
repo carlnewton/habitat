@@ -268,12 +268,30 @@ measurement_units:
 
 admin:
   actions:
+    deleted: "Deleted"
     reason: "Reason"
     confirmation_message: "Are you sure you would like to %action% the selected %subject%?"
     ban:
       title: "Ban"
       messages:
         content_deleted: "All content created by the selected %subject% will be permanently deleted"
+    demote:
+      title: "Demote"
+      messages:
+        moderator_privileges: "The %subject% will no longer have moderator privileges"
+    promote:
+      title: "Promote"
+      messages:
+        moderator_actions: "With moderator privileges, the %subject% will be able to:"
+        moderator_action_1: "View user details"
+        moderator_action_2: "Freeze and unfreeze user accounts"
+        moderator_action_3: "Ban users"
+        moderator_action_4: "Move posts to another category"
+        moderator_action_5: "Delete posts"
+        moderator_action_6: "Edit posts"
+        moderator_action_7: "Delete comments"
+        moderator_action_8: "View and dismiss reported posts and comments"
+        moderator_action_9: "Block and unblock email addresses"
     freeze:
       title: "Freeze"
       freeze_for: "Freeze for"
@@ -407,6 +425,8 @@ moderation_log:
   actions:
     ban: "Banned user '%username%'. Reason: %reason%"
     freeze: "Frozen user '%username%' for %freeze_value% %freeze_interval%. Reason: %reason%"
+    promote: "Promoted user '%username%' to moderator"
+    demote: "Demoted moderator '%username%'"
     delete_post: "Deleted post '%post_title%' by '%username%'. Reason: %reason%"
     edit_post: "Edited post '%post_title%' by '%username%'. Reason: %reason%"
     delete_comment: "Deleted comment '%comment%' by '%username%' from post '%post_title%'. Reason: %reason%"
@@ -424,3 +444,10 @@ emails:
     new_reports: "%count% new reports"
     new_reports_link: "View reported content"
   email_sent: "Email sent to %email_address%"
+
+users:
+  roles:
+    administrator: "Administrator"
+    moderator: "Moderator"
+    user: "User"
+

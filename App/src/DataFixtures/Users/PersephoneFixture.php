@@ -9,6 +9,7 @@ class PersephoneFixture extends AbstractUserFixture
             'username' => 'Persephone',
             'email' => 'persephone@example.com',
             'created' => '2024/03/03 03:03:03',
+            'roles' => ['ROLE_MODERATOR'],
         ],
     ];
 

@@ -28,6 +28,15 @@
                     <a href="{{ path('app_moderation_comments', { user: user.id }) }}" class="dropdown-item">View comments</a>
                 {% endif %}
             </li>
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                    <form class="action-item-form" method="post" action="{% if 'ROLE_MODERATOR' in user.roles %}{{ path('app_moderation_users_demote') }}{% else %}{{ path('app_moderation_users_promote') }}{% endif %}">
+                        <input name="items" type="hidden" value="{{ user.id }}"/>
+                        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                        <button type="submit" class="dropdown-item checkbox-action">{% if 'ROLE_MODERATOR' in user.roles %}{{ 'admin.actions.demote.title' | trans }}{% else %}{{ 'admin.actions.promote.title' | trans }}{% endif %}</button>
+                    </form>
+                </li>
+            {% endif %}
             <li>
                 <form class="action-item-form" method="post" action="{% if user.frozen %}{{ path('app_moderation_users_unfreeze') }}{% else %}{{ path('app_moderation_users_freeze') }}{% endif %}">
                     <input name="items" type="hidden" value="{{ user.id }}"/>

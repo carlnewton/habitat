@@ -1,0 +1,66 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set subject = ((users|length == 1) ? 'admin.moderation.users.singular' : 'admin.moderation.users.plural') | trans %}
+{% set page_title = ('admin.actions.demote.title' | trans) ~ ' ' ~ subject %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">{{ 'admin.moderation.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_moderation_users')}}">{{ 'admin.moderation.users.menu_title' | trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'admin.actions.demote.title' | trans }}</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header p-5 text-center">
+            <p class="lead">
+                {{ 'admin.actions.confirmation_message' | trans({
+                    '%action%': 'admin.actions.demote.title' | trans | lower,
+                    '%subject%': subject,
+                }) }}
+            </p>
+            <p>
+                {{ 'admin.actions.demote.messages.moderator_privileges' | trans({ '%subject%': subject }) }}
+            </p>
+            <form method="post" action="{{ path('app_moderation_users_demote') }}">
+                <input name="items" type="hidden" value="{{ user_ids }}">
+                <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                <input type="hidden" name="demote" value="1">
+                <button type="submit" class="btn btn-danger">{{ 'admin.actions.demote.title' | trans }}</button>
+                <a href="{{ path('app_moderation_users') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th>{{ 'fields.username.title' | trans }}</th>
+                    <th>{{ 'fields.email_address.title' | trans }}</th>
+                    <th>{{ 'fields.created.title' | trans }}</th>
+                    <th>{{ 'admin.moderation.posts.menu_title' | trans }}</th>
+                    <th>{{ 'admin.moderation.comments.menu_title' | trans }}</th>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.emailaddress }}</td>
+                            <td>{{ user.created|date }}</td>
+                            <td>
+                                <div class="d-grid">
+                                    <a class="btn btn-link{% if user.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: user.id }) }}">{{ user.posts|length }}</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-grid">
+                                    <a class="btn btn-link{% if user.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: user.id }) }}">{{ user.comments|length }}</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

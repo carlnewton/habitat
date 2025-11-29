@@ -40,6 +40,7 @@ abstract class AbstractUserFixture extends Fixture implements DependentFixtureIn
             $userEntity
                 ->setUsername($user['username'])
                 ->setEmailAddress($user['email'])
+                ->setRoles($user['roles'] ?? [])
                 ->setCreated(\DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $user['created']))
                 ->setEmailVerified(true)
             ;

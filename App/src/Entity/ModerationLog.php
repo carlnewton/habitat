@@ -15,7 +15,7 @@ class ModerationLog
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'SET NULL')]
     private ?User $user = null;
 
     #[ORM\Column]

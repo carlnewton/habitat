@@ -9,6 +9,7 @@ class SmithFixture extends AbstractUserFixture
             'username' => 'Smith',
             'email' => 'smith@example.com',
             'created' => '2023/01/02 03:04:05',
+            'roles' => ['ROLE_MODERATOR'],
         ],
     ];
 

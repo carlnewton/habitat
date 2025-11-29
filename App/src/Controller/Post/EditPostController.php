@@ -153,7 +153,7 @@ class EditPostController extends AbstractController
             }
 
             // Edit functionality is currently only available to admins, but this might change, so I'm putting this
-            // extra check in now just in case it's latter forgotten.
+            // extra check in now just in case it's later forgotten.
             if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
                 $moderationLog = new ModerationLog();
                 $moderationLog
