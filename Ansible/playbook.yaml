@@ -259,6 +259,14 @@
         state: present
         build: always
 
+    - name: Prune unused Docker utilities
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+        builder_cache: true
+
   handlers:
     - name: Update apt repository index
       apt:
