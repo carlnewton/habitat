@@ -1,0 +1,453 @@
+setup:
+  create_admin_account:
+    title: "1. Create your admin account"
+    validations:
+      generic: "Something went wrong with your details, please try again."
+  set_location:
+    title: "2. Set the location of your Habitat"
+    info:
+      post_inside_circle: "Users will be able to create posts in any location inside the circle."
+      global_preferences: "Setting the map zoom, boundary size and measurement preference here also sets it throughout your Habitat instance."
+  add_categories:
+    title: "3. Add some categories"
+    suggested_categories:
+      sightseeing:
+        name: "Sightseeing"
+        description: "A space for sharing and discussing visual discoveries, landmarks, nature spots, street art, hidden gems, and other unique finds in the area."
+      news_events:
+        name: "News and Events"
+        description: "Posts related to news updates, events, festivals, concerts, or community gatherings."
+      food_drink:
+        name: "Food and Drink"
+        description: "Discussions and pictures of restaurants, cafes, food trucks, or special dishes."
+      history:
+        name: "History"
+        description: "Pictures and discussions specifically focused on the historical significance, stories, and events related to local historical sites, buildings, or events in the area."
+      businesses:
+        name: "Businesses"
+        description: "Posts promoting or discussing shops, boutiques, or services."
+      sports_recreation:
+        name: "Sports and Recreation"
+        description: "Conversations about outdoor activities, or recreational facilities."
+      community_initiatives:
+        name: "Community Initiatives"
+        description: "Posts about charities, volunteer opportunities, or community projects."
+      habitat_meta:
+        name: "Habitat Meta"
+        description: "Discussions about this instance of Habitat."
+      random:
+        name: "Random"
+        description: "A catch-all for various topics that do not fit anywhere else."
+    validations:
+      empty: "You must select at least one category. Don't worry, you can change these later."
+  image_storage:
+    title: "4. Choose your image storage solution"
+    options:
+      local:
+        label: "Local"
+        description: "Images will be stored in the <code>/uploads</code> directory. This option is simpler to set up, but may be more difficult and more expensive to maintain in the long run when running out of disk space."
+      amazon_s3:
+        label: "Amazon S3"
+        description: "Images will be stored using Amazon S3 Cloud Object Storage."
+    warnings:
+      no_encryption_key: "This is not available because the <strong>ENCRYPTION_KEY</strong> environment variable has not been set."
+      amazon_s3_exception: "An error occurred when attempting to connect to the S3 bucket"
+    validations:
+      no_option_selected: "You must choose an image storage option"
+  configure_mail:
+    title: "5. Configure your mail settings"
+    test_email_sent: "A test email has been sent to %email_address% and no issues have been reported. If you have not received it, check the settings here and try again."
+    warnings:
+      test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
+
+fields:
+  created:
+    title: "Created"
+  username:
+    title: "Username"
+    help_text: "Your username will be publicly visible. You are recommended to choose a nickname."
+    validations:
+      minimum_characters: "Your username must be a minimum of %character_length% characters"
+      maximum_characters: "Your username must be a maximum of %character_length% characters"
+      alphabetic_numeric: "Your username must only use alphabetic and numeric characters"
+      already_taken: "This username is already taken"
+    updated: "Your username has been updated"
+  email_address:
+    title: "Email address"
+    help_text: "Your email address will be kept private, and can be used to recover your password."
+    validations:
+      invalid_email_address: "This is not a valid email address"
+      non_matching_email_address: "The provided email address does not match that of your account"
+  password:
+    title: "Password"
+    help_text: "Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter."
+    validations:
+      weak_password: "You must use a stronger password"
+  amazon_s3_region:
+    title: "Region"
+    default_value: "Select the region"
+    validations:
+      empty: "You must select the region of your S3 bucket"
+  amazon_s3_bucket_name:
+    title: "Bucket name"
+    validations:
+      empty: "You must enter the name of your S3 bucket"
+  amazon_s3_access_key:
+    title: "Access key"
+    validations:
+      empty: "You must enter the access key for your S3 bucket"
+  amazon_s3_secret_key:
+    title: "Secret key"
+    validations:
+      no_encryption_key: "The secret key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
+      empty: "You must enter the secret key for your S3 bucket"
+  smtp_username:
+    title: "SMTP username"
+    help_text: "The username for your SMTP mail service. This is usually an email address."
+    validations:
+      empty: "You must enter an SMTP username"
+  smtp_password:
+    title: "SMTP password"
+    help_text: "The password for your SMTP mail service. This can sometimes be an API key."
+    validations:
+      empty: "You must enter an SMTP password"
+      no_encryption_key: "The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
+  smtp_server:
+    title: "SMTP server"
+    help_text: "The server URL of your SMTP mail service."
+    validations:
+      empty: "You must enter an SMTP server"
+  smtp_port:
+    title: "SMTP port"
+    help_text: "The port for sending mail to your SMTP mail service."
+    validations:
+      invalid: "You must enter a valid port number"
+  sender_email_address:
+    title: "Sender email address"
+    help_text: "Emails sent to users of this Habitat instance will be sent from the email address provided."
+    validations:
+      invalid: "You must enter a valid sender email address"
+  test_recipient_email_address:
+    title: "Test recipient email address"
+    help_text: "A test email will be sent to this email address if provided. Leave this empty to skip the test and continue."
+    validations:
+      invalid: "You must enter a valid recipient email address"
+  csrf_token:
+    validations:
+      invalid: "Invalid or missing CSRF token. Please try again."
+  habitat_name:
+    title: "Habitat name"
+  location:
+    title: "Location"
+  report_post_reason:
+    title: "Why are you reporting this post?"
+  report_comment_reason:
+    title: "Why are you reporting this comment?"
+  sidebar_content:
+    title: "Sidebar content"
+  collapse_content:
+    title: "Collapse content"
+  content:
+    title: "Content"
+  title:
+    title: "Title"
+  reported_by:
+    title: "Reported by"
+  context:
+    title: "Context"
+  reported_date:
+    title: "Reported date"
+  type:
+    title: "Type"
+    validations:
+      invalid: "You must choose a valid type"
+  show_date:
+    title: "Show date"
+    validations:
+      invalid: "You must enter a valid date"
+      gte_hide_date: "The show date must be earlier than the hide date if set"
+  hide_date:
+    title: "Hide date"
+    validations:
+      invalid: "You must enter a valid date"
+      lt_hide_date: "The hide date must be later than the show date if set"
+  link_url:
+    title: "Link URL"
+  toggle_category:
+    enabled: Posts from this category appear in your feed
+    disabled: Posts from this category are hidden from your feed
+
+post:
+  posted_by: "Posted by"
+
+report_post:
+  reported: "Reported a post"
+  confirmation: "Thank you for reporting this post. It will be reviewed by the administrator."
+report_comment:
+  reported: "Reported a comment"
+  confirmation: "Thank you for reporting this comment. It will be reviewed by the administrator."
+
+account:
+  login:
+    title: "Log in to your account"
+    logged_in_message: "You are logged in as %username%,"
+
+about:
+  title: "About Habitat"
+  what_is_habitat:
+    title: "What is Habitat?"
+    1: "Habitat is a free and open-source social platform for people to discover what there is to see and do in their local area."
+    2: "Small communities, such as towns and villages, are able to create their own instances of Habitat to share information about local places of interest."
+    3: "is one such instance."
+  who_runs_habitat:
+    title: "Who runs Habitat?"
+    1: "Each Habitat community operates independently, with its own dedicated administrator overseeing the instance."
+    2: "This particular instance is managed by"
+    3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
+
+buttons:
+  continue: "Continue"
+  change: "Change"
+  show_current_location: "Show your current location"
+  save: "Save"
+  insert: "Insert"
+  update: "Update"
+  actions: "Actions"
+  delete: "Delete"
+  cancel: Cancel
+  remove: "Remove"
+  unblock: "Unblock"
+  block: "Block"
+  block_email_address: "Block an email address"
+  report_this_post: "Report this post"
+  report_this_comment: "Report this comment"
+  resend_verification_email: "Resend verification email"
+  login: "Log in"
+  logout: "Log out"
+  forgot_password: "Forgot password"
+  find_out_more: "Find out more"
+  add_a_category: "Add a category"
+  add_a_question: "Add a question"
+map:
+  size_label: "Size"
+  toggle_miles: "miles"
+  toggle_kilometers: "kilometers"
+  warnings:
+    area_too_large: "Habitat has not been designed to work at this size. Things may not work as expected."
+  validations:
+    invalid_location: "You must choose a valid location"
+    invalid_location_size: "You must choose a valid location size"
+
+user_settings:
+  title: "Settings"
+  preferences:
+    title: "Preferences"
+    measurement_units:
+      title: "Measurement units"
+      description: "Display distances in"
+  hidden_categories:
+    title: "Hidden categories"
+    no_hidden_categories: "You are not currently hiding any categories."
+  change_details:
+    title: "Change your details"
+  delete_account:
+    title: "Delete your account"
+    warning: "Warning: Account deletion is perminent. All of your posts and comments will also be deleted."
+    description: "To delete your account, enter your email address:"
+    validations:
+      admin_account: "This is an adminstrator account and as such cannot be deleted"
+    success: "Your account has been deleted"
+
+measurement_units:
+  kilometers:
+    label:
+      long: "kilometers"
+      short: "km"
+  miles:
+    label: "miles"
+
+admin:
+  actions:
+    deleted: "Deleted"
+    reason: "Reason"
+    confirmation_message: "Are you sure you would like to %action% the selected %subject%?"
+    ban:
+      title: "Ban"
+      messages:
+        content_deleted: "All content created by the selected %subject% will be permanently deleted"
+    demote:
+      title: "Demote"
+      messages:
+        moderator_privileges: "The %subject% will no longer have moderator privileges"
+    promote:
+      title: "Promote"
+      messages:
+        moderator_actions: "With moderator privileges, the %subject% will be able to:"
+        moderator_action_1: "View user details"
+        moderator_action_2: "Freeze and unfreeze user accounts"
+        moderator_action_3: "Ban users"
+        moderator_action_4: "Move posts to another category"
+        moderator_action_5: "Delete posts"
+        moderator_action_6: "Edit posts"
+        moderator_action_7: "Delete comments"
+        moderator_action_8: "View and dismiss reported posts and comments"
+        moderator_action_9: "Block and unblock email addresses"
+    freeze:
+      title: "Freeze"
+      freeze_for: "Freeze for"
+      messages:
+        unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
+    unfreeze: "Unfreeze"
+    dismiss:
+      title: "Dismiss"
+      messages:
+        reports_deleted: "The %subject% will be permanently deleted"
+    change_category:
+      title: "Change category"
+      messages:
+        choose_new: "Choose a new category for the selected %subject%"
+  overview:
+    title: "Overview"
+    view_more: "View more"
+  settings:
+    title: "Settings"
+    validations:
+      habitat_name:
+        max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
+      sidebar_content:
+        disallowed_html_tags: "The sidebar content contains disallowed HTML tags"
+  tables:
+    summary: "Displaying %item_count% of %total_item_count%"
+    filtered_summary: "Displaying %item_count% of %filtered_item_count% filtered from %total_item_count%"
+    no_matching_items: "No matching %item_name% found"
+    per_page: "%item_name% per page"
+
+  moderation:
+    title: "Moderation"
+    users:
+      singular: "user"
+      plural: "users"
+      title: "User moderation"
+      menu_title: "Users"
+      validations:
+        users_not_found: "The users could not be found"
+    posts:
+      singular: "post"
+      plural: "posts"
+      title: "Post moderation"
+      menu_title: "Posts"
+    comments:
+      singular: "comment"
+      plural: "comments"
+      title: "Comment moderation"
+      menu_title: "Comments"
+    blocked_email_addresses:
+      singular: "email address"
+      plural: "email addresses"
+      title: "Blocked email address moderation"
+      menu_title: "Blocked email addresses"
+    reports:
+      singular: "report"
+      plural: "reports"
+      title: "Report moderation"
+      menu_title: "Reports"
+  categories:
+    title: "Categories"
+  announcements:
+    title: "Announcements"
+    validations:
+      content:
+        disallowed_html_tags: "The announcement content contains disallowed HTML tags"
+  user_registration:
+    title: "User registration"
+    allow_registration: "Allow users to register"
+    registration_challenge:
+      title: "Registration challenge"
+      help_text: "You can create questions which the user must answer correctly in order to create an account. If creating multiple questions, the user will be required to answer one question at random when registering for an account."
+  amazon_s3_details:
+    title: "Amazon S3 details"
+  mail:
+    title: "Mail"
+
+modals:
+  insert_hyperlink:
+    title: "Insert hyperlink"
+  update_hyperlink:
+    title: "Update hyperlink"
+  cancel: Cancel
+
+menus:
+  main:
+    home:
+      title: Home
+    post:
+      title: Post
+    nearby:
+      title: Nearby
+      error: "You need to enable access to your location to see what's nearby"
+  utility:
+    about:
+      title: "About"
+    admin_dashboard:
+      title: "Admin dashboard"
+    settings:
+      title: "Settings"
+    moderation_log:
+      title: "Moderation log"
+    log_in:
+      title: "Log in"
+    log_out:
+      title: "Log out"
+    sign_up:
+      title: "Sign up"
+  notifications:
+    title: "Notifications"
+    messages:
+      no_new_notifications: "You have no new notifications"
+
+flash_messages:
+  account_frozen: "You cannot perform this action because your account has been frozen until %unfreeze_datetime%. Reason: %reason%"
+  prevent_action_account_unverified: "You cannot perform this action because your email address has not yet been verified."
+  account_unverified: "Your email address has not yet been verified. Check your emails to verify your email address."
+
+notifications:
+  new_post_comments:
+    title: "New comments"
+    message: "You have %count% new comments on your post"
+
+moderation_log:
+  title: "Moderation log"
+  no_logs: "No moderation actions have been logged in the past 30 days"
+  record_of_actions: The Moderation log is a publicly accessible record of moderation actions taken within this instance of Habitat to ensure accountability and transparency.
+  days_available: These records are available for 30 days from the date of the action taken.
+  sensitive_content_warning: Some of the logs may contain content of a sensitive nature. This could include obscene material, spam, or URLs that may pose a danger. You are encouraged to exercise caution when viewing the logs and to be mindful of the potentially harmful content you may encounter.
+    
+  actions:
+    ban: "Banned user '%username%'. Reason: %reason%"
+    freeze: "Frozen user '%username%' for %freeze_value% %freeze_interval%. Reason: %reason%"
+    promote: "Promoted user '%username%' to moderator"
+    demote: "Demoted moderator '%username%'"
+    delete_post: "Deleted post '%post_title%' by '%username%'. Reason: %reason%"
+    edit_post: "Edited post '%post_title%' by '%username%'. Reason: %reason%"
+    delete_comment: "Deleted comment '%comment%' by '%username%' from post '%post_title%'. Reason: %reason%"
+    change_category: "Moved post '%post_title%' from '%from_category%' to '%to_category%'"
+
+emails:
+  daily_digest:
+    subject: "New activity in your Habitat"
+    body: |
+      Hello %admin%,
+      You have new activity in your Habitat:
+    new_users: "%count% new users"
+    new_posts: "%count% new posts"
+    new_comments: "%count% new comments"
+    new_reports: "%count% new reports"
+    new_reports_link: "View reported content"
+  email_sent: "Email sent to %email_address%"
+
+users:
+  roles:
+    administrator: "Administrator"
+    moderator: "Moderator"
+    user: "User"
+

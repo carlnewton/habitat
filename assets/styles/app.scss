@@ -1,0 +1,47 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+@include media-breakpoint-down(md) {
+  body {
+    padding-bottom: 80px;
+  }
+}
+
+#map { height: 100%; }
+.post-card a {
+    text-decoration: none !important;
+}
+
+#drawer .active {
+    color: var(--bs-primary) !important;
+}
+
+.drawer-padding {
+  padding-bottom: 80px;
+}
+
+.comment.htmx-added, .post.htmx-added {
+  opacity: 0;
+}
+.comment, .post {
+  opacity: 1;
+  transition: opacity 3s ease-out;
+}
+
+div.dropzone {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg);
+  color: var(--bs-primary);
+}
+
+.form-switch.form-switch-lg {
+  margin-bottom: 1.5rem;
+}
+
+.form-switch.form-switch-lg .form-check-input {
+  height: 2rem;
+  width: calc(3rem + 0.75rem);
+  border-radius: 4rem;
+}
