@@ -29,6 +29,7 @@ RUN set -eux; \
 		intl \
 		opcache \
 		zip \
+		exif \
 		gd \
 	;
 

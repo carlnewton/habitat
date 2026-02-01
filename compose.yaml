@@ -22,6 +22,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - habitat_uploads:/uploads
     ports:
       - name: http
         target: 80
@@ -62,6 +63,7 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  habitat_uploads:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
