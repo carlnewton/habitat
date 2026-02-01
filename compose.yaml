@@ -6,28 +6,22 @@ services:
     environment:
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
       DEFAULT_URI: https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}
+      APP_SECRET: ${APP_SECRET:-!ChangeThisAppSecret!}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-!ChangeThisEncryptionKey!}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-      APP_SECRET: ${APP_SECRET:-!ChangeThisSecret!}
       # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-!ChangeThisEncryptionKey!}
       # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
       MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}/.well-known/mercure}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-      MERCURE_EXTRA_DIRECTIVES: |
-        transport bolt {
-          path mercure.db
-          cleanup_frequency 0.2
-        }
       # The two next lines can be removed after initial installation
       SYMFONY_VERSION: ${SYMFONY_VERSION:-}
       STABILITY: ${STABILITY:-stable}
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-      - habitat_uploads:/uploads
     ports:
       - name: http
         target: 80
@@ -68,7 +62,6 @@ services:
 volumes:
   caddy_data:
   caddy_config:
-  habitat_uploads:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 

@@ -4,13 +4,13 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.4.16",
+        "php": ">=8.4.17",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "aws/aws-sdk-php": "^3.369.5",
+        "aws/aws-sdk-php": "^3.369.24",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
-        "doctrine/orm": "^3.6",
+        "doctrine/orm": "^3.6.2",
         "knplabs/knp-time-bundle": "^2.5",
         "symfony/console": "8.0.*",
         "symfony/dotenv": "8.0.*",
@@ -25,7 +25,7 @@
         "symfony/security-csrf": "8.0.*",
         "symfony/translation": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
-        "symfony/ux-twig-component": "^2.31",
+        "symfony/ux-twig-component": "^2.32",
         "symfony/validator": "8.0.*",
         "symfony/webpack-encore-bundle": "^2.4",
         "symfony/yaml": "8.0.*"
@@ -85,6 +85,6 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
-        "symfony/maker-bundle": ">=1.65.1"
+        "symfony/maker-bundle": "^1.65.1"
     }
 }

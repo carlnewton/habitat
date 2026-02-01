@@ -181,7 +181,7 @@
         ]
     },
     "symfony/ux-twig-component": {
-        "version": "2.31",
+        "version": "2.32",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
