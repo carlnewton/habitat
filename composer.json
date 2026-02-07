@@ -7,7 +7,7 @@
         "php": ">=8.4.17",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "aws/aws-sdk-php": "^3.369.24",
+        "aws/aws-sdk-php": "^3.369.29",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6.2",
@@ -85,7 +85,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
-        "friendsofphp/php-cs-fixer": "^3.93",
+        "friendsofphp/php-cs-fixer": "^3.93.1",
         "symfony/maker-bundle": "^1.65.1"
     }
 }
