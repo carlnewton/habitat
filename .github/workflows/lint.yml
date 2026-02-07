@@ -14,7 +14,7 @@ jobs:
         docker-php-ext-install zip
 
     - name: Install composer
-      working-directory: ./App
+      working-directory: .
       run: |
         EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -33,10 +33,10 @@ jobs:
         exit $RESULT
 
     - name: Composer dependencies
-      working-directory: ./App
+      working-directory: .
       run: |
         ./composer.phar install
 
     - name: PHP CS Fix
-      working-directory: ./App
+      working-directory: .
       run: php vendor/bin/php-cs-fixer fix --dry-run
