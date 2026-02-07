@@ -7,18 +7,76 @@ conversation about their local area.
 
 ## Getting Started
 
-Fork this repository to create your own instance of Habitat. To adhere to the AGPL license, your fork must be a public
-repository, so be careful not to ever commit any secrets.
+### Docker Compose
 
-## Linux Server Hosting
+To install with Docker Compose create a `habitat-compose.yml` file and add the following contents:
 
-The packages and setup required for hosting Habitat on a Linux server are in the Ansible playbook.
+```yaml
+services:
+  habitat-app:
+    container_name: habitat
+    image: carlnewton/habitat:latest
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: https://${DOMAIN}
+      MERCURE_PUBLIC_URL: https://${DOMAIN}/.well-known/mercure
+      DEFAULT_URI: https://${DOMAIN}"
+      APP_SECRET: ${APP_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@habitat-database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - habitat_uploads:/uploads
+    networks:
+      habitat:
+    security_opt:
+      - no-new-privileges:true
 
-To run the ansible playbook:
+  habitat-database:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    networks:
+      habitat:
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+    security_opt:
+      - no-new-privileges:true
 
-1. Navigate to the `Ansible` directory
-2. Copy `vars.yaml.template` to `vars.yaml` and amend its contents accordingly
-3. Run `ansible-playbook -i "domain-or-ip-address.example.com," -u example-user playbook.yaml --private-key=~/.ssh/example-key`
+networks:
+  habitat:
+
+volumes:
+  caddy_data:
+  caddy_config:
+  habitat_uploads:
+  database_data:
+```
+
+and a `.env` file in the same directory containing the following:
+
+```env
+# The domain of your Habitat instance
+DOMAIN=example.com
+
+# The APP_SECRET should be a 32 character string of characters, numbers and symbols. It should be unique to your Habitat
+# instance, and should be kept secret. It is also good practice to change this ahead of running composer pull.
+# See https://symfony.com/doc/current/reference/configuration/framework.html#secret
+APP_SECRET=!YouMustChangeThisAppSecret!
+
+ENCRYPTION_KEY=!YouMustChangeThisEncryptionKey!
+POSTGRES_USER=!YouMustChangeThisPostgresUser!
+POSTGRES_PASSWORD=!YouMustChangeThisPostgresPassword!
+POSTGRES_DB=habitat
+```
 
 ## Local Development
 
