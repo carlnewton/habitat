@@ -12,7 +12,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
 
+#[AsPeriodicTask(frequency: '1 hour')]
 #[AsCommand(name: 'habitat:cleanup-attachments')]
 class CleanupAttachmentsCommand extends Command
 {

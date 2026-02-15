@@ -14,8 +14,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Scheduler\Attribute\AsCronTask;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsCronTask('0 7 * * *')]
 #[AsCommand(name: 'habitat:send-daily-digest-email')]
 class SendDailyDigestEmailCommand extends Command
 {

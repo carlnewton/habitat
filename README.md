@@ -33,6 +33,25 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  habitat-worker:
+    image: carlnewton/habitat:latest
+    restart: unless-stopped
+    environment:
+      RUN_MIGRATIONS: false
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@habitat-database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
+    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=60', '--limit=10', '--memory-limit=128M']
+    healthcheck:
+      disable: true
+    volumes:
+      - habitat_uploads:/uploads
+    depends_on:
+      habitat-app:
+        condition: service_healthy
+    networks:
+      habitat:
+    security_opt:
+      - no-new-privileges:true
+
   habitat-database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:

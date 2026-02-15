@@ -37,6 +37,17 @@ services:
         published: ${HTTP3_PORT:-443}
         protocol: udp
 
+  php-worker:
+    image: ${IMAGES_PREFIX:-}app-php-worker
+    restart: unless-stopped
+    environment:
+      RUN_MIGRATIONS: false
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
+    healthcheck:
+      disable: true
+    depends_on:
+      - php
+
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
