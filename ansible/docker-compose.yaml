@@ -2,7 +2,7 @@
 services:
   habitat-app:
     container_name: habitat
-    image: carlnewton/habitat:v0.5
+    image: carlnewton/habitat:latest
     restart: unless-stopped
     environment:
       SERVER_NAME: https://${DOMAIN}
@@ -18,7 +18,7 @@ services:
       - no-new-privileges:true
  
   habitat-worker:
-    image: carlnewton/habitat:v0.5
+    image: carlnewton/habitat:latest
     restart: unless-stopped
     environment:
       RUN_MIGRATIONS: false
