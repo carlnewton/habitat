@@ -1,7 +1,7 @@
 ---
 # Production environment override
 services:
-  php:
+  habitat-app:
     build:
       context: .
       target: frankenphp_prod
@@ -9,10 +9,10 @@ services:
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
 
-  php-worker:
+  habitat-worker:
     extends:
       file: compose.yaml
-      service: php-worker
+      service: habitat-worker
     image: ${IMAGES_PREFIX:-}app-php-worker
     build:
       context: .
@@ -23,5 +23,5 @@ services:
       - /app/var/
       - habitat_uploads:/uploads
     depends_on:
-      php:
+      habitat-app:
         condition: service_healthy

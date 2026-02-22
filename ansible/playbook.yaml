@@ -3,62 +3,24 @@
 - name: Habitat Server Provisioning
   become: true
   hosts: all
-  vars_files: vars.yaml
   tasks:
     - name: Update repository index
       package:
         update_cache: yes
-
-    - name: Install cURL
-      package:
-        name: curl
-        state: latest
-
-    - name: Install unzip
-      package:
-        name: unzip
-        state: latest
-
-    - name: Install ca-certificates
-      package:
-        name: ca-certificates
-        state: latest
-
-    - name: Install certbot
-      package:
-        name: certbot
-        state: latest
-
-    - name: Install Crontab
-      package:
-        name: cronie
-        state: present
-
-    - name: Start and enable crontab service
-      service:
-        name: cronie
-        state: started
-        enabled: yes
-
-    - name: Create /etc/apt/keyrings directory
-      file:
-        path: /etc/apt/keyrings
-        state: directory
-        mode: 0755
 
     - name: Download Docker GPG file
       get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
         dest: /etc/apt/keyrings/docker.asc
         mode: 0644
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts.os_family == "Debian"
 
     - name: Add Docker repository
       apt_repository:
-        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts.lsb.codename }} stable"
         state: present
         filename: docker
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts.os_family == "Debian"
       notify: Update apt repository index
 
     - name: Install Docker packages
@@ -103,159 +65,29 @@
         line: '/swapfile none swap sw 0 0'
         state: present
 
-    - name: Create MARIADB_USER variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^MARIADB_USER="
-        line: "MARIADB_USER=habitat"
-
-    - name: Create HABITAT_EMAIL_ADDRESS variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^HABITAT_EMAIL_ADDRESS="
-        line: "HABITAT_EMAIL_ADDRESS={{ email_address }}"
-
-    - name: Create HABITAT_DOMAIN variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^HABITAT_DOMAIN="
-        line: "HABITAT_DOMAIN={{ domain }}"
-
-    - name: Check if the MARIADB_PASSWORD is already defined
-      lineinfile:
-        state: absent
-        path: /etc/environment
-        regexp: '^MARIADB_PASSWORD='
-      check_mode: true
-      register: existing_mariadb_password
-
-    - name: Create MARIADB_PASSWORD variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^MARIADB_PASSWORD="
-        line: "MARIADB_PASSWORD={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$[]') }}"
-      when: existing_mariadb_password.found == 0
-
-    - name: Create MARIADB_DATABASE variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^MARIADB_DATABASE=habitat"
-        line: "MARIADB_DATABASE=habitat"
-
-    - name: Create APP_SECRET variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^APP_SECRET="
-        line: "APP_SECRET={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$[]') }}"
-
-    - name: Check if the ENCRYPTION_KEY is already defined
-      lineinfile:
-        state: absent
-        path: /etc/environment
-        regexp: '^ENCRYPTION_KEY='
-      check_mode: true
-      register: existing_encryption_key
-
-    - name: Create ENCRYPTION_KEY variable
-      lineinfile:
-        path: /etc/environment
-        state: present
-        regexp: "^ENCRYPTION_KEY="
-        line: "ENCRYPTION_KEY={{ lookup('community.general.random_string', length=32, min_lower=1, min_upper=1, min_numeric=1, min_special=1, override_special='-_=+!$[]') }}"
-      when: existing_encryption_key.found == 0
-
-    - name: Create /opt/habitat/files directory
+    - name: Create /opt/habitat directory
       file:
-        path: /opt/habitat/files
+        path: /opt/habitat
         state: directory
         mode: 0755
 
-    - name: Create /opt/habitat/db directory
-      file:
-        path: /opt/habitat/db
-        state: directory
-        mode: 0755
-
-    - name: Copy docker-compose files to /opt/habitat/docker-compose directory
+    - name: Copy docker-compose files to /opt/habitat directory
       copy:
-        src: files/docker-compose
+        src: '{{ item }}'
         dest: /opt/habitat/
         mode: 0755
-
-    - name: Set timezone
-      lineinfile:
-        path: /opt/habitat/docker-compose/php-apache/timezone.ini
-        state: present
-        regexp: "^date.timezone="
-        line: "date.timezone={{ timezone }}"
-
-    - name: Delete Habitat app directory
-      file:
-        path: /opt/habitat/app
-        state: absent
-
-    - name: Download Habitat
-      get_url:
-        url: "{{ habitat_repo_url }}/archive/refs/heads/{{ habitat_repo_version }}.zip"
-        dest: /tmp
-      register: habitat_archive
-
-    - name: Unarchive Habitat
-      unarchive:
-        src: "{{ habitat_archive.dest }}"
-        dest: /tmp
-        remote_src: yes
-        list_files: yes
-      register: habitat_unarchive
-
-    - name: Move Habitat app directory
-      command: "mv /tmp/{{ habitat_unarchive.files[0] }}/App/ /opt/habitat/app"
-
-    - name: Create .install file to instruct Docker to run Composer and NPM install
-      copy:
-        content: "This file exists as an instruction to the Docker entrypoint to run Compose and NPM install."
-        dest: /opt/habitat/app/.install
-        mode: 0755
-
-    - name: Delete temporary Habitat archive file
-      file:
-        path: "{{ habitat_archive.dest }}"
-        state: absent
-
-    - name: Delete temporary Habitat archive directory
-      file:
-        path: "/tmp/{{ habitat_unarchive.files[0] }}"
-        state: absent
+      loop:
+        - docker-compose.yaml
+        - .env
 
     - name: Stop docker compose services
       community.docker.docker_compose_v2:
-        project_src: /opt/habitat/docker-compose
+        project_src: /opt/habitat
         state: stopped
-
-    - name: Generate SSL certificate
-      shell: |
-        certbot certonly --standalone --non-interactive --agree-tos --email {{ email_address }} -d {{ domain }}
-
-    - name: Create a cron job for certbot auto renewal
-      cron:
-        name: "Auto-renew letsencrypt certificate with certbot"
-        minute: "0"
-        hour: "1"
-        day: "*"
-        month: "*"
-        weekday: "0"
-        job: "certbot renew --post-hook 'docker compose -f /opt/habitat/docker-compose/docker-compose.yaml restart php-apache'"
-        user: "root"
 
     - name: Run docker compose up
       community.docker.docker_compose_v2:
-        project_src: /opt/habitat/docker-compose
+        project_src: /opt/habitat
         state: present
         build: always
 

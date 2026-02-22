@@ -97,6 +97,16 @@ POSTGRES_PASSWORD=!YouMustChangeThisPostgresPassword!
 POSTGRES_DB=habitat
 ```
 
+### Linux Server Hosting
+
+The packages and setup required for hosting Habitat on a Linux server are in the Ansible playbook.
+
+To run the ansible playbook:
+
+1. Navigate to the `ansible` directory
+2. Copy `.env.template` to `.env` and amend its contents accordingly
+3. Run `ansible-playbook -i "domain-or-ip-address.example.com," -u example-user playbook.yaml --private-key=~/.ssh/example-key`
+
 ## Local Development
 
 1. Navigate to the `Docker/dev` directory and copy the `.env.dist` file to create a new file called `.env`

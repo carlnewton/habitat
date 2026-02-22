@@ -1,7 +1,7 @@
 ---
 # Development environment override
 services:
-  php:
+  habitat-app:
     build:
       context: .
       target: frankenphp_dev
@@ -23,10 +23,10 @@ services:
       - host.docker.internal:host-gateway
     tty: true
 
-  php-worker:
+  habitat-worker:
     extends:
       file: compose.yaml
-      service: php-worker
+      service: habitat-worker
     image: ${IMAGES_PREFIX:-}app-php-worker
     build:
       context: .
@@ -37,14 +37,14 @@ services:
       - /app/var/
       - habitat_uploads:/uploads
     depends_on:
-      php:
+      habitat-app:
         condition: service_healthy
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
 ###> doctrine/doctrine-bundle ###
-  database:
+  habitat-database:
     ports:
       - "5432"
 ###< doctrine/doctrine-bundle ###
