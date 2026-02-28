@@ -19,8 +19,6 @@ services:
     restart: unless-stopped
     environment:
       SERVER_NAME: https://${DOMAIN}
-      MERCURE_PUBLIC_URL: https://${DOMAIN}/.well-known/mercure
-      DEFAULT_URI: https://${DOMAIN}"
       APP_SECRET: ${APP_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@habitat-database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
@@ -28,6 +26,9 @@ services:
       - caddy_data:/data
       - caddy_config:/config
       - habitat_uploads:/uploads
+    ports:
+      - 80:80
+      - 443:443
     networks:
       habitat:
     security_opt:
@@ -91,7 +92,10 @@ DOMAIN=example.com
 # See https://symfony.com/doc/current/reference/configuration/framework.html#secret
 APP_SECRET=!YouMustChangeThisAppSecret!
 
+# The ENCRYPTION_KEY should be a 32 character string of characters, numbers and symbols. It should be unique to your
+# Habitat instance, and should be kept secret. This should never be changed.
 ENCRYPTION_KEY=!YouMustChangeThisEncryptionKey!
+
 POSTGRES_USER=!YouMustChangeThisPostgresUser!
 POSTGRES_PASSWORD=!YouMustChangeThisPostgresPassword!
 POSTGRES_DB=habitat
