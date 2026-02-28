@@ -39,8 +39,11 @@ services:
     restart: unless-stopped
     environment:
       RUN_MIGRATIONS: false
+      SERVER_NAME: https://${DOMAIN}
+      APP_SECRET: ${APP_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@habitat-database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
-    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=60', '--limit=10', '--memory-limit=128M']
+    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=600', '--limit=10', '--memory-limit=128M']
     healthcheck:
       disable: true
     volumes:

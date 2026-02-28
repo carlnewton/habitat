@@ -17,7 +17,7 @@ services:
     build:
       context: .
       target: frankenphp_prod
-    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=60', '--limit=10', '--memory-limit=128M']
+    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=600', '--limit=10', '--memory-limit=128M']
     volumes:
       - ./:/app
       - /app/var/
