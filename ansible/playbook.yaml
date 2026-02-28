@@ -1,0 +1,105 @@
+# ansible-playbook -i "example.com," -u example-user playbook.yaml --private-key ~/.ssh/private-key-example.pem
+
+- name: Habitat Server Provisioning
+  become: true
+  hosts: all
+  tasks:
+    - name: Update repository index
+      package:
+        update_cache: yes
+
+    - name: Download Docker GPG file
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: 0644
+      when: ansible_facts.os_family == "Debian"
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts.lsb.codename }} stable"
+        state: present
+        filename: docker
+      when: ansible_facts.os_family == "Debian"
+      notify: Update apt repository index
+
+    - name: Install Docker packages
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+
+    - name: Check if swapfile is active
+      command: swapon --show=NAME
+      register: swap_status
+
+    - name: Create a swap file
+      command: fallocate -l 2G /swapfile
+      args:
+        creates: /swapfile
+      when: '"/swapfile" not in swap_status.stdout'
+
+    - name: Set the correct permissions for the swap file
+      file:
+        path: /swapfile
+        mode: 0600
+      when: '"/swapfile" not in swap_status.stdout'
+
+    - name: Set up the swap area
+      command: mkswap /swapfile
+      args:
+        creates: /swapfile.swap
+      when: '"/swapfile" not in swap_status.stdout'
+
+    - name: Enable the swap file
+      command: swapon /swapfile
+      when: '"/swapfile" not in swap_status.stdout'
+
+    - name: Ensure swap is enabled on boot
+      lineinfile:
+        path: /etc/fstab
+        line: '/swapfile none swap sw 0 0'
+        state: present
+
+    - name: Create /opt/habitat directory
+      file:
+        path: /opt/habitat
+        state: directory
+        mode: 0755
+
+    - name: Copy docker-compose files to /opt/habitat directory
+      copy:
+        src: '{{ item }}'
+        dest: /opt/habitat/
+        mode: 0755
+      loop:
+        - docker-compose.yaml
+        - .env
+
+    - name: Stop docker compose services
+      community.docker.docker_compose_v2:
+        project_src: /opt/habitat
+        state: stopped
+
+    - name: Run docker compose up
+      community.docker.docker_compose_v2:
+        project_src: /opt/habitat
+        state: present
+        build: always
+
+    - name: Prune unused Docker utilities
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+        builder_cache: true
+
+  handlers:
+    - name: Update apt repository index
+      apt:
+        update_cache: yes

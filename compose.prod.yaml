@@ -1,0 +1,27 @@
+---
+# Production environment override
+services:
+  habitat-app:
+    build:
+      context: .
+      target: frankenphp_prod
+    environment:
+      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+
+  habitat-worker:
+    extends:
+      file: compose.yaml
+      service: habitat-worker
+    image: ${IMAGES_PREFIX:-}app-php-worker
+    build:
+      context: .
+      target: frankenphp_prod
+    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=60', '--limit=10', '--memory-limit=128M']
+    volumes:
+      - ./:/app
+      - /app/var/
+      - habitat_uploads:/uploads
+    depends_on:
+      habitat-app:
+        condition: service_healthy

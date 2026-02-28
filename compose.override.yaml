@@ -1,0 +1,61 @@
+---
+# Development environment override
+services:
+  habitat-app:
+    build:
+      context: .
+      target: frankenphp_dev
+    volumes:
+      - ./:/app
+      - ./frankenphp/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - ./frankenphp/conf.d/20-app.dev.ini:/usr/local/etc/php/app.conf.d/20-app.dev.ini:ro
+      # If you develop on Mac or Windows you can remove the vendor/ directory
+      #  from the bind-mount for better performance by enabling the next line:
+      #- /app/vendor
+    environment:
+      FRANKENPHP_WORKER_CONFIG: watch
+      MERCURE_EXTRA_DIRECTIVES: demo
+      # See https://xdebug.org/docs/all_settings#mode
+      XDEBUG_MODE: "${XDEBUG_MODE:-off}"
+      APP_ENV: "${APP_ENV:-dev}"
+    extra_hosts:
+      # Ensure that host.docker.internal is correctly defined on Linux
+      - host.docker.internal:host-gateway
+    tty: true
+
+  habitat-worker:
+    extends:
+      file: compose.yaml
+      service: habitat-worker
+    image: ${IMAGES_PREFIX:-}app-php-worker
+    build:
+      context: .
+      target: frankenphp_dev
+    command: ['bin/console', 'messenger:consume', '-vv', '--time-limit=60', '--limit=10', '--memory-limit=128M']
+    volumes:
+      - ./:/app
+      - /app/var/
+      - habitat_uploads:/uploads
+    depends_on:
+      habitat-app:
+        condition: service_healthy
+
+###> symfony/mercure-bundle ###
+###< symfony/mercure-bundle ###
+
+###> doctrine/doctrine-bundle ###
+  habitat-database:
+    ports:
+      - "5432"
+###< doctrine/doctrine-bundle ###
+
+###> symfony/mailer ###
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+###< symfony/mailer ###
