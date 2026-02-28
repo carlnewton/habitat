@@ -185,7 +185,7 @@
                     <br>
                     <small>{{ 'menus.main.home.title' | trans }}</small>
                 </a>
-                <a href="{{ path('app_create_post') }}{% if category is defined %}?category={{ category.id }}{% endif %}" class="text-center col col-sm-4 text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_create_post' %} active{% endif %}">
+                <a href="{{ path('app_create_post') }}{% if category is defined %}?category={{ category.id }}{% endif %}" class="text-center create-post-link col col-sm-4 text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_create_post' %} active{% endif %}">
                     <i class="h3 bi bi-plus-circle{% if app.request.attributes.get('_route') == 'app_create_post' %}-fill{% endif %}"></i>
                     <br>
                     <small>{{ 'menus.main.post.title' | trans }}</small>

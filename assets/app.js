@@ -38,6 +38,10 @@ for (let i = 0; i < nearbyLinks.length; i++) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 let homeLinks = document.querySelectorAll('.home-link');
+                let createPostLink = document.querySelector('.create-post-link');
+                createPostLink.querySelector('i').classList.remove('bi-plus-circle-fill');
+                createPostLink.querySelector('i').classList.add('bi-plus-circle');
+                createPostLink.classList.remove('active');
                 for (let h = 0; h < homeLinks.length; h++) {
                     homeLinks[h].classList.remove('active');
                     homeLinks[h].querySelector('i').classList.remove('bi-house-fill');
