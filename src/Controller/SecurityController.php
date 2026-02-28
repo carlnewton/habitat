@@ -136,7 +136,7 @@ class SecurityController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            $domain = getenv('HABITAT_DOMAIN');
+            $domain = getenv('SERVER_NAME');
 
             $mailer->send(
                 $user->getEmailAddress(),
@@ -145,7 +145,7 @@ class SecurityController extends AbstractController
                 '<p>Hello ' . $user->getUsername() . ',</p>' .
                 '<p>Click the link below to verify the email address for your account.</p>' .
                 '<p>Ignore this email if you didn\'t create this account.</p>' .
-                '<p><a href="https://' . $domain . $router->generate('app_verify_user', [
+                '<p><a href="' . $domain . $router->generate('app_verify_user', [
                     'userId' => $user->getId(),
                     'verificationString' => $emailVerificationString,
                 ]) . '">Verify your email address</a>'
@@ -298,7 +298,7 @@ class SecurityController extends AbstractController
             $this->entityManager->flush();
 
             $settingsRepository = $this->entityManager->getRepository(Settings::class);
-            $domain = getenv('HABITAT_DOMAIN');
+            $domain = getenv('SERVER_NAME');
 
             $mailer->send(
                 $user->getEmailAddress(),
@@ -307,7 +307,7 @@ class SecurityController extends AbstractController
                 '<p>Hello ' . $user->getUsername() . ',</p>' .
                 '<p>Click the link below to reset the password for your account.</p>' .
                 '<p>Ignore this email if you didn\'t request a password reset.</p>' .
-                '<p><a href="https://' . $domain . $router->generate('app_reset_password', [
+                '<p><a href="' . $domain . $router->generate('app_reset_password', [
                     'userId' => $user->getId(),
                     'verificationString' => $emailVerificationString,
                 ]) . '">Reset your password</a>'

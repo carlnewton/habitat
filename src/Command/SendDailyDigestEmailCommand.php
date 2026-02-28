@@ -75,7 +75,7 @@ class SendDailyDigestEmailCommand extends Command
             return Command::SUCCESS;
         }
 
-        $domain = getenv('HABITAT_DOMAIN');
+        $domain = getenv('SERVER_NAME');
 
         $userRepository = $this->entityManager->getRepository(User::class);
         $admins = $userRepository->findUsersByRole('ROLE_SUPER_ADMIN');
@@ -89,7 +89,7 @@ class SendDailyDigestEmailCommand extends Command
         if (!empty($newReports)) {
             $reportsModerationRoute = $this->urlGenerator->generate('app_moderation_reports');
             $body .= '<p>' . $this->translator->trans('emails.daily_digest.new_reports', ['%count%' => count($newReports)]) . '</p>';
-            $body .= '<p><a href="https://' . $domain . $reportsModerationRoute . '">' . $this->translator->trans('emails.daily_digest.new_reports_link') . '</a></p>';
+            $body .= '<p><a href="' . $domain . $reportsModerationRoute . '">' . $this->translator->trans('emails.daily_digest.new_reports_link') . '</a></p>';
         }
 
         if (!empty($newPosts)) {

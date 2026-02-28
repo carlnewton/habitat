@@ -42,7 +42,7 @@ class ResendVerificationEmailController extends AbstractController
 
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
 
-        $domain = getenv('HABITAT_DOMAIN');
+        $domain = getenv('SERVER_NAME');
         $this->mailer->send(
             $user->getEmailAddress(),
             $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
@@ -50,7 +50,7 @@ class ResendVerificationEmailController extends AbstractController
             '<p>Hello ' . $user->getUsername() . ',</p>' .
             '<p>Click the link below to verify the email address for your account.</p>' .
             '<p>Ignore this email if you didn\'t create this account.</p>' .
-            '<p><a href="https://' . $domain . $this->router->generate('app_verify_user', [
+            '<p><a href="' . $domain . $this->router->generate('app_verify_user', [
                 'userId' => $user->getId(),
                 'verificationString' => $user->getEmailVerificationString(),
             ]) . '">Verify your email address</a>'
