@@ -31,7 +31,8 @@ Encore
     .addEntry('admin_table', './assets/admin_table.js')
     .addEntry('admin_registration_settings', './assets/admin_registration_settings.js')
     .addEntry('create_post', './assets/create_post.js')
-    .addEntry('view_post', './assets/view_post.js')
+    .addEntry('view_map', './assets/view_map.js')
+    .addEntry('photoswipe', './assets/photoswipe.js')
     .addEntry('nearby', './assets/nearby.js')
     .addEntry('image_storage_setup', './assets/image_storage_setup.js')
 

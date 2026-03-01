@@ -2,7 +2,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('view_post') }}
+
+    {% if post.attachments is not empty %}
+        {{ encore_entry_link_tags('photoswipe') }}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -94,5 +97,12 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('view_post') }}
+
+    {% if post.attachments is not empty %}
+        {{ encore_entry_script_tags('photoswipe') }}
+    {% endif %}
+
+    {% if post.latitude is not null and post.longitude is not null %}
+        {{ encore_entry_script_tags('view_map') }}
+    {% endif %}
 {% endblock %}
