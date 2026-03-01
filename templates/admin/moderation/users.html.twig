@@ -57,7 +57,7 @@
             <i class="bi bi-x-lg fs-4 text-danger"></i>
         {% endif %}
     </td>
-    <td class="align-middle{% if sort == 'created' %} bg-light border{% endif %}">{{ item.created|date }}</td>
+    <td class="align-middle{% if sort == 'created' %} bg-light border{% endif %}">{{ item.created|local_date }}</td>
     <td class="align-middle{% if sort == 'posts' %} bg-light border{% endif %}">
         <div class="d-grid">
             <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: item.id }) }}">{{ item.posts|length }}</a>

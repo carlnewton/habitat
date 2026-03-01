@@ -30,6 +30,55 @@ class LatLong
         return $this->latitude . ',' . $this->longitude;
     }
 
+    /**
+     * This calculates distances between the given latlong and every timezone and returns the closest. That sounds like
+     * a great deal of work, so I've decided not to use it dynamically and only call it when saving its returned value
+     * for later use. All things considered though, it seems to be fast, but it's probably best to benchmark this if
+     * ever using it on a regular old GET request.
+     */
+    public static function getTimezone(string $latLong): \DateTimeZone
+    {
+        $timezoneIdentifiers = \DateTimeZone::listIdentifiers();
+
+        $closestTimezone = null;
+        $closestDistance = null;
+        foreach ($timezoneIdentifiers as $timezoneIdentifier) {
+            $timezone = new \DateTimeZone($timezoneIdentifier);
+            $location = timezone_location_get($timezone);
+            $distance = self::getDistance($location['latitude'] . ',' . $location['longitude'], $latLong);
+            if (null === $closestDistance || $closestDistance > $distance) {
+                $closestDistance = $distance;
+                $closestTimezone = $timezone;
+            }
+        }
+
+        return $closestTimezone;
+    }
+
+    public static function getDistance(string $latLongA, string $latLongB): float
+    {
+        $latLongArrA = explode(',', $latLongA);
+        $latitudeA = deg2rad($latLongArrA[0]);
+        $longitudeA = deg2rad($latLongArrA[1]);
+
+        $latLongArrB = explode(',', $latLongB);
+        $latitudeB = deg2rad($latLongArrB[0]);
+        $longitudeB = deg2rad($latLongArrB[1]);
+
+        $latitudeDistance = $latitudeA - $latitudeB;
+        $longitudeDistance = $longitudeA - $longitudeB;
+
+        $a = sin($latitudeDistance / 2) * sin($latitudeDistance / 2)
+            + cos($latitudeA) * cos($latitudeB)
+            * sin($longitudeDistance / 2) * sin($longitudeDistance / 2)
+        ;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = self::EARTH_RADIUS_METERS * $c;
+
+        return $distance;
+    }
+
     public static function isValidLatLong(string $latLong, ?string $withinBoundsLatLong = null, ?int $withinBoundsRadiusMeters = null): bool
     {
         if (!str_contains($latLong, ',')) {
@@ -69,24 +118,7 @@ class LatLong
             return true;
         }
 
-        // The Haversine Formula
-        $latitude = deg2rad($latitude);
-        $longitude = deg2rad($longitude);
-
-        $withinBoundsLatLongArr = explode(',', $withinBoundsLatLong);
-        $withinBoundsLatitude = deg2rad($withinBoundsLatLongArr[0]);
-        $withinBoundsLongitude = deg2rad($withinBoundsLatLongArr[1]);
-
-        $latitudeDistance = $withinBoundsLatitude - $latitude;
-        $longitudeDistance = $withinBoundsLongitude - $longitude;
-
-        $a = sin($latitudeDistance / 2) * sin($latitudeDistance / 2)
-            + cos($latitude) * cos($withinBoundsLatitude)
-            * sin($longitudeDistance / 2) * sin($longitudeDistance / 2)
-        ;
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        $distance = self::EARTH_RADIUS_METERS * $c;
+        $distance = self::getDistance($latitude . ',' . $longitude, $withinBoundsLatLong);
 
         return $distance <= $withinBoundsRadiusMeters;
     }

@@ -204,6 +204,15 @@ class SetupController extends AbstractController
         $locationLatLngSetting->setValue($request->request->get('locationLatLng'));
         $this->entityManager->persist($locationLatLngSetting);
 
+        $timezoneSetting = $settingsRepository->getSettingByName('timezone');
+        if (!$timezoneSetting) {
+            $timezoneSetting = new Settings();
+            $timezoneSetting->setName('timezone');
+        }
+        $timezone = LatLong::getTimezone($request->request->get('locationLatLng'));
+        $timezoneSetting->setValue($timezone->getName());
+        $this->entityManager->persist($timezoneSetting);
+
         $setupSetting->setValue('categories');
 
         $this->entityManager->persist($setupSetting);

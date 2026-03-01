@@ -16,9 +16,9 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
+    <body class="bg-light">
         <div class="navbar-expand-md">
-            <nav class="navbar shadow-sm fixed-top bg-{{ setting('theme', 'light') }} border-bottom">
+            <nav class="navbar shadow-sm fixed-top bg-{{ setting('theme', 'white') }} border-bottom">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ path('app_index_index') }}">
                         <img src="/build/images/habitat_icon.svg" width="30" height="30" class="d-inline-block align-top" alt="Habitat">
@@ -98,7 +98,7 @@
                                 <a href="{{ path('app_view_post', { 'id': notification.post.id }) }}" class="list-group-item list-group-item-action">
                                     <h5 class="mb-1"><i class="bi bi-chat-fill text-primary"></i> {{ 'notifications.new_post_comments.title' | trans }}</h5>
                                     <p>{{ 'notifications.new_post_comments.message' | trans({ '%count%': notification.data.count }) }} <strong>{{ notification.post.title }}</strong></p>
-                                    <span class="float-end text-muted" title="{{ notification.date|date }}">{{ notification.date|time_diff }}</span>
+                                    <span class="float-end text-muted" title="{{ notification.date|local_date }}">{{ notification.date|time_diff }}</span>
                                 </a>
                             {% endif %}
                         {% endfor %}
@@ -178,7 +178,7 @@
                 {% endblock %}
             </div>
         </div>
-        <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'light') }} border-top shadow-lg">
+        <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'white') }} border-top shadow-lg">
             <div class="container-fluid">
                 <a href="{{ path('app_index_index') }}" class="text-center home-link col col-sm-4 text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_index_index' %} active{% endif %}">
                     <i class="h3 bi bi-house{% if app.request.attributes.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>

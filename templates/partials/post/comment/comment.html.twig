@@ -52,6 +52,6 @@
     <p data-test="commentBody">
         {{ comment.body }}
     </p>
-    <div class="date text-muted" title="{{ comment.posted|date }}">{{ comment.posted|time_diff }}</div>
+    <div class="date text-muted" title="{{ comment.posted|local_date }}">{{ comment.posted|time_diff }}</div>
     <hr>
 </div>

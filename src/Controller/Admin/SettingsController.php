@@ -103,6 +103,15 @@ class SettingsController extends AbstractController
             $locationLatLngSetting->setValue($request->request->get('locationLatLng'));
             $entityManager->persist($locationLatLngSetting);
 
+            $timezoneSetting = $settingsRepository->getSettingByName('timezone');
+            if (!$timezoneSetting) {
+                $timezoneSetting = new Settings();
+                $timezoneSetting->setName('timezone');
+            }
+            $timezone = LatLong::getTimezone($request->request->get('locationLatLng'));
+            $timezoneSetting->setValue($timezone->getName());
+            $entityManager->persist($timezoneSetting);
+
             $sidebarContent->setContent($request->request->get('sidebarContent'));
             $entityManager->persist($sidebarContent);
 

@@ -30,7 +30,7 @@
                                     hx-swap="afterend"
                                 {% endif %}
                             >
-                                <td class="text-nowrap" title="{{ log.date|date }}">{{ log.date|time_diff }}</td>
+                                <td class="text-nowrap" title="{{ log.date|local_date }}">{{ log.date|time_diff }}</td>
                                 <td class="text-nowrap">
                                     {% if log.user %}
                                         {{ log.user.username }}

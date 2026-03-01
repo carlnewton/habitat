@@ -67,7 +67,7 @@
                         <tr>
                             <td>{{ user.username }}</td>
                             <td>{{ user.emailaddress }}</td>
-                            <td>{{ user.created|date }}</td>
+                            <td>{{ user.created|local_date }}</td>
                             <td>
                                 <div class="d-grid">
                                     <a class="btn btn-link{% if user.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: user.id }) }}">{{ user.posts|length }}</a>

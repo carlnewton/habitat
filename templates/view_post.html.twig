@@ -72,7 +72,7 @@
             {% else %}
                 <em>{{ post.user.username }}</em>
             {% endif %}
-            <span title="{{ post.posted|date }}">{{ post.posted|time_diff }}</span>
+            <span title="{{ post.posted|local_date }}">{{ post.posted|time_diff }}</span>
         </p>
         <span class="fs-4 mb-3">{{ component('Heart', {'post': post}) }}</span>
         <h2 id="comments">Comments</h2>

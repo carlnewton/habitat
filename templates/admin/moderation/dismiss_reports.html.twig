@@ -46,7 +46,7 @@
                         <tr>
                             <td>{{ report.type | capitalize }}</td>
                             <td><a href="{{ path('app_moderation_user', { id: report.reportedBy.id }) }}">{{ report.reportedBy.username }}</a></td>
-                            <td>{{ report.reportedDate|date }}</td>
+                            <td>{{ report.reportedDate|local_date }}</td>
                             <td>{{ report.reason }}</td>
                             <td>
                                 {% if report.type == 'post' %}
