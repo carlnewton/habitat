@@ -108,6 +108,8 @@ POSTGRES_PASSWORD=!YouMustChangeThisPostgresPassword!
 POSTGRES_DB=habitat
 ```
 
+Then run `docker compose -f habitat-compose.yml up`
+
 ### Linux Server Hosting
 
 The packages and setup required for hosting Habitat on a Linux server are in the Ansible playbook.
@@ -120,7 +122,7 @@ To run the ansible playbook:
 
 ## Local Development
 
-2. Run `docker-compose up`
+2. Run `docker compose up`
 
 Run any application, symfony and composer commands from within the `habitat-habitat-app-1` container:
 
