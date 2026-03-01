@@ -13,7 +13,7 @@ conversation about their local area.
 
 ### Docker Compose
 
-To install with Docker Compose create a `habitat-compose.yml` file and add the following contents:
+To install with Docker Compose create a `docker-compose.yml` file and add the following contents:
 
 ```yaml
 services:
@@ -108,7 +108,7 @@ POSTGRES_PASSWORD=!YouMustChangeThisPostgresPassword!
 POSTGRES_DB=habitat
 ```
 
-Then run `docker compose -f habitat-compose.yml up`
+Then run `docker compose up -d`
 
 ### Linux Server Hosting
 
