@@ -1,3 +1,7 @@
+<p align="center">
+    <img alt="Habitat" src="./assets/img/habitat_icon.svg?raw=true" />
+</p>
+
 # Habitat
 
 Habitat is a free and open source, self-hosted platform for communities to discover and discuss their local area.
