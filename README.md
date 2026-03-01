@@ -4,7 +4,7 @@
 
 <h1 align="center">Habitat</h1>
 
-Habitat is a free and open source, self-hosted platform for communities to discover and discuss their local area.
+Habitat is a free and open-source social platform for local communities.
 
 Locals can create posts linked to a specific location on a map, making it easy for others to find and join the
 conversation about their local area.
