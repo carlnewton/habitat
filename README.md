@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Habitat" src="./assets/img/habitat_icon.svg?raw=true" />
+    <img alt="Habitat" width="128" height="128" src="./assets/img/habitat_icon.svg?raw=true" />
 </p>
 
 # Habitat
