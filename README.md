@@ -2,7 +2,7 @@
     <img alt="Habitat" width="128" height="128" src="./assets/img/habitat_icon.svg?raw=true" />
 </p>
 
-# Habitat
+<h1 align="center">Habitat</h1>
 
 Habitat is a free and open source, self-hosted platform for communities to discover and discuss their local area.
 
