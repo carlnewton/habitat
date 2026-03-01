@@ -116,16 +116,15 @@ To run the ansible playbook:
 
 ## Local Development
 
-1. Navigate to the `Docker/dev` directory and copy the `.env.dist` file to create a new file called `.env`
 2. Run `docker-compose up`
 
-Run any application, symfony and composer commands from within the `habitat-apache-php` container:
+Run any application, symfony and composer commands from within the `habitat-habitat-app-1` container:
 
 ```sh
-docker exec -it habitat-apache-php bash
+docker exec -it habitat-habitat-app-1 bash
 ```
 
-Habitat can be loaded in the web browser from [localhost](http://localhost).
+Habitat can be loaded in the web browser from [localhost](https://localhost).
 
 ## Further Information
 
