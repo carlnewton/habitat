@@ -1,7 +1,7 @@
 Cypress.Commands.add('resetDatabase', () => {
-    cy.exec('docker exec symfony-docker-php-1 php bin/console doctrine:database:drop --force --no-interaction', { failOnNonZeroExit: false });
-    cy.exec('docker exec symfony-docker-php-1 php bin/console doctrine:database:create --no-interaction');
-    cy.exec('docker exec symfony-docker-php-1 php bin/console doctrine:migrations:migrate --no-interaction');
+    cy.exec('docker exec habitat-habitat-app-1 php bin/console doctrine:database:drop --force --no-interaction', { failOnNonZeroExit: false });
+    cy.exec('docker exec habitat-habitat-app-1 php bin/console doctrine:database:create --no-interaction');
+    cy.exec('docker exec habitat-habitat-app-1 php bin/console doctrine:migrations:migrate --no-interaction');
 });
 
 Cypress.Commands.add('loadFixtureGroups', (fixtureGroups) => {
@@ -9,7 +9,7 @@ Cypress.Commands.add('loadFixtureGroups', (fixtureGroups) => {
   fixtureGroups.forEach(async (fixtureGroup) => {
       groups += ' --group ' + fixtureGroup;
   });
-  cy.exec(`docker exec symfony-docker-php-1 php bin/console doctrine:fixtures:load ${groups} --no-interaction`);
+  cy.exec(`docker exec habitat-habitat-app-1 php bin/console doctrine:fixtures:load ${groups} --no-interaction`);
 });
 
 Cypress.Commands.add('getElement', (dataTestValue) => {
