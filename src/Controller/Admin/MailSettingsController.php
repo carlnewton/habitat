@@ -24,6 +24,7 @@ class MailSettingsController extends AbstractController
         $settingsRepository = $entityManager->getRepository(Settings::class);
 
         $smtpUsername = $settingsRepository->getSettingByName('smtpUsername');
+        $smtpPassword = $settingsRepository->getSettingByName('smtpPassword');
         $smtpServer = $settingsRepository->getSettingByName('smtpServer');
         $smtpPort = $settingsRepository->getSettingByName('smtpPort');
         $smtpFromEmailAddress = $settingsRepository->getSettingByName('smtpFromEmailAddress');
@@ -32,6 +33,7 @@ class MailSettingsController extends AbstractController
             return $this->render('admin/mail.html.twig', [
                 'values' => [
                     'smtpUsername' => $smtpUsername->getValue(),
+                    'smtpPassword' => $smtpPassword->getEncryptedValue(),
                     'smtpServer' => $smtpServer->getValue(),
                     'smtpPort' => $smtpPort->getValue(),
                     'smtpFromEmailAddress' => $smtpFromEmailAddress->getValue(),
@@ -49,6 +51,7 @@ class MailSettingsController extends AbstractController
             return $this->render('admin/mail.html.twig', [
                 'values' => [
                     'smtpUsername' => $smtpUsername->getValue(),
+                    'smtpPassword' => $smtpPassword->getEncryptedValue(),
                     'smtpServer' => $smtpServer->getValue(),
                     'smtpPort' => $smtpPort->getValue(),
                     'smtpFromEmailAddress' => $smtpFromEmailAddress->getValue(),
@@ -56,14 +59,14 @@ class MailSettingsController extends AbstractController
             ]);
         }
 
-        $savedSmtpPassword = $settingsRepository->getSettingByName('smtpPassword');
-        $fieldErrors = $this->validateRequest($request, $savedSmtpPassword);
+        $fieldErrors = $this->validateRequest($request);
 
         if (!empty($fieldErrors)) {
             return $this->render('admin/mail.html.twig', [
                 'errors' => $fieldErrors,
                 'values' => [
                     'smtpUsername' => $request->request->get('smtpUsername'),
+                    'smtpPassword' => $request->request->get('smtpPassword'),
                     'smtpServer' => $request->request->get('smtpServer'),
                     'smtpPort' => $request->request->get('smtpPort'),
                     'smtpFromEmailAddress' => $request->request->get('smtpFromEmailAddress'),
@@ -72,15 +75,11 @@ class MailSettingsController extends AbstractController
         }
 
         if (!empty($request->request->get('smtpToEmailAddress'))) {
-            $password = $savedSmtpPassword->getEncryptedValue();
-            if (!empty($request->request->get('smtpPassword'))) {
-                $password = $request->request->get('smtpPassword');
-            }
             $mailException = null;
             try {
                 $mailer->sendTest(
                     $request->request->get('smtpUsername'),
-                    $password,
+                    $request->request->get('smtpPassword'),
                     $request->request->get('smtpServer'),
                     (int) $request->request->get('smtpPort'),
                     $request->request->get('smtpToEmailAddress'),
@@ -95,6 +94,7 @@ class MailSettingsController extends AbstractController
                     'email_sent_exception' => $mailException,
                     'values' => [
                         'smtpUsername' => $smtpUsername->getValue(),
+                        'smtpPassword' => $smtpPassword->getEncryptedValue(),
                         'smtpServer' => $smtpServer->getValue(),
                         'smtpPort' => $smtpPort->getValue(),
                         'smtpFromEmailAddress' => $smtpFromEmailAddress->getValue(),
@@ -112,11 +112,9 @@ class MailSettingsController extends AbstractController
         $smtpUsername->setValue($request->request->get('smtpUsername'));
         $entityManager->persist($smtpUsername);
 
-        if (!empty($request->request->get('smtpPassword'))) {
-            $smtpPassword = $settingsRepository->getSettingByName('smtpPassword');
-            $smtpPassword->setEncryptedValue($request->request->get('smtpPassword'));
-            $entityManager->persist($smtpPassword);
-        }
+        $smtpPassword = $settingsRepository->getSettingByName('smtpPassword');
+        $smtpPassword->setEncryptedValue($request->request->get('smtpPassword'));
+        $entityManager->persist($smtpPassword);
 
         $smtpServer->setValue($request->request->get('smtpServer'));
         $entityManager->persist($smtpServer);
@@ -137,13 +135,9 @@ class MailSettingsController extends AbstractController
         return $this->redirectToRoute('app_admin_mail');
     }
 
-    private function validateRequest(Request $request, Settings $smtpPassword): array
+    private function validateRequest(Request $request): array
     {
         $errors = [];
-
-        if (empty($request->request->get('smtpUsername'))) {
-            $errors['smtpUsername'][] = 'You must enter an SMTP username';
-        }
 
         if (empty($_ENV['ENCRYPTION_KEY'])) {
             $errors['smtpPassword'][] = 'The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set';

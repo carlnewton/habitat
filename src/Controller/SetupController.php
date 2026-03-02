@@ -527,14 +527,6 @@ class SetupController extends AbstractController
     {
         $errors = [];
 
-        if (empty($request->request->get('smtpUsername'))) {
-            $errors['smtpUsername'][] = $this->translator->trans('fields.smtp_username.validations.empty');
-        }
-
-        if (empty($request->request->get('smtpPassword'))) {
-            $errors['smtpPassword'][] = $this->translator->trans('fields.smtp_password.validations.empty');
-        }
-
         if (empty($_ENV['ENCRYPTION_KEY'])) {
             $errors['smtpPassword'][] = $this->translator->trans('fields.smtp_password.validations.no_encryption_key');
         }

@@ -31,7 +31,7 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" name="smtpUsername" id="smtpUsername" placeholder="admin"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}"{% endif %} required data-test="smtpUsername">
+                        <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" name="smtpUsername" id="smtpUsername" placeholder="admin"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}"{% endif %} data-test="smtpUsername">
                         <label for="smtpUsername">{{ 'fields.smtp_username.title' | trans }}</label>
                         {% if errors.smtpUsername is defined %}
                             <div class="invalid-feedback" data-test="smtpUsernameErrors">
@@ -49,7 +49,7 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" name="smtpPassword" id="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}"{% endif %} required data-test="smtpPassword">
+                        <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" name="smtpPassword" id="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}"{% endif %} data-test="smtpPassword">
                         <label for="smtpPassword">{{ 'fields.smtp_password.title' | trans }}</label>
                         {% if errors.smtpPassword is defined %}
                             <div class="invalid-feedback" data-test="smtpPasswordErrors">
