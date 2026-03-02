@@ -1,9 +1,16 @@
 ---
 # TODO: Put this into the Github CI
+#
+# docker system prune -a
 # docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache
+#
+# docker tag carlnewton/habitat carlnewton/habitat:1.2.3-rc1
+# docker push carlnewton/habitat:1.2.3-rc1
+#
 # docker tag carlnewton/habitat carlnewton/habitat:1.2.3
-# docker tag carlnewton/habitat carlnewton/habitat:latest
 # docker push carlnewton/habitat:1.2.3
+#
+# docker tag carlnewton/habitat carlnewton/habitat:latest
 # docker push carlnewton/habitat:latest
 services:
   habitat-app:
