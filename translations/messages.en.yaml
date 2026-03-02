@@ -104,13 +104,10 @@ fields:
   smtp_username:
     title: "SMTP username"
     help_text: "The username for your SMTP mail service. This is usually an email address."
-    validations:
-      empty: "You must enter an SMTP username"
   smtp_password:
     title: "SMTP password"
     help_text: "The password for your SMTP mail service. This can sometimes be an API key."
     validations:
-      empty: "You must enter an SMTP password"
       no_encryption_key: "The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
   smtp_server:
     title: "SMTP server"

@@ -290,34 +290,6 @@ describe('setup', function() {
       cy.visit('/');
     })
 
-    it('produces error if SMTP username is not populated', function() {
-      Object.keys(this.data).forEach((key) => {
-        if (key !== 'smtpUsername') {
-          cy.getElement(key).type(this.data[key]);
-        }
-      });
-      cy.getElement('submit').click();
-
-      cy.getElement('smtpUsername').invoke('prop', 'validity').then((validity) => {
-        expect(validity.valid).to.be.false;
-        expect(validity.valueMissing).to.be.true;
-      })
-    })
-
-    it('produces error if SMTP password is not populated', function() {
-      Object.keys(this.data).forEach((key) => {
-        if (key !== 'smtpPassword') {
-          cy.getElement(key).type(this.data[key]);
-        }
-      });
-      cy.getElement('submit').click();
-
-      cy.getElement('smtpPassword').invoke('prop', 'validity').then((validity) => {
-        expect(validity.valid).to.be.false;
-        expect(validity.valueMissing).to.be.true;
-      })
-    })
-
     it('produces error if SMTP server is not populated', function() {
       Object.keys(this.data).forEach((key) => {
         if (key !== 'smtpServer') {

@@ -17,6 +17,10 @@ class Mailer
 
     private SymfonyMailer $symfonyMailer;
 
+    private const SMTP_STRING_WITH_CREDENTIALS = 'smtp://%s:%s@%s:%d';
+
+    private const SMTP_STRING_WITHOUT_CREDENTIALS = 'smtp://%s:%d';
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ParameterBagInterface $params,
@@ -56,12 +60,19 @@ class Mailer
         $server = $this->settingsRepository->getSettingByName('smtpServer');
         $port = $this->settingsRepository->getSettingByName('smtpPort');
 
-        $transport = Transport::fromDsn(sprintf('smtp://%s:%s@%s:%s',
-            $username->getValue(),
-            $password->getEncryptedValue(),
-            $server->getValue(),
-            $port->getValue()
-        ));
+        if ('' === $username->getValue() && '' === $password->getEncryptedValue()) {
+            $transport = Transport::fromDsn(sprintf(self::SMTP_STRING_WITHOUT_CREDENTIALS,
+                $server->getValue(),
+                $port->getValue()
+            ));
+        } else {
+            $transport = Transport::fromDsn(sprintf(self::SMTP_STRING_WITH_CREDENTIALS,
+                $username->getValue(),
+                $password->getEncryptedValue(),
+                $server->getValue(),
+                $port->getValue()
+            ));
+        }
 
         $this->symfonyMailer = new SymfonyMailer($transport);
 
@@ -77,7 +88,14 @@ class Mailer
 
     private function getTransport(string $username, string $password, string $server, int $port): TransportInterface
     {
-        return Transport::fromDsn(sprintf('smtp://%s:%s@%s:%d',
+        if ('' === $username && '' === $password) {
+            return Transport::fromDsn(sprintf(self::SMTP_STRING_WITHOUT_CREDENTIALS,
+                $server,
+                $port,
+            ));
+        }
+
+        return Transport::fromDsn(sprintf(self::SMTP_STRING_WITH_CREDENTIALS,
             $username,
             $password,
             $server,

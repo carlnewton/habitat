@@ -24,9 +24,6 @@
         <div class="mb-3">
             <label for="smtpPassword" class="form-label">SMTP password</label>
             <input type="password" class="form-control{% if errors.smtpPassword is defined %} is-invalid{% endif %}" id="smtpPassword" name="smtpPassword" placeholder="password"{% if values.smtpPassword is defined %} value="{{ values.smtpPassword }}{% endif %}">
-            <div class="form-text">
-                The value for this field is hidden once saved. If left empty, the existing password will be used.
-            </div>
             {% if errors.smtpPassword is defined %}
                     <div class="invalid-feedback">
                     {% for errorMessage in errors.smtpPassword %}
