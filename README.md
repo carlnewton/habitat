@@ -132,6 +132,18 @@ docker exec -it habitat-habitat-app-1 bash
 
 Habitat can be loaded in the web browser from [localhost](https://localhost).
 
+## Troubleshooting
+
+### Nginx Proxy Manager / Traefik SSL Certificate Issues
+
+Those using a reverse proxy might find themselves in a catch-22 when first launching Habitat. It attempts to attain an
+SSL certificate, but LetsEncrypt can't load the application to verify because it doesn't have a correctly configured SSL
+certificate.
+
+This can be resolved by temporarily setting the `SERVER_NAME` variable to `http://${DOMAIN}:80` in `docker-compose.yml`.
+Once a certificate has been attained, it should be fine to change the variable back to `https://${DOMAIN}` to secure
+your traffic.
+
 ## Further Information
 
 - [Could We Build a Decentralised Social Platform Rooted in Place?](https://carlnewton.github.io/posts/location-based-social-network/)
