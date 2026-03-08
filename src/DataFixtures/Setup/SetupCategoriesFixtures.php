@@ -12,6 +12,10 @@ use Doctrine\Persistence\ObjectManager;
 
 class SetupCategoriesFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
+    private const SETTINGS = [
+        'setup' => 'image_storage',
+    ];
+
     private const CATEGORIES = [
         'Sightseeing' => [
             'description' => 'A space for sharing and discussing visual discoveries, landmarks, nature spots, street art, hidden gems, and other unique finds in the area.',
@@ -85,16 +89,17 @@ class SetupCategoriesFixtures extends Fixture implements FixtureGroupInterface, 
         }
 
         $settingsRepository = $manager->getRepository(Settings::class);
-        $setupSetting = $settingsRepository->findOneBy(['name' => 'setup']);
-        if (is_null($setupSetting)) {
-            $setupSetting = new Settings();
+        foreach (self::SETTINGS as $name => $value) {
+            $setting = $settingsRepository->findOneBy(['name' => $name]);
+            if (is_null($setting)) {
+                $setting = new Settings();
+            }
+            $setting
+                ->setName($name)
+                ->setValue($value)
+            ;
+            $manager->persist($setting);
         }
-        $setupSetting
-            ->setName('setup')
-            ->setValue('image_storage')
-        ;
-
-        $manager->persist($setupSetting);
 
         $manager->flush();
     }

@@ -19,7 +19,7 @@
                 </div>
             {% endfor %}
             <div class="row mb-3">
-                <select class="form-select form-select-lg{% if errors.language is defined %} is-invalid{% endif %}" name="language" id="language" aria-label="{{ 'fields.language.title' | trans }}">
+                <select class="form-select form-select-lg{% if errors.language is defined %} is-invalid{% endif %}" name="language" id="language" aria-label="{{ 'fields.language.title' | trans }}" data-test="language">
                     {% for language_code, language_name in languages %}
                         <option{% if (values.language is defined and values.language == language_code) or (values.language is not defined and app.request.query.get('language') == language_code) %} selected{% endif %} value="{{ language_code }}">{{ language_name }}</option>
                     {% endfor %}
