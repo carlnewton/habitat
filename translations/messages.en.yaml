@@ -1,15 +1,17 @@
 setup:
+  select_language:
+    title: "1. Select your language"
   create_admin_account:
-    title: "1. Create your admin account"
+    title: "2. Create your admin account"
     validations:
       generic: "Something went wrong with your details, please try again."
   set_location:
-    title: "2. Set the location of your Habitat"
+    title: "3. Set the location of your Habitat"
     info:
       post_inside_circle: "Users will be able to create posts in any location inside the circle."
       global_preferences: "Setting the map zoom, boundary size and measurement preference here also sets it throughout your Habitat instance."
   add_categories:
-    title: "3. Add some categories"
+    title: "4. Add some categories"
     suggested_categories:
       sightseeing:
         name: "Sightseeing"
@@ -41,7 +43,7 @@ setup:
     validations:
       empty: "You must select at least one category. Don't worry, you can change these later."
   image_storage:
-    title: "4. Choose your image storage solution"
+    title: "5. Choose your image storage solution"
     options:
       local:
         label: "Local"
@@ -55,12 +57,16 @@ setup:
     validations:
       no_option_selected: "You must choose an image storage option"
   configure_mail:
-    title: "5. Configure your mail settings"
+    title: "6. Configure your mail settings"
     test_email_sent: "A test email has been sent to %email_address% and no issues have been reported. If you have not received it, check the settings here and try again."
     warnings:
       test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
 
 fields:
+  language:
+    title: "Language"
+    validations:
+      empty: "You must select a language"
   created:
     title: "Created"
   username:

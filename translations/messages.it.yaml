@@ -1,0 +1,455 @@
+setup:
+  select_language:
+    title: "1. Seleziona la tua lingua"
+  create_admin_account:
+    title: "2. Crea il tuo account amministratore"
+    validations:
+      generic: "Si è verificato un errore con i tuoi dati, riprova."
+  set_location:
+    title: "3. Imposta la posizione del tuo Habitat"
+    info:
+      post_inside_circle: "Gli utenti potranno creare post in qualsiasi posizione all'interno del cerchio."
+      global_preferences: "L'impostazione dello zoom della mappa, delle dimensioni del confine e della preferenza di misurazione qui impostata, verrà applicata anche in tutta l'istanza del tuo Habitat."
+  add_categories:
+    title: "4. Aggiungi alcune categorie"
+    suggested_categories:
+      sightseeing:
+        name: "Luoghi d'interesse"
+        description: "Uno spazio per condividere e discutere scoperte visive, punti di riferimento, luoghi naturali, arte di strada, gemme nascoste e altre scoperte uniche nella zona."
+      news_events:
+        name: "Notizie ed Eventi"
+        description: "Post relativi ad aggiornamenti di notizie, eventi, festival, concerti o raduni di comunità."
+      food_drink:
+        name: "Cibo e Bevande"
+        description: "Discussioni e foto di ristoranti, caffè, food truck o piatti speciali."
+      history:
+        name: "Storia"
+        description: "Foto e discussioni specificamente focalizzate sul significato storico, le storie e gli eventi relativi a siti storici locali, edifici o eventi nella zona."
+      businesses:
+        name: "Attività commerciali"
+        description: "Post che promuovono o discutono negozi, boutique o servizi."
+      sports_recreation:
+        name: "Sport e Tempo Libero"
+        description: "Conversazioni su attività all'aperto o strutture ricreative."
+      community_initiatives:
+        name: "Iniziative comunitarie"
+        description: "Post su enti di beneficenza, opportunità di volontariato o progetti comunitari."
+      habitat_meta:
+        name: "Habitat Meta"
+        description: "Discussioni su questa istanza di Habitat."
+      random:
+        name: "Varie"
+        description: "Una categoria generica per vari argomenti che non si adattano a nessun'altra categoria."
+    validations:
+      empty: "Devi selezionare almeno una categoria. Non preoccuparti, potrai modificarle in seguito."
+  image_storage:
+    title: "5. Scegli la tua soluzione di archiviazione immagini"
+    options:
+      local:
+        label: "Locale"
+        description: "Le immagini verranno archiviate nella directory <code>/uploads</code>. Questa opzione è più semplice da configurare, ma potrebbe essere più difficile e costosa da mantenere a lungo termine quando si esaurisce lo spazio su disco."
+      amazon_s3:
+        label: "Amazon S3"
+        description: "Le immagini verranno archiviate utilizzando Amazon S3 Cloud Object Storage."
+    warnings:
+      no_encryption_key: "Questo non è disponibile perché la variabile d'ambiente <strong>ENCRYPTION_KEY</strong> non è stata impostata."
+      amazon_s3_exception: "Si è verificato un errore durante il tentativo di connessione al bucket S3"
+    validations:
+      no_option_selected: "Devi scegliere un'opzione di archiviazione immagini"
+  configure_mail:
+    title: "6. Configura le tue impostazioni di posta"
+    test_email_sent: "Un'email di prova è stata inviata a %email_address% e non sono stati segnalati problemi. Se non l'hai ricevuta, controlla le impostazioni qui e riprova."
+    warnings:
+      test_email_exception: "Si è verificato un problema durante il tentativo di invio di un'email di prova: %exception%"
+
+fields:
+  language:
+    title: "Lingua"
+    validations:
+      empty: "Devi scegliere una lingua"
+  created:
+    title: "Creato"
+  username:
+    title: "Nome utente"
+    help_text: "Il tuo nome utente sarà visibile pubblicamente. Si consiglia di scegliere un soprannome."
+    validations:
+      minimum_characters: "Il tuo nome utente deve avere un minimo di %character_length% caratteri"
+      maximum_characters: "Il tuo nome utente deve avere un massimo di %character_length% caratteri"
+      alphabetic_numeric: "Il tuo nome utente deve contenere solo caratteri alfabetici e numerici"
+      already_taken: "Questo nome utente è già stato preso"
+    updated: "Il tuo nome utente è stato aggiornato"
+  email_address:
+    title: "Indirizzo email"
+    help_text: "Il tuo indirizzo email sarà mantenuto privato e può essere utilizzato per recuperare la password."
+    validations:
+      invalid_email_address: "Questo non è un indirizzo email valido"
+      non_matching_email_address: "L'indirizzo email fornito non corrisponde a quello del tuo account"
+  password:
+    title: "Password"
+    help_text: "La tua password deve contenere 8 o più caratteri che comprendano almeno un numero e una lettera maiuscola e minuscola."
+    validations:
+      weak_password: "Devi utilizzare una password più complessa"
+  amazon_s3_region:
+    title: "Regione"
+    default_value: "Seleziona la regione"
+    validations:
+      empty: "Devi selezionare la regione del tuo bucket S3"
+  amazon_s3_bucket_name:
+    title: "Nome bucket"
+    validations:
+      empty: "Devi inserire il nome del tuo bucket S3"
+  amazon_s3_access_key:
+    title: "Chiave di accesso"
+    validations:
+      empty: "Devi inserire la chiave di accesso per il tuo bucket S3"
+  amazon_s3_secret_key:
+    title: "Chiave segreta"
+    validations:
+      no_encryption_key: "La chiave segreta non può essere salvata a meno che non sia impostata una variabile d'ambiente ENCRYPTION_KEY"
+      empty: "Devi inserire la chiave segreta per il tuo bucket S3"
+  smtp_username:
+    title: "Nome utente SMTP"
+    help_text: "Il nome utente per il tuo servizio di posta SMTP. Solitamente è un indirizzo email."
+  smtp_password:
+    title: "Password SMTP"
+    help_text: "La password per il tuo servizio di posta SMTP. A volte può essere una chiave API."
+    validations:
+      no_encryption_key: "La chiave della password non può essere salvata a meno che non sia impostata una variabile d'ambiente ENCRYPTION_KEY"
+  smtp_server:
+    title: "Server SMTP"
+    help_text: "L'URL del server del tuo servizio di posta SMTP."
+    validations:
+      empty: "Devi inserire un server SMTP"
+  smtp_port:
+    title: "Porta SMTP"
+    help_text: "La porta per l'invio di posta al tuo servizio di posta SMTP."
+    validations:
+      invalid: "Devi inserire un numero di porta valido"
+  sender_email_address:
+    title: "Indirizzo email del mittente"
+    help_text: "Le email inviate agli utenti di questa istanza di Habitat verranno inviate dall'indirizzo email fornito."
+    validations:
+      invalid: "Devi inserire un indirizzo email del mittente valido"
+  test_recipient_email_address:
+    title: "Indirizzo email del destinatario di prova"
+    help_text: "Un'email di prova verrà inviata a questo indirizzo email se fornito. Lascia questo campo vuoto per saltare il test e continuare."
+    validations:
+      invalid: "Devi inserire un indirizzo email del destinatario valido"
+  csrf_token:
+    validations:
+      invalid: "Token CSRF non valido o mancante. Riprova."
+  habitat_name:
+    title: "Nome dell'Habitat"
+  location:
+    title: "Posizione"
+  report_post_reason:
+    title: "Perché stai segnalando questo post?"
+  report_comment_reason:
+    title: "Perché stai segnalando questo commento?"
+  sidebar_content:
+    title: "Contenuto della barra laterale"
+  collapse_content:
+    title: "Contenuto da comprimere"
+  content:
+    title: "Contenuto"
+  title:
+    title: "Titolo"
+  reported_by:
+    title: "Segnalato da"
+  context:
+    title: "Contesto"
+  reported_date:
+    title: "Data di segnalazione"
+  type:
+    title: "Tipo"
+    validations:
+      invalid: "Devi scegliere un tipo valido"
+  show_date:
+    title: "Data di visualizzazione"
+    validations:
+      invalid: "Devi inserire una data valida"
+      gte_hide_date: "La data di visualizzazione deve essere precedente alla data di occultamento, se impostata"
+  hide_date:
+    title: "Data di occultamento"
+    validations:
+      invalid: "Devi inserire una data valida"
+      lt_hide_date: "La data di occultamento deve essere successiva alla data di visualizzazione, se impostata"
+  link_url:
+    title: "URL del link"
+  toggle_category:
+    enabled: "I post di questa categoria vengono visualizzati nel tuo feed"
+    disabled: "I post di questa categoria sono nascosti dal tuo feed"
+
+post:
+  posted_by: "Pubblicato da"
+
+report_post:
+  reported: "Segnalato un post"
+  confirmation: "Grazie per aver segnalato questo post. Verrà esaminato dall'amministratore."
+report_comment:
+  reported: "Segnalato un commento"
+  confirmation: "Grazie per aver segnalato questo commento. Verrà esaminato dall'amministratore."
+
+account:
+  login:
+    title: "Accedi al tuo account"
+    logged_in_message: "Hai effettuato l'accesso come %username%,"
+
+about:
+  title: "Informazioni su Habitat"
+  what_is_habitat:
+    title: "Cos'è Habitat?"
+    1: "Habitat è una piattaforma social gratuita e open-source per permettere alle persone di scoprire cosa c'è da vedere e da fare nella loro zona."
+    2: "Piccole comunità, come città e villaggi, possono creare le proprie istanze di Habitat per condividere informazioni sui luoghi di interesse locali."
+    3: "è una di queste istanze."
+  who_runs_habitat:
+    title: "Chi gestisce Habitat?"
+    1: "Ogni comunità di Habitat opera in modo indipendente, con il proprio amministratore dedicato che supervisiona l'istanza."
+    2: "Questa particolare istanza è gestita da"
+    3: "Se sei interessato a promuovere l'impegno della comunità nella tua zona, puoi anche configurare la tua istanza di Habitat."
+
+buttons:
+  continue: "Continua"
+  change: "Modifica"
+  show_current_location: "Mostra la tua posizione attuale"
+  save: "Salva"
+  insert: "Inserisci"
+  update: "Aggiorna"
+  actions: "Azioni"
+  delete: "Elimina"
+  cancel: "Annulla"
+  remove: "Rimuovi"
+  unblock: "Sblocca"
+  block: "Blocca"
+  block_email_address: "Blocca un indirizzo email"
+  report_this_post: "Segnala questo post"
+  report_this_comment: "Segnala questo commento"
+  resend_verification_email: "Invia di nuovo l'email di verifica"
+  login: "Accedi"
+  logout: "Esci"
+  forgot_password: "Password dimenticata"
+  find_out_more: "Scopri di più"
+  add_a_category: "Aggiungi una categoria"
+  add_a_question: "Aggiungi una domanda"
+map:
+  size_label: "Dimensione"
+  toggle_miles: "miglia"
+  toggle_kilometers: "chilometri"
+  warnings:
+    area_too_large: "Habitat non è stato progettato per funzionare a queste dimensioni. Alcune funzionalità potrebbero non funzionare come previsto."
+  validations:
+    invalid_location: "Devi scegliere una posizione valida"
+    invalid_location_size: "Devi scegliere una dimensione della posizione valida"
+
+user_settings:
+  title: "Impostazioni"
+  preferences:
+    title: "Preferenze"
+    measurement_units:
+      title: "Unità di misura"
+      description: "Visualizza le distanze in"
+  hidden_categories:
+    title: "Categorie nascoste"
+    no_hidden_categories: "Attualmente non stai nascondendo nessuna categoria."
+  change_details:
+    title: "Modifica i tuoi dati"
+  delete_account:
+    title: "Elimina il tuo account"
+    warning: "Attenzione: l'eliminazione dell'account è permanente. Tutti i tuoi post e commenti verranno eliminati."
+    description: "Per eliminare il tuo account, inserisci il tuo indirizzo email:"
+    validations:
+      admin_account: "Questo è un account amministratore e non può essere eliminato"
+    success: "Il tuo account è stato eliminato"
+
+measurement_units:
+  kilometers:
+    label:
+      long: "chilometri"
+      short: "km"
+  miles:
+    label: "miglia"
+
+admin:
+  actions:
+    deleted: "Eliminato"
+    reason: "Motivo"
+    confirmation_message: "Sei sicuro di voler %action% il %subject% selezionato?"
+    ban:
+      title: "Banna"
+      messages:
+        content_deleted: "Tutti i contenuti creati dal %subject% selezionato verranno eliminati definitivamente"
+    demote:
+      title: "Declassa"
+      messages:
+        moderator_privileges: "Il %subject% non avrà più privilegi di moderatore"
+    promote:
+      title: "Promuovi"
+      messages:
+        moderator_actions: "Con i privilegi di moderatore, il %subject% sarà in grado di:"
+        moderator_action_1: "Visualizzare i dettagli dell'utente"
+        moderator_action_2: "Bloccare e sbloccare gli account utente"
+        moderator_action_3: "Bannare gli utenti"
+        moderator_action_4: "Spostare i post in un'altra categoria"
+        moderator_action_5: "Eliminare i post"
+        moderator_action_6: "Modificare i post"
+        moderator_action_7: "Eliminare i commenti"
+        moderator_action_8: "Visualizzare e ignorare i post e i commenti segnalati"
+        moderator_action_9: "Bloccare e sbloccare gli indirizzi email"
+    freeze:
+      title: "Blocca"
+      freeze_for: "Blocca per"
+      messages:
+        unable_post_comment: "Il %subject% non potrà pubblicare o commentare finché non sarà trascorso il tempo di sblocco"
+    unfreeze: "Sblocca"
+    dismiss:
+      title: "Ignora"
+      messages:
+        reports_deleted: "Il %subject% verrà eliminato definitivamente"
+    change_category:
+      title: "Cambia categoria"
+      messages:
+        choose_new: "Scegli una nuova categoria per il %subject% selezionato"
+  overview:
+    title: "Panoramica"
+    view_more: "Visualizza altro"
+  settings:
+    title: "Impostazioni"
+    validations:
+      habitat_name:
+        max_characters: "Il nome del tuo Habitat deve avere un massimo di %max_characters% caratteri"
+      sidebar_content:
+        disallowed_html_tags: "Il contenuto della barra laterale contiene tag HTML non consentiti"
+  tables:
+    summary: "Visualizzazione di %item_count% di %total_item_count%"
+    filtered_summary: "Visualizzazione di %item_count% di %filtered_item_count% filtrati da %total_item_count%"
+    no_matching_items: "Nessun %item_name% corrispondente trovato"
+    per_page: "%item_name% per pagina"
+
+  moderation:
+    title: "Moderazione"
+    users:
+      singular: "utente"
+      plural: "utenti"
+      title: "Moderazione utenti"
+      menu_title: "Utenti"
+      validations:
+        users_not_found: "Gli utenti non sono stati trovati"
+    posts:
+      singular: "post"
+      plural: "post"
+      title: "Post moderation"
+      menu_title: "Post"
+    comments:
+      singular: "commento"
+      plural: "commenti"
+      title: "Comment moderation"
+      menu_title: "Commenti"
+    blocked_email_addresses:
+      singular: "indirizzo email"
+      plural: "indirizzi email"
+      title: "Moderazione indirizzi email bloccati"
+      menu_title: "Indirizzi email bloccati"
+    reports:
+      singular: "segnalazione"
+      plural: "segnalazioni"
+      title: "Moderazione segnalazioni"
+      menu_title: "Segnalazioni"
+  categories:
+    title: "Categorie"
+  announcements:
+    title: "Annunci"
+    validations:
+      content:
+        disallowed_html_tags: "Il contenuto dell'annuncio contiene tag HTML non consentiti"
+  user_registration:
+    title: "Registrazione utenti"
+    allow_registration: "Consenti agli utenti di registrarsi"
+    registration_challenge:
+      title: "Sfida di registrazione"
+      help_text: "Puoi creare domande a cui l'utente deve rispondere correttamente per creare un account. Se crei più domande, all'utente verrà richiesto di rispondere a una domanda a caso quando si registra per un account."
+  amazon_s3_details:
+    title: "Dettagli Amazon S3"
+  mail:
+    title: "Posta"
+
+modals:
+  insert_hyperlink:
+    title: "Inserisci hyperlink"
+  update_hyperlink:
+    title: "Aggiorna hyperlink"
+  cancel: "Annulla"
+
+menus:
+  main:
+    home:
+      title: "Home"
+    post:
+      title: "Post"
+    nearby:
+      title: "Nelle vicinanze"
+      error: "Devi abilitare l'accesso alla tua posizione per vedere cosa c'è nelle vicinanze"
+  utility:
+    about:
+      title: "Informazioni"
+    admin_dashboard:
+      title: "Dashboard amministratore"
+    settings:
+      title: "Impostazioni"
+    moderation_log:
+      title: "Registro di moderazione"
+    log_in:
+      title: "Accedi"
+    log_out:
+      title: "Esci"
+    sign_up:
+      title: "Iscriviti"
+  notifications:
+    title: "Notifiche"
+    messages:
+      no_new_notifications: "Non hai nuove notifiche"
+
+flash_messages:
+  account_frozen: "Non puoi eseguire questa azione perché il tuo account è stato bloccato fino al %unfreeze_datetime%. Motivo: %reason%"
+  prevent_action_account_unverified: "Non puoi eseguire questa azione perché il tuo indirizzo email non è stato ancora verificato."
+  account_unverified: "Il tuo indirizzo email non è stato ancora verificato. Controlla le tue email per verificare il tuo indirizzo email."
+
+notifications:
+  new_post_comments:
+    title: "Nuovi commenti"
+    message: "Hai %count% nuovi commenti sul tuo post"
+
+moderation_log:
+  title: "Registro di moderazione"
+  no_logs: "Nessuna azione di moderazione è stata registrata negli ultimi 30 giorni"
+  record_of_actions: Il registro di moderazione è un registro pubblicamente accessibile delle azioni di moderazione intraprese all'interno di questa istanza di Habitat per garantire responsabilità e trasparenza.
+  days_available: Questi record sono disponibili per 30 giorni dalla data dell'azione intrapresa.
+  sensitive_content_warning: Alcuni dei registri possono contenere contenuti di natura delicata. Ciò potrebbe includere materiale osceno, spam o URL che potrebbero rappresentare un pericolo. Si consiglia di prestare attenzione quando si visualizzano i registri e di essere consapevoli dei contenuti potenzialmente dannosi che si possono incontrare.
+    
+  actions:
+    ban: "Utente '%username%' bannato. Motivo: %reason%"
+    freeze: "Utente '%username%' bloccato per %freeze_value% %freeze_interval%. Motivo: %reason%"
+    promote: "Utente '%username%' promosso a moderatore"
+    demote: "Moderatore '%username%' declassato"
+    delete_post: "Post '%post_title%' eliminato da '%username%'. Motivo: %reason%"
+    edit_post: "Post '%post_title%' modificato da '%username%'. Motivo: %reason%"
+    delete_comment: "Commento '%comment%' eliminato da '%username%' dal post '%post_title%'. Motivo: %reason%"
+    change_category: "Post '%post_title%' spostato da '%from_category%' a '%to_category%'"
+
+emails:
+  daily_digest:
+    subject: "Nuova attività nel tuo Habitat"
+    body: |
+      Ciao %admin%,
+      Hai nuova attività nel tuo Habitat:
+    new_users: "%count% nuovi utenti"
+    new_posts: "%count% nuovi post"
+    new_comments: "%count% nuovi commenti"
+    new_reports: "%count% nuove segnalazioni"
+    new_reports_link: "Visualizza contenuti segnalati"
+  email_sent: "Email inviata a %email_address%"
+
+users:
+  roles:
+    administrator: "Amministratore"
+    moderator: "Moderatore"
+    user: "Utente"
