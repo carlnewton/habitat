@@ -201,6 +201,8 @@ about:
     1: "Each Habitat community operates independently, with its own dedicated administrator overseeing the instance."
     2: "This particular instance is managed by"
     3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
+  local_area:
+    title: "Local Area"
 
 buttons:
   continue: "Continue"

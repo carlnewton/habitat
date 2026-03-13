@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 {% set page_title = 'about.title' | trans %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {% if locationLatLng %}
+        {{ encore_entry_link_tags('about_map') }}
+    {% endif %}
+{% endblock %}
+
 {% block outer_body %}
     <div class="col-12 text-center">
         <div class="pt-5">
@@ -256,10 +263,32 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        {% if locationLatLng %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="display-5">{{ 'about.local_area.title' | trans }}</h2>
+                <div
+                    id="about-map"
+                    class="rounded"
+                    style="height: 400px;"
+                    data-center="{{ locationLatLng }}"
+                    data-zoom="{{ locationZoom }}"
+                    data-radius="{{ locationRadiusMeters }}"
+                ></div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row mt-4">
             <div class="col-xs-12">
                 <a href="https://github.com/carlnewton/habitat" class="btn btn-lg btn-primary">{{ 'buttons.find_out_more' | trans }}</a>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if locationLatLng %}
+        {{ encore_entry_script_tags('about_map') }}
+    {% endif %}
 {% endblock %}

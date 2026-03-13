@@ -35,6 +35,7 @@ Encore
     .addEntry('photoswipe', './assets/photoswipe.js')
     .addEntry('nearby', './assets/nearby.js')
     .addEntry('image_storage_setup', './assets/image_storage_setup.js')
+    .addEntry('about_map', './assets/about_map.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
