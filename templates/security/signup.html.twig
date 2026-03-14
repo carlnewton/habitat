@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
-{% set page_title = 'Create an account' %}
+{% set page_title = 'account.sign_up.title' | trans %}
 
 {% block body %}
     <form method="post">
-        <h1 class="mb-3">Create an account</h1>
+        <h1 class="mb-3">{{ 'account.sign_up.title' | trans }}</h1>
         <div class="row">
             <div class="col-sm-6 col-xs-12">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control{% if errors.username is defined %} is-invalid{% endif %}" name="username" id="username" data-test="username" placeholder="Username"{% if values.username is defined %} value="{{ values.username }}"{% endif %} required>
-                    <label for="username">Username</label>
+                    <label for="username">{{ 'fields.username.title' | trans }}</label>
                     {% if errors.username is defined %}
                         <div class="invalid-feedback" data-test="username-errors">
                             {% for errorMessage in errors.username %}
@@ -20,7 +20,7 @@
             </div>
             <div class="col-sm-6 col-xs-12">
                 <p>
-                    Your username will be publicly visible. You are recommended to choose a nickname.
+                    {{ 'fields.username.help_text' | trans }}
                 </p>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <div class="col-sm-6 col-xs-12">
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control{% if errors.email is defined %} is-invalid{% endif %}" name="email" id="email" data-test="email" placeholder="email@example.com"{% if values.email is defined %} value="{{ values.email }}"{% endif %} required>
-                    <label for="email">Email address</label>
+                    <label for="email">{{ 'fields.email_address.title' | trans }}</label>
                     {% if errors.email is defined %}
                         <div class="invalid-feedback" data-test="email-errors">
                             {% for errorMessage in errors.email %}
@@ -40,7 +40,7 @@
             </div>
             <div class="col-sm-6 col-xs-12">
                 <p>
-                    Your email address will be visible to administrators only, and can be used to recover your password.
+                    {{ 'fields.email_address.help_text' | trans }}
                 </p>
             </div>
         </div>
@@ -48,7 +48,7 @@
             <div class="col-sm-6 col-xs-12">
                 <div class="form-floating mb-3">
                     <input type="password" class="form-control{% if errors.password is defined %} is-invalid{% endif %}" name="password" id="password" data-test="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
-                    <label for="password">Password</label>
+                    <label for="password">{{ 'fields.password.title' | trans }}</label>
                     {% if errors.password is defined %}
                         <div class="invalid-feedback" data-test="password-errors">
                             {% for errorMessage in errors.password %}
@@ -60,7 +60,7 @@
             </div>
             <div class="col-sm-6 col-xs-12">
                 <p>
-                    Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter
+                    {{ 'fields.password.help_text' | trans }}
                 </p>
             </div>
         </div>
@@ -68,8 +68,8 @@
         {% if question is defined and question is not null %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Registration challenge</h5>
-                    <p>To successfully create an account, you must correctly answer the following question:</p>
+                    <h5 class="card-title">{{ 'account.sign_up.challenge.title' | trans }}</h5>
+                    <p>{{ 'account.sign_up.challenge.help_text' | trans }}</p>
                     <p><strong>{{ question.question }}</strong></p>
                     <div class="form-floating">
                         <input type="text" class="form-control{% if errors.question is defined %} is-invalid{% endif %}" name="answer" id="answer" placeholder="Answer" required>
@@ -87,7 +87,7 @@
             </div>
         {% endif %}
 
-        <button class="btn btn-primary btn-lg" data-test="submit">Sign up</button>
+        <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.sign_up' | trans }}</button>
         <input type="hidden" name="token" value="{{ csrf_token('signup') }}">
     </form>
 {% endblock %}

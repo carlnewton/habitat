@@ -94,7 +94,8 @@ fields:
     updated: "Il tuo nome utente è stato aggiornato"
   email_address:
     title: "Indirizzo email"
-    help_text: "Il tuo indirizzo email sarà mantenuto privato e può essere utilizzato per recuperare la password."
+    admin_help_text: "Il tuo indirizzo email sarà mantenuto privato e può essere utilizzato per recuperare la password."
+    help_text: "Il tuo indirizzo email sarà visibile solo ai moderatori e potrà essere usato per recuperare la password."
     validations:
       invalid_email_address: "Questo non è un indirizzo email valido"
       non_matching_email_address: "L'indirizzo email fornito non corrisponde a quello del tuo account"
@@ -232,6 +233,11 @@ account:
   login:
     title: "Accedi al tuo account"
     logged_in_message: "Hai effettuato l'accesso come %username%,"
+  sign_up:
+    title: "Crea un account"
+    challenge:
+      title: "Sfida di registrazione"
+      help_text: "Per creare con successo un account, devi rispondere correttamente alla seguente domanda:"
 
 about:
   title: "Informazioni su Habitat"
@@ -247,6 +253,7 @@ about:
     3: "Se sei interessato a promuovere l'impegno della comunità nella tua zona, puoi anche configurare la tua istanza di Habitat."
 
 buttons:
+  sign_up: "Iscriviti"
   apply: "Applica"
   continue: "Continua"
   change: "Modifica"

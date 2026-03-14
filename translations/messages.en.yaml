@@ -94,7 +94,8 @@ fields:
     updated: "Your username has been updated"
   email_address:
     title: "Email address"
-    help_text: "Your email address will be kept private, and can be used to recover your password."
+    admin_help_text: "Your email address will be kept private, and can be used to recover your password."
+    help_text: "Your email address will be visible to moderators only, and can be used to recover your password."
     validations:
       invalid_email_address: "This is not a valid email address"
       non_matching_email_address: "The provided email address does not match that of your account"
@@ -232,6 +233,11 @@ account:
   login:
     title: "Log in to your account"
     logged_in_message: "You are logged in as %username%,"
+  sign_up:
+    title: "Create an account"
+    challenge:
+      title: "Registration challenge"
+      help_text: "To successfully create an account, you must correctly answer the following question:"
 
 about:
   title: "About Habitat"
@@ -247,6 +253,7 @@ about:
     3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
 
 buttons:
+  sign_up: "Sign up"
   apply: "Apply"
   continue: "Continue"
   change: "Change"
