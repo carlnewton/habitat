@@ -1,6 +1,6 @@
 {% extends 'admin/base.html.twig' %}
 {% if action == 'add' %}
-    {% set page_title = 'Add a category' %}
+    {% set page_title = 'buttons.add_a_category' | trans %}
 {% else %}
     {% set page_title = category.name %}
 {% endif %}
@@ -9,25 +9,25 @@
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">Admin dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_admin_categories')}}">Categories</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_index')}}">{{ 'menus.utility.admin_dashboard.title' | trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_categories')}}">{{ 'admin.categories.title' | trans }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-                {% if action == 'add' %}Add a Category{% else %}{{ category.name }}{% endif %}
+                {% if action == 'add' %}{{ 'buttons.add_a_category' | trans }}{% else %}{{ category.name }}{% endif %}
             </li>
         </ol>
     </nav>
 
-    <h2 class="mb-3">{% if action == 'add' %}Add a Category{% else %}{{ category.name }}{% endif %}</h2>
+    <h2 class="mb-3">{% if action == 'add' %}{{ 'buttons.add_a_category' | trans }}{% else %}{{ category.name }}{% endif %}</h2>
 
     {% if action == 'update' %}
         <div class="dropdown mb-3">
             <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
-                Actions
+                {{ 'buttons.actions' | trans }}
             </button>
             <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
                 <li>
                     {% if category.posts|length > 0 %}
-                        <a href="{{ path('app_moderation_posts', { category: category.id }) }}" class="dropdown-item">View posts</a>
+                        <a href="{{ path('app_moderation_posts', { category: category.id }) }}" class="dropdown-item">{{ 'menus.contextual.view_posts.title' | trans }}</a>
                     {% else %}
                         <form class="action-item-form" method="post" action="{{ path('app_admin_categories_delete') }}">
                             <input name="items" type="hidden" value="{{ category.id }}"/>
@@ -42,7 +42,7 @@
 
     <form method="post">
         <div class="row mb-3">
-            <label for="name" class="col-sm-3 col-form-label">Name</label>
+            <label for="name" class="col-sm-3 col-form-label">{{ 'fields.name.title' | trans }}</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control{% if errors.name is defined %} is-invalid{% endif %}" name="name" id="name" value="{% if category.name is defined %}{{ category.name }}{% endif %}" required>
                 {% if errors.name is defined %}
@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="description" class="col-sm-3 col-form-label">Description</label>
+            <label for="description" class="col-sm-3 col-form-label">{{ 'fields.description.title' | trans }}</label>
             <div class="col-sm-9">
                 <textarea class="form-control{% if errors.description is defined %} is-invalid{% endif %}" name="description">{% if category.description is defined %}{{ category.description }}{% endif %}</textarea>
                 {% if errors.description is defined %}
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="Location" class="col-sm-3 col-form-label">Location</label>
+            <label for="Location" class="col-sm-3 col-form-label">{{ 'fields.location.title' | trans }}</label>
             <div class="col-sm-9">
                 <select class="form-select{% if errors.location is defined %} is-invalid{% endif %}" name="location" id="location" aria-label="Location">
                     {% for option in location_options %}
@@ -85,11 +85,11 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="weight" class="col-sm-3 col-form-label">Weight</label>
+            <label for="weight" class="col-sm-3 col-form-label">{{ 'fields.weight.title' | trans }}</label>
             <div class="col-sm-9">
                 <input type="number" class="form-control{% if errors.weight is defined %} is-invalid{% endif %}" name="weight" id="weight" value="{% if category.weight is defined %}{{ category.weight }}{% endif %}" aria-describedby="weight-help">
                 <div id="weight-help" class="form-text">
-                    Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically.
+                    {{ 'fields.weight.description' | trans }}
                 </div>
                 {% if errors.weight is defined %}
                     <div class="invalid-feedback">
@@ -101,7 +101,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <label for="allow-posting" class="col-sm-3 col-form-label">Allow posting</label>
+            <label for="allow-posting" class="col-sm-3 col-form-label">{{ 'post.allow_posting' | trans }}</label>
             <div class="col-sm-9">
                 <div class="form-check form-switch form-switch-lg">
                     <input class="form-check-input" type="checkbox" name="allow-posting" role="switch" id="allow-posting"{% if category.allowPosting is defined and category.allowPosting == 'on' %} checked{% endif %}>
@@ -109,6 +109,6 @@
             </div>
         </div>
         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">{{ 'buttons.save' | trans }}</button>
     </form>
 {% endblock %}

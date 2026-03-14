@@ -1,5 +1,5 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'User details' %}
+{% set page_title = 'admin.moderation.users.details' | trans %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
@@ -11,21 +11,21 @@
         </ol>
     </nav>
 
-    <h2>User details</h2>
+    <h2>{{ 'admin.moderation.users.details' | trans }}</h2>
 
     <div class="dropdown mb-3">
         <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
-            Actions
+            {{ 'buttons.actions' | trans }}
         </button>
         <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
             <li>
                 {% if user.posts|length > 0 %}
-                    <a href="{{ path('app_moderation_posts', { user: user.id }) }}" class="dropdown-item">View posts</a>
+                    <a href="{{ path('app_moderation_posts', { user: user.id }) }}" class="dropdown-item">{{ 'menus.contextual.view_posts.title' | trans }}</a>
                 {% endif %}
             </li>
             <li>
                 {% if user.comments|length > 0 %}
-                    <a href="{{ path('app_moderation_comments', { user: user.id }) }}" class="dropdown-item">View comments</a>
+                    <a href="{{ path('app_moderation_comments', { user: user.id }) }}" class="dropdown-item">{{ 'menus.contextual.view_comments.title' | trans }}</a>
                 {% endif %}
             </li>
             {% if is_granted('ROLE_SUPER_ADMIN') %}
@@ -57,29 +57,29 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Username</th>
+                <th>{{ 'fields.username.title' | trans }}</th>
                 <td>{{ user.username }}</td>
             </tr>
             <tr>
-                <th>Email address</th>
+                <th>{{ 'fields.email_address.title' | trans}}</th>
                 <td>{{ user.emailaddress }}</td>
             </tr>
             <tr>
-                <th>Created</th>
+                <th>{{ 'fields.created.title' | trans }}</th>
                 <td>{{ user.created|local_date }}</td>
             </tr>
             <tr>
-                <th>Freeze status</th>
+                <th>{{ 'admin.actions.freeze.freeze_status' | trans }}</th>
                 <td>
                     {% if user.frozen %}
-                        Currently frozen. This user will be unfrozen {{ user.frozenLog.unfreezeDate|time_diff }}.
+                    {{ 'admin.actions.freeze.currently_frozen' | trans }} {{ user.frozenLog.unfreezeDate|time_diff }}.
                     {% else %}
-                        Not frozen
+                        {{ 'admin.actions.freeze.not_frozen' | trans }}
                     {% endif %}
                 </td>
             </tr>
             <tr>
-                <th>Posts</th>
+                <th>{{ 'fields.posts.title' | trans }}</th>
                 <td>
                     <a class="btn btn-link{% if user.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: user.id }) }}">
                         {{ user.posts|length }}
@@ -87,7 +87,7 @@
                 </td>
             </tr>
             <tr>
-                <th>Comments</th>
+                <th>{{ 'fields.comments.title' | trans }}</th>
                 <td>
                     <a class="btn btn-link{% if user.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: user.id }) }}">
                         {{ user.comments|length }}

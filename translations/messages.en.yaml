@@ -63,6 +63,20 @@ setup:
       test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
 
 fields:
+  description:
+    title: "Description"
+  photos:
+    title: "Photos"
+  post:
+    title: "Post"
+  posts:
+    title: "Posts"
+  comment:
+    title: "Comment"
+  comments:
+    title: "Comments"
+  hearts:
+    title: "Hearts"
   language:
     title: "Language"
     validations:
@@ -138,10 +152,17 @@ fields:
   csrf_token:
     validations:
       invalid: "Invalid or missing CSRF token. Please try again."
+  name:
+    title: "Name"
   habitat_name:
     title: "Habitat name"
   location:
     title: "Location"
+  weight:
+    title: "Weight"
+    description: "Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically."
+  date_reported:
+    title: "Date reported"
   report_post_reason:
     title: "Why are you reporting this post?"
   report_comment_reason:
@@ -154,12 +175,24 @@ fields:
     title: "Content"
   title:
     title: "Title"
+  body:
+    title: "Body"
+  category:
+    title: "Category"
+  user:
+    title: "User"
+  attachments:
+    title: "Attachments"
+  verified:
+    title: "Verified"
   reported_by:
     title: "Reported by"
   context:
     title: "Context"
   reported_date:
     title: "Reported date"
+  reason_for_edit:
+    title: "Reason for edit"
   type:
     title: "Type"
     validations:
@@ -181,7 +214,12 @@ fields:
     disabled: Posts from this category are hidden from your feed
 
 post:
+  create: "Create a post"
+  edit: "Edit post"
   posted_by: "Posted by"
+  posted: "Posted"
+  posting: "Posting..."
+  allow_posting: "Allow posting"
 
 report_post:
   reported: "Reported a post"
@@ -209,8 +247,10 @@ about:
     3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
 
 buttons:
+  apply: "Apply"
   continue: "Continue"
   change: "Change"
+  clear: "Clear"
   show_current_location: "Show your current location"
   save: "Save"
   insert: "Insert"
@@ -221,25 +261,31 @@ buttons:
   remove: "Remove"
   unblock: "Unblock"
   block: "Block"
+  submit_post: "Submit post"
   block_email_address: "Block an email address"
   report_this_post: "Report this post"
   report_this_comment: "Report this comment"
   resend_verification_email: "Resend verification email"
+  remove_location: "Remove location"
   login: "Log in"
   logout: "Log out"
   forgot_password: "Forgot password"
+  reset_password: "Reset your password"
   find_out_more: "Find out more"
   add_a_category: "Add a category"
   add_a_question: "Add a question"
+  add_a_location: "Add a location"
 map:
   size_label: "Size"
   toggle_miles: "miles"
   toggle_kilometers: "kilometers"
   warnings:
     area_too_large: "Habitat has not been designed to work at this size. Things may not work as expected."
+    home_address: "Never post your home address"
   validations:
     invalid_location: "You must choose a valid location"
     invalid_location_size: "You must choose a valid location size"
+    out_of_bounds: "The location can only be set inside the bounds of this Habitat"
 
 user_settings:
   title: "Settings"
@@ -298,6 +344,9 @@ admin:
     freeze:
       title: "Freeze"
       freeze_for: "Freeze for"
+      freeze_status: "Freeze status"
+      not_frozen: "Not frozen"
+      currently_frozen: "Currently frozen. This user will be unfrozen"
       messages:
         unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
@@ -327,11 +376,13 @@ admin:
 
   moderation:
     title: "Moderation"
+    filters: "Filters"
     users:
       singular: "user"
       plural: "users"
       title: "User moderation"
       menu_title: "Users"
+      details: "User details"
       validations:
         users_not_found: "The users could not be found"
     posts:
@@ -380,6 +431,15 @@ modals:
   cancel: Cancel
 
 menus:
+  contextual:
+    edit:
+      title: Edit
+    report:
+      title: Report
+    view_posts:
+      title: "View posts"
+    view_comments:
+      title: "View comments"
   main:
     home:
       title: Home
@@ -454,3 +514,7 @@ users:
     moderator: "Moderator"
     user: "User"
 
+misc:
+  any: "Any"
+  loading: "Loading..."
+  to_comment: "to comment on this post."

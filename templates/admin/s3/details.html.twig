@@ -77,6 +77,6 @@
         </div>
         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
         
-        <button class="btn btn-primary">Save</button>
+        <button class="btn btn-primary">{{ 'buttons.save' | trans }}</button>
     </form>
     {% endblock %}

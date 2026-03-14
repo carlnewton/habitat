@@ -63,6 +63,20 @@ setup:
       test_email_exception: "Si è verificato un problema durante il tentativo di invio di un'email di prova: %exception%"
 
 fields:
+  description:
+    title: "Descrizione"
+  photos:
+    title: "Foto"
+  post:
+    title: "Post"
+  posts:
+    title: "Post"
+  comment:
+    title: "Commento"
+  comments:
+    title: "Commenti"
+  hearts:
+    title: "Cuori"
   language:
     title: "Lingua"
     validations:
@@ -138,10 +152,17 @@ fields:
   csrf_token:
     validations:
       invalid: "Token CSRF non valido o mancante. Riprova."
+  name:
+    title: "Nome"
   habitat_name:
     title: "Nome dell'Habitat"
   location:
     title: "Posizione"
+  weight:
+    title: "Peso"
+    description: "Le categorie con peso basso sono ordinate prima di quelle con peso elevato nella lista delle categorie. Le categorie con lo stesso peso sono ordinate alfabeticamente."
+  date_reported:
+    title: "Data riportata"
   report_post_reason:
     title: "Perché stai segnalando questo post?"
   report_comment_reason:
@@ -154,12 +175,24 @@ fields:
     title: "Contenuto"
   title:
     title: "Titolo"
+  body:
+    title: "Corpo"
+  category:
+    title: "Categoria"
+  user:
+    title: "Utente"
+  attachments:
+    title: "Allegati"
+  verified:
+    title: "Verificato"
   reported_by:
     title: "Segnalato da"
   context:
     title: "Contesto"
   reported_date:
     title: "Data di segnalazione"
+  reason_for_edit:
+    title: "Motivo della modifica"
   type:
     title: "Tipo"
     validations:
@@ -181,7 +214,12 @@ fields:
     disabled: "I post di questa categoria sono nascosti dal tuo feed"
 
 post:
+  create: "Creare un post"
+  edit: "Modifica post"
   posted_by: "Pubblicato da"
+  posted: "Pubblicato"
+  posting: "Pubblicazione..."
+  allow_posting: "Consentire la pubblicazione"
 
 report_post:
   reported: "Segnalato un post"
@@ -209,8 +247,10 @@ about:
     3: "Se sei interessato a promuovere l'impegno della comunità nella tua zona, puoi anche configurare la tua istanza di Habitat."
 
 buttons:
+  apply: "Applica"
   continue: "Continua"
   change: "Modifica"
+  clear: "Libera"
   show_current_location: "Mostra la tua posizione attuale"
   save: "Salva"
   insert: "Inserisci"
@@ -221,25 +261,31 @@ buttons:
   remove: "Rimuovi"
   unblock: "Sblocca"
   block: "Blocca"
+  submit_post: "Invia post"
   block_email_address: "Blocca un indirizzo email"
   report_this_post: "Segnala questo post"
   report_this_comment: "Segnala questo commento"
   resend_verification_email: "Invia di nuovo l'email di verifica"
+  remove_location: "Rimuovi posizione"
   login: "Accedi"
   logout: "Esci"
   forgot_password: "Password dimenticata"
+  reset_password: "Reimposta la tua password"
   find_out_more: "Scopri di più"
   add_a_category: "Aggiungi una categoria"
   add_a_question: "Aggiungi una domanda"
+  add_a_location: "Aggiungi una posizione"
 map:
   size_label: "Dimensione"
   toggle_miles: "miglia"
   toggle_kilometers: "chilometri"
   warnings:
     area_too_large: "Habitat non è stato progettato per funzionare a queste dimensioni. Alcune funzionalità potrebbero non funzionare come previsto."
+    home_address: "Non pubblicare mai il tuo indirizzo di casa"
   validations:
     invalid_location: "Devi scegliere una posizione valida"
     invalid_location_size: "Devi scegliere una dimensione della posizione valida"
+    out_of_bounds: "La posizione può essere impostata solo all'interno dei confini di questo Habitat"
 
 user_settings:
   title: "Impostazioni"
@@ -298,6 +344,9 @@ admin:
     freeze:
       title: "Blocca"
       freeze_for: "Blocca per"
+      freeze_status: "Stato di blocco"
+      not_frozen: "Non bloccato"
+      currently_frozen: "Attualmente bloccato. Questo utente sarà sbloccato"
       messages:
         unable_post_comment: "Il %subject% non potrà pubblicare o commentare finché non sarà trascorso il tempo di sblocco"
     unfreeze: "Sblocca"
@@ -327,11 +376,13 @@ admin:
 
   moderation:
     title: "Moderazione"
+    filters: "Filtri"
     users:
       singular: "utente"
       plural: "utenti"
       title: "Moderazione utenti"
       menu_title: "Utenti"
+      details: "Dettagli utente"
       validations:
         users_not_found: "Gli utenti non sono stati trovati"
     posts:
@@ -380,6 +431,15 @@ modals:
   cancel: "Annulla"
 
 menus:
+  contextual:
+    edit:
+      title: "Modifica"
+    report:
+      title: "Segnala"
+    view_posts:
+      title: "Visualizza i post"
+    view_comments:
+      title: "Visualizza i commenti"
   main:
     home:
       title: "Home"
@@ -453,3 +513,8 @@ users:
     administrator: "Amministratore"
     moderator: "Moderatore"
     user: "Utente"
+
+misc:
+  any: "Qualsiasi"
+  loading: "Caricamento..."
+  to_comment: "per commentare questo post."

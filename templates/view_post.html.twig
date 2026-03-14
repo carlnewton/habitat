@@ -27,7 +27,7 @@
             <p data-test="body">{{ post.body }}</p>
         {% endif %}
         {% if post.attachments is not empty %}
-            <h2 id="photos">Photos</h2>
+            <h2 id="photos">{{ 'fields.photos.title' | trans }}</h2>
             <div id="gallery" class="card mb-4">
                 {% for attachment in post.attachments %}
                     <a{% if not loop.first %} class="d-none position-relative"{% endif %} data-pswp-width="{{ attachment.width }}" data-pswp-height="{{ attachment.height }}" href="{{ path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })}}">
@@ -61,7 +61,7 @@
             </div>
         {% endif %}
         {% if post.latitude is not null and post.longitude is not null %}
-            <h2 id="location">Location</h2>
+            <h2 id="location">{{ 'fields.location.title' | trans }}</h2>
             <div class="card mb-4">
                 <div class="ratio ratio-16x9">
                     <div id="map" class="rounded" data-center="{{ post.latitude }},{{ post.longitude }}"></div>
@@ -78,17 +78,17 @@
             <span title="{{ post.posted|local_date }}">{{ post.posted|time_diff }}</span>
         </p>
         <span class="fs-4 mb-3">{{ component('Heart', {'post': post}) }}</span>
-        <h2 id="comments">Comments</h2>
+        <h2 id="comments">{{ 'fields.comments.title' | trans }}</h2>
 
         {% if app.user %}
             {% include 'partials/post/comment/form.html.twig' %}
         {% else %}
-            <p class="lead"><a href="{{ path('app_login') }}">Sign in</a> to comment on this post.</p>
+            <p class="lead"><a href="{{ path('app_login') }}">{{ 'buttons.login' | trans }}</a> {{ 'misc.to_comment' | trans }}</p>
         {% endif %}
         <div id="comments-list" class="mb-5" hx-trigger="revealed" hx-get="/hx/list-comments?post={{ post.id }}" hx-swap="afterbegin">
             <div class="d-flex justify-content-center htmx-indicator" id="comment-spinner">
                 <div class="spinner-border text-secondary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ 'misc.loading' | trans }}</span>
                 </div>
             </div>
         </div>

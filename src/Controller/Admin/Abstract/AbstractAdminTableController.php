@@ -3,8 +3,10 @@
 namespace App\Controller\Admin\Abstract;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AbstractAdminTableController extends AbstractController
 {
@@ -14,14 +16,20 @@ class AbstractAdminTableController extends AbstractController
 
     protected const SORT_ORDERS = ['asc', 'desc'];
 
+    public function __construct(
+        protected EntityManagerInterface $entityManager,
+        protected TranslatorInterface $translator,
+    ) {
+    }
+
     protected function renderTemplate(Request $request, string $templatePath)
     {
-        $page = $request->request->get('page');
+        $page = $request->query->get('page');
         if ((int) $page < 1) {
             $page = 1;
         }
 
-        $sort = $request->request->get('sort');
+        $sort = $request->query->get('sort');
         if (!in_array($sort, array_keys($this->getHeadings()))) {
             $sort = $this->getDefaultSortProperty();
         } else {
@@ -31,12 +39,12 @@ class AbstractAdminTableController extends AbstractController
             }
         }
 
-        $order = $request->request->get('order');
+        $order = $request->query->get('order');
         if (!in_array($order, self::SORT_ORDERS)) {
             $order = $this->getDefaultSortOrder();
         }
 
-        $itemsPerPage = $request->request->get('perPage');
+        $itemsPerPage = $request->query->get('perPage');
         if (!in_array($itemsPerPage, self::ITEMS_PER_PAGE_OPTIONS)) {
             $itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE;
         }
@@ -68,24 +76,24 @@ class AbstractAdminTableController extends AbstractController
 
         $filters = [];
         foreach ($this->getFilters() as $filterName => $filterProperties) {
-            if (null === $request->request->get($filterName)) {
+            if (null === $request->query->get($filterName)) {
                 continue;
             }
 
             switch ($filterProperties['validation']) {
                 case 'non-zero-integer':
-                    if ((int) $request->request->get($filterName) > 0) {
-                        $filters[$filterName] = (int) $request->request->get($filterName);
+                    if ((int) $request->query->get($filterName) > 0) {
+                        $filters[$filterName] = (int) $request->query->get($filterName);
                     }
                     break;
                 case 'boolean':
-                    if (in_array($request->request->get($filterName), ['0', '1'])) {
-                        $filters[$filterName] = (int) $request->request->get($filterName);
+                    if (in_array($request->query->get($filterName), ['0', '1'])) {
+                        $filters[$filterName] = (int) $request->query->get($filterName);
                     }
                     break;
                 case 'alphabetic':
-                    if (ctype_alpha($request->request->get($filterName))) {
-                        $filters[$filterName] = $request->request->get($filterName);
+                    if (ctype_alpha($request->query->get($filterName))) {
+                        $filters[$filterName] = $request->query->get($filterName);
                     }
                     break;
                 default:
