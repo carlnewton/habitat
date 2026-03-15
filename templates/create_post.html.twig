@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% set page_title = 'Create a post' %}
+{% set page_title = 'post.create' | trans %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="visually-hidden">Create a new post</h1>
+    <h1 class="visually-hidden">{{ 'post.create' | trans }}</h1>
     <form id="post-form" method="post" action="{{ path('app_create_post') }}" enctype="multipart/form-data">
         <div class="form-floating mb-3">
-            <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="Title" value="{% if values.title is defined %}{{ values.title }}{% endif %}" data-test="title">
-            <label for="title">Title</label>
+            <input type="text" class="form-control form-control-lg{% if errors.title is defined %} is-invalid{% endif %}" name="title" placeholder="{{ 'fields.title.title' | trans }}" value="{% if values.title is defined %}{{ values.title }}{% endif %}" data-test="title">
+            <label for="title">{{ 'fields.title.title' | trans }}</label>
             {% if errors.title is defined %}
                 <div class="invalid-feedback" data-test="title-errors">
                     {% for errorMessage in errors.title %}
@@ -21,16 +21,16 @@
             {% endif %}
         </div>
         <div class="form-floating mb-3">
-            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="Body" data-test="body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
-            <label for="body">Body</label>
+            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="{{ 'fields.body.title' | trans }}" data-test="body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
+            <label for="body">{{ 'fields.body.title' | trans }}</label>
         </div>
         <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
-            <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="Category">
+            <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="{{ 'fields.category.title' | trans }}">
                 {% for category in categories %}
                     <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.label|lower }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
-            <label for="category">Category</label>
+            <label for="category">{{ 'fields.category.title' | trans }}</label>
             {% if errors.category is defined %}
                 <div class="invalid-feedback">
                     {% for errorMessage in errors.category %}
@@ -41,23 +41,23 @@
         </div>
         <div class="dropzone mb-3"></div>
         <input type="hidden" name="attachmentIds" id="attachmentIds" value="{% if values.attachmentIds is defined %}{{ values.attachmentIds }}{% endif %}">
-        <button class="btn btn-outline-primary mb-3" id="add-location-btn" type="button">Add a location</button>
+        <button class="btn btn-outline-primary mb-3" id="add-location-btn" type="button">{{ 'buttons.add_a_location' | trans }}</button>
         <div id="location-card" class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">
             <div class="card-header">
-                Location
-                <button type="button" class="btn-close float-end" id="remove-location-btn" title="Remove location" aria-label="Remove location"></button>
+                {{ 'fields.location.title' | trans }}
+                <button type="button" class="btn-close float-end" id="remove-location-btn" title="{{ 'buttons.remove_location' | trans }}" aria-label="{{ 'buttons.remove_location' | trans }}"></button>
             </div>
             <div class="card-body ratio ratio-16x9">
                 <div id="map" data-center="{{ setting('locationLatLng') }}" data-zoom="{{ setting('locationZoom') }}" data-radius="{{ setting('locationRadiusMeters') }}"></div>
             </div>
             <div class="card-body text-white bg-danger text-center fw-bold d-none" id="bounds-warning">
-                The location can only be set inside the bounds of this Habitat
+                {{ 'map.validations.out_of_bounds' | trans }}
             </div>
             <div class="card-footer">
                 <div class="row">
                     <div class="col-12 gx-2 d-flex align-items-center">
-                        <button type="button" class="btn btn-outline-secondary get-location float-start" title="Show your current location"><i class="bi bi-crosshair2"></i></button>
-                        <span class="ms-2 text-secondary">Never post your home address</span>
+                        <button type="button" class="btn btn-outline-secondary get-location float-start" title="{{ 'buttons.show_current_location' | trans }}"><i class="bi bi-crosshair2"></i></button>
+                        <span class="ms-2 text-secondary">{{ 'map.warnings.home_address' | trans }}</span>
                     </div>
                 </div>
             </div>
@@ -72,12 +72,12 @@
         <input type="hidden" name="locationLatLng" id="locationLatLng" value="{% if values.locationLatLng is defined %}{{ values.locationLatLng }}{% endif %}">
         <input type="hidden" name="token" value="{{ csrf_token('post') }}">
         <div class="d-grid gap-2">
-            <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg" data-test="submit">Submit post</button>
+            <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.submit_post' | trans }}</button>
         </div>
     </form>
     <div id="posting" class="text-center text-secondary py-5 d-none">
         <div class="spinner-border my-5" role="status"></div>
-        <p class="fs-3">Posting...</p>
+        <p class="fs-3">{{ 'post.posting' | trans }}</p>
     </div>
 {% endblock %}
 

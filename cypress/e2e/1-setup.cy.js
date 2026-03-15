@@ -4,7 +4,32 @@ describe('setup', function() {
     cy.resetDatabase();
   })
 
+  describe('setup language', function() {
+
+    beforeEach(function() {
+      cy.fixture('setup').then((data) => {
+        this.data = data.languageFormData;
+      });
+      cy.visit('/');
+    })
+
+    it('redirects to setup path', function() {
+      cy.url().should('include', '/setup');
+    })
+
+    it('submits new language form data', function() {
+      cy.getElement('language').select(this.data['language']);
+      cy.getElement('submit').click();
+      cy.url().should('include', '/setup/admin');
+    })
+
+  })
+
   describe('setup admin', function() {
+
+    before(function() {
+      cy.loadFixtureGroups(['setup-language']);
+    })
 
     beforeEach(function() {
       cy.fixture('setup').then((data) => {
@@ -13,8 +38,8 @@ describe('setup', function() {
       cy.visit('/');
     })
 
-    it('redirects to setup path', function() {
-      cy.url().should('include', '/setup');
+    it('redirects to admin path', function() {
+      cy.url().should('include', '/setup/admin');
     })
 
     it('prevents form submission if no username is provided', function() {
@@ -109,7 +134,7 @@ describe('setup', function() {
   describe('setup location', function() {
 
     before(function() {
-      cy.loadFixtureGroups(['setup-admin']);
+      cy.loadFixtureGroups(['setup-language', 'setup-admin']);
     })
 
     beforeEach(function() {
@@ -165,7 +190,7 @@ describe('setup', function() {
   describe('setup categories', function() {
 
     beforeEach(function() {
-      cy.loadFixtureGroups(['setup-admin', 'setup-location']);
+      cy.loadFixtureGroups(['setup-language', 'setup-admin', 'setup-location']);
       cy.visit('/');
     })
 
@@ -191,7 +216,7 @@ describe('setup', function() {
   describe('setup image storage', function() {
 
     before(function() {
-      cy.loadFixtureGroups(['setup-admin', 'setup-location', 'setup-categories']);
+      cy.loadFixtureGroups(['setup-language', 'setup-admin', 'setup-location', 'setup-categories']);
     })
 
     beforeEach(function() {
@@ -276,6 +301,7 @@ describe('setup', function() {
 
     before(function() {
       cy.loadFixtureGroups([
+        'setup-language',
         'setup-admin',
         'setup-location',
         'setup-categories',

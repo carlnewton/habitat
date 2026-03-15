@@ -5,7 +5,6 @@ namespace App\Controller\Admin\Moderation;
 use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\BlockedEmailAddress;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,15 +14,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class BlockedEmailAddressesIndexController extends AbstractAdminTableController implements AdminTableControllerInterface
 {
-    protected EntityManagerInterface $entityManager;
-
     #[Route(path: '/admin/moderation/blocked-email-addresses', name: 'app_moderation_blocked_email_addresses', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager,
     ): Response {
-        $this->entityManager = $entityManager;
-
         return $this->renderTemplate($request, 'admin/moderation/blocked_email_addresses.html.twig');
     }
 
@@ -36,7 +30,7 @@ class BlockedEmailAddressesIndexController extends AbstractAdminTableController 
     {
         return [
             'email_address' => [
-                'label' => 'Email address',
+                'label' => $this->translator->trans('fields.email_address.title'),
                 'sortable' => true,
             ],
         ];
@@ -44,7 +38,7 @@ class BlockedEmailAddressesIndexController extends AbstractAdminTableController 
 
     public function getItemsLabel(): string
     {
-        return 'blocked email addresses';
+        return $this->translator->trans('admin.moderation.blocked_email_addresses.plural');
     }
 
     public function getDefaultSortProperty(): string

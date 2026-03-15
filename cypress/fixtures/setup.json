@@ -1,4 +1,7 @@
 {
+    "languageFormData": {
+        "language": "en"
+    },
     "adminFormData": {
         "username": "Username",
         "email": "email@example.com",

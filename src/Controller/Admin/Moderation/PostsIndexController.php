@@ -7,7 +7,6 @@ use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,15 +16,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class PostsIndexController extends AbstractAdminTableController implements AdminTableControllerInterface
 {
-    protected EntityManagerInterface $entityManager;
-
     #[Route(path: '/admin/moderation/posts', name: 'app_moderation_posts', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager,
     ): Response {
-        $this->entityManager = $entityManager;
-
         return $this->renderTemplate($request, 'admin/moderation/posts.html.twig');
     }
 
@@ -57,13 +51,13 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
 
         return [
             'category' => [
-                'label' => 'Category',
+                'label' => $this->translator->trans('fields.category.title'),
                 'type' => 'select',
                 'options' => $categories,
                 'validation' => 'non-zero-integer',
             ],
             'user' => [
-                'label' => 'User',
+                'label' => $this->translator->trans('fields.user.title'),
                 'type' => 'select',
                 'options' => $users,
                 'validation' => 'non-zero-integer',
@@ -75,31 +69,31 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
     {
         return [
             'title' => [
-                'label' => 'Title',
+                'label' => $this->translator->trans('fields.title.title'),
                 'sortable' => true,
             ],
             'posted' => [
-                'label' => 'Posted',
+                'label' => $this->translator->trans('post.posted'),
                 'sortable' => true,
             ],
             'category' => [
-                'label' => 'Category',
+                'label' => $this->translator->trans('fields.category.title'),
             ],
             'user' => [
-                'label' => 'User',
+                'label' => $this->translator->trans('fields.user.title'),
             ],
             'attachments' => [
-                'label' => 'Attachments',
+                'label' => $this->translator->trans('fields.attachments.title'),
                 'sortable' => true,
                 'type' => 'count',
             ],
             'comments' => [
-                'label' => 'Comments',
+                'label' => $this->translator->trans('fields.comments.title'),
                 'sortable' => true,
                 'type' => 'count',
             ],
             'hearts' => [
-                'label' => 'Hearts',
+                'label' => $this->translator->trans('fields.hearts.title'),
                 'sortable' => true,
                 'type' => 'count',
             ],
@@ -108,7 +102,7 @@ class PostsIndexController extends AbstractAdminTableController implements Admin
 
     public function getItemsLabel(): string
     {
-        return 'posts';
+        return $this->translator->trans('admin.moderation.posts.plural');
     }
 
     public function getDefaultSortProperty(): string

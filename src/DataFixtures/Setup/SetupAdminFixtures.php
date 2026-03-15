@@ -6,11 +6,16 @@ use App\Entity\Settings;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class SetupAdminFixtures extends Fixture implements FixtureGroupInterface
+class SetupAdminFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
+    private const SETTINGS = [
+        'setup' => 'location',
+    ];
+
     private const DATETIME_FORMAT = 'Y/m/d H:i:s';
 
     private const ADMIN_USER = [
@@ -33,6 +38,13 @@ class SetupAdminFixtures extends Fixture implements FixtureGroupInterface
         ];
     }
 
+    public function getDependencies(): array
+    {
+        return [
+            SetupLanguageFixtures::class,
+        ];
+    }
+
     public function load(ObjectManager $manager): void
     {
         $userEntity = new User();
@@ -51,13 +63,18 @@ class SetupAdminFixtures extends Fixture implements FixtureGroupInterface
 
         $this->addReference('user/' . strtolower($userEntity->getUsername()), $userEntity);
 
-        $setupSetting = new Settings();
-        $setupSetting
-            ->setName('setup')
-            ->setValue('location')
-        ;
-
-        $manager->persist($setupSetting);
+        $settingsRepository = $manager->getRepository(Settings::class);
+        foreach (self::SETTINGS as $name => $value) {
+            $setting = $settingsRepository->findOneBy(['name' => $name]);
+            if (is_null($setting)) {
+                $setting = new Settings();
+            }
+            $setting
+                ->setName($name)
+                ->setValue($value)
+            ;
+            $manager->persist($setting);
+        }
 
         $manager->flush();
     }
