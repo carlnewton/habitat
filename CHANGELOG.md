@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#14] Italian translation file
 - [#14] Language selection in setup and admin area
+- [#85] A map on the about page
 
 ### Changed
 
