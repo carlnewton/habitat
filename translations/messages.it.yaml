@@ -251,6 +251,8 @@ about:
     1: "Ogni comunità di Habitat opera in modo indipendente, con il proprio amministratore dedicato che supervisiona l'istanza."
     2: "Questa particolare istanza è gestita da"
     3: "Se sei interessato a promuovere l'impegno della comunità nella tua zona, puoi anche configurare la tua istanza di Habitat."
+  local_area:
+    title: "Area locale"
 
 buttons:
   sign_up: "Iscriviti"
