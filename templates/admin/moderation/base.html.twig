@@ -5,7 +5,7 @@
     <div class="card my-3">
         {% if filters is not empty %}
             <form class="card-body bg-light d-flex align-items-center flex-column flex-sm-row gap-2 rounded-top">
-                <h5 class="card-title m-0">Filters</h5>
+                <h5 class="card-title m-0">{{ 'admin.moderation.filters' | trans }}</h5>
                 <div class="d-flex flex-fill gap-2 flex-column flex-lg-row">
                     {% for filterName, filterProperties in filters %}
                         <div class="input-group">
@@ -14,7 +14,7 @@
                                 <input type="text" name="{{ filterName }}" class="form-control" placeholder="{{ filterProperties.label }}" aria-label="{{ filterProperties.label}}" aria-describedby="{{ filterName }}-filter">
                             {% elseif filterProperties.type == 'select' %}
                                 <select name="{{ filterName }}" class="form-select{% if filtered[filterName] is defined %} border-primary{% endif %}" aria-describedby="{{ filterName }}">
-                                    <option value>Any</option>
+                                    <option value>{{ 'misc.any' | trans }}</option>
                                     {% for option in filterProperties.options %}
                                         <option value="{{ option.value }}"{% if filtered[filterName] is defined and filtered[filterName] == option.value %} selected{% endif %}>{{ option.label }}</option>
                                     {% endfor %}
@@ -27,8 +27,12 @@
                 <input type="hidden" name="sort" value="{{ sort }}" />
                 <input type="hidden" name="order" value="{{ order }}" />
                 <div class="d-flex flex-column flex-md-row gap-2">
-                    <button type="submit" class="btn btn-outline-primary">Apply</button>
-                    {% if filtered is not empty %}<a href="{{ app.request.pathinfo }}" class="btn btn-outline-danger">Clear</a>{% endif %}
+                    <button type="submit" class="btn btn-outline-primary">{{ 'buttons.apply' | trans }}</button>
+                    {% if filtered is not empty %}
+                        <a href="{{ app.request.pathinfo }}" class="btn btn-outline-danger">
+                            {{ 'buttons.clear' | trans }}
+                        </a>
+                    {% endif %}
                 </div>
             </form>
         {% endif %}

@@ -8,20 +8,20 @@
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 {% set show_divider = true %}
                 <li>
-                    <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">Edit</a>
+                    <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">{{ 'menus.contextual.edit.title' | trans }}</a>
                 </li>
                 <li>
                     <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_change_category') }}">
                         <input name="items" type="hidden" value="{{ post.id }}"/>
                         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                        <button type="submit" class="dropdown-item checkbox-action">Change category</button>
+                        <button type="submit" class="dropdown-item checkbox-action">{{ 'admin.actions.change_category.title' | trans }}</button>
                     </form>
                 </li>
             {% endif %}
             {% if app.user.id != post.user.id %}
                 {% set show_divider = true %}
                 <li>
-                    <button class="dropdown-item checkbox-action" hx-get="{{ path('app_hx_report_post', { postId: post.id }) }}" hx-target="#report-post-{{ post.id }}" hx-swap="innerHTML">Report</button>
+                    <button class="dropdown-item checkbox-action" hx-get="{{ path('app_hx_report_post', { postId: post.id }) }}" hx-target="#report-post-{{ post.id }}" hx-swap="innerHTML">{{ 'menus.contextual.report.title' | trans }}</button>
                 </li>
             {% endif %}
             {% if app.user.id == post.user.id or is_granted('ROLE_SUPER_ADMIN') %}
@@ -33,13 +33,13 @@
                         <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .post" hx-post="{{ path('app_hx_delete_post' )}}">
                             <input name="postId" type="hidden" value="{{ post.id }}"/>
                             <input type="hidden" name="token" value="{{ csrf_token('post') }}">
-                            <button type="submit" class="dropdown-item checkbox-action">Delete</button>
+                            <button type="submit" class="dropdown-item checkbox-action">{{ 'buttons.delete' | trans }}</button>
                         </form>
                     {% elseif is_granted('ROLE_SUPER_ADMIN') %}
                         <form class="action-item-form" method="post" action="{{ path('app_moderation_posts_delete') }}">
                             <input name="items" type="hidden" value="{{ post.id }}"/>
                             <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                            <button type="submit" class="dropdown-item checkbox-action">Delete</button>
+                            <button type="submit" class="dropdown-item checkbox-action">{{ 'buttons.delete' | trans }}</button>
                         </form>
                     {% endif %}
                 </li>

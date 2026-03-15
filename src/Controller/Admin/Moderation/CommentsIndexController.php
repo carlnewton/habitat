@@ -6,7 +6,6 @@ use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Comment;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,15 +15,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class CommentsIndexController extends AbstractAdminTableController implements AdminTableControllerInterface
 {
-    protected EntityManagerInterface $entityManager;
-
     #[Route(path: '/admin/moderation/comments', name: 'app_moderation_comments', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager,
     ): Response {
-        $this->entityManager = $entityManager;
-
         return $this->renderTemplate($request, 'admin/moderation/comments.html.twig');
     }
 
@@ -56,24 +50,24 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
     {
         return [
             'body' => [
-                'label' => 'Comment',
+                'label' => $this->translator->trans('fields.comment.title'),
             ],
             'posted' => [
-                'label' => 'Posted',
+                'label' => $this->translator->trans('post.posted'),
                 'sortable' => true,
             ],
             'user' => [
-                'label' => 'User',
+                'label' => $this->translator->trans('fields.user.title'),
             ],
             'post' => [
-                'label' => 'Post',
+                'label' => $this->translator->trans('fields.post.title'),
             ],
         ];
     }
 
     public function getItemsLabel(): string
     {
-        return 'comments';
+        return $this->translator->trans('admin.moderation.comments.plural');
     }
 
     public function getDefaultSortProperty(): string

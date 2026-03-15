@@ -5,7 +5,6 @@ namespace App\Controller\Admin\Moderation;
 use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,15 +14,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class UsersIndexController extends AbstractAdminTableController implements AdminTableControllerInterface
 {
-    protected EntityManagerInterface $entityManager;
-
     #[Route(path: '/admin/moderation/users', name: 'app_moderation_users', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager,
     ): Response {
-        $this->entityManager = $entityManager;
-
         return $this->renderTemplate($request, 'admin/moderation/users.html.twig');
     }
 
@@ -36,28 +30,28 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
     {
         return [
             'username' => [
-                'label' => 'Username',
+                'label' => $this->translator->trans('fields.username.title'),
                 'sortable' => true,
             ],
             'type' => [
-                'label' => 'Type',
+                'label' => $this->translator->trans('fields.type.title'),
                 'sortable' => false,
             ],
             'email_verified' => [
-                'label' => 'Verified',
+                'label' => $this->translator->trans('fields.verified.title'),
                 'sortable' => true,
             ],
             'created' => [
-                'label' => 'Created',
+                'label' => $this->translator->trans('fields.created.title'),
                 'sortable' => true,
             ],
             'posts' => [
-                'label' => 'Posts',
+                'label' => $this->translator->trans('fields.posts.title'),
                 'sortable' => true,
                 'type' => 'count',
             ],
             'comments' => [
-                'label' => 'Comments',
+                'label' => $this->translator->trans('fields.comments.title'),
                 'sortable' => true,
                 'type' => 'count',
             ],
@@ -66,7 +60,7 @@ class UsersIndexController extends AbstractAdminTableController implements Admin
 
     public function getItemsLabel(): string
     {
-        return 'users';
+        return $this->translator->trans('admin.moderation.users.plural');
     }
 
     public function getDefaultSortProperty(): string

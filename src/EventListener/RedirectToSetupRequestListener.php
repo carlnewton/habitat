@@ -41,6 +41,6 @@ class RedirectToSetupRequestListener
             return;
         }
 
-        $event->setResponse(new RedirectResponse($this->router->generate('app_setup_admin'), RedirectResponse::HTTP_FOUND));
+        $event->setResponse(new RedirectResponse($this->router->generate('app_setup_language'), RedirectResponse::HTTP_FOUND));
     }
 }

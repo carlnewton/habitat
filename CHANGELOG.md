@@ -9,13 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- A map on the about page
+- [#14] Italian translation file
+- [#14] Language selection in setup and admin area
+- [#85] A map on the about page
+
+### Changed
+
+- The about page links to gethabitat.org
+
+### Fixed
+
+- [#95] Moderation filters are working
 
 ## [1.0.2] - 2026-03-02
 
 ### Fixed
 
-- SMTP settings can be saved and used without credentials
+- [#86] SMTP settings can be saved and used without credentials
 
 ## [1.0.1] - 2026-03-01
 

@@ -5,28 +5,20 @@ namespace App\DataFixtures\Setup;
 use App\Entity\Settings;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class SetupImageStorageFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
+class SetupLanguageFixtures extends Fixture implements FixtureGroupInterface
 {
     private const SETTINGS = [
-        'imageStorage' => 'local',
-        'setup' => 'mail',
+        'language' => 'en',
+        'setup' => 'admin',
     ];
 
     public static function getGroups(): array
     {
         return [
             'setup',
-            'setup-image-storage',
-        ];
-    }
-
-    public function getDependencies(): array
-    {
-        return [
-            SetupCategoriesFixtures::class,
+            'setup-language',
         ];
     }
 

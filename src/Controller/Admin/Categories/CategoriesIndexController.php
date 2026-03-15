@@ -5,7 +5,6 @@ namespace App\Controller\Admin\Categories;
 use App\Controller\Admin\Abstract\AbstractAdminTableController;
 use App\Controller\Admin\Abstract\AdminTableControllerInterface;
 use App\Entity\Category;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,10 +16,7 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
     #[Route(path: '/admin/categories', name: 'app_admin_categories', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        EntityManagerInterface $entityManager,
     ): Response {
-        $this->entityManager = $entityManager;
-
         return $this->renderTemplate($request, 'admin/categories/index.html.twig');
     }
 
@@ -33,26 +29,26 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
     {
         return [
             'name' => [
-                'label' => 'Category',
+                'label' => $this->translator->trans('fields.category.title'),
                 'sortable' => true,
             ],
             'description' => [
-                'label' => 'Description',
+                'label' => $this->translator->trans('fields.description.title'),
             ],
             'location' => [
-                'label' => 'Location',
+                'label' => $this->translator->trans('fields.location.title'),
                 'sortable' => true,
             ],
             'weight' => [
-                'label' => 'Weight',
+                'label' => $this->translator->trans('fields.weight.title'),
                 'sortable' => true,
             ],
             'allow_posting' => [
-                'label' => 'Allow posting',
+                'label' => $this->translator->trans('post.allow_posting'),
                 'sortable' => true,
             ],
             'posts' => [
-                'label' => 'Posts',
+                'label' => $this->translator->trans('fields.posts.title'),
                 'sortable' => true,
                 'type' => 'count',
             ],

@@ -28,11 +28,17 @@ class SetupController extends AbstractController
      * important to also add to the listener to prevent a redirect loop.
      */
     private const SETUP_STEP_TO_ROUTE = [
+        'admin' => 'app_setup_admin',
         'location' => 'app_setup_location',
         'categories' => 'app_setup_categories',
         'image_storage' => 'app_setup_image_storage',
         'mail' => 'app_setup_mail',
         'complete' => 'app_index_index',
+    ];
+
+    public const LANGUAGES = [
+        'en' => 'English',
+        'it' => 'Italiano',
     ];
 
     private const IMAGE_STORAGE_OPTIONS = [
@@ -50,8 +56,8 @@ class SetupController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/setup', name: 'app_setup_admin')]
-    public function admin(Request $request): Response
+    #[Route(path: '/setup', name: 'app_setup_language')]
+    public function language(Request $request): Response
     {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
@@ -60,7 +66,70 @@ class SetupController extends AbstractController
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
         }
 
-        $userRepository = $this->entityManager->getRepository(User::class);
+        if ('POST' !== $request->getMethod()) {
+            return $this->render('setup/language.html.twig', [
+                'languages' => self::LANGUAGES,
+            ]);
+        }
+
+        $submittedToken = $request->getPayload()->get('token');
+
+        if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('fields.csrf_token.validations.invalid'),
+            );
+
+            return $this->render('setup/language.html.twig', [
+                'languages' => self::LANGUAGES,
+            ]);
+        }
+
+        $fieldErrors = $this->validateSetupLanguageRequest($request);
+
+        if (!empty($fieldErrors)) {
+            return $this->render('setup/language.html.twig', [
+                'errors' => $fieldErrors,
+                'languages' => self::LANGUAGES,
+                'values' => [
+                    'language' => $request->request->get('language'),
+                ],
+            ]);
+        }
+
+        $languageSetting = $settingsRepository->getSettingByName('language');
+        if (!$languageSetting) {
+            $languageSetting = new Settings();
+            $languageSetting->setName('language');
+        }
+        $languageSetting->setValue($request->request->get('language'));
+
+        $setupSetting = new Settings();
+        $setupSetting
+            ->setName('setup')
+            ->setValue('admin')
+        ;
+
+        $this->entityManager->persist($setupSetting);
+        $this->entityManager->persist($languageSetting);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_setup_admin');
+    }
+
+    #[Route(path: '/setup/admin', name: 'app_setup_admin')]
+    public function admin(Request $request): Response
+    {
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
+        $setupSetting = $settingsRepository->getSettingByName('setup');
+
+        if (empty($setupSetting)) {
+            return $this->redirectToRoute('app_setup_language');
+        }
+
+        if ('admin' !== $setupSetting->getValue()) {
+            return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
+        }
 
         if ('POST' !== $request->getMethod()) {
             return $this->render('setup/admin.html.twig');
@@ -115,11 +184,7 @@ class SetupController extends AbstractController
             return $this->render('setup/admin.html.twig');
         }
 
-        $setupSetting = new Settings();
-        $setupSetting
-            ->setName('setup')
-            ->setValue('location')
-        ;
+        $setupSetting->setValue('location');
         $this->entityManager->persist($setupSetting);
         $this->entityManager->persist($admin);
         $this->entityManager->flush();
@@ -135,20 +200,19 @@ class SetupController extends AbstractController
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
         if (empty($setupSetting)) {
-            return $this->redirectToRoute('app_setup_admin');
+            return $this->redirectToRoute('app_setup_language');
         }
 
         if ('location' !== $setupSetting->getValue()) {
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
         }
 
-        $userRepository = $this->entityManager->getRepository(User::class);
-
         if ('POST' !== $request->getMethod()) {
             return $this->render('setup/location.html.twig');
         }
 
         $submittedToken = $request->getPayload()->get('token');
+
         if (!$this->isCsrfTokenValid('setup', $submittedToken)) {
             $this->addFlash(
                 'warning',
@@ -230,7 +294,7 @@ class SetupController extends AbstractController
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
         if (empty($setupSetting)) {
-            return $this->redirectToRoute('app_setup_admin');
+            return $this->redirectToRoute('app_setup_language');
         }
 
         if ('categories' !== $setupSetting->getValue()) {
@@ -299,7 +363,7 @@ class SetupController extends AbstractController
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
         if (empty($setupSetting)) {
-            return $this->redirectToRoute('app_setup_admin');
+            return $this->redirectToRoute('app_setup_language');
         }
 
         if ('image_storage' !== $setupSetting->getValue()) {
@@ -401,7 +465,7 @@ class SetupController extends AbstractController
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
         if (empty($setupSetting)) {
-            return $this->redirectToRoute('app_setup_admin');
+            return $this->redirectToRoute('app_setup_language');
         }
 
         if ('mail' !== $setupSetting->getValue()) {
@@ -603,6 +667,25 @@ class SetupController extends AbstractController
                 'summary' => $this->translator->trans('setup.image_storage.warnings.amazon_s3_exception'),
                 'detail' => $exception->getMessage(),
             ];
+        }
+
+        return $errors;
+    }
+
+    private function validateSetupLanguageRequest(Request $request): array
+    {
+        $errors = [];
+
+        if (empty($request->request->get('language'))) {
+            $errors['language'][] = $this->translator->trans(
+                'fields.language.validations.empty',
+            );
+        }
+
+        if (!array_key_exists($request->request->get('language'), self::LANGUAGES)) {
+            $errors['language'][] = $this->translator->trans(
+                'fields.language.validations.empty',
+            );
         }
 
         return $errors;

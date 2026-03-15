@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\SetupController;
 use App\Entity\Settings;
 use App\Entity\SidebarContent;
 use App\Utilities\LatLong;
@@ -42,6 +43,7 @@ class SettingsController extends AbstractController
                 );
 
                 return $this->render('admin/settings.html.twig', [
+                    'languages' => SetupController::LANGUAGES,
                     'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
                 ]);
             }
@@ -50,6 +52,7 @@ class SettingsController extends AbstractController
 
             if (!empty($fieldErrors)) {
                 return $this->render('admin/settings.html.twig', [
+                    'languages' => SetupController::LANGUAGES,
                     'errors' => $fieldErrors,
                     'values' => [
                         'habitatName' => $request->request->get('habitatName'),
@@ -57,6 +60,7 @@ class SettingsController extends AbstractController
                         'locationMeasurement' => $request->request->get('locationMeasurement'),
                         'locationRadiusMeters' => $request->request->get('locationRadiusMeters'),
                         'locationZoom' => $request->request->get('locationZoom'),
+                        'language' => $request->request->get('language'),
                         'sidebarContent' => $request->request->get('sidebarContent'),
                     ],
                 ]);
@@ -95,6 +99,14 @@ class SettingsController extends AbstractController
             $locationZoomSetting->setValue($request->request->get('locationZoom'));
             $entityManager->persist($locationZoomSetting);
 
+            $languageSetting = $settingsRepository->getSettingByName('language');
+            if (!$languageSetting) {
+                $languageSetting = new Settings();
+                $languageSetting->setName('language');
+            }
+            $languageSetting->setValue($request->request->get('language'));
+            $entityManager->persist($languageSetting);
+
             $locationLatLngSetting = $settingsRepository->getSettingByName('locationLatLng');
             if (!$locationLatLngSetting) {
                 $locationLatLngSetting = new Settings();
@@ -128,14 +140,17 @@ class SettingsController extends AbstractController
         $habitatNameSetting = $settingsRepository->getSettingByName('habitatName');
         $locationLatLngSetting = $settingsRepository->getSettingByName('locationLatLng');
         $locationZoomSetting = $settingsRepository->getSettingByName('locationZoom');
+        $languageSetting = $settingsRepository->getSettingByName('language');
         $locationMeasurementSetting = $settingsRepository->getSettingByName('locationMeasurement');
         $locationRadiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
 
         return $this->render('admin/settings.html.twig', [
+            'languages' => SetupController::LANGUAGES,
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
                 'locationLatLng' => ($locationLatLngSetting) ? $locationLatLngSetting->getValue() : '51,0',
                 'locationZoom' => ($locationZoomSetting) ? $locationZoomSetting->getValue() : '3',
+                'language' => ($languageSetting) ? $languageSetting->getValue() : 'en',
                 'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'km',
                 'locationRadiusMeters' => ($locationRadiusSetting) ? $locationRadiusSetting->getValue() : '3000',
                 'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
@@ -170,6 +185,13 @@ class SettingsController extends AbstractController
             || $request->request->get('locationRadiusMeters') < 1
         ) {
             $errors['location'][] = $this->translator->trans('map.validations.invalid_location_size');
+        }
+
+        if (
+            empty($request->request->get('language'))
+            || !array_key_exists($request->request->get('language'), SetupController::LANGUAGES)
+        ) {
+            $errors['language'][] = $this->translator->trans('fields.language.validations.empty');
         }
 
         if (SidebarContent::stripTags($request->request->get('sidebarContent')) !== $request->request->get('sidebarContent')) {

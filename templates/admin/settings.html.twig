@@ -51,6 +51,21 @@
             <input type="hidden" name="locationMeasurement" id="locationMeasurement" value="{{ values.locationMeasurement }}">
         </div>
         <div class="mb-3">
+            <label for="language" class="form-label">{{ 'fields.language.title' | trans }}</label>
+            <select class="form-select{% if errors.language is defined %} is-invalid{% endif %}" name="language" id="language" aria-label="{{ 'fields.language.title' | trans }}">
+                {% for language_code, language_name in languages %}
+                    <option{% if (values.language is defined and values.language == language_code) or (values.language is not defined and app.request.query.get('language') == language_code) %} selected{% endif %} value="{{ language_code }}">{{ language_name }}</option>
+                {% endfor %}
+            </select>
+            {% if errors.language is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.language %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
             <label for="sidebarContent" class="form-label">{{ 'fields.sidebar_content.title' | trans }}</label>
             <div class="card{% if errors.sidebarContent is defined %} border-danger{% endif %}">
                 <div class="card-header">
