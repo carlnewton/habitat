@@ -202,7 +202,7 @@ about:
     2: "This particular instance is managed by"
     3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
   local_area:
-    title: "Local Area"
+    title: "Local area"
 
 buttons:
   continue: "Continue"

@@ -26,6 +26,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('about_map', './assets/about_map.js')
     .addEntry('admin_map', './assets/admin_map.js')
     .addEntry('tt_editor', './assets/tt_editor.js')
     .addEntry('admin_table', './assets/admin_table.js')
@@ -35,7 +36,6 @@ Encore
     .addEntry('photoswipe', './assets/photoswipe.js')
     .addEntry('nearby', './assets/nearby.js')
     .addEntry('image_storage_setup', './assets/image_storage_setup.js')
-    .addEntry('about_map', './assets/about_map.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
