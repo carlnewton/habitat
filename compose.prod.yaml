@@ -4,6 +4,12 @@
 # docker system prune -a
 # docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache
 #
+# # Test the image only:
+# docker compose -f compose.yaml -f compose.prod.yaml up
+#
+# docker tag carlnewton/habitat carlnewton/habitat:develop
+# docker push carlnewton/habitat:develop
+#
 # docker tag carlnewton/habitat carlnewton/habitat:1.2.3-rc1
 # docker push carlnewton/habitat:1.2.3-rc1
 #
