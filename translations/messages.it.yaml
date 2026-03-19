@@ -397,12 +397,12 @@ admin:
     posts:
       singular: "post"
       plural: "post"
-      title: "Post moderation"
+      title: "Moderazione post"
       menu_title: "Post"
     comments:
       singular: "commento"
       plural: "commenti"
-      title: "Comment moderation"
+      title: "Moderazione dei commenti"
       menu_title: "Commenti"
     blocked_email_addresses:
       singular: "indirizzo email"
