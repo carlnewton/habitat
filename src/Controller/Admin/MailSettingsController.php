@@ -32,11 +32,11 @@ class MailSettingsController extends AbstractController
         if ('POST' !== $request->getMethod()) {
             return $this->render('admin/mail.html.twig', [
                 'values' => [
-                    'smtpUsername' => $smtpUsername->getValue(),
-                    'smtpPassword' => $smtpPassword->getEncryptedValue(),
-                    'smtpServer' => $smtpServer->getValue(),
-                    'smtpPort' => $smtpPort->getValue(),
-                    'smtpFromEmailAddress' => $smtpFromEmailAddress->getValue(),
+                    'smtpUsername' => $smtpUsername?->getValue(),
+                    'smtpPassword' => $smtpPassword?->getEncryptedValue(),
+                    'smtpServer' => $smtpServer?->getValue(),
+                    'smtpPort' => $smtpPort?->getValue(),
+                    'smtpFromEmailAddress' => $smtpFromEmailAddress?->getValue(),
                 ],
             ]);
         }
@@ -50,11 +50,11 @@ class MailSettingsController extends AbstractController
 
             return $this->render('admin/mail.html.twig', [
                 'values' => [
-                    'smtpUsername' => $smtpUsername->getValue(),
-                    'smtpPassword' => $smtpPassword->getEncryptedValue(),
-                    'smtpServer' => $smtpServer->getValue(),
-                    'smtpPort' => $smtpPort->getValue(),
-                    'smtpFromEmailAddress' => $smtpFromEmailAddress->getValue(),
+                    'smtpUsername' => $smtpUsername?->getValue(),
+                    'smtpPassword' => $smtpPassword?->getEncryptedValue(),
+                    'smtpServer' => $smtpServer?->getValue(),
+                    'smtpPort' => $smtpPort?->getValue(),
+                    'smtpFromEmailAddress' => $smtpFromEmailAddress?->getValue(),
                 ],
             ]);
         }
@@ -93,11 +93,11 @@ class MailSettingsController extends AbstractController
                 return $this->render('admin/mail.html.twig', [
                     'email_sent_exception' => $mailException,
                     'values' => [
-                        'smtpUsername' => $smtpUsername->getValue(),
-                        'smtpPassword' => $smtpPassword->getEncryptedValue(),
-                        'smtpServer' => $smtpServer->getValue(),
-                        'smtpPort' => $smtpPort->getValue(),
-                        'smtpFromEmailAddress' => $smtpFromEmailAddress->getValue(),
+                        'smtpUsername' => $request->request->get('smtpUsername'),
+                        'smtpPassword' => $request->request->get('smtpPassword'),
+                        'smtpServer' => $request->request->get('smtpServer'),
+                        'smtpPort' => $request->request->get('smtpPort'),
+                        'smtpFromEmailAddress' => $request->request->get('smtpFromEmailAddress'),
                     ],
                 ]);
             }
@@ -109,19 +109,39 @@ class MailSettingsController extends AbstractController
             );
         }
 
+        if (!$smtpUsername) {
+            $smtpUsername = new Settings();
+            $smtpUsername->setName('smtpUsername');
+        }
         $smtpUsername->setValue($request->request->get('smtpUsername'));
         $entityManager->persist($smtpUsername);
 
         $smtpPassword = $settingsRepository->getSettingByName('smtpPassword');
+        if (!$smtpPassword) {
+            $smtpPassword = new Settings();
+            $smtpPassword->setName('smtpPassword');
+        }
         $smtpPassword->setEncryptedValue($request->request->get('smtpPassword'));
         $entityManager->persist($smtpPassword);
 
+        if (!$smtpServer) {
+            $smtpServer = new Settings();
+            $smtpServer->setName('smtpServer');
+        }
         $smtpServer->setValue($request->request->get('smtpServer'));
         $entityManager->persist($smtpServer);
 
+        if (!$smtpPort) {
+            $smtpPort = new Settings();
+            $smtpPort->setName('smtpPort');
+        }
         $smtpPort->setValue($request->request->get('smtpPort'));
         $entityManager->persist($smtpPort);
 
+        if (!$smtpFromEmailAddress) {
+            $smtpFromEmailAddress = new Settings();
+            $smtpFromEmailAddress->setName('smtpFromEmailAddress');
+        }
         $smtpFromEmailAddress->setValue($request->request->get('smtpFromEmailAddress'));
         $entityManager->persist($smtpFromEmailAddress);
 

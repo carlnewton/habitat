@@ -57,6 +57,7 @@ setup:
   configure_mail:
     title: "5. Configure your mail settings"
     test_email_sent: "A test email has been sent to %email_address% and no issues have been reported. If you have not received it, check the settings here and try again."
+    skip_hint: "You can configure mail settings later from <a href=\"%path%\">Admin &rsaquo; Mail</a>."
     warnings:
       test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
 
@@ -223,6 +224,7 @@ buttons:
   logout: "Log out"
   forgot_password: "Forgot password"
   find_out_more: "Find out more"
+  skip: "Skip"
   add_a_category: "Add a category"
   add_a_question: "Add a question"
 map:
