@@ -12,6 +12,10 @@ class RedirectToSetupRequestListener
 {
     private const SETUP_ROUTES_PREFIX = 'app_setup_';
 
+    private const SETUP_PERMITTED_ROUTES = [
+        'app_login',
+    ];
+
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected UrlGeneratorInterface $router,
@@ -38,6 +42,10 @@ class RedirectToSetupRequestListener
         }
 
         if (str_starts_with($request->attributes->get('_route'), self::SETUP_ROUTES_PREFIX)) {
+            return;
+        }
+
+        if (in_array($request->attributes->get('_route'), self::SETUP_PERMITTED_ROUTES) && '1' === $request->query->get('admin')) {
             return;
         }
 

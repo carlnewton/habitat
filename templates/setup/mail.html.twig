@@ -25,7 +25,9 @@
                     </div>
                 {% else %}
                     <div class="alert alert-danger" role="alert">
-                        {{ 'setup.configure_mail.warnings.test_email_exception' | trans({ '%exception%': email_sent_exception }) }}
+                        {{ 'setup.configure_mail.warnings.test_email_exception' | trans }}
+                        <hr>
+                        {{ email_sent_exception }}
                     </div>
                 {% endif %}
             {% endif %}
@@ -120,21 +122,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-xs-12">
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" name="smtpToEmailAddress" id="smtpToEmailAddress" placeholder="recipient@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}"{% endif %} data-test="smtpToEmailAddress">
-                        <label for="smtpToEmailAddress">{{ 'fields.test_recipient_email_address.title' | trans }}</label>
-                        {% if errors.smtpToEmailAddress is defined %}
-                            <div class="invalid-feedback" data-test="smtpToEmailAddressErrors">
-                                {% for errorMessage in errors.smtpToEmailAddress %}
+                <div class="col-sm-12 col-xs-12">
+                    <div class="input-group mb-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" name="smtpToEmailAddress" id="smtpToEmailAddress" placeholder="recipient@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}"{% endif %} data-test="smtpToEmailAddress">
+                            <label for="smtpToEmailAddress">{{ 'fields.test_recipient_email_address.title' | trans }}</label>
+                            {% if errors.smtpToEmailAddress is defined %}
+                                <div class="invalid-feedback" data-test="smtpToEmailAddressErrors">
+                                    {% for errorMessage in errors.smtpToEmailAddress %}
                                     <p>{{ errorMessage }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <button class="btn btn-outline-secondary" name="actionTest" data-test="test-submit">{{ 'buttons.send_test_email' | trans }}</button>
                     </div>
-                </div>
-                <div class="col-sm-6 col-xs-12">
-                    <p>{{ 'fields.test_recipient_email_address.help_text' | trans }}</p>
                 </div>
             </div>
             <div class="text-center">

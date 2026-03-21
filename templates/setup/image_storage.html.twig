@@ -27,18 +27,11 @@
                     </label>
                 </li>
                 <li class="list-group-item pt-3 d-flex{% if errors.s3 is defined %}border border-danger{% endif %}">
-                    <input class="form-check-input me-3" type="radio" name="storageOption" value="s3" id="s3"{% if values.storageOption is defined and values.storageOption == 's3' %} checked{% endif %}{% if encryption_key_exists == false %} disabled{% endif %} data-test="s3">
+                    <input class="form-check-input me-3" type="radio" name="storageOption" value="s3" id="s3"{% if values.storageOption is defined and values.storageOption == 's3' %} checked{% endif %} data-test="s3">
                     <div class="flex-grow-1">
                         <label class="form-check-label" for="s3">
                             <h5>{{ 'setup.image_storage.options.amazon_s3.label' | trans }}</h5>
                             <p>{{ 'setup.image_storage.options.amazon_s3.description' | trans }}</p>
-                                
-                            {% if encryption_key_exists == false %}
-                                <div class="alert alert-warning">
-                                    {{ 'setup.image_storage.warnings.no_encryption_key' | trans | raw }}
-                                </div>
-                            {% endif %}
-
                         </label>
                         <div id="s3Options" class="d-none" data-test="s3Options">
                             <div class="form-floating mb-3">

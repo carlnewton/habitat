@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Setup login screen
+
+### Changed
+
+- The administrator must maintain a logged in session to continue setup
+- #[101] Send test email process is clearer in both setup and admin pages
+- Removed conditions which warn about no encryption key - the encryption key is mandatory
+- Further translations added to the mail administration page
+
+### Fixed
+
+- Corrected mistakes in translation files
+
 ## [1.1.0] - 2026-03-15
 
 ### Added

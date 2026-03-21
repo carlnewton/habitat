@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -194,8 +195,10 @@ class SetupController extends AbstractController
     }
 
     #[Route(path: '/setup/location', name: 'app_setup_location')]
-    public function location(Request $request): Response
-    {
+    public function location(
+        Request $request,
+        #[CurrentUser] ?User $user,
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -205,6 +208,10 @@ class SetupController extends AbstractController
 
         if ('location' !== $setupSetting->getValue()) {
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
+        }
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login', ['admin' => '1']);
         }
 
         if ('POST' !== $request->getMethod()) {
@@ -288,8 +295,10 @@ class SetupController extends AbstractController
     }
 
     #[Route(path: '/setup/categories', name: 'app_setup_categories')]
-    public function categories(Request $request): Response
-    {
+    public function categories(
+        Request $request,
+        #[CurrentUser] ?User $user,
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -299,6 +308,10 @@ class SetupController extends AbstractController
 
         if ('categories' !== $setupSetting->getValue()) {
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
+        }
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login', ['admin' => '1']);
         }
 
         $suggestedCategories = $this->getSuggestedCategories();
@@ -357,8 +370,10 @@ class SetupController extends AbstractController
     }
 
     #[Route(path: '/setup/image-storage', name: 'app_setup_image_storage')]
-    public function imageStorage(Request $request): Response
-    {
+    public function imageStorage(
+        Request $request,
+        #[CurrentUser] ?User $user,
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -370,12 +385,13 @@ class SetupController extends AbstractController
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
         }
 
-        $encryptionKeyExists = !empty($_ENV['ENCRYPTION_KEY']);
+        if (!$user) {
+            return $this->redirectToRoute('app_login', ['admin' => '1']);
+        }
 
         if ('POST' !== $request->getMethod()) {
             return $this->render('setup/image_storage.html.twig', [
                 'regions' => AmazonS3::REGIONS,
-                'encryption_key_exists' => $encryptionKeyExists,
             ]);
         }
 
@@ -388,7 +404,6 @@ class SetupController extends AbstractController
 
             return $this->render('setup/image_storage.html.twig', [
                 'regions' => AmazonS3::REGIONS,
-                'encryption_key_exists' => $encryptionKeyExists,
             ]);
         }
 
@@ -398,7 +413,6 @@ class SetupController extends AbstractController
             return $this->render('setup/image_storage.html.twig', [
                 'errors' => $fieldErrors,
                 'regions' => AmazonS3::REGIONS,
-                'encryption_key_exists' => $encryptionKeyExists,
                 'values' => [
                     'storageOption' => $request->request->get('storageOption'),
                     'region' => $request->request->get('region'),
@@ -459,8 +473,10 @@ class SetupController extends AbstractController
     }
 
     #[Route(path: '/setup/mail', name: 'app_setup_mail')]
-    public function mail(Request $request): Response
-    {
+    public function mail(
+        Request $request,
+        #[CurrentUser] ?User $user,
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -472,12 +488,12 @@ class SetupController extends AbstractController
             return $this->redirectToRoute(self::SETUP_STEP_TO_ROUTE[$setupSetting->getValue()]);
         }
 
-        $encryptionKeyExists = !empty($_ENV['ENCRYPTION_KEY']);
+        if (!$user) {
+            return $this->redirectToRoute('app_login', ['admin' => '1']);
+        }
 
         if ('POST' !== $request->getMethod()) {
-            return $this->render('setup/mail.html.twig', [
-                'encryption_key_exists' => $encryptionKeyExists,
-            ]);
+            return $this->render('setup/mail.html.twig');
         }
 
         $submittedToken = $request->getPayload()->get('token');
@@ -487,9 +503,7 @@ class SetupController extends AbstractController
                 $this->translator->trans('fields.csrf_token.validations.invalid'),
             );
 
-            return $this->render('setup/mail.html.twig', [
-                'encryption_key_exists' => $encryptionKeyExists,
-            ]);
+            return $this->render('setup/mail.html.twig');
         }
 
         $fieldErrors = $this->validateSetupMailRequest($request);
@@ -497,7 +511,6 @@ class SetupController extends AbstractController
         if (!empty($fieldErrors)) {
             return $this->render('setup/mail.html.twig', [
                 'errors' => $fieldErrors,
-                'encryption_key_exists' => $encryptionKeyExists,
                 'values' => [
                     'smtpUsername' => $request->request->get('smtpUsername'),
                     'smtpPassword' => $request->request->get('smtpPassword'),
@@ -509,7 +522,7 @@ class SetupController extends AbstractController
             ]);
         }
 
-        if (!empty($request->request->get('smtpToEmailAddress'))) {
+        if (!is_null($request->request->get('actionTest'))) {
             $mailException = null;
             try {
                 $this->mailer->sendTest(
@@ -527,7 +540,6 @@ class SetupController extends AbstractController
             return $this->render('setup/mail.html.twig', [
                 'email_sent_to' => $request->request->get('smtpToEmailAddress'),
                 'email_sent_exception' => $mailException,
-                'encryption_key_exists' => $encryptionKeyExists,
                 'values' => [
                     'smtpUsername' => $request->request->get('smtpUsername'),
                     'smtpPassword' => $request->request->get('smtpPassword'),
@@ -591,10 +603,6 @@ class SetupController extends AbstractController
     {
         $errors = [];
 
-        if (empty($_ENV['ENCRYPTION_KEY'])) {
-            $errors['smtpPassword'][] = $this->translator->trans('fields.smtp_password.validations.no_encryption_key');
-        }
-
         if (empty($request->request->get('smtpServer'))) {
             $errors['smtpServer'][] = $this->translator->trans('fields.smtp_server.validations.empty');
         }
@@ -607,8 +615,8 @@ class SetupController extends AbstractController
             $errors['smtpFromEmailAddress'][] = $this->translator->trans('fields.sender_email_address.validations.invalid');
         }
 
-        if (!empty($request->request->get('smtpToEmailAddress')) && !filter_var($request->request->get('smtpToEmailAddress'), FILTER_VALIDATE_EMAIL)) {
-            $errors['smtpToEmailAddress'][] = $this->translator->trans('fields.recipient_email_address.validations.invalid');
+        if (!is_null($request->request->get('actionTest')) && !filter_var($request->request->get('smtpToEmailAddress'), FILTER_VALIDATE_EMAIL)) {
+            $errors['smtpToEmailAddress'][] = $this->translator->trans('fields.test_recipient_email_address.validations.invalid');
         }
 
         return $errors;
@@ -627,10 +635,6 @@ class SetupController extends AbstractController
         }
 
         // All validation from here on is for the S3 storage option.
-
-        if (empty($_ENV['ENCRYPTION_KEY'])) {
-            $errors['secretKey'][] = $this->translator->trans('fields.amazon_s3_secret_key.validations.no_encryption_key');
-        }
 
         if (empty($request->request->get('region')) || !in_array($request->request->get('region'), AmazonS3::REGIONS)) {
             $errors['region'][] = $this->translator->trans('fields.amazon_s3_region.validations.empty');

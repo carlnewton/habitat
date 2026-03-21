@@ -6,6 +6,10 @@ describe('admin', function() {
 
   describe('setup dashboard', function() {
 
+    beforeEach(function() {
+      cy.then(Cypress.session.clearAllSavedSessions)
+    })
+
     it('links to the admin dashboard', function() {
       cy.loginUser('admin');
       cy.visit('/');
