@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The administrator must maintain a logged in session to continue setup
-- Send test email process is clearer in both setup and admin pages
+- #[101] Send test email process is clearer in both setup and admin pages
 - Removed conditions which warn about no encryption key - the encryption key is mandatory
 - Further translations added to the mail administration page
 
