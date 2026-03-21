@@ -564,4 +564,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public static function isPasswordStrong($password): bool
+    {
+        if (empty($password)) {
+            return false;
+        }
+
+        if (mb_strlen($password) < self::PASSWORD_MIN_LENGTH) {
+            return false;
+        }
+
+        if (!preg_match('/[A-Z]/', $password)) {
+            return false;
+        }
+
+        if (!preg_match('/[a-z]/', $password)) {
+            return false;
+        }
+
+        if (!preg_match('/[0-9]/', $password)) {
+            return false;
+        }
+
+        return true;
+    }
 }
