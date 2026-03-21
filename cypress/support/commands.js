@@ -1,4 +1,6 @@
 Cypress.Commands.add('resetDatabase', () => {
+    cy.exec('docker compose down');
+    cy.exec('docker compose up -d');
     cy.exec('docker exec habitat-habitat-app-1 php bin/console doctrine:database:drop --force --no-interaction', { failOnNonZeroExit: false });
     cy.exec('docker exec habitat-habitat-app-1 php bin/console doctrine:database:create --no-interaction');
     cy.exec('docker exec habitat-habitat-app-1 php bin/console doctrine:migrations:migrate --no-interaction');

@@ -1,7 +1,7 @@
 ---
 # TODO: Put this into the Github CI
 #
-# docker system prune -a
+# docker system prune -a --volumes
 # docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache
 #
 # # Test the image only:

@@ -52,7 +52,6 @@ setup:
         label: "Amazon S3"
         description: "Le immagini verranno archiviate utilizzando Amazon S3 Cloud Object Storage."
     warnings:
-      no_encryption_key: "Questo non è disponibile perché la variabile d'ambiente <strong>ENCRYPTION_KEY</strong> non è stata impostata."
       amazon_s3_exception: "Si è verificato un errore durante il tentativo di connessione al bucket S3"
     validations:
       no_option_selected: "Devi scegliere un'opzione di archiviazione immagini"
@@ -60,7 +59,7 @@ setup:
     title: "6. Configura le tue impostazioni di posta"
     test_email_sent: "Un'email di prova è stata inviata a %email_address% e non sono stati segnalati problemi. Se non l'hai ricevuta, controlla le impostazioni qui e riprova."
     warnings:
-      test_email_exception: "Si è verificato un problema durante il tentativo di invio di un'email di prova: %exception%"
+      test_email_exception: "Si è verificato un problema durante il tentativo di invio di un'email di prova"
 
 fields:
   description:
@@ -102,8 +101,17 @@ fields:
   password:
     title: "Password"
     help_text: "La tua password deve contenere 8 o più caratteri che comprendano almeno un numero e una lettera maiuscola e minuscola."
+    updated: "La tua password è stata aggiornata"
     validations:
       weak_password: "Devi utilizzare una password più complessa"
+      incorrect_current_password: "La tua password attuale è errata"
+      passwords_do_not_match: "La password confermata non corrisponde"
+  current_password:
+    title: "Password attuale"
+  new_password:
+    title: "Nuova password"
+  confirm_password:
+    title: "Conferma nuova password"
   amazon_s3_region:
     title: "Regione"
     default_value: "Seleziona la regione"
@@ -120,7 +128,6 @@ fields:
   amazon_s3_secret_key:
     title: "Chiave segreta"
     validations:
-      no_encryption_key: "La chiave segreta non può essere salvata a meno che non sia impostata una variabile d'ambiente ENCRYPTION_KEY"
       empty: "Devi inserire la chiave segreta per il tuo bucket S3"
   smtp_username:
     title: "Nome utente SMTP"
@@ -128,8 +135,6 @@ fields:
   smtp_password:
     title: "Password SMTP"
     help_text: "La password per il tuo servizio di posta SMTP. A volte può essere una chiave API."
-    validations:
-      no_encryption_key: "La chiave della password non può essere salvata a meno che non sia impostata una variabile d'ambiente ENCRYPTION_KEY"
   smtp_server:
     title: "Server SMTP"
     help_text: "L'URL del server del tuo servizio di posta SMTP."
@@ -147,7 +152,6 @@ fields:
       invalid: "Devi inserire un indirizzo email del mittente valido"
   test_recipient_email_address:
     title: "Indirizzo email del destinatario di prova"
-    help_text: "Un'email di prova verrà inviata a questo indirizzo email se fornito. Lascia questo campo vuoto per saltare il test e continuare."
     validations:
       invalid: "Devi inserire un indirizzo email del destinatario valido"
   csrf_token:
@@ -284,6 +288,8 @@ buttons:
   add_a_category: "Aggiungi una categoria"
   add_a_question: "Aggiungi una domanda"
   add_a_location: "Aggiungi una posizione"
+  send_test_email: "Invia un'email di test"
+
 map:
   size_label: "Dimensione"
   toggle_miles: "miglia"
@@ -397,12 +403,12 @@ admin:
     posts:
       singular: "post"
       plural: "post"
-      title: "Post moderation"
+      title: "Moderazione post"
       menu_title: "Post"
     comments:
       singular: "commento"
       plural: "commenti"
-      title: "Comment moderation"
+      title: "Moderazione dei commenti"
       menu_title: "Commenti"
     blocked_email_addresses:
       singular: "indirizzo email"
@@ -527,3 +533,8 @@ misc:
   any: "Qualsiasi"
   loading: "Caricamento..."
   to_comment: "per commentare questo post."
+
+commands:
+  reset_admin_password:
+    title: "Reimposta la password dell'amministratore"
+    no_admin: "Non hai ancora creato un account amministratore"

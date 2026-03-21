@@ -138,6 +138,7 @@ describe('setup', function() {
     })
 
     beforeEach(function() {
+      cy.loginUser('admin');
       cy.visit('/');
     })
 
@@ -191,6 +192,7 @@ describe('setup', function() {
 
     beforeEach(function() {
       cy.loadFixtureGroups(['setup-language', 'setup-admin', 'setup-location']);
+      cy.loginUser('admin');
       cy.visit('/');
     })
 
@@ -223,6 +225,7 @@ describe('setup', function() {
       cy.fixture('setup').then((data) => {
         this.data = data.s3OptionsData;
       });
+      cy.loginUser('admin');
       cy.visit('/');
     })
 
@@ -299,7 +302,7 @@ describe('setup', function() {
 
   describe('setup mail', function() {
 
-    before(function() {
+    beforeEach(function() {
       cy.loadFixtureGroups([
         'setup-language',
         'setup-admin',
@@ -307,9 +310,9 @@ describe('setup', function() {
         'setup-categories',
         'setup-image-storage'
       ]);
-    })
 
-    beforeEach(function() {
+      cy.loginUser('admin');
+
       cy.fixture('setup').then((data) => {
         this.data = data.mailFormData;
       });
@@ -399,6 +402,15 @@ describe('setup', function() {
       })
     })
 
+    it('does not progress past the mail page when the test button is clicked', function() {
+      Object.keys(this.data).forEach((key) => {
+        cy.getElement(key).type(this.data[key]);
+      });
+      cy.getElement('test-submit').click();
+
+      cy.url().should('include', '/mail');
+    })
+
     it('submits mail form data', function() {
       Object.keys(this.data).forEach((key) => {
         if (key !== 'smtpToEmailAddress') {
@@ -408,6 +420,60 @@ describe('setup', function() {
       cy.getElement('submit').click();
 
       cy.url().should('include', '/admin');
+    })
+
+    it('submits mail form data when save button is clicked and recipient email address is populated', function() {
+      Object.keys(this.data).forEach((key) => {
+        cy.getElement(key).type(this.data[key]);
+      });
+      cy.getElement('submit').click();
+
+      cy.url().should('include', '/admin');
+    })
+
+  })
+
+  describe('post setup', function() {
+
+    before(function() {
+      cy.loadFixtureGroups([
+        'setup',
+      ]);
+    })
+
+    it('does not allow setup request', function() {
+      cy.visit('/setup');
+      cy.url().should('not.include', '/setup');
+    })
+
+    it('does not allow setup admin request', function() {
+      cy.visit('/setup/admin');
+      cy.url().should('not.include', '/setup');
+    })
+
+    it('does not allow setup location request', function() {
+      cy.visit('/setup/location');
+      cy.url().should('not.include', '/setup');
+    })
+
+    it('does not allow setup categories request', function() {
+      cy.visit('/setup/categories');
+      cy.url().should('not.include', '/setup');
+    })
+
+    it('does not allow setup image storage request', function() {
+      cy.visit('/setup/image-storage');
+      cy.url().should('not.include', '/setup');
+    })
+
+    it('does not allow setup mail request', function() {
+      cy.visit('/setup/mail');
+      cy.url().should('not.include', '/setup');
+    })
+
+    it('login does not redirect to setup', function() {
+      cy.visit('/login');
+      cy.url().should('not.include', '/setup');
     })
 
   })

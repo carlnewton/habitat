@@ -1,32 +1,82 @@
-{% extends 'base.html.twig' %}
+{% if app.request.query.get('admin') and setting('setup') != 'complete' %}
+    {% set layout = 'setup' %}
+{% else %}
+    {% set layout = 'base' %}
+{% endif %}
+{% extends (layout == 'setup') ? 'setup/base.html.twig' : 'base.html.twig' %}
 {% set page_title = 'account.login.title' | trans %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    {% if (layout == 'setup') %}
+        <h1 class="display-5 fw-bold">Habitat</h1>
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <form class="text-start" method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="_username" id="email_address" placeholder="{{ 'fields.email_address.title' | trans }}" value="{{ last_email_address }}" data-test="email_address">
+                            <label for="email_address">{{ 'fields.email_address.title' | trans }}</label>
+                            {% if errors.email_address is defined %}
+                                <div class="invalid-feedback" data-test="emailAddressErrors">
+                                    {% for errorMessage in errors.email_address %}
+                                        <p>{{ errorMessage }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control{% if errors.password is defined %} is-invalid{% endif %}" name="_password" id="password" placeholder="{{ 'fields.password.title' | trans }}"{% if values.password is defined %} value="{{ values.password }}"{% endif %} data-test="password">
+                            <label for="password">{{ 'fields.password.title' | trans }}</label>
+                            {% if errors.password is defined %}
+                                <div class="invalid-feedback" data-test="passwordErrors">
+                                    {% for errorMessage in errors.password %}
+                                        <p>{{ errorMessage }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.login' | trans }}</button>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            </form>
+        </div>
+    {% else %}
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                {{ 'account.login.logged_in_message' | trans({ '%username%': app.user.username }) }}
-                <a href="{{ path('app_logout') }}">{{ 'buttons.logout' | trans}}</a>
+            {% if app.user %}
+                <div class="mb-3">
+                    {{ 'account.login.logged_in_message' | trans({ '%username%': app.user.username }) }}
+                    <a href="{{ path('app_logout') }}">{{ 'buttons.logout' | trans}}</a>
+                </div>
+            {% endif %}
+
+            <h1 class="h3 mb-3 font-weight-normal">{{ 'account.login.title' | trans }}</h1>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email_address" name="_username" value="{{ last_email_address }}" autocomplete="username" required autofocus data-test="email_address">
+                <label for="email_address">{{ 'fields.email_address.title' | trans }}</label>
             </div>
-        {% endif %}
+            <div class="form-floating mb-3">
+                <input type="password" name="_password" class="form-control" id="password" autocomplete="current-password" required data-test="password">
+                <label for="password">{{ 'fields.password.title' | trans }}</label>
+            </div>
 
-        <h1 class="h3 mb-3 font-weight-normal">{{ 'account.login.title' | trans }}</h1>
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="email_address" name="_username" value="{{ last_email_address }}" autocomplete="username" required autofocus data-test="email_address">
-            <label for="email_address">{{ 'fields.email_address.title' | trans }}</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="password" name="_password" class="form-control" id="password" autocomplete="current-password" required data-test="password">
-            <label for="password">{{ 'fields.password.title' | trans }}</label>
-        </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <button class="btn btn-lg btn-primary" type="submit" data-test="submit">{{ 'buttons.login' | trans }}</button>
-        <a class="btn btn-lg btn-link" href="{{ path('app_forgot_password') }}">{{ 'buttons.forgot_password' | trans }}</a>
-    </form>
+            <button class="btn btn-lg btn-primary" type="submit" data-test="submit">{{ 'buttons.login' | trans }}</button>
+            <a class="btn btn-lg btn-link" href="{{ path('app_forgot_password') }}">{{ 'buttons.forgot_password' | trans }}</a>
+        </form>
+    {% endif %}
 {% endblock %}

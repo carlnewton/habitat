@@ -18,6 +18,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -34,8 +35,22 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/login', name: 'app_login')]
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
-    {
+    public function login(
+        Request $request,
+        AuthenticationUtils $authenticationUtils,
+        #[CurrentUser] ?User $user,
+    ): Response {
+        if ('1' === $request->query->get('admin')) {
+            $admins = $this->userRepository->findUsersByRole('ROLE_SUPER_ADMIN');
+            if (empty($admins)) {
+                return $this->redirectToRoute('app_setup_language');
+            }
+
+            if ($user) {
+                return $this->redirectToRoute('app_setup_language');
+            }
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
 
         $lastEmailAddress = $authenticationUtils->getLastUsername();
@@ -185,7 +200,7 @@ class SecurityController extends AbstractController
             $errors['email'][] = 'This is not a valid email address';
         }
 
-        if (!$this->isPasswordStrong($request->request->get('password'))) {
+        if (!User::isPasswordStrong($request->request->get('password'))) {
             $errors['password'][] = 'You must use a stronger password';
         }
 
@@ -214,31 +229,6 @@ class SecurityController extends AbstractController
         }
 
         if (!in_array(trim(mb_strtolower($submittedAnswer)), $correctAnswers)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function isPasswordStrong($password): bool
-    {
-        if (empty($password)) {
-            return false;
-        }
-
-        if (mb_strlen($password) < User::PASSWORD_MIN_LENGTH) {
-            return false;
-        }
-
-        if (!preg_match('/[A-Z]/', $password)) {
-            return false;
-        }
-
-        if (!preg_match('/[a-z]/', $password)) {
-            return false;
-        }
-
-        if (!preg_match('/[0-9]/', $password)) {
             return false;
         }
 
@@ -342,7 +332,7 @@ class SecurityController extends AbstractController
             return $this->render('security/reset_password.html.twig');
         }
 
-        if (!$this->isPasswordStrong($request->request->get('password'))) {
+        if (!User::isPasswordStrong($request->request->get('password'))) {
             return $this->render('security/reset_password.html.twig', [
                 'validation_failed' => true,
             ]);

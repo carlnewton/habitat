@@ -4,14 +4,16 @@
 {% block body %}
     {% if email_sent_exception is defined %}
         <div class="alert alert-danger" role="alert">
-            {{ 'setup.configure_mail.warnings.test_email_exception' | trans({ '%exception%': email_sent_exception }) }}
+            {{ 'setup.configure_mail.warnings.test_email_exception' | trans }}
+            <hr>
+            {{ email_sent_exception }}
         </div>
     {% endif %}
     <form method="post" action="{{ path('app_admin_mail') }}">
 
         <div class="mb-3">
             <label for="smtpUsername" class="form-label">{{ 'fields.smtp_username.title' | trans }}</label>
-            <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" id="smtpUsername" name="smtpUsername" placeholder="email@example.com"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}{% endif %}">
+            <input type="text" class="form-control{% if errors.smtpUsername is defined %} is-invalid{% endif %}" id="smtpUsername" name="smtpUsername" placeholder="admin"{% if values.smtpUsername is defined %} value="{{ values.smtpUsername }}{% endif %}">
             {% if errors.smtpUsername is defined %}
                     <div class="invalid-feedback">
                     {% for errorMessage in errors.smtpUsername %}
@@ -35,7 +37,7 @@
 
         <div class="mb-3">
             <label for="smtpServer" class="form-label">{{ 'fields.smtp_server.title' | trans }}</label>
-            <input type="text" class="form-control{% if errors.smtpServer is defined %} is-invalid{% endif %}" id="smtpServer" name="smtpServer" placeholder="server"{% if values.smtpServer is defined %} value="{{ values.smtpServer }}{% endif %}">
+            <input type="text" class="form-control{% if errors.smtpServer is defined %} is-invalid{% endif %}" id="smtpServer" name="smtpServer" placeholder="smtp.example.com"{% if values.smtpServer is defined %} value="{{ values.smtpServer }}{% endif %}">
             {% if errors.smtpServer is defined %}
                     <div class="invalid-feedback">
                     {% for errorMessage in errors.smtpServer %}
@@ -59,7 +61,7 @@
 
         <div class="mb-3">
             <label for="smtpFromEmailAddress" class="form-label">{{ 'fields.sender_email_address.title' | trans }}</label>
-            <input type="text" class="form-control{% if errors.smtpFromEmailAddress is defined %} is-invalid{% endif %}" id="smtpFromEmailAddress" name="smtpFromEmailAddress" placeholder="587"{% if values.smtpFromEmailAddress is defined %} value="{{ values.smtpFromEmailAddress }}{% endif %}">
+            <input type="text" class="form-control{% if errors.smtpFromEmailAddress is defined %} is-invalid{% endif %}" id="smtpFromEmailAddress" name="smtpFromEmailAddress" placeholder="habitat@example.com"{% if values.smtpFromEmailAddress is defined %} value="{{ values.smtpFromEmailAddress }}{% endif %}">
             {% if errors.smtpFromEmailAddress is defined %}
                     <div class="invalid-feedback">
                     {% for errorMessage in errors.smtpFromEmailAddress %}
@@ -70,18 +72,19 @@
         </div>
 
         <div class="mb-3">
+
             <label for="smtpToEmailAddress" class="form-label">{{ 'fields.test_recipient_email_address.title' | trans }}</label>
-            <input type="text" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" id="smtpToEmailAddress" name="smtpToEmailAddress" placeholder="user@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}{% endif %}" aria-describedby="smtpToEmailAddressHelp">
-            <small id="smtpToEmailAddressHelp" class="form-text">
-                {{ 'fields.test_recipient_email_address.help_text' | trans }}
-            </small>
-            {% if errors.smtpToEmailAddress is defined %}
-                    <div class="invalid-feedback">
-                    {% for errorMessage in errors.smtpToEmailAddress %}
-                        <p>{{ errorMessage }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
+            <div class="input-group mb-3">
+                <input type="text" class="form-control{% if errors.smtpToEmailAddress is defined %} is-invalid{% endif %}" id="smtpToEmailAddress" name="smtpToEmailAddress" placeholder="user@example.com"{% if values.smtpToEmailAddress is defined %} value="{{ values.smtpToEmailAddress }}{% endif %}" aria-describedby="smtpToEmailAddressHelp">
+                <button class="btn btn-outline-secondary" name="actionTest">{{ 'buttons.send_test_email' | trans }}</button>
+                {% if errors.smtpToEmailAddress is defined %}
+                        <div class="invalid-feedback">
+                        {% for errorMessage in errors.smtpToEmailAddress %}
+                            <p>{{ errorMessage }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
