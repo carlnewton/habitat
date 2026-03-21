@@ -101,17 +101,17 @@ fields:
   password:
     title: "Password"
     help_text: "Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter."
-    current_password:
-      title: "Current password"
-    new_password:
-      title: "New password"
-    confirm_password:
-      title: "Confirm new password"
     updated: "Your password has been updated"
     validations:
       weak_password: "You must use a stronger password"
       incorrect_current_password: "Your current password is incorrect"
-      passwords_do_not_match: "The passwords do not match"
+      passwords_do_not_match: "The confirmed password does not match"
+  current_password:
+    title: "Current password"
+  new_password:
+    title: "New password"
+  confirm_password:
+    title: "Confirm new password"
   amazon_s3_region:
     title: "Region"
     default_value: "Select the region"
