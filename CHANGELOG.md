@@ -9,13 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Change password settings
+- [#105] Change password settings
 - Setup login screen
+- [#111] Reset admin password console command
 
 ### Changed
 
 - The administrator must maintain a logged in session to continue setup
-- #[101] Send test email process is clearer in both setup and admin pages
+- [#101] Send test email process is clearer in both setup and admin pages
 - Removed conditions which warn about no encryption key - the encryption key is mandatory
 - Further translations added to the mail administration page
 

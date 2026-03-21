@@ -533,3 +533,8 @@ misc:
   any: "Any"
   loading: "Loading..."
   to_comment: "to comment on this post."
+
+commands:
+  reset_admin_password:
+    title: "Reset the administrator password"
+    no_admin: "You have not yet created an administrator account"

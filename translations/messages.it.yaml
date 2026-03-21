@@ -533,3 +533,8 @@ misc:
   any: "Qualsiasi"
   loading: "Caricamento..."
   to_comment: "per commentare questo post."
+
+commands:
+  reset_admin_password:
+    title: "Reimposta la password dell'amministratore"
+    no_admin: "Non hai ancora creato un account amministratore"
