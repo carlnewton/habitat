@@ -18,6 +18,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -34,8 +35,22 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/login', name: 'app_login')]
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
-    {
+    public function login(
+        Request $request,
+        AuthenticationUtils $authenticationUtils,
+        #[CurrentUser] ?User $user,
+    ): Response {
+        if ('1' === $request->query->get('admin')) {
+            $admins = $this->userRepository->findUsersByRole('ROLE_SUPER_ADMIN');
+            if (empty($admins)) {
+                return $this->redirectToRoute('app_setup_language');
+            }
+
+            if ($user) {
+                return $this->redirectToRoute('app_setup_language');
+            }
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
 
         $lastEmailAddress = $authenticationUtils->getLastUsername();

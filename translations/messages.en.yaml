@@ -52,7 +52,6 @@ setup:
         label: "Amazon S3"
         description: "Images will be stored using Amazon S3 Cloud Object Storage."
     warnings:
-      no_encryption_key: "This is not available because the <strong>ENCRYPTION_KEY</strong> environment variable has not been set."
       amazon_s3_exception: "An error occurred when attempting to connect to the S3 bucket"
     validations:
       no_option_selected: "You must choose an image storage option"
@@ -60,7 +59,7 @@ setup:
     title: "6. Configure your mail settings"
     test_email_sent: "A test email has been sent to %email_address% and no issues have been reported. If you have not received it, check the settings here and try again."
     warnings:
-      test_email_exception: "An issue occurred when attempting to send a test email: %exception%"
+      test_email_exception: "An issue occurred when attempting to send a test email"
 
 fields:
   description:
@@ -120,7 +119,6 @@ fields:
   amazon_s3_secret_key:
     title: "Secret key"
     validations:
-      no_encryption_key: "The secret key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
       empty: "You must enter the secret key for your S3 bucket"
   smtp_username:
     title: "SMTP username"
@@ -129,7 +127,6 @@ fields:
     title: "SMTP password"
     help_text: "The password for your SMTP mail service. This can sometimes be an API key."
     validations:
-      no_encryption_key: "The password key cannot be saved unless an ENCRYPTION_KEY environment variable is set"
   smtp_server:
     title: "SMTP server"
     help_text: "The server URL of your SMTP mail service."
@@ -147,7 +144,6 @@ fields:
       invalid: "You must enter a valid sender email address"
   test_recipient_email_address:
     title: "Test recipient email address"
-    help_text: "A test email will be sent to this email address if provided. Leave this empty to skip the test and continue."
     validations:
       invalid: "You must enter a valid recipient email address"
   csrf_token:
@@ -284,6 +280,8 @@ buttons:
   add_a_category: "Add a category"
   add_a_question: "Add a question"
   add_a_location: "Add a location"
+  send_test_email: "Send a test email"
+
 map:
   size_label: "Size"
   toggle_miles: "miles"
