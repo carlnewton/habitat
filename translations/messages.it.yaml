@@ -143,7 +143,6 @@ fields:
       invalid: "Devi inserire un indirizzo email del mittente valido"
   test_recipient_email_address:
     title: "Indirizzo email del destinatario di prova"
-    help_text: "Un'email di prova verrà inviata a questo indirizzo email se fornito. Lascia questo campo vuoto per saltare il test e continuare."
     validations:
       invalid: "Devi inserire un indirizzo email del destinatario valido"
   csrf_token:

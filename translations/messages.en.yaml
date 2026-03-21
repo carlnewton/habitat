@@ -126,7 +126,6 @@ fields:
   smtp_password:
     title: "SMTP password"
     help_text: "The password for your SMTP mail service. This can sometimes be an API key."
-    validations:
   smtp_server:
     title: "SMTP server"
     help_text: "The server URL of your SMTP mail service."
