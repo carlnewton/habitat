@@ -60,6 +60,13 @@
                             <input type="hidden" name="token" value="{{ csrf_token('change_username') }}">
                         </form>
                     </li>
+                    <li class="list-group-item">
+                        <form hx-swap="outerHTML" hx-post="/hx/change-password" hx-target="#hx-change-password">
+                            <p class="fw-bold mb-2">{{ 'user_settings.change_password.title' | trans }}</p>
+                            {% include 'partials/hx/change_password.html.twig' %}
+                            <input type="hidden" name="token" value="{{ csrf_token('change_password') }}">
+                        </form>
+                    </li>
                 </ul>
             </div>
             <div class="card mb-3">

@@ -101,8 +101,17 @@ fields:
   password:
     title: "Password"
     help_text: "Your password must contain 8 or more characters that are of at least one number, and one uppercase and lowercase letter."
+    current_password:
+      title: "Current password"
+    new_password:
+      title: "New password"
+    confirm_password:
+      title: "Confirm new password"
+    updated: "Your password has been updated"
     validations:
       weak_password: "You must use a stronger password"
+      incorrect_current_password: "Your current password is incorrect"
+      passwords_do_not_match: "The passwords do not match"
   amazon_s3_region:
     title: "Region"
     default_value: "Select the region"
@@ -305,6 +314,8 @@ user_settings:
     no_hidden_categories: "You are not currently hiding any categories."
   change_details:
     title: "Change your details"
+  change_password:
+    title: "Change your password"
   delete_account:
     title: "Delete your account"
     warning: "Warning: Account deletion is perminent. All of your posts and comments will also be deleted."
