@@ -54,42 +54,17 @@ class ChangePasswordController extends AbstractController
         $errors = [];
 
         if (!$passwordHasher->isPasswordValid($user, (string) $request->request->get('current_password'))) {
-            $errors[] = $translator->trans('fields.password.validations.incorrect_current_password');
+            $errors['current_password'][] = $translator->trans('fields.password.validations.incorrect_current_password');
         }
 
-        if (!$this->isPasswordStrong($request->request->get('new_password'))) {
-            $errors[] = $translator->trans('fields.password.validations.weak_password');
+        if (!User::isPasswordStrong($request->request->get('new_password'))) {
+            $errors['new_password'][] = $translator->trans('fields.password.validations.weak_password');
         }
 
         if ($request->request->get('new_password') !== $request->request->get('confirm_password')) {
-            $errors[] = $translator->trans('fields.password.validations.passwords_do_not_match');
+            $errors['confirm_password'][] = $translator->trans('fields.password.validations.passwords_do_not_match');
         }
 
         return $errors;
-    }
-
-    private function isPasswordStrong($password): bool
-    {
-        if (empty($password)) {
-            return false;
-        }
-
-        if (mb_strlen($password) < User::PASSWORD_MIN_LENGTH) {
-            return false;
-        }
-
-        if (!preg_match('/[A-Z]/', $password)) {
-            return false;
-        }
-
-        if (!preg_match('/[a-z]/', $password)) {
-            return false;
-        }
-
-        if (!preg_match('/[0-9]/', $password)) {
-            return false;
-        }
-
-        return true;
     }
 }

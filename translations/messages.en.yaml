@@ -314,8 +314,6 @@ user_settings:
     no_hidden_categories: "You are not currently hiding any categories."
   change_details:
     title: "Change your details"
-  change_password:
-    title: "Change your password"
   delete_account:
     title: "Delete your account"
     warning: "Warning: Account deletion is perminent. All of your posts and comments will also be deleted."

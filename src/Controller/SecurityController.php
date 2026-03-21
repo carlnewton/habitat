@@ -200,7 +200,7 @@ class SecurityController extends AbstractController
             $errors['email'][] = 'This is not a valid email address';
         }
 
-        if (!$this->isPasswordStrong($request->request->get('password'))) {
+        if (!User::isPasswordStrong($request->request->get('password'))) {
             $errors['password'][] = 'You must use a stronger password';
         }
 
@@ -229,31 +229,6 @@ class SecurityController extends AbstractController
         }
 
         if (!in_array(trim(mb_strtolower($submittedAnswer)), $correctAnswers)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function isPasswordStrong($password): bool
-    {
-        if (empty($password)) {
-            return false;
-        }
-
-        if (mb_strlen($password) < User::PASSWORD_MIN_LENGTH) {
-            return false;
-        }
-
-        if (!preg_match('/[A-Z]/', $password)) {
-            return false;
-        }
-
-        if (!preg_match('/[a-z]/', $password)) {
-            return false;
-        }
-
-        if (!preg_match('/[0-9]/', $password)) {
             return false;
         }
 
@@ -357,7 +332,7 @@ class SecurityController extends AbstractController
             return $this->render('security/reset_password.html.twig');
         }
 
-        if (!$this->isPasswordStrong($request->request->get('password'))) {
+        if (!User::isPasswordStrong($request->request->get('password'))) {
             return $this->render('security/reset_password.html.twig', [
                 'validation_failed' => true,
             ]);
