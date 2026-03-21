@@ -19,7 +19,6 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -199,8 +198,7 @@ class SetupController extends AbstractController
     public function location(
         Request $request,
         #[CurrentUser] ?User $user,
-    ): Response
-    {
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -300,8 +298,7 @@ class SetupController extends AbstractController
     public function categories(
         Request $request,
         #[CurrentUser] ?User $user,
-    ): Response
-    {
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -376,8 +373,7 @@ class SetupController extends AbstractController
     public function imageStorage(
         Request $request,
         #[CurrentUser] ?User $user,
-    ): Response
-    {
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
@@ -480,8 +476,7 @@ class SetupController extends AbstractController
     public function mail(
         Request $request,
         #[CurrentUser] ?User $user,
-): Response
-    {
+    ): Response {
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $setupSetting = $settingsRepository->getSettingByName('setup');
 
