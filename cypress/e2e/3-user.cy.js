@@ -267,6 +267,39 @@ describe('user', function() {
       cy.getElement('change-username-errors').should('be.visible');
     })
 
+    it('allows a user to change their password', function() {
+      cy.loginUser('neo');
+      cy.visit('/settings');
+      cy.getElement('change-current-password').clear().type('Neo');
+      cy.getElement('change-new-password').clear().type('!ThisIsASecurePassword123!');
+      cy.getElement('change-confirm-password').clear().type('!ThisIsASecurePassword123!');
+      cy.getElement('change-password-submit').click();
+
+      cy.getElement('change-password-success').should('be.visible');
+    })
+
+    it('does not allow a user to change their password if current password is incorrect', function() {
+      cy.loginUser('neo');
+      cy.visit('/settings');
+      cy.getElement('change-current-password').clear().type('Incorrect password');
+      cy.getElement('change-new-password').clear().type('!ThisIsASecurePassword123!');
+      cy.getElement('change-confirm-password').clear().type('!ThisIsASecurePassword123!');
+      cy.getElement('change-password-submit').click();
+
+      cy.getElement('current-password-error').should('be.visible');
+    })
+
+    it('does not allow a user to change their password if confirmed password does not match', function() {
+      cy.loginUser('neo');
+      cy.visit('/settings');
+      cy.getElement('change-current-password').clear().type('Neo');
+      cy.getElement('change-new-password').clear().type('!ThisIsASecurePassword123!');
+      cy.getElement('change-confirm-password').clear().type('!ThisIsADifferentSecurePassword123!');
+      cy.getElement('change-password-submit').click();
+
+      cy.getElement('confirm-password-error').should('be.visible');
+    })
+
   })
 
 })
