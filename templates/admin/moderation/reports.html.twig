@@ -22,7 +22,7 @@
     <td class="align-middle">
         {{ item.type | capitalize }}
     </td>
-    <td class="align-middle{% if sort == 'date_reported' %} bg-light border{% endif %}">{{ item.reportedDate|local_date }}</td>
+    <td class="align-middle{% if sort == 'reported_date' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.reportedDate|local_date }}</td>
     <td class="align-middle">
         <a href="{{ path('app_moderation_user', { id: item.reportedBy.id }) }}">{{ item.reportedBy.username }}</a>
     </td>

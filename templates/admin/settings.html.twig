@@ -66,6 +66,22 @@
             {% endif %}
         </div>
         <div class="mb-3">
+            <label for="theme" class="form-label">{{ 'fields.theme.title' | trans }}</label>
+            <div class="form-check{% if errors.theme is defined %} is-invalid{% endif %}">
+                <input type="radio" class="btn-check" name="theme" value="light" id="light" autocomplete="off"{% if values.theme is defined and values.theme == 'light' %} checked{% endif %}>
+                <label class="btn btn-outline-secondary" for="light">{{ 'fields.theme.light' | trans }}</label>
+                <input type="radio" class="btn-check" name="theme" value="dark" id="dark" autocomplete="off"{% if values.theme is defined and values.theme == 'dark' %} checked{% endif %}>
+                <label class="btn btn-outline-secondary" for="dark">{{ 'fields.theme.dark' | trans }}</label>
+            </div>
+            {% if errors.theme is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.theme %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
             <label for="sidebarContent" class="form-label">{{ 'fields.sidebar_content.title' | trans }}</label>
             <div class="card{% if errors.sidebarContent is defined %} border-danger{% endif %}">
                 <div class="card-header">

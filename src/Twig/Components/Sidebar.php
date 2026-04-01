@@ -16,7 +16,7 @@ final class Sidebar
 
     public function getSidebarContent(): string
     {
-        $sidebarContent = $this->sidebarContentRepository->findOneBy(['id' => 1]);
+        $sidebarContent = $this->sidebarContentRepository->findOneBy([]);
 
         if (is_null($sidebarContent)) {
             return '';

@@ -14,7 +14,7 @@ final class Announcement
     public function __construct(
         private AnnouncementRepository $announcementRepository,
     ) {
-        $announcement = $this->announcementRepository->findOneBy(['id' => 1]);
+        $announcement = $this->announcementRepository->findOneBy([]);
 
         if (is_null($announcement)) {
             return;

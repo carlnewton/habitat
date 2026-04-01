@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-xl-6">
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-sliders"></i> {{ 'user_settings.preferences.title' | trans }}
                     </h5>
@@ -30,7 +30,7 @@
                 </ul>
             </div>
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-tag"></i> {{ 'user_settings.hidden_categories.title' | trans }}
                     </h5>
@@ -62,7 +62,7 @@
                 {% endif %}
             </div>
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-x-circle"></i> {{ 'user_settings.delete_account.title' | trans }}
                     </h5>
@@ -74,7 +74,7 @@
         </div>
         <div class="col-xl-6">
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-person"></i> {{ 'user_settings.change_details.title' | trans }}
                     </h5>

@@ -163,6 +163,12 @@ fields:
     title: "Habitat name"
   location:
     title: "Location"
+  theme:
+    title: "Theme"
+    dark: "Dark"
+    light: "Light"
+    validations:
+      empty: "You must select a theme."
   weight:
     title: "Weight"
     description: "Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically."

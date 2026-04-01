@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" data-bs-theme="{{ setting('theme', 'light') }}">
+{% set habitat_theme = setting('theme', 'light') %}
+<html lang="en" data-bs-theme="{{ habitat_theme }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,9 +17,9 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body class="bg-light">
+    <body class="bg-{% if habitat_theme == 'light' %}light{% else %}super-dark{% endif %}">
         <div class="navbar-expand-md">
-            <nav class="navbar shadow-sm fixed-top bg-{{ setting('theme', 'white') }} border-bottom">
+            <nav class="navbar shadow-sm fixed-top bg-{% if habitat_theme == 'light' %}white{% else %}dark{% endif %} border-bottom">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ path('app_index_index') }}">
                         <img src="/build/images/habitat_icon.svg" width="30" height="30" class="d-inline-block align-top" alt="Habitat">

@@ -26,7 +26,7 @@ class AnnouncementsController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $announcementRepository = $entityManager->getRepository(Announcement::class);
-        $announcement = $announcementRepository->findOneBy(['id' => 1]);
+        $announcement = $announcementRepository->findOneBy([]);
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');

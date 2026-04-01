@@ -22,5 +22,5 @@
 {% endblock %}
 
 {% block rows %}
-    <td class="align-middle{% if sort == 'email_address' %} bg-light border{% endif %}">{{ item.emailaddress }}</td>
+    <td class="align-middle{% if sort == 'email_address' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.emailaddress }}</td>
 {% endblock %}

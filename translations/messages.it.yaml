@@ -163,6 +163,12 @@ fields:
     title: "Nome dell'Habitat"
   location:
     title: "Posizione"
+  theme:
+    title: "Tema"
+    dark: "Buio"
+    light: "Luce"
+    validations:
+      empty: "Devi scegliere un tema."
   weight:
     title: "Peso"
     description: "Le categorie con peso basso sono ordinate prima di quelle con peso elevato nella lista delle categorie. Le categorie con lo stesso peso sono ordinate alfabeticamente."

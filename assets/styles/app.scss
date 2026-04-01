@@ -3,6 +3,10 @@ body {
   padding-bottom: 40px;
 }
 
+.bg-super-dark {
+  background-color: #171a1d;
+}
+
 @include media-breakpoint-down(md) {
   body {
     padding-bottom: 80px;
