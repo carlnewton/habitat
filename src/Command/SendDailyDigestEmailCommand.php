@@ -100,7 +100,7 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newPost->getId(),
                 ]);
 
-                $body .= '<li><a href="https://' . $domain . $viewPostRoute . '">' . $newPost->getTitle() . '</a> - ' . $newPost->getUser()->getUsername() . '</li>';
+                $body .= '<li><a href="' . $domain . $viewPostRoute . '">' . $newPost->getTitle() . '</a> - ' . $newPost->getUser()->getUsername() . '</li>';
             }
             $body .= '</ul>';
         }
@@ -113,7 +113,7 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newComment->getPost()->getId(),
                 ]);
 
-                $body .= '<li><a href="https://' . $domain . $viewPostRoute . '">' . $newComment->getBody() . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
+                $body .= '<li><a href="' . $domain . $viewPostRoute . '">' . $newComment->getBody() . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
             }
             $body .= '</ul>';
         }
@@ -126,7 +126,7 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newUser->getId(),
                 ]);
 
-                $body .= '<li><a href="https://' . $domain . $userModerationRoute . '">' . $newUser->getUsername() . '</a></li>';
+                $body .= '<li><a href="' . $domain . $userModerationRoute . '">' . $newUser->getUsername() . '</a></li>';
             }
             $body .= '</ul>';
         }
