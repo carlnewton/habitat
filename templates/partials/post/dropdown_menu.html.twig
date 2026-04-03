@@ -4,9 +4,7 @@
             <i class="bi bi-three-dots-vertical"></i>
         </button>
         <ul class="dropdown-menu">
-            {% set show_divider = false %}
             {% if is_granted('ROLE_SUPER_ADMIN') %}
-                {% set show_divider = true %}
                 <li>
                     <a class="dropdown-item" href="{{ path('app_edit_post', { id: post.id })}}">{{ 'menus.contextual.edit.title' | trans }}</a>
                 </li>
@@ -18,16 +16,16 @@
                     </form>
                 </li>
             {% endif %}
+            <li>
+                <button class="dropdown-item checkbox-action share-btn" data-title="{{ post.title|e('html_attr') }}" data-url="{{ absolute_url(path('app_view_post', { id: post.id } )) }}" data-text="{{ post.body|striptags|slice(0, 200)|e('html_attr') }}">{{ 'menus.contextual.share.title' | trans }}</button>
+            </li>
             {% if app.user.id != post.user.id %}
-                {% set show_divider = true %}
                 <li>
                     <button class="dropdown-item checkbox-action" hx-get="{{ path('app_hx_report_post', { postId: post.id }) }}" hx-target="#report-post-{{ post.id }}" hx-swap="innerHTML">{{ 'menus.contextual.report.title' | trans }}</button>
                 </li>
             {% endif %}
             {% if app.user.id == post.user.id or is_granted('ROLE_SUPER_ADMIN') %}
-                {% if show_divider %}
-                    <li><hr class="dropdown-divider"></li>
-                {% endif %}
+                <li><hr class="dropdown-divider"></li>
                 <li>
                     {% if app.user.id == post.user.id %}
                         <form class="action-item-form" method="post" hx-swap="outerHTML" hx-target="closest .post" hx-post="{{ path('app_hx_delete_post' )}}">
