@@ -4,11 +4,39 @@
 {% block body %}
     <form method="post">
         <div class="row mb-3">
+            {% if not registrations_allowed %}
+                <div class="alert alert-danger">
+                    {{ 'admin.user_registration.user_registrations_disabled' | trans({ '%mail_settings_url%': path('app_admin_mail') }) | raw }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="row mb-3">
             <label for="enable-registration" class="col-sm-3 col-form-label">{{ 'admin.user_registration.allow_registration' | trans }}</label>
             <div class="col-sm-9">
-                <div class="form-check form-switch form-switch-lg">
-                    <input class="form-check-input" type="checkbox" name="enable-registration" role="switch" id="enable_registration"{% if values.registration is defined and values.registration == 'on' %} checked{% endif %} data-test="enable-registration-checkbox">
+                <div class="form-check form-switch form-switch-lg{% if errors.enableRegistration is defined %} is-invalid{% endif %}">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="enable-registration"
+                        role="switch"
+                        id="enable_registration"
+                        {% if values.registration is defined and values.registration == 'on' %}
+                            checked
+                        {% elseif not registrations_allowed %}
+                            disabled
+                        {% endif %}
+                        data-test="enable-registration-checkbox"
+                    >
                 </div>
+                {% if errors.enableRegistration is defined %}
+                    <div class="invalid-feedback">
+                        <ul>
+                            {% for error in errors.enableRegistration %}
+                                <li>{{ error|striptags }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="mb-3">

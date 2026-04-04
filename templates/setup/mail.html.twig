@@ -141,9 +141,8 @@
             </div>
             <div class="text-center">
                 <button class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.continue' | trans }}</button>
-                <button class="btn btn-link btn-lg" name="skip" value="1" formnovalidate data-test="skip">{{ 'buttons.skip' | trans }}</button>
+                <button class="btn btn-outline-primary btn-lg" name="skip" value="1" formnovalidate data-test="skip">{{ 'buttons.skip_for_now' | trans }}</button>
             </div>
-            <p class="text-center text-muted mt-2 small">{{ 'setup.configure_mail.skip_hint' | trans({'%path%': path('app_admin_mail')}) | raw }}</p>
             <input type="hidden" name="token" value="{{ csrf_token('setup') }}">
         </form>
     </div>
