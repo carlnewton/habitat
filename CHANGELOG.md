@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#119] Opengraph meta tags
 
+### Fixed
+
+- The updated datetime gets modified when editing a post
+
 ## [1.2.0] - 2026-03-21
 
 ### Added

@@ -3,7 +3,7 @@
 {% block opengraph %}
     {{ parent() }}
     <meta property="og:type" content="article">
-    <meta property="og:title" content="{{ post.title }}">
+    <meta property="og:title" content="{{ page_title }}">
     <meta property="og:url" content="{{ absolute_url(path('app_view_post', { id: post.id })) }}">
     {% if post.body is not empty %}
         <meta property="og:description" content="{{ post.body|striptags|slice(0, 200) }}">
@@ -14,14 +14,11 @@
         <meta property="og:image:width" content="550">
     {% endif %}
     <meta property="article:published_time" content="{{ post.posted|date('c') }}">
-
-    <meta name="twitter:card" content="{{ post.attachments is not empty ? 'summary_large_image' : 'summary' }}">
-    <meta name="twitter:title" content="{{ post.title }}">
-    {% if post.body is not empty %}
-        <meta name="twitter:description" content="{{ post.body|striptags|slice(0, 200) }}">
+    {% if post.updated %}
+        <meta property="article:modified_time" content="{{ post.updated|date('c') }}">
     {% endif %}
-    {% if post.attachments is not empty %}
-        <meta name="twitter:image" content="{{ absolute_url(path('app_load_attachment_thumbnail', { postId: post.id, attachmentId: post.attachments|first.id, width: 550 })) }}">
+    {% if show_category %}
+        <meta property="article:section" content="{{ post.category.name }}">
     {% endif %}
 {% endblock %}
 

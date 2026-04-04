@@ -4,7 +4,7 @@
 {% block opengraph %}
     {{ parent() }}
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ setting('habitatName', 'Habitat') }}">
+    <meta property="og:title" content="{{ habitat_name }}">
     <meta property="og:url" content="{{ absolute_url(path('app_index_index')) }}">
 {% endblock %}
 

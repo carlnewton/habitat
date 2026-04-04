@@ -1,12 +1,13 @@
+{% set habitat_name = setting('habitatName', 'Habitat') %}
 <!doctype html>
 <html lang="en" data-bs-theme="{{ setting('theme', 'light') }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="manifest" href="/manifest.json">
-        <title>{% if page_title is defined %}{{ page_title }} - {% endif %}{{ setting('habitatName', 'Habitat') }}</title>
+        <title>{% if page_title is defined %}{{ page_title }} - {% endif %}{{ habitat_name }}</title>
         {% block opengraph %}
-            <meta property="og:site_name" content="{{ setting('habitatName', 'Habitat') }}">
+            <meta property="og:site_name" content="{{ habitat_name }}">
         {% endblock %}
         <link rel="icon" href="/build/images/habitat_icon.svg">
         {% block stylesheets %}
@@ -25,7 +26,7 @@
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ path('app_index_index') }}">
                         <img src="/build/images/habitat_icon.svg" width="30" height="30" class="d-inline-block align-top" alt="Habitat">
-                        {{ setting('habitatName', 'Habitat') }}
+                        {{ habitat_name }}
                     </a>
 
                     <div id="right-navs-container" class="d-flex">
@@ -163,7 +164,7 @@
                                         hx-target="#hx-body"
                                         hx-replace-url="true"
                                         class="fs-5 nearby-link nav-link{% if app.request.attributes.get('_route') == 'app_nearby_nearby' %} active{% endif %}"
-                                        data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ setting('habitatName', 'Habitat') }}"
+                                        data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ habitat_name }}"
                                         data-errormessage="{{ 'menus.main.nearby.error' | trans }}"
                                     >
                                         <i class="bi bi-geo-alt{% if app.request.attributes.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>
@@ -199,7 +200,7 @@
                     hx-target="#hx-body"
                     hx-replace-url="true"
                     class="text-center col col-sm-4 nearby-link text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_nearby_nearby' %} active{% endif %}"
-                    data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ setting('habitatName', 'Habitat') }}"
+                    data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ habitat_name }}"
                     data-errormessage="{{ 'menus.main.nearby.error' | trans }}"
                 >
                     <i class="h3 bi bi-geo-alt{% if app.request.attributes.get('_route') == 'app_nearby_nearby' %}-fill{% endif %}"></i>

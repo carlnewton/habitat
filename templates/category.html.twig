@@ -3,7 +3,7 @@
 {% block opengraph %}
     {{ parent() }}
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ category.name }} - {{ setting('habitatName', 'Habitat') }}">
+    <meta property="og:title" content="{{ page_title }}">
     <meta property="og:url" content="{{ absolute_url(path('app_category_index', { id: category.id })) }}">
     {% if category.description is not empty %}
         <meta property="og:description" content="{{ category.description|striptags|slice(0, 200) }}">

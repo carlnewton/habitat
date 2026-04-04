@@ -85,6 +85,7 @@ class EditPostController extends AbstractController
             $post
                 ->setTitle(trim($request->request->get('title')))
                 ->setBody(trim($request->request->get('body')))
+                ->setUpdated(new \DateTime())
                 ->setCategory($postCategory)
             ;
 
