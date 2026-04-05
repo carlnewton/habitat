@@ -365,6 +365,13 @@ admin:
       messages:
         unable_post_comment: "Il %subject% non potrà pubblicare o commentare finché non sarà trascorso il tempo di sblocco"
     unfreeze: "Sblocca"
+    verify:
+      title: "Verifica"
+      alternate_title: "Verifica manualmente"
+      messages:
+        already_verified: "%username% non è stato verificato perché sono già verificati."
+        warning: "Gli utenti dovrebbero verificare il proprio indirizzo email cliccando sul link di verifica nell'email ricevuta quando creano un account. Dovresti verificare manualmente gli utenti solo se sei certo che possiedano l'indirizzo email con cui si sono registrati."
+        success: "Utenti verificati"
     dismiss:
       title: "Ignora"
       messages:
