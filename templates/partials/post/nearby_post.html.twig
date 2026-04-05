@@ -12,7 +12,7 @@
             <div id="report-post-{{ post.id }}"></div>
             <div class="mb-2">
                 {% if category is not defined and show_category %}
-                    <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">
+                    <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-{% if habitat_theme == 'light' %}secondary{% else %}body-emphasis{% endif %} fs-5">
                         <i class="bi bi-tag"></i>
                         {{ post.category.name }}
                     </a>
