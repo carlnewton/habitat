@@ -89,6 +89,9 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
         "friendsofphp/php-cs-fixer": "^3.94.2",
+        "phpunit/phpunit": "^13.1",
+        "symfony/browser-kit": "8.0.*",
+        "symfony/css-selector": "8.0.*",
         "symfony/maker-bundle": "^1.66.0"
     }
 }
