@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#42] Basic WYSIWYG editor on posts
+- PHPUnit testing and CI
 
 ## [1.2.0] - 2026-03-21
 
