@@ -6,6 +6,7 @@ use App\Controller\SetupController;
 use App\Entity\Settings;
 use App\Entity\SidebarContent;
 use App\Utilities\LatLong;
+use App\Utilities\UserSubmittedHTML;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class SettingsController extends AbstractController
     ): Response {
         $settingsRepository = $entityManager->getRepository(Settings::class);
         $sidebarContentRepository = $entityManager->getRepository(SidebarContent::class);
-        $sidebarContent = $sidebarContentRepository->findOneBy(['id' => 1]);
+        $sidebarContent = $sidebarContentRepository->findOneBy([]);
         if (!$sidebarContent) {
             $sidebarContent = new SidebarContent();
         }
@@ -194,7 +195,7 @@ class SettingsController extends AbstractController
             $errors['language'][] = $this->translator->trans('fields.language.validations.empty');
         }
 
-        if (SidebarContent::stripTags($request->request->get('sidebarContent')) !== $request->request->get('sidebarContent')) {
+        if (!UserSubmittedHTML::isClean($request->request->get('sidebarContent'), SidebarContent::ALLOWED_TAGS)) {
             $errors['sidebarContent'][] = $this->translator->trans('admin.settings.validations.sidebar_content.disallowed_html_tags');
         }
 

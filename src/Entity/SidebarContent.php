@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SidebarContentRepository;
+use App\Utilities\UserSubmittedHTML;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,32 +27,17 @@ class SidebarContent
 
     public function getContent(): ?string
     {
+        if (!UserSubmittedHTML::isClean($this->content, self::ALLOWED_TAGS)) {
+            return null;
+        }
+
         return $this->content;
     }
 
     public function setContent(?string $content): static
     {
-        $this->content = $this->stripTags($content);
+        $this->content = UserSubmittedHTML::clean($content, self::ALLOWED_TAGS);
 
         return $this;
-    }
-
-    public static function stripTags(?string $content): string
-    {
-        if (is_null($content)) {
-            return '';
-        }
-
-        $content = trim($content);
-        if ('' === $content || '<p></p>' === $content) {
-            return '';
-        }
-
-        $allowedTags = '';
-        foreach (self::ALLOWED_TAGS as $allowedTag) {
-            $allowedTags .= '<' . $allowedTag . '>';
-        }
-
-        return strip_tags($content, $allowedTags);
     }
 }

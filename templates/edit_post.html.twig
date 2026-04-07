@@ -21,8 +21,21 @@
             {% endif %}
         </div>
         <div class="form-floating mb-3">
-            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="{{ 'fields.body.title' | trans }}">{% if post.body is defined %}{{ post.body }}{% endif %}</textarea>
-            <label for="body">{{ 'fields.body.title' | trans }}</label>
+            <label for="body" class="form-label visually-hidden">{{ 'fields.body.title' | trans }}</label>
+            <div class="card{% if errors.body is defined %} border-danger{% endif %}">
+                <div class="card-header">
+                    <button type="button" class="ttBtnA btn"><i class="bi bi-link"></i></button>
+                </div>
+                <div class="card-body editor"></div>
+            </div>
+            {% if errors.body is defined %}
+                <div class="text-danger">
+                    {% for errorMessage in errors.body %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <input type="hidden" name="body" id="ttContent" value="{% if post.body is defined %}{{ post.body }}{% endif %}">
         </div>
         <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
             <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="{{ 'fields.category.title' | trans }}">
@@ -86,6 +99,7 @@
             <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg">{{ 'buttons.submit_post' | trans }}</button>
         </div>
     </form>
+    {% include 'partials/tt_editor/link_modal.html.twig' %}
     <div id="posting" class="text-center text-secondary py-5 d-none">
         <div class="spinner-border my-5" role="status"></div>
         <p class="fs-3">Posting...</p>
@@ -95,4 +109,5 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('create_post') }}
+    {{ encore_entry_script_tags('tt_editor') }}
 {% endblock %}

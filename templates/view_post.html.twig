@@ -24,7 +24,7 @@
             </div>
         {% endif %}
         {% if post.body is not empty %}
-            <p data-test="body">{{ post.body }}</p>
+            <p data-test="body">{{ post.body | raw }}</p>
         {% endif %}
         {% if post.attachments is not empty %}
             <h2 id="photos">{{ 'fields.photos.title' | trans }}</h2>

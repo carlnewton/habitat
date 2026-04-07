@@ -163,6 +163,13 @@ fields:
     title: "Habitat name"
   location:
     title: "Location"
+    validations:
+      required: "You must choose a location"
+  reason:
+    title: "Reason"
+    validations:
+      max_length: "The reason must be a maximum of %max_length% characters"
+      required: "You must state a reason"
   weight:
     title: "Weight"
     description: "Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically."
@@ -180,10 +187,17 @@ fields:
     title: "Content"
   title:
     title: "Title"
+    validations:
+      max_length: "The title must be a maximum of %max_length% characters"
+      empty: "The title cannot be empty"
   body:
     title: "Body"
+    validations:
+      disallowed_html_tags: "The body contains disallowed HTML tags"
   category:
     title: "Category"
+    validations:
+      required: "You must choose a category"
   user:
     title: "User"
   attachments:
@@ -225,6 +239,9 @@ post:
   posted: "Posted"
   posting: "Posting..."
   allow_posting: "Allow posting"
+  submitted: "Your post has been submitted"
+  updated: "The post has been updated"
+  does_not_exist: "The post does not exist"
 
 report_post:
   reported: "Reported a post"

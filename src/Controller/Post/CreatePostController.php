@@ -9,6 +9,7 @@ use App\Entity\PostAttachment;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\LatLong;
+use App\Utilities\UserSubmittedHTML;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,7 +77,7 @@ class CreatePostController extends AbstractController
             if (!$this->isCsrfTokenValid('post', $submittedToken)) {
                 $this->addFlash(
                     'warning',
-                    'Something went wrong, please try again.'
+                    $this->translator->trans('fields.csrf_token.validations.invalid'),
                 );
 
                 return $this->render('create_post.html.twig');
@@ -130,10 +131,7 @@ class CreatePostController extends AbstractController
                 $this->addAttachmentsToPost($request->request->get('attachmentIds'), $post);
             }
 
-            $this->addFlash(
-                'notice',
-                'Your post has been submitted'
-            );
+            $this->addFlash('notice', $this->translator->trans('post.submitted'));
 
             return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
         }
@@ -187,13 +185,17 @@ class CreatePostController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->request->get('title')) > Post::TITLE_MAX_LENGTH) {
-            $errors['title'][] = 'The title must be a maximum of ' . Post::TITLE_MAX_LENGTH . ' characters';
+            $errors['title'][] = $this->translator->trans('fields.title.validations.max_length', ['%max_length%' => Post::TITLE_MAX_LENGTH]);
         } elseif (empty(trim($request->request->get('title')))) {
-            $errors['title'][] = 'The title cannot be empty';
+            $errors['title'][] = $this->translator->trans('fields.title.validations.empty');
+        }
+
+        if (!UserSubmittedHTML::isClean($request->request->get('body'), Post::ALLOWED_TAGS)) {
+            $errors['body'][] = $this->translator->trans('fields.body.validations.disallowed_html_tags');
         }
 
         if (empty($request->request->get('category'))) {
-            $errors['category'][] = 'You must choose a category';
+            $errors['category'][] = $this->translator->trans('fields.category.validations.required');
         } else {
             $foundCategory = null;
             foreach ($this->categories as $category) {
@@ -207,7 +209,7 @@ class CreatePostController extends AbstractController
             $radiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
             $latLngSetting = $settingsRepository->getSettingByName('locationLatLng');
             if (is_null($foundCategory)) {
-                $errors['category'][] = 'You must choose a category';
+                $errors['category'][] = $this->translator->trans('fields.category.validations.required');
             } elseif (
                 (
                     CategoryLocationOptionsEnum::REQUIRED === $foundCategory->getLocation()
@@ -229,7 +231,7 @@ class CreatePostController extends AbstractController
                     )
                 )
             ) {
-                $errors['location'][] = 'You must choose a location';
+                $errors['location'][] = $this->translator->trans('fields.location.validations.required');
             }
         }
 

@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Announcement;
 use App\Entity\AnnouncementTypesEnum;
+use App\Utilities\UserSubmittedHTML;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -115,7 +116,7 @@ class AnnouncementsController extends AbstractController
     {
         $errors = [];
 
-        if (Announcement::stripTags($request->request->get('content')) !== $request->request->get('content')) {
+        if (!UserSubmittedHTML::isClean($request->request->get('content'), Announcement::ALLOWED_TAGS)) {
             $errors['content'][] = $this->translator->trans('admin.announcements.validations.content.disallowed_html_tags');
         }
 

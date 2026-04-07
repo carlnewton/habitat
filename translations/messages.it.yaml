@@ -163,6 +163,13 @@ fields:
     title: "Nome dell'Habitat"
   location:
     title: "Posizione"
+    validations:
+      required: "Devi scegliere una location"
+  reason:
+    title: "Motivo"
+    validations:
+      max_length: "La ragione deve essere un massimo di %max_length% di caratteri"
+      required: "Devi fornire una ragione"
   weight:
     title: "Peso"
     description: "Le categorie con peso basso sono ordinate prima di quelle con peso elevato nella lista delle categorie. Le categorie con lo stesso peso sono ordinate alfabeticamente."
@@ -180,10 +187,17 @@ fields:
     title: "Contenuto"
   title:
     title: "Titolo"
+    validations:
+      max_length: "Il titolo deve essere composto al massimo da %max_length% di caratteri"
+      empty: "Il titolo non può essere vuoto"
   body:
     title: "Corpo"
+    validations:
+      disallowed_html_tags: "Il corpo contiene tag HTML non ammessi"
   category:
     title: "Categoria"
+    validations:
+      required: "Devi scegliere una categoria"
   user:
     title: "Utente"
   attachments:
@@ -225,6 +239,9 @@ post:
   posted: "Pubblicato"
   posting: "Pubblicazione..."
   allow_posting: "Consentire la pubblicazione"
+  submitted: "Il tuo post è stato inviato"
+  updated: "Il post è stato aggiornato"
+  does_not_exist: "Il post non esiste"
 
 report_post:
   reported: "Segnalato un post"
