@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 {% set page_title = 'menus.main.home.title' | trans %}
 
+{% block opengraph %}
+    {{ parent() }}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ habitat_name }}">
+    <meta property="og:url" content="{{ absolute_url(path('app_index_index')) }}">
+{% endblock %}
+
 {% block body %}
     <h1 class="visually-hidden">Latest posts</h1>
     <div id="posts-list">

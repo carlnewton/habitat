@@ -1,5 +1,16 @@
 {% extends 'base.html.twig' %}
 
+{% block opengraph %}
+    {{ parent() }}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ page_title }}">
+    <meta property="og:url" content="{{ absolute_url(path('app_category_index', { id: category.id })) }}">
+    {% if category.description is not empty %}
+        <meta property="og:description" content="{{ category.description|striptags|slice(0, 200) }}">
+        <meta name="description" content="{{ category.description|striptags|slice(0, 200) }}">
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     <h1>{{ category.name }}</h1>
     <p class="lead">{{ category.description|nl2br }}</p>
