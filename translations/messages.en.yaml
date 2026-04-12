@@ -467,6 +467,8 @@ menus:
   contextual:
     edit:
       title: Edit
+    share:
+      title: Share
     report:
       title: Report
     view_posts:

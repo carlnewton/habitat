@@ -467,6 +467,8 @@ menus:
   contextual:
     edit:
       title: "Modifica"
+    share:
+      title: "Condividi"
     report:
       title: "Segnala"
     view_posts:
