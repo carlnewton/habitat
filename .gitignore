@@ -30,6 +30,7 @@ yarn-error.log
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+.phpunit.cache
 
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php
