@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Announcement;
 use App\Entity\AnnouncementTypesEnum;
-use App\Utilities\UserSubmittedHTML;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +26,7 @@ class AnnouncementsController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $announcementRepository = $entityManager->getRepository(Announcement::class);
-        $announcement = $announcementRepository->findOneBy(['id' => 1]);
+        $announcement = $announcementRepository->findOneBy([]);
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
@@ -115,10 +114,6 @@ class AnnouncementsController extends AbstractController
     protected function validateRequest(Request $request): array
     {
         $errors = [];
-
-        if (!UserSubmittedHTML::isClean($request->request->get('content'), Announcement::ALLOWED_TAGS)) {
-            $errors['content'][] = $this->translator->trans('admin.announcements.validations.content.disallowed_html_tags');
-        }
 
         if (is_null($request->request->get('type')) || empty(AnnouncementTypesEnum::from($request->request->get('type')))) {
             $errors['type'][] = $this->translator->trans('fields.type.validations.invalid');

@@ -192,8 +192,6 @@ fields:
       empty: "Il titolo non può essere vuoto"
   body:
     title: "Corpo"
-    validations:
-      disallowed_html_tags: "Il corpo contiene tag HTML non ammessi"
   category:
     title: "Categoria"
     validations:
@@ -398,8 +396,6 @@ admin:
     validations:
       habitat_name:
         max_characters: "Il nome del tuo Habitat deve avere un massimo di %max_characters% caratteri"
-      sidebar_content:
-        disallowed_html_tags: "Il contenuto della barra laterale contiene tag HTML non consentiti"
   tables:
     summary: "Visualizzazione di %item_count% di %total_item_count%"
     filtered_summary: "Visualizzazione di %item_count% di %filtered_item_count% filtrati da %total_item_count%"
@@ -441,9 +437,6 @@ admin:
     title: "Categorie"
   announcements:
     title: "Annunci"
-    validations:
-      content:
-        disallowed_html_tags: "Il contenuto dell'annuncio contiene tag HTML non consentiti"
   user_registration:
     title: "Registrazione utenti"
     allow_registration: "Consenti agli utenti di registrarsi"

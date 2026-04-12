@@ -50,7 +50,7 @@
     </div>
     <div id="report-comment-{{ comment.id }}"></div>
     <p data-test="commentBody">
-        {{ comment.body }}
+        {{ comment.body | sanitize_html('app.comment_sanitizer') }}
     </p>
     <div class="date text-muted" title="{{ comment.posted|local_date }}">{{ comment.posted|time_diff }}</div>
     <hr>

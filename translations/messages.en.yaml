@@ -192,8 +192,6 @@ fields:
       empty: "The title cannot be empty"
   body:
     title: "Body"
-    validations:
-      disallowed_html_tags: "The body contains disallowed HTML tags"
   category:
     title: "Category"
     validations:
@@ -398,8 +396,6 @@ admin:
     validations:
       habitat_name:
         max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
-      sidebar_content:
-        disallowed_html_tags: "The sidebar content contains disallowed HTML tags"
   tables:
     summary: "Displaying %item_count% of %total_item_count%"
     filtered_summary: "Displaying %item_count% of %filtered_item_count% filtered from %total_item_count%"
@@ -441,9 +437,6 @@ admin:
     title: "Categories"
   announcements:
     title: "Announcements"
-    validations:
-      content:
-        disallowed_html_tags: "The announcement content contains disallowed HTML tags"
   user_registration:
     title: "User registration"
     allow_registration: "Allow users to register"

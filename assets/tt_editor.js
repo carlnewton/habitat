@@ -10,12 +10,6 @@ const tteditor = new Editor({
         StarterKit,
         Link.configure({
             openOnClick: false,
-            // The HTMLAttributes are for admin submitted content only. If using this as a starting point for user
-            // submitted links, should probably remove these two lines.
-            HTMLAttributes: {
-                rel: null,
-                target: null,
-            },
         }),
     ],
     editorProps: {

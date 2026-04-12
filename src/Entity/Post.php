@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use App\Utilities\UserSubmittedHTML;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Post
 {
     public const TITLE_MAX_LENGTH = 255;
-
-    public const ALLOWED_TAGS = ['p', 'a'];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -113,16 +110,12 @@ class Post
 
     public function getBody(): ?string
     {
-        if (!UserSubmittedHTML::isClean($this->body, self::ALLOWED_TAGS)) {
-            return null;
-        }
-
         return $this->body;
     }
 
     public function setBody(?string $body): static
     {
-        $this->body = UserSubmittedHTML::clean($body, self::ALLOWED_TAGS);
+        $this->body = $body;
 
         return $this;
     }

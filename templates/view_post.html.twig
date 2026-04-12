@@ -24,7 +24,7 @@
             </div>
         {% endif %}
         {% if post.body is not empty %}
-            <p data-test="body">{{ post.body | raw }}</p>
+            <div data-test="body">{{ post.body | sanitize_html('app.post_sanitizer') }}</div>
         {% endif %}
         {% if post.attachments is not empty %}
             <h2 id="photos">{{ 'fields.photos.title' | trans }}</h2>
@@ -82,6 +82,7 @@
 
         {% if app.user %}
             {% include 'partials/post/comment/form.html.twig' %}
+            {% include 'partials/tt_editor/link_modal.html.twig' %}
         {% else %}
             <p class="lead"><a href="{{ path('app_login') }}">{{ 'buttons.login' | trans }}</a> {{ 'misc.to_comment' | trans }}</p>
         {% endif %}
@@ -104,5 +105,9 @@
 
     {% if post.latitude is not null and post.longitude is not null %}
         {{ encore_entry_script_tags('view_map') }}
+    {% endif %}
+
+    {% if app.user %}
+        {{ encore_entry_script_tags('tt_editor') }}
     {% endif %}
 {% endblock %}

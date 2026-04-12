@@ -81,7 +81,7 @@ class CommentsDeleteController extends AbstractController
                 ->setUser($this->getUser())
                 ->setDate(new \DateTimeImmutable())
                 ->setAction($this->translator->trans('moderation_log.actions.delete_comment', [
-                    '%comment%' => $comment->getBody(),
+                    '%comment%' => strip_tags($comment->getBody()),
                     '%username%' => $comment->getUser()->getUsername(),
                     '%post_title%' => $comment->getPost()->getTitle(),
                     '%reason%' => $request->request->get('reason'),

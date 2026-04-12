@@ -10,7 +10,6 @@ use App\Entity\PostAttachment;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\LatLong;
-use App\Utilities\UserSubmittedHTML;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -230,10 +229,6 @@ class EditPostController extends AbstractController
             $errors['title'][] = $this->translator->trans('fields.title.validations.max_length', ['%max_length%' => Post::TITLE_MAX_LENGTH]);
         } elseif (empty(trim($request->request->get('title')))) {
             $errors['title'][] = $this->translator->trans('fields.title.validations.empty');
-        }
-
-        if (!UserSubmittedHTML::isClean($request->request->get('body'), Post::ALLOWED_TAGS)) {
-            $errors['body'][] = $this->translator->trans('fields.body.validations.disallowed_html_tags');
         }
 
         if (strlen($request->request->get('reason')) > 255) {

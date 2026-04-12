@@ -6,7 +6,6 @@ use App\Controller\SetupController;
 use App\Entity\Settings;
 use App\Entity\SidebarContent;
 use App\Utilities\LatLong;
-use App\Utilities\UserSubmittedHTML;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -193,10 +192,6 @@ class SettingsController extends AbstractController
             || !array_key_exists($request->request->get('language'), SetupController::LANGUAGES)
         ) {
             $errors['language'][] = $this->translator->trans('fields.language.validations.empty');
-        }
-
-        if (!UserSubmittedHTML::isClean($request->request->get('sidebarContent'), SidebarContent::ALLOWED_TAGS)) {
-            $errors['sidebarContent'][] = $this->translator->trans('admin.settings.validations.sidebar_content.disallowed_html_tags');
         }
 
         return $errors;
