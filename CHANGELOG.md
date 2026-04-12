@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- [#104] Administrators can manually verify users
+- PHPUnit testing and CI
+- 
 ### Changed
 
 - [#115] It is now possible to skip the mail configuration on setup
+
+### Fixed
+
+- [#120] Remove duplicate protocol from daily digest emails
 
 ## [1.2.0] - 2026-03-21
 

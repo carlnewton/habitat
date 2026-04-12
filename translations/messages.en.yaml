@@ -366,6 +366,13 @@ admin:
       messages:
         unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
+    verify:
+      title: "Verify"
+      alternate_title: "Manually verify"
+      messages:
+        already_verified: "%username% could not be verified because they are already verified."
+        warning: "Users should verify their email address by clicking the verification link in the email they receive when creating an account. You should only manually verify users if you are certain that they own the email address they have signed up with."
+        success: "Users verified"
     dismiss:
       title: "Dismiss"
       messages:

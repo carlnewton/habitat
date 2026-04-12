@@ -16,6 +16,13 @@
                         <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.promote.title' | trans }}</button>
                     </form>
                 </li>
+                <li>
+                    <form class="action-item-form" method="post" action="{{ path('app_moderation_users_verify') }}">
+                        <input name="items" type="hidden" value=""/>
+                        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                        <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.verify.title' | trans }}</button>
+                    </form>
+                </li>
             {% endif %}
             <li>
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_freeze') }}">
