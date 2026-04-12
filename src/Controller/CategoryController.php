@@ -47,6 +47,7 @@ class CategoryController extends AbstractController
         }
 
         return $this->render('category.html.twig', [
+            'page_title' => $category->getName(),
             'posts' => $posts,
             'offset' => self::MAX_POSTS,
             'category' => $category,
