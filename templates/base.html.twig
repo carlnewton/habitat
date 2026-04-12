@@ -181,12 +181,12 @@
         </div>
         <nav id="drawer" class="d-block d-md-none navbar navbar-expand fixed-bottom bg-{{ setting('theme', 'white') }} border-top shadow-lg">
             <div class="container-fluid">
-                <a href="{{ path('app_index_index') }}" class="text-center home-link col col-sm-4 text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_index_index' %} active{% endif %}">
+                <a href="{{ path('app_index_index') }}" class="text-center home-link col col-sm-4 text-decoration-none{% if app.request.attributes.get('_route') == 'app_index_index' %} active{% else %} text-secondary{% endif %}">
                     <i class="h3 bi bi-house{% if app.request.attributes.get('_route') == 'app_index_index' %}-fill{% endif %}"></i>
                     <br>
                     <small>{{ 'menus.main.home.title' | trans }}</small>
                 </a>
-                <a href="{{ path('app_create_post') }}{% if category is defined %}?category={{ category.id }}{% endif %}" class="text-center create-post-link col col-sm-4 text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_create_post' %} active{% endif %}">
+                <a href="{{ path('app_create_post') }}{% if category is defined %}?category={{ category.id }}{% endif %}" class="text-center create-post-link col col-sm-4 text-decoration-none{% if app.request.attributes.get('_route') == 'app_create_post' %} active{% else %} text-secondary{% endif %}">
                     <i class="h3 bi bi-plus-circle{% if app.request.attributes.get('_route') == 'app_create_post' %}-fill{% endif %}"></i>
                     <br>
                     <small>{{ 'menus.main.post.title' | trans }}</small>
@@ -196,7 +196,7 @@
                     hx-post="{{ path('app_nearby_nearby') }}"
                     hx-target="#hx-body"
                     hx-replace-url="true"
-                    class="text-center col col-sm-4 nearby-link text-secondary text-decoration-none{% if app.request.attributes.get('_route') == 'app_nearby_nearby' %} active{% endif %}"
+                    class="text-center col col-sm-4 nearby-link text-decoration-none{% if app.request.attributes.get('_route') == 'app_nearby_nearby' %} active{% else %} text-secondary{% endif %}"
                     data-nearbytitle="{{ 'menus.main.nearby.title' | trans }} - {{ setting('habitatName', 'Habitat') }}"
                     data-errormessage="{{ 'menus.main.nearby.error' | trans }}"
                 >

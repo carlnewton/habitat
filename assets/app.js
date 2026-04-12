@@ -42,14 +42,19 @@ for (let i = 0; i < nearbyLinks.length; i++) {
                 createPostLink.querySelector('i').classList.remove('bi-plus-circle-fill');
                 createPostLink.querySelector('i').classList.add('bi-plus-circle');
                 createPostLink.classList.remove('active');
+                createPostLink.classList.add('text-secondary');
                 for (let h = 0; h < homeLinks.length; h++) {
                     homeLinks[h].classList.remove('active');
+                    if (homeLinks[h].querySelector('small') !== null) {
+                        homeLinks[h].classList.add('text-secondary');
+                    }
                     homeLinks[h].querySelector('i').classList.remove('bi-house-fill');
                     homeLinks[h].querySelector('i').classList.add('bi-house');
                 }
                 let nearbyLinks = document.querySelectorAll('.nearby-link');
                 for (let n = 0; n < nearbyLinks.length; n++) {
                     nearbyLinks[n].classList.add('active');
+                    nearbyLinks[n].classList.remove('text-secondary');
                     nearbyLinks[n].querySelector('i').classList.remove('bi-geo-alt');
                     nearbyLinks[n].querySelector('i').classList.add('bi-geo-alt-fill');
                 }

@@ -18,10 +18,6 @@ body {
     text-decoration: none !important;
 }
 
-#drawer .active {
-    color: var(--bs-primary) !important;
-}
-
 .drawer-padding {
   padding-bottom: 80px;
 }
@@ -48,4 +44,36 @@ div.dropzone {
   height: 2rem;
   width: calc(3rem + 0.75rem);
   border-radius: 4rem;
+}
+
+[data-bs-theme="dark"] {
+    .nav-pills .nav-link.active {
+        background-color: rgb(116, 176, 214);
+        color: #171a1d;
+    }
+
+    .btn-primary {
+        background-color: rgb(116, 176, 214);
+        border-color: rgb(116, 176, 214);
+        color: #171a1d;
+    }
+    
+    .btn-outline-primary {
+        border-color: rgb(116, 176, 214);
+        color: rgb(116, 176, 214);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: rgb(116, 176, 214);
+        color: #171a1d;
+    }
+
+    .dropdown-item:active {
+        background-color: rgb(116, 176, 214);
+        color: #171a1d;
+    }
+
+    div.dropzone {
+        color: rgb(116, 176, 214);
+    }
 }
