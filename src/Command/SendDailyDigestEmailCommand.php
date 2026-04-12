@@ -32,6 +32,15 @@ class SendDailyDigestEmailCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
+        $smtpFromEmailAddress = $settingsRepository->getSettingByName('smtpFromEmailAddress');
+
+        if (!$smtpFromEmailAddress) {
+            $output->writeln($this->translator->trans('commands.daily_digest_email.no_mail_configuration'));
+
+            return Command::FAILURE;
+        }
+
         $yesterday = (new \DateTime())->modify('-1 day');
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
@@ -131,10 +140,9 @@ class SendDailyDigestEmailCommand extends Command
             $body .= '</ul>';
         }
 
-        $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $this->mailer->send(
             $admin->getEmailAddress(),
-            $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+            $smtpFromEmailAddress->getValue(),
             $subject,
             $body
         );

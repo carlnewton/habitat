@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#104] Administrators can manually verify users
 - PHPUnit testing and CI
+- 
+### Changed
+
+- [#115] It is now possible to skip the mail configuration on setup
 
 ### Fixed
 

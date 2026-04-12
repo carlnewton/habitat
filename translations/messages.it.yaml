@@ -285,6 +285,7 @@ buttons:
   forgot_password: "Password dimenticata"
   reset_password: "Reimposta la tua password"
   find_out_more: "Scopri di più"
+  skip_for_now: "Per ora salta"
   add_a_category: "Aggiungi una categoria"
   add_a_question: "Aggiungi una domanda"
   add_a_location: "Aggiungi una posizione"
@@ -385,6 +386,8 @@ admin:
     view_more: "Visualizza altro"
   settings:
     title: "Impostazioni"
+    messages:
+      saved: "Impostazioni salvate"
     validations:
       habitat_name:
         max_characters: "Il nome del tuo Habitat deve avere un massimo di %max_characters% caratteri"
@@ -437,8 +440,16 @@ admin:
   user_registration:
     title: "Registrazione utenti"
     allow_registration: "Consenti agli utenti di registrarsi"
+    user_registrations_disabled: "Gli utenti che si registrano riceveranno un'email per verificare il proprio indirizzo email. Non puoi permettere agli utenti di registrarsi finché non <a class=\"alert-link\" href=\"%mail_settings_url%\">configuri le impostazioni della posta</a>."
+    validations:
+      invalid_value: "Questo campo ha un valore non valido"
     registration_challenge:
       title: "Sfida di registrazione"
+      validations:
+        no_correct_answers: "Tutte le domande devono avere almeno una risposta corretta"
+        answer_character_count: "Tutte le risposte devono avere almeno 255 caratteri"
+        question_character_count: "Tutte le domande devono avere almeno 255 caratteri"
+        json: "Impossibile convalidare le domande sulla registrazione"
       help_text: "Puoi creare domande a cui l'utente deve rispondere correttamente per creare un account. Se crei più domande, all'utente verrà richiesto di rispondere a una domanda a caso quando si registra per un account."
   amazon_s3_details:
     title: "Dettagli Amazon S3"
@@ -545,3 +556,5 @@ commands:
   reset_admin_password:
     title: "Reimposta la password dell'amministratore"
     no_admin: "Non hai ancora creato un account amministratore"
+  daily_digest_email:
+    no_mail_configuration: "Impossibile inviare l'email di digest giornaliero finché le impostazioni della posta non sono state configurate"
