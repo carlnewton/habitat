@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- [#104] Administrators can manually verify users
+- PHPUnit testing and CI
+
 ### Fixed
 
 - [#120] Remove duplicate protocol from daily digest emails
