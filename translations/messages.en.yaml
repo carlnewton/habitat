@@ -285,6 +285,7 @@ buttons:
   forgot_password: "Forgot password"
   reset_password: "Reset your password"
   find_out_more: "Find out more"
+  skip_for_now: "Skip for now"
   add_a_category: "Add a category"
   add_a_question: "Add a question"
   add_a_location: "Add a location"
@@ -365,6 +366,13 @@ admin:
       messages:
         unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
+    verify:
+      title: "Verify"
+      alternate_title: "Manually verify"
+      messages:
+        already_verified: "%username% could not be verified because they are already verified."
+        warning: "Users should verify their email address by clicking the verification link in the email they receive when creating an account. You should only manually verify users if you are certain that they own the email address they have signed up with."
+        success: "Users verified"
     dismiss:
       title: "Dismiss"
       messages:
@@ -378,6 +386,8 @@ admin:
     view_more: "View more"
   settings:
     title: "Settings"
+    messages:
+      saved: "Settings saved"
     validations:
       habitat_name:
         max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
@@ -430,8 +440,16 @@ admin:
   user_registration:
     title: "User registration"
     allow_registration: "Allow users to register"
+    user_registrations_disabled: "Users who register for an account will receive an email to verify their email address. You are not able to allow users to register until you <a class=\"alert-link\" href=\"%mail_settings_url%\">configure your mail settings</a>."
+    validations:
+      invalid_value: "This field has an invalid value"
     registration_challenge:
       title: "Registration challenge"
+      validations:
+        no_correct_answers: "All questions must have at least one correct answer"
+        answer_character_count: "All answers must be 255 characters or less"
+        question_character_count: "All questions must be 255 characters or less"
+        json: "Unable to validate the registration questions"
       help_text: "You can create questions which the user must answer correctly in order to create an account. If creating multiple questions, the user will be required to answer one question at random when registering for an account."
   amazon_s3_details:
     title: "Amazon S3 details"
@@ -540,3 +558,5 @@ commands:
   reset_admin_password:
     title: "Reset the administrator password"
     no_admin: "You have not yet created an administrator account"
+  daily_digest_email:
+    no_mail_configuration: "Unable to send the daily digest email until the mail settings have been configured"

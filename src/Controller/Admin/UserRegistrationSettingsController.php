@@ -11,10 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class UserRegistrationSettingsController extends AbstractController
 {
+    private bool $registrationsAllowed = false;
+
+    public function __construct(
+        private TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route(path: '/admin/user-registration', name: 'app_admin_user_registration', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
@@ -25,6 +33,10 @@ class UserRegistrationSettingsController extends AbstractController
 
         $settingsRepository = $entityManager->getRepository(Settings::class);
         $registrationSetting = $settingsRepository->getSettingByName('registration');
+        $smtpFromEmailAddress = $settingsRepository->getSettingByName('smtpFromEmailAddress');
+        if ($smtpFromEmailAddress) {
+            $this->registrationsAllowed = true;
+        }
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
@@ -39,6 +51,7 @@ class UserRegistrationSettingsController extends AbstractController
                         'questions' => $this->convertQuestionsToJsonString($questions),
                         'registration' => ($registrationSetting) ? $registrationSetting->getValue() : '',
                     ],
+                    'registrations_allowed' => $this->registrationsAllowed,
                 ]);
             }
 
@@ -51,6 +64,7 @@ class UserRegistrationSettingsController extends AbstractController
                         'questions' => $request->request->get('registration-challenge-questions'),
                         'registration' => $request->request->get('enable-registration'),
                     ],
+                    'registrations_allowed' => $this->registrationsAllowed,
                 ]);
             }
 
@@ -91,10 +105,7 @@ class UserRegistrationSettingsController extends AbstractController
 
                 $entityManager->flush();
 
-                $this->addFlash(
-                    'notice',
-                    'Settings saved'
-                );
+                $this->addFlash('notice', $this->translator->trans('admin.settings.messages.saved'));
 
                 return $this->redirectToRoute('app_admin_user_registration');
             }
@@ -105,6 +116,7 @@ class UserRegistrationSettingsController extends AbstractController
                 'questions' => $this->convertQuestionsToJsonString($questions),
                 'registration' => ($registrationSetting) ? $registrationSetting->getValue() : '',
             ],
+            'registrations_allowed' => $this->registrationsAllowed,
         ]);
     }
 
@@ -138,18 +150,22 @@ class UserRegistrationSettingsController extends AbstractController
         $errors = [];
 
         if (!empty($request->request->get('enable-registration')) && 'on' !== $request->request->get('enable-registration')) {
-            $errors['enable-registration'] = 'You must decide to enable or disable user registration';
+            $errors['enableRegistration'][] = $this->translator->trans('admin.user_registration.validations.invalid_value');
+        }
+
+        if ('on' === $request->request->get('enable-registration') && !$this->registrationsAllowed) {
+            $errors['enableRegistration'][] = $this->translator->trans('admin.user_registration.user_registrations_disabled');
         }
 
         $submittedQuestions = $request->request->get('registration-challenge-questions');
 
         if (!json_validate($submittedQuestions)) {
-            $errors['questions'][] = 'Unable to validate the registration questions';
+            $errors['questions'][] = $this->translator->trans('admin.user_registration.registration_challenge.validations.json');
         } else {
             $submittedQuestions = json_decode($submittedQuestions);
             foreach ($submittedQuestions as $question) {
                 if (strlen(trim($question->question)) > 255) {
-                    $errors['questions'][] = 'All questions must be 255 characters or less';
+                    $errors['questions'][] = $this->translator->trans('admin.user_registration.registration_challenge.validations.question_character_count');
                 }
 
                 if (strlen(trim($question->question)) > 0) {
@@ -159,13 +175,13 @@ class UserRegistrationSettingsController extends AbstractController
                             $questionHasAnswer = true;
 
                             if (strlen(trim($answer)) > 255) {
-                                $errors['questions'][] = 'All answers must be 255 characters or less';
+                                $errors['questions'][] = $this->translator->trans('admin.user_registration.registration_challenge.validations.answer_character_count');
                             }
                         }
                     }
 
                     if (!$questionHasAnswer) {
-                        $errors['questions'][] = 'All questions must have at least one correct answer';
+                        $errors['questions'][] = $this->translator->trans('admin.user_registration.registration_challenge.validations.no_correct_answers');
                     }
                 }
             }
