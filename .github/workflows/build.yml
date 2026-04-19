@@ -1,3 +1,9 @@
+on:
+  push:
+    branches:
+      - main
+      - 102-github-actions
+
 name: Build
 jobs:
   build:
