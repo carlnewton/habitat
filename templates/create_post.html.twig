@@ -23,10 +23,14 @@
         <div class="mb-3">
             <label for="body" class="form-label visually-hidden">{{ 'fields.body.title' | trans }}</label>
             <div class="card{% if errors.body is defined %} border-danger{% endif %}">
-                <div class="card-header">
-                    <button type="button" class="ttBtnA btn"><i class="bi bi-link"></i></button>
+                <div class="d-flex align-content-stretch">
+                    <div class="flex-grow-1">
+                        <div class="card-body editor" data-placeholder="{{ 'fields.body.title' | trans }}"></div>
+                    </div>
+                    <div class="wysiwyg-tools d-none">
+                        <button type="button" class="ttBtnA btn btn-outline-secondary m-2 fs-5"><i class="bi bi-link"></i></button>
+                    </div>
                 </div>
-                <div class="card-body editor"></div>
             </div>
             {% if errors.body is defined %}
                 <div class="text-danger">
