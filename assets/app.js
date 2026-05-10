@@ -68,3 +68,30 @@ for (let i = 0; i < nearbyLinks.length; i++) {
         event.detail.parameters['latLng'] = nearbyLatLng;
     });
 }
+
+const shareBtns = document.querySelectorAll('.share-btn');
+
+shareBtns.forEach(shareBtn => {
+    if (!navigator.canShare) {
+        shareBtn.remove();
+        return;
+    }
+
+    shareBtn.addEventListener('click', () => {
+        let shareData = {
+            title: shareBtn.dataset.title,
+            text: shareBtn.dataset.text,
+            url: shareBtn.dataset.url,
+        };
+    
+        if (!navigator.canShare(shareData)) {
+            console.log(shareData)
+            return;
+        }
+
+        navigator.share(shareData)
+        .catch((e) =>
+            console.log(e)
+        )
+    });
+});

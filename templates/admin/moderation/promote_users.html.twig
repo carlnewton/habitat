@@ -39,7 +39,7 @@
                 <input name="items" type="hidden" value="{{ user_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
                 <input type="hidden" name="promote" value="1">
-                <button type="submit" class="btn btn-danger">{{ 'admin.actions.promote.title' | trans }}</button>
+                <button type="submit" class="btn btn-danger" data-test="btn-promote">{{ 'admin.actions.promote.title' | trans }}</button>
                 <a href="{{ path('app_moderation_users') }}" class="btn btn-outline-primary">{{ 'buttons.cancel' | trans }}</a>
             </form>
         </div>
