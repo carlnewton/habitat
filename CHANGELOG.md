@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#42] Hyperlinks on posts and comments
+- [#135] RSS feed for latest posts
 
 ## [1.3.0] - 2026-04-12
 
