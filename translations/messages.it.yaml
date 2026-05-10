@@ -258,6 +258,9 @@ about:
   local_area:
     title: "Area locale"
 
+rss:
+  description: 'Un feed RSS contenente gli ultimi post'
+
 buttons:
   sign_up: "Iscriviti"
   apply: "Applica"
