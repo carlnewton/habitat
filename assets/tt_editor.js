@@ -84,6 +84,9 @@ function initTiptapEditor() {
         tteditor.chain().focus().extendMarkRange('link').unsetLink().run();
         if (linkUrlField.value.trim() !== '') {
             tteditor.chain().focus().extendMarkRange('link').setLink({ href: linkUrlField.value }).run();
+            if (tteditor.view.state.selection.empty) {
+                tteditor.commands.insertContent(linkUrlField.value);
+            }
         }
     }
     
