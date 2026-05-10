@@ -10,7 +10,11 @@
                 <title>{{ post.title }}</title>
                 <link>{{ absolute_url(path('app_view_post', { id: post.id })) }}</link>
                 <guid isPermaLink="true">{{ absolute_url(path('app_view_post', { id: post.id })) }}</guid>
-                <description>{{ post.body }}</description>
+                <description>
+                    <![CDATA[
+                        {{ post.body | sanitize_html('app.post_sanitizer') }}
+                    ]]>
+                </description>
                 {% if show_category %}
                     <category>{{ post.category.name }}</category>
                 {% endif %}
