@@ -1,13 +1,13 @@
 <form id="comment-form" class="mb-3" hx-swap="outerHTML settle:500ms show:#comments-list:top" hx-post="/hx/add-comment">
     <div class="mb-3">
         <label for="comment" class="form-label visually-hidden">{{ 'fields.comment.title' | trans }}</label>
-        <div class="card{% if errors.comment is defined %} border-danger{% endif %}">
+        <div class="form-control{% if errors.comment is defined %} border-danger{% endif %}">
             <div class="d-flex align-content-stretch">
                 <div class="flex-grow-1">
-                    <div class="card-body editor" data-placeholder="{{ 'fields.comment.title' | trans }}"></div>
+                    <div class="editor" data-placeholder="{{ 'fields.comment.title' | trans }}"></div>
                 </div>
                 <div class="wysiwyg-tools d-none">
-                    <button type="button" class="ttBtnA btn btn-outline-secondary m-2 fs-5"><i class="bi bi-link"></i></button>
+                    <button type="button" class="ttBtnA btn btn-outline-secondary mt-2 fs-5"><i class="bi bi-link"></i></button>
                 </div>
             </div>
         </div>

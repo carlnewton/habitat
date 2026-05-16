@@ -14,7 +14,12 @@ function initTiptapEditor() {
                 link: {
                     openOnClick: false,
                     enableClickSelection: true,
-                }
+                },
+                bold: false,
+                italic: false,
+                underline: false,
+                strike: false,
+                codeBlock: false,
             }),
             Placeholder.configure({
                 placeholder: document.querySelector('.editor').dataset.placeholder,
@@ -35,6 +40,13 @@ function initTiptapEditor() {
         onFocus({ editor, event }) {
             let wysiwygTools = document.querySelector('.wysiwyg-tools');
             wysiwygTools && wysiwygTools.classList.remove('d-none');
+        },
+        onBlur({ editor, event }) {
+            if (event.relatedTarget && event.relatedTarget.classList.contains('ttBtnA')) {
+                return;
+            }
+            let wysiwygTools = document.querySelector('.wysiwyg-tools');
+            wysiwygTools && wysiwygTools.classList.add('d-none');
         },
     })
 
