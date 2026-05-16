@@ -122,7 +122,7 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newComment->getPost()->getId(),
                 ]);
 
-                $body .= '<li><a href="' . $domain . $viewPostRoute . '">' . $newComment->getBody() . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
+                $body .= '<li><a href="' . $domain . $viewPostRoute . '">' . trim(strip_tags($newComment->getBody())) . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
             }
             $body .= '</ul>';
         }

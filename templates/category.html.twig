@@ -6,8 +6,8 @@
     <meta property="og:title" content="{{ page_title }}">
     <meta property="og:url" content="{{ absolute_url(path('app_category_index', { id: category.id })) }}">
     {% if category.description is not empty %}
-        <meta property="og:description" content="{{ category.description|striptags|slice(0, 200) }}">
-        <meta name="description" content="{{ category.description|striptags|slice(0, 200) }}">
+        <meta property="og:description" content="{{ category.description | striptags | slice(0, 200) }}">
+        <meta name="description" content="{{ category.description | striptags | slice(0, 200) }}">
     {% endif %}
 {% endblock %}
 
