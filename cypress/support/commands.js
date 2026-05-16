@@ -48,7 +48,7 @@ Cypress.Commands.add('createPost', (postReference) => {
     const post = posts[postReference];
     cy.visit('/post');
     cy.getElement('title').type(post.title);
-    cy.getElement('body').type(post.body);
+    cy.get('.tiptap').type(post.body);
     cy.getElement('submit').click();
     cy.url().should('match', /\/post\/\d+$/).then((url) => {
       const urlObject = new URL(url);
@@ -61,9 +61,9 @@ Cypress.Commands.add('createPost', (postReference) => {
 
 Cypress.Commands.add('addComment', (postId, comment) => {
   cy.visit('/post/' + postId);
-  cy.getElement('commentFormBody').type(comment);
+  cy.get('.tiptap').type(comment);
   cy.getElement('commentSubmit').click();
-  cy.getElement('commentFormBody').should('not.have.value');
+  cy.get('.tiptap').should('not.have.value');
   cy.getElement('commentBody').should('include.text', comment);
   cy.getElement('commentErrors').should('not.exist');
 });
