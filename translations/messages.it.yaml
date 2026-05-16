@@ -163,6 +163,13 @@ fields:
     title: "Nome dell'Habitat"
   location:
     title: "Posizione"
+    validations:
+      required: "Devi scegliere una location"
+  reason:
+    title: "Motivo"
+    validations:
+      max_length: "La ragione deve essere un massimo di %max_length% di caratteri"
+      required: "Devi fornire una ragione"
   weight:
     title: "Peso"
     description: "Le categorie con peso basso sono ordinate prima di quelle con peso elevato nella lista delle categorie. Le categorie con lo stesso peso sono ordinate alfabeticamente."
@@ -180,10 +187,15 @@ fields:
     title: "Contenuto"
   title:
     title: "Titolo"
+    validations:
+      max_length: "Il titolo deve essere composto al massimo da %max_length% di caratteri"
+      empty: "Il titolo non può essere vuoto"
   body:
     title: "Corpo"
   category:
     title: "Categoria"
+    validations:
+      required: "Devi scegliere una categoria"
   user:
     title: "Utente"
   attachments:
@@ -225,6 +237,9 @@ post:
   posted: "Pubblicato"
   posting: "Pubblicazione..."
   allow_posting: "Consentire la pubblicazione"
+  submitted: "Il tuo post è stato inviato"
+  updated: "Il post è stato aggiornato"
+  does_not_exist: "Il post non esiste"
 
 report_post:
   reported: "Segnalato un post"
@@ -394,8 +409,6 @@ admin:
     validations:
       habitat_name:
         max_characters: "Il nome del tuo Habitat deve avere un massimo di %max_characters% caratteri"
-      sidebar_content:
-        disallowed_html_tags: "Il contenuto della barra laterale contiene tag HTML non consentiti"
   tables:
     summary: "Visualizzazione di %item_count% di %total_item_count%"
     filtered_summary: "Visualizzazione di %item_count% di %filtered_item_count% filtrati da %total_item_count%"
@@ -437,9 +450,6 @@ admin:
     title: "Categorie"
   announcements:
     title: "Annunci"
-    validations:
-      content:
-        disallowed_html_tags: "Il contenuto dell'annuncio contiene tag HTML non consentiti"
   user_registration:
     title: "Registrazione utenti"
     allow_registration: "Consenti agli utenti di registrarsi"

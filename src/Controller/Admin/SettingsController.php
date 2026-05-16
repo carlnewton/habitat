@@ -29,7 +29,7 @@ class SettingsController extends AbstractController
     ): Response {
         $settingsRepository = $entityManager->getRepository(Settings::class);
         $sidebarContentRepository = $entityManager->getRepository(SidebarContent::class);
-        $sidebarContent = $sidebarContentRepository->findOneBy(['id' => 1]);
+        $sidebarContent = $sidebarContentRepository->findOneBy([]);
         if (!$sidebarContent) {
             $sidebarContent = new SidebarContent();
         }
@@ -192,10 +192,6 @@ class SettingsController extends AbstractController
             || !array_key_exists($request->request->get('language'), SetupController::LANGUAGES)
         ) {
             $errors['language'][] = $this->translator->trans('fields.language.validations.empty');
-        }
-
-        if (SidebarContent::stripTags($request->request->get('sidebarContent')) !== $request->request->get('sidebarContent')) {
-            $errors['sidebarContent'][] = $this->translator->trans('admin.settings.validations.sidebar_content.disallowed_html_tags');
         }
 
         return $errors;

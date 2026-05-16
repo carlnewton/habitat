@@ -1,14 +1,24 @@
 <form id="comment-form" class="mb-3" hx-swap="outerHTML settle:500ms show:#comments-list:top" hx-post="/hx/add-comment">
-    <div class="form-floating mb-3">
-        <textarea class="form-control form-control-lg{% if errors.comment is defined %} is-invalid{% endif %}" name="comment" style="height: 100px" placeholder="Comment" data-test="commentFormBody">{% if values.comment is defined %}{{ values.comment }}{% endif %}</textarea>
-        <label for="comment">Comment</label>
+    <div class="mb-3">
+        <label for="comment" class="form-label visually-hidden">{{ 'fields.comment.title' | trans }}</label>
+        <div class="form-control{% if errors.comment is defined %} border-danger{% endif %}">
+            <div class="d-flex align-content-stretch">
+                <div class="flex-grow-1">
+                    <div class="editor" data-placeholder="{{ 'fields.comment.title' | trans }}"></div>
+                </div>
+                <div class="wysiwyg-tools d-none">
+                    <button type="button" class="ttBtnA btn btn-outline-secondary mt-2 fs-5"><i class="bi bi-link"></i></button>
+                </div>
+            </div>
+        </div>
         {% if errors.comment is defined %}
-            <div class="invalid-feedback" data-test="commentErrors">
+            <div class="text-danger" data-test="commentErrors">
                 {% for errorMessage in errors.comment %}
                     <p>{{ errorMessage }}</p>
                 {% endfor %}
             </div>
         {% endif %}
+        <input type="hidden" name="comment" id="ttContent" value="{% if values.comment is defined %}{{ values.comment }}{% endif %}">
     </div>
     <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
     <input type="hidden" name="postId" value="{{ post.id }}">

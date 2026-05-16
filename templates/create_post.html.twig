@@ -20,9 +20,26 @@
                 </div>
             {% endif %}
         </div>
-        <div class="form-floating mb-3">
-            <textarea class="form-control form-control-lg" name="body" style="height: 100px" placeholder="{{ 'fields.body.title' | trans }}" data-test="body">{% if values.body is defined %}{{ values.body }}{% endif %}</textarea>
-            <label for="body">{{ 'fields.body.title' | trans }}</label>
+        <div class="mb-3">
+            <label for="body" class="form-label visually-hidden">{{ 'fields.body.title' | trans }}</label>
+            <div class="form-control{% if errors.body is defined %} border-danger{% endif %}">
+                <div class="d-flex align-content-stretch">
+                    <div class="flex-grow-1">
+                        <div class="editor" data-placeholder="{{ 'fields.body.title' | trans }}"></div>
+                    </div>
+                    <div class="wysiwyg-tools d-none">
+                        <button type="button" class="ttBtnA btn btn-outline-secondary mt-2 fs-5"><i class="bi bi-link"></i></button>
+                    </div>
+                </div>
+            </div>
+            {% if errors.body is defined %}
+                <div class="text-danger">
+                    {% for errorMessage in errors.body %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <input type="hidden" name="body" id="ttContent" value="{% if values.body is defined %}{{ values.body }}{% endif %}">
         </div>
         <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
             <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="{{ 'fields.category.title' | trans }}">
@@ -75,6 +92,7 @@
             <button type="button" id="submit-post-btn" class="btn btn-primary btn-lg" data-test="submit">{{ 'buttons.submit_post' | trans }}</button>
         </div>
     </form>
+    {% include 'partials/tt_editor/link_modal.html.twig' %}
     <div id="posting" class="text-center text-secondary py-5 d-none">
         <div class="spinner-border my-5" role="status"></div>
         <p class="fs-3">{{ 'post.posting' | trans }}</p>
@@ -84,4 +102,5 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('create_post') }}
+    {{ encore_entry_script_tags('tt_editor') }}
 {% endblock %}

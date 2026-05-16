@@ -16,7 +16,7 @@
             </h4>
             <div id="announcementAccordionContent" class="accordion-collapse collapse" data-bs-parent="#announcementAccordion">
                 <div class="accordion-body bg-{{ this.announcement.type.machineName }}-subtle">
-                    {{ this.announcement.content | raw }}
+                    {{ this.announcement.content | sanitize_html('app.announcement_sanitizer') }}
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
                 </h4>
             {% endif %}
             {% if this.announcement.content is not empty %}
-                {{ this.announcement.content | raw }}
+                {{ this.announcement.content | sanitize_html('app.announcement_sanitizer') }}
             {% endif %}
         </div>
     {% endif %}

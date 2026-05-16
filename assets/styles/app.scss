@@ -45,3 +45,15 @@ div.dropzone {
   width: calc(3rem + 0.75rem);
   border-radius: 4rem;
 }
+
+.min-height-100 {
+  min-height: 100px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: rgba(var(--bs-body-color-rgb), 0.65);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
