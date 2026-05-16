@@ -67,7 +67,7 @@
                                     <h6 class="mb-1">{{ comment.user.username }}</h6>
                                     <small class="text-body-secondary">{{ comment.posted|time_diff }}</small>
                                 </div>
-                                <p class="card-text">{{ comment.body }}</p>
+                                <p class="card-text">{{ comment.body | striptags }}</p>
                             </a>
                         {% endfor %}
                     </div>

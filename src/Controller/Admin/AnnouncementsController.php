@@ -26,7 +26,7 @@ class AnnouncementsController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $announcementRepository = $entityManager->getRepository(Announcement::class);
-        $announcement = $announcementRepository->findOneBy(['id' => 1]);
+        $announcement = $announcementRepository->findOneBy([]);
 
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
@@ -114,10 +114,6 @@ class AnnouncementsController extends AbstractController
     protected function validateRequest(Request $request): array
     {
         $errors = [];
-
-        if (Announcement::stripTags($request->request->get('content')) !== $request->request->get('content')) {
-            $errors['content'][] = $this->translator->trans('admin.announcements.validations.content.disallowed_html_tags');
-        }
 
         if (is_null($request->request->get('type')) || empty(AnnouncementTypesEnum::from($request->request->get('type')))) {
             $errors['type'][] = $this->translator->trans('fields.type.validations.invalid');

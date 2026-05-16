@@ -3,6 +3,8 @@
 #
 # NOTE: Ensure you have ran npm run build first -- otherwise, if you've ran watch the js/css won't be compressed
 #
+# npm run build
+#
 # docker system prune -a --volumes
 # docker compose -f compose.yaml -f compose.prod.yaml build --pull --no-cache
 #

@@ -1,0 +1,32 @@
+framework:
+    html_sanitizer:
+        sanitizers:
+            app.comment_sanitizer:
+                allow_elements:
+                    p: []
+                    a: ['href']
+                allowed_link_schemes: ['http', 'https', 'mailto']
+                allow_relative_links: true
+            app.post_sanitizer:
+                allow_elements:
+                    p: []
+                    a: ['href']
+                allowed_link_schemes: ['http', 'https', 'mailto']
+                allow_relative_links: true
+            app.announcement_sanitizer:
+                allow_elements:
+                    p: []
+                    a: ['href']
+                    ul: []
+                    li: []
+                allowed_link_schemes: ['http', 'https', 'mailto']
+                allow_relative_links: true
+            app.sidebar_content_sanitizer:
+                allow_elements:
+                    p: []
+                    a: ['href']
+                    ul: []
+                    li: []
+                    h3: []
+                allowed_link_schemes: ['http', 'https', 'mailto']
+                allow_relative_links: true

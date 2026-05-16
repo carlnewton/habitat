@@ -163,6 +163,13 @@ fields:
     title: "Habitat name"
   location:
     title: "Location"
+    validations:
+      required: "You must choose a location"
+  reason:
+    title: "Reason"
+    validations:
+      max_length: "The reason must be a maximum of %max_length% characters"
+      required: "You must state a reason"
   weight:
     title: "Weight"
     description: "Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically."
@@ -180,10 +187,15 @@ fields:
     title: "Content"
   title:
     title: "Title"
+    validations:
+      max_length: "The title must be a maximum of %max_length% characters"
+      empty: "The title cannot be empty"
   body:
     title: "Body"
   category:
     title: "Category"
+    validations:
+      required: "You must choose a category"
   user:
     title: "User"
   attachments:
@@ -225,6 +237,9 @@ post:
   posted: "Posted"
   posting: "Posting..."
   allow_posting: "Allow posting"
+  submitted: "Your post has been submitted"
+  updated: "The post has been updated"
+  does_not_exist: "The post does not exist"
 
 report_post:
   reported: "Reported a post"
@@ -257,6 +272,9 @@ about:
     3: "If you're interested in fostering community engagement in your area, you can also set up your own Habitat instance."
   local_area:
     title: "Local area"
+
+rss:
+  description: 'An RSS feed containing the latest posts'
 
 buttons:
   sign_up: "Sign up"
@@ -391,8 +409,6 @@ admin:
     validations:
       habitat_name:
         max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
-      sidebar_content:
-        disallowed_html_tags: "The sidebar content contains disallowed HTML tags"
   tables:
     summary: "Displaying %item_count% of %total_item_count%"
     filtered_summary: "Displaying %item_count% of %filtered_item_count% filtered from %total_item_count%"
@@ -434,9 +450,6 @@ admin:
     title: "Categories"
   announcements:
     title: "Announcements"
-    validations:
-      content:
-        disallowed_html_tags: "The announcement content contains disallowed HTML tags"
   user_registration:
     title: "User registration"
     allow_registration: "Allow users to register"

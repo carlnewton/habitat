@@ -6,6 +6,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ habitat_name }}">
     <meta property="og:url" content="{{ absolute_url(path('app_index_index')) }}">
+    <link rel="alternate" type="application/rss+xml" href="{{ absolute_url(path('app_rss_latest')) }}">
 {% endblock %}
 
 {% block body %}
