@@ -475,6 +475,8 @@ modals:
   update_hyperlink:
     title: "Aggiorna hyperlink"
   cancel: "Annulla"
+  sign_in:
+    body: "Devi essere loggato per farlo."
 
 menus:
   contextual:
