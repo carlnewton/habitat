@@ -33,9 +33,9 @@ Cypress.Commands.add('loginUser', (username) => {
 });
 
 Cypress.Commands.add('logoutUser', () => {
+  cy.then(Cypress.session.clearCurrentSessionData)
   cy.visit('/logout')
   cy.url().should('not.include', 'logout')
-  cy.then(Cypress.session.clearCurrentSessionData)
 });
 
 Cypress.Commands.add('switchToUser', (username) => {
