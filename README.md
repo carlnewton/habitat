@@ -4,10 +4,19 @@
 
 <h1 align="center">Habitat</h1>
 
-Habitat is a free and open-source social platform for local communities.
+Habitat is a platform for local communities.
 
-Locals can create posts linked to a specific location on a map, making it easy for others to find and join the
-conversation about their local area.
+### ❤️ Free and Open Source
+
+Free of ads, free of data harvesting, free of charge. Habitat is made with love and owned by the community.
+
+### 🌌 Decentralised
+
+Create an instance for your local area, and invite people to join to talk about all things local.
+
+### 🧭 Location at the Heart
+
+Locals can discuss specific locations within their Habitat and find out about conversations happening nearby.
 
 <a href="https://gethabitat.org"><img alt="Habitat" src="./screenshots.png" alt="The Habitat Home Feed on a desktop and a mobile device" /></a>
 
