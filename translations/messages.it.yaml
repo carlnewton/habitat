@@ -568,6 +568,7 @@ misc:
   any: "Qualsiasi"
   loading: "Caricamento..."
   to_comment: "per commentare questo post."
+  or: "o"
 
 commands:
   reset_admin_password:

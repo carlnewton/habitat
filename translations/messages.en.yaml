@@ -568,6 +568,7 @@ misc:
   any: "Any"
   loading: "Loading..."
   to_comment: "to comment on this post."
+  or: "or"
 
 commands:
   reset_admin_password:

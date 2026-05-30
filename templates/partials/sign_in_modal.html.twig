@@ -1,4 +1,4 @@
-<div class="modal" id="signInModal" tabindex="-1">
+<div class="modal" id="signInModal" tabindex="-1" data-test="modal-log-in">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,10 +10,10 @@
             </div>
             <div class="modal-footer">
                 <div class="vstack gap-3">
-                    <a class="btn btn-lg btn-primary" href="{{ path('app_login') }}">{{ 'menus.utility.log_in.title' | trans }}</a>
+                    <a class="btn btn-lg btn-primary" href="{{ path('app_login') }}" data-test="modal-log-in-link">{{ 'menus.utility.log_in.title' | trans }}</a>
                     {% if setting('registration') == 'on' %}
-                        <div class="text-center text-muted">or</div>
-                        <a class="btn btn-lg btn-outline-secondary" href="{{ path('app_signup') }}">{{ 'account.sign_up.title' | trans }}</a>
+                        <div class="text-center text-muted">{{ 'misc.or' | trans }}</div>
+                        <a class="btn btn-lg btn-outline-secondary" href="{{ path('app_signup') }}" data-test="modal-sign-up-link">{{ 'account.sign_up.title' | trans }}</a>
                     {% endif %}
                 </div>
             </div>
