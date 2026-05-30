@@ -2,16 +2,28 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Setup\SetupAdminFixtures;
 use App\DataFixtures\Setup\SetupCategoriesFixtures;
+use App\DataFixtures\Users\ApocFixture;
+use App\DataFixtures\Users\CypherFixture;
+use App\DataFixtures\Users\MorpheusFixture;
+use App\DataFixtures\Users\MouseFixture;
+use App\DataFixtures\Users\NeoFixture;
+use App\DataFixtures\Users\OracleFixture;
+use App\DataFixtures\Users\SmithFixture;
+use App\DataFixtures\Users\SwitchFixture;
+use App\DataFixtures\Users\TankFixture;
+use App\DataFixtures\Users\TrinityFixture;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 // TODO: Break these down into posts per user so that we can use that particular user for dependencies
-class PostFixtures extends Fixture implements DependentFixtureInterface
+class PostFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     private const DATETIME_FORMAT = 'Y/m/d H:i:s';
 
@@ -188,7 +200,23 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
+            ApocFixture::class,
+            CypherFixture::class,
+            MouseFixture::class,
+            MorpheusFixture::class,
+            NeoFixture::class,
+            OracleFixture::class,
+            SetupAdminFixtures::class,
             SetupCategoriesFixtures::class,
+            SmithFixture::class,
+            SwitchFixture::class,
+            TankFixture::class,
+            TrinityFixture::class,
         ];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['posts'];
     }
 }

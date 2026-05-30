@@ -133,3 +133,10 @@
         {{ encore_entry_script_tags('tt_editor') }}
     {% endif %}
 {% endblock %}
+
+{% block modals %}
+    {{ parent() }}
+    {% if not app.user %}
+        {% include 'partials/sign_in_modal.html.twig' %}
+    {% endif %}
+{% endblock %}

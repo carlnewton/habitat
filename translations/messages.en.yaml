@@ -474,7 +474,9 @@ modals:
     title: "Insert hyperlink"
   update_hyperlink:
     title: "Update hyperlink"
-  cancel: Cancel
+  cancel: "Cancel"
+  sign_in:
+    body: "You need to be logged in to do that."
 
 menus:
   contextual:
@@ -566,6 +568,7 @@ misc:
   any: "Any"
   loading: "Loading..."
   to_comment: "to comment on this post."
+  or: "or"
 
 commands:
   reset_admin_password:
