@@ -282,7 +282,9 @@ buttons:
   continue: "Continua"
   change: "Modifica"
   clear: "Libera"
+  use_current_location: "Usa la tua posizione attuale"
   show_current_location: "Mostra la tua posizione attuale"
+  hide_current_location: "Nascondi la tua posizione attuale"
   save: "Salva"
   insert: "Inserisci"
   update: "Aggiorna"
@@ -348,6 +350,7 @@ measurement_units:
       short: "km"
   miles:
     label: "miglia"
+  away: "di distanza"
 
 admin:
   actions:

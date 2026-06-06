@@ -86,7 +86,16 @@
             <h2 id="location">{{ 'fields.location.title' | trans }}</h2>
             <div class="card mb-4">
                 <div class="ratio ratio-16x9">
-                    <div id="map" class="rounded" data-center="{{ post.latitude }},{{ post.longitude }}"></div>
+                    <div
+                        id="map"
+                        class="rounded"
+                        data-center="{{ post.latitude }},{{ post.longitude }}"
+                        data-showcurrentlocation="{{ 'buttons.show_current_location' | trans }}"
+                        data-hidecurrentlocation="{{ 'buttons.hide_current_location' | trans }}"
+                        data-measurementtype="{{ setting('locationMeasurement') }}"
+                        data-measurement="{{ (setting('locationMeasurement') == 'km') ? 'measurement_units.kilometers.label.short' | trans : 'measurement_units.miles.label' | trans }}"
+                        data-away="{{ 'measurement_units.away' | trans }}"
+                    ></div>
                 </div>
             </div>
         {% endif %}
