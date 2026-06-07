@@ -2,6 +2,7 @@ require('leaflet');
 
 if (document.getElementById('map') !== null) {
     var location;
+    var watchPosition;
     var myLocationEnabled = false;
     var myLocationRefresh = false;
     var relativeDistanceControl;
@@ -33,6 +34,7 @@ if (document.getElementById('map') !== null) {
             viewLocationButton.id = 'view-location-btn';
             viewLocationButton.innerHTML = '<i class="bi bi-compass"></i>';
             viewLocationButton.title = document.getElementById('map').dataset.showcurrentlocation;
+            viewLocationButton.setAttribute('data-test', 'current-location-btn')
 
             return viewLocationButton;
         },
@@ -62,15 +64,10 @@ if (document.getElementById('map') !== null) {
         if (myLocationEnabled) {
             viewLocationButton.title = document.getElementById('map').dataset.hidecurrentlocation;
             document.getElementById('view-location-btn').classList.add('leaflet-btn-active');
-            navigator.geolocation.getCurrentPosition(setCurrentPosition);
+            watchPosition = navigator.geolocation.watchPosition(setCurrentPosition, failCurrentPosition);
         } else {
-            viewLocationButton.title = document.getElementById('map').dataset.showcurrentlocation;
-            document.getElementById('view-location-btn').classList.remove('leaflet-btn-active');
-
-            relativeDistanceControl.remove();
-            relativeDistanceControl = undefined;
-            myLocationRefresh = false;
-            centerOnMarker();
+            navigator.geolocation.clearWatch(watchPosition);
+            disableCurrentLocation();
         }
     }
 
@@ -85,6 +82,30 @@ if (document.getElementById('map') !== null) {
         map.removeLayer(line);
         map.setMaxBounds(latLng.toBounds(500));
         map.panTo(latLng);
+    }
+
+    function failCurrentPosition(err) {
+        switch (err.code) {
+            case 1:
+                alert(document.getElementById('map').dataset.error);
+                break;
+            default:
+                alert(err.message);
+        }
+
+        disableCurrentLocation();
+    }
+
+    function disableCurrentLocation() {
+        viewLocationButton.title = document.getElementById('map').dataset.showcurrentlocation;
+        document.getElementById('view-location-btn').classList.remove('leaflet-btn-active');
+
+        if (relativeDistanceControl !== undefined) {
+            relativeDistanceControl.remove();
+            relativeDistanceControl = undefined;
+        }
+        myLocationRefresh = false;
+        centerOnMarker();
     }
 
     function setCurrentPosition(position) {
@@ -127,6 +148,7 @@ if (document.getElementById('map') !== null) {
                     distanceIndicator.id = 'distanceIndicator';
                     distanceIndicator.title = document.getElementById('map').dataset.showcurrentlocation;
                     distanceIndicator.innerHTML = printDistance(map.distance(currentLatLng, latLng));
+                    distanceIndicator.setAttribute('data-test', 'distance-indicator')
 
                     return distanceIndicator;
                 },
@@ -145,10 +167,6 @@ if (document.getElementById('map') !== null) {
 
         line = L.polyline([latLng, currentLatLng], { color: 'white', weight: 6, dashArray: '10,14', className: 'location-path' });
         line.addTo(map);
-
-        setTimeout(function() {
-            navigator.geolocation.getCurrentPosition(setCurrentPosition);
-        }, 5000);
     }
 
     function printDistance(meters) {

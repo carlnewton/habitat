@@ -322,6 +322,7 @@ map:
     invalid_location: "You must choose a valid location"
     invalid_location_size: "You must choose a valid location size"
     out_of_bounds: "The location can only be set inside the bounds of this Habitat"
+    location_disabled: "You need to enable access to your location to do that"
 
 user_settings:
   title: "Settings"
