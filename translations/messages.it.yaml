@@ -165,10 +165,11 @@ fields:
     title: "Posizione"
   theme:
     title: "Tema"
-    dark: "Buio"
-    light: "Luce"
+    dark: "scura"
+    light: "chiara"
     validations:
       empty: "Devi scegliere un tema."
+    override: "Hai selezionato il tema %theme% come <a href=\"%user_settings_url%\">impostazione utente</a>, pertanto non vedrai questa modifica predefinita globale."
   weight:
     title: "Peso"
     description: "Le categorie con peso basso sono ordinate prima di quelle con peso elevato nella lista delle categorie. Le categorie con lo stesso peso sono ordinate alfabeticamente."

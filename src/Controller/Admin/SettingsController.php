@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Controller\SetupController;
 use App\Entity\Settings;
 use App\Entity\SidebarContent;
+use App\Entity\User;
+use App\Entity\UserSettings;
 use App\Repository\SettingsRepository;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -30,11 +33,23 @@ class SettingsController extends AbstractController
     #[Route(path: '/admin/settings', name: 'app_admin_settings', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
+        #[CurrentUser] ?User $user,
     ): Response {
         $sidebarContentRepository = $this->entityManager->getRepository(SidebarContent::class);
         $sidebarContent = $sidebarContentRepository->findOneBy([]);
         if (!$sidebarContent) {
             $sidebarContent = new SidebarContent();
+        }
+
+        $userSettingsRepository = $this->entityManager->getRepository(UserSettings::class);
+        $adminUserThemeSetting = $userSettingsRepository->findOneBy([
+            'name' => 'theme',
+            'user' => $user->getId(),
+        ]);
+
+        $adminUserTheme = null;
+        if ($adminUserThemeSetting) {
+            $adminUserTheme = $this->translator->trans('fields.theme.' . $adminUserThemeSetting->getValue());
         }
 
         if ('POST' === $request->getMethod()) {
@@ -47,6 +62,7 @@ class SettingsController extends AbstractController
 
                 return $this->render('admin/settings.html.twig', [
                     'languages' => SetupController::LANGUAGES,
+                    'adminUserTheme' => $adminUserTheme,
                     'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
                 ]);
             }
@@ -56,6 +72,7 @@ class SettingsController extends AbstractController
             if (!empty($fieldErrors)) {
                 return $this->render('admin/settings.html.twig', [
                     'languages' => SetupController::LANGUAGES,
+                    'adminUserTheme' => $adminUserTheme,
                     'errors' => $fieldErrors,
                     'values' => [
                         'habitatName' => $request->request->get('habitatName'),
@@ -102,6 +119,7 @@ class SettingsController extends AbstractController
 
         return $this->render('admin/settings.html.twig', [
             'languages' => SetupController::LANGUAGES,
+            'adminUserTheme' => $adminUserTheme,
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
                 'locationLatLng' => ($locationLatLngSetting) ? $locationLatLngSetting->getValue() : '51,0',

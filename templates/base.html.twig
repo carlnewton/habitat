@@ -31,7 +31,7 @@
                             <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotifications" aria-controls="offcanvasNotifications" aria-label="Toggle notifications">
                                 <i class="bi bi-bell fs-4 text-secondary position-relative">
                                     {% if app.user and app.user.hasNotifications %}
-                                        <span class="position-absolute top-0 end-0 p-1 bg-danger border border-light rounded-circle" data-test="new-notifications-indicator">
+                                        <span class="position-absolute top-0 end-0 p-1 bg-danger rounded-circle" data-test="new-notifications-indicator">
                                             <span class="visually-hidden">New notifications</span>
                                         </span>
                                     {% endif %}

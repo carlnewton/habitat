@@ -67,12 +67,17 @@
         </div>
         <div class="mb-3">
             <label for="theme" class="form-label">{{ 'fields.theme.title' | trans }}</label>
-            <div class="form-check{% if errors.theme is defined %} is-invalid{% endif %}">
+
+            <div class="input-group p-0 {% if errors.theme is defined %} is-invalid{% endif %}">
                 <input type="radio" class="btn-check" name="theme" value="light" id="light" autocomplete="off"{% if values.theme is defined and values.theme == 'light' %} checked{% endif %}>
-                <label class="btn btn-outline-secondary" for="light">{{ 'fields.theme.light' | trans }}</label>
+                <label class="btn btn-outline-secondary rounded-start" for="light">{{ 'fields.theme.light' | trans }}</label>
                 <input type="radio" class="btn-check" name="theme" value="dark" id="dark" autocomplete="off"{% if values.theme is defined and values.theme == 'dark' %} checked{% endif %}>
                 <label class="btn btn-outline-secondary" for="dark">{{ 'fields.theme.dark' | trans }}</label>
             </div>
+
+            {% if adminUserTheme %}
+                <div class="form-text">{{ 'fields.theme.override' | trans({'%theme%' : adminUserTheme, '%user_settings_url%': path('app_settings') }) | raw }}</div>
+            {% endif %}
             {% if errors.theme is defined %}
                 <div class="invalid-feedback">
                     {% for errorMessage in errors.theme %}

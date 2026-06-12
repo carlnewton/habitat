@@ -165,8 +165,9 @@ fields:
     title: "Location"
   theme:
     title: "Theme"
-    dark: "Dark"
-    light: "Light"
+    dark: "dark"
+    light: "light"
+    override: "You have selected the %theme% theme as a <a href=\"%user_settings_url%\">user setting</a>, which will prevent you from seeing this global default change."
     validations:
       empty: "You must select a theme."
   weight:

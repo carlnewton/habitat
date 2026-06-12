@@ -1,3 +1,5 @@
+{% set habitat_theme = setting('theme', 'light') %}
+
 <div class="post"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#post-spinner" hx-get="/hx/list-posts?offset={{ offset }}{% if category is defined %}&category={{ category.id }}{% endif %}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
     <div class="card shadow mb-3 post-card">
         <div class="card-body">

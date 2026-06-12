@@ -47,6 +47,10 @@ div.dropzone {
 }
 
 [data-bs-theme="dark"] {
+    .text-primary {
+        color: rgb(116, 176, 214) !important;
+    }
+
     .nav-pills .nav-link.active {
         background-color: rgb(116, 176, 214);
         color: #171a1d;
