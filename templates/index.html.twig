@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 {% set page_title = 'menus.main.home.title' | trans %}
 
+{% block opengraph %}
+    {{ parent() }}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ habitat_name }}">
+    <meta property="og:url" content="{{ absolute_url(path('app_index_index')) }}">
+    <link rel="alternate" type="application/rss+xml" href="{{ absolute_url(path('app_rss_latest')) }}">
+{% endblock %}
+
 {% block body %}
     <h1 class="visually-hidden">Latest posts</h1>
     <div id="posts-list">
@@ -13,4 +21,11 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block modals %}
+    {{ parent() }}
+    {% if not app.user %}
+        {% include 'partials/sign_in_modal.html.twig' %}
+    {% endif %}
 {% endblock %}

@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\SidebarContent;
 use App\Repository\SidebarContentRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -24,10 +23,6 @@ final class Sidebar
 
         $content = $sidebarContent->getContent();
         if (is_null($content)) {
-            return '';
-        }
-
-        if (SidebarContent::stripTags($content) !== $content) {
             return '';
         }
 

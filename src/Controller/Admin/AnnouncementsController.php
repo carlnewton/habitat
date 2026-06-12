@@ -115,10 +115,6 @@ class AnnouncementsController extends AbstractController
     {
         $errors = [];
 
-        if (Announcement::stripTags($request->request->get('content')) !== $request->request->get('content')) {
-            $errors['content'][] = $this->translator->trans('admin.announcements.validations.content.disallowed_html_tags');
-        }
-
         if (is_null($request->request->get('type')) || empty(AnnouncementTypesEnum::from($request->request->get('type')))) {
             $errors['type'][] = $this->translator->trans('fields.type.validations.invalid');
         }

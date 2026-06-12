@@ -13,7 +13,7 @@ describe('comment', function() {
     cy.createPost('basic');
     cy.getElement('success-message').should('be.visible');
     cy.getElement('commentErrors').should('not.exist');
-    cy.getElement('commentFormBody').clear();
+    cy.get('.tiptap').clear();
     cy.getElement('commentSubmit').click();
     cy.getElement('commentErrors').should('be.visible');
   })
@@ -24,9 +24,9 @@ describe('comment', function() {
     cy.get('@postId').then((postId) => {
       cy.visit('post/' + postId);
     })
-    cy.getElement('commentFormBody').type('This is a comment');
+    cy.get('.tiptap').type('This is a comment');
     cy.getElement('commentSubmit').click();
-    cy.getElement('commentFormBody').should('not.have.value');
+    cy.get('.tiptap').should('not.have.value');
     cy.getElement('commentBody').should('include.text', 'This is a comment');
     cy.getElement('commentErrors').should('not.exist');
   })

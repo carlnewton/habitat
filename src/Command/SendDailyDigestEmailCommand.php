@@ -32,6 +32,15 @@ class SendDailyDigestEmailCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $settingsRepository = $this->entityManager->getRepository(Settings::class);
+        $smtpFromEmailAddress = $settingsRepository->getSettingByName('smtpFromEmailAddress');
+
+        if (!$smtpFromEmailAddress) {
+            $output->writeln($this->translator->trans('commands.daily_digest_email.no_mail_configuration'));
+
+            return Command::FAILURE;
+        }
+
         $yesterday = (new \DateTime())->modify('-1 day');
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
@@ -100,7 +109,7 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newPost->getId(),
                 ]);
 
-                $body .= '<li><a href="https://' . $domain . $viewPostRoute . '">' . $newPost->getTitle() . '</a> - ' . $newPost->getUser()->getUsername() . '</li>';
+                $body .= '<li><a href="' . $domain . $viewPostRoute . '">' . $newPost->getTitle() . '</a> - ' . $newPost->getUser()->getUsername() . '</li>';
             }
             $body .= '</ul>';
         }
@@ -113,7 +122,7 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newComment->getPost()->getId(),
                 ]);
 
-                $body .= '<li><a href="https://' . $domain . $viewPostRoute . '">' . $newComment->getBody() . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
+                $body .= '<li><a href="' . $domain . $viewPostRoute . '">' . trim(strip_tags($newComment->getBody())) . '</a> - ' . $newComment->getUser()->getUsername() . '</li>';
             }
             $body .= '</ul>';
         }
@@ -126,15 +135,14 @@ class SendDailyDigestEmailCommand extends Command
                     'id' => $newUser->getId(),
                 ]);
 
-                $body .= '<li><a href="https://' . $domain . $userModerationRoute . '">' . $newUser->getUsername() . '</a></li>';
+                $body .= '<li><a href="' . $domain . $userModerationRoute . '">' . $newUser->getUsername() . '</a></li>';
             }
             $body .= '</ul>';
         }
 
-        $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $this->mailer->send(
             $admin->getEmailAddress(),
-            $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+            $smtpFromEmailAddress->getValue(),
             $subject,
             $body
         );

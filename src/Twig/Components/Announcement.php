@@ -20,11 +20,6 @@ final class Announcement
             return;
         }
 
-        $content = $announcement->getContent();
-        if (AnnouncementEntity::stripTags($content) !== $content) {
-            return;
-        }
-
         if (empty($announcement->getTitle()) && empty($announcement->getContent())) {
             return;
         }

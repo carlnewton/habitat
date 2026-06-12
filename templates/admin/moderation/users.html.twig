@@ -3,7 +3,7 @@
 
 {% block actions %}
     <div class="dropdown mt-3">
-        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actions-btn" data-test="actions" data-bs-toggle="dropdown" aria-expanded="false">
             {{ 'buttons.actions' | trans }}
         </button>
         <ul class="dropdown-menu" id="actions-menu" aria-labelledby="actions-btn">
@@ -13,7 +13,14 @@
                     <form class="action-item-form" method="post" action="{{ path('app_moderation_users_promote') }}">
                         <input name="items" type="hidden" value=""/>
                         <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                        <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.promote.title' | trans }}</button>
+                        <button type="submit" class="dropdown-item checkbox-action disabled" data-test="promote">{{ 'admin.actions.promote.title' | trans }}</button>
+                    </form>
+                </li>
+                <li>
+                    <form class="action-item-form" method="post" action="{{ path('app_moderation_users_verify') }}">
+                        <input name="items" type="hidden" value=""/>
+                        <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                        <button type="submit" class="dropdown-item checkbox-action disabled" data-test="verify">{{ 'admin.actions.verify.title' | trans }}</button>
                     </form>
                 </li>
             {% endif %}
@@ -21,14 +28,14 @@
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_freeze') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.freeze.title' | trans }}</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled" data-test="freeze">{{ 'admin.actions.freeze.title' | trans }}</button>
                 </form>
             </li>
             <li>
                 <form class="action-item-form" method="post" action="{{ path('app_moderation_users_ban') }}">
                     <input name="items" type="hidden" value=""/>
                     <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
-                    <button type="submit" class="dropdown-item checkbox-action disabled">{{ 'admin.actions.ban.title' | trans }}</button>
+                    <button type="submit" class="dropdown-item checkbox-action disabled" data-test="ban">{{ 'admin.actions.ban.title' | trans }}</button>
                 </form>
             </li>
         </ul>

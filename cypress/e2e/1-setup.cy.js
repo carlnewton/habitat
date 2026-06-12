@@ -431,6 +431,11 @@ describe('setup', function() {
       cy.url().should('include', '/admin');
     })
 
+    it('submitting mail data can be skipped', function() {
+      cy.getElement('skip').click();
+      cy.url().should('include', '/admin');
+    })
+
   })
 
   describe('post setup', function() {

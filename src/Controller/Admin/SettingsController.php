@@ -8,6 +8,7 @@ use App\Entity\SidebarContent;
 use App\Entity\User;
 use App\Entity\UserSettings;
 use App\Repository\SettingsRepository;
+use App\Repository\SidebarContentRepository;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,12 +23,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SettingsController extends AbstractController
 {
     private SettingsRepository $settingsRepository;
+    private SidebarContentRepository $sidebarContentRepository;
 
     public function __construct(
         private TranslatorInterface $translator,
         private EntityManagerInterface $entityManager,
     ) {
         $this->settingsRepository = $this->entityManager->getRepository(Settings::class);
+        $this->sidebarContentRepository = $this->entityManager->getRepository(SidebarContent::class);
     }
 
     #[Route(path: '/admin/settings', name: 'app_admin_settings', methods: ['GET', 'POST'])]
@@ -35,8 +38,7 @@ class SettingsController extends AbstractController
         Request $request,
         #[CurrentUser] ?User $user,
     ): Response {
-        $sidebarContentRepository = $this->entityManager->getRepository(SidebarContent::class);
-        $sidebarContent = $sidebarContentRepository->findOneBy([]);
+        $sidebarContent = $this->sidebarContentRepository->findOneBy([]);
         if (!$sidebarContent) {
             $sidebarContent = new SidebarContent();
         }

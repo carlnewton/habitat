@@ -161,8 +161,6 @@ fields:
     title: "Name"
   habitat_name:
     title: "Habitat name"
-  location:
-    title: "Location"
   theme:
     title: "Theme"
     dark: "dark"
@@ -170,6 +168,15 @@ fields:
     override: "You have selected the %theme% theme as a <a href=\"%user_settings_url%\">user setting</a>, which will prevent you from seeing this global default change."
     validations:
       empty: "You must select a theme."
+  location:
+    title: "Location"
+    validations:
+      required: "You must choose a location"
+  reason:
+    title: "Reason"
+    validations:
+      max_length: "The reason must be a maximum of %max_length% characters"
+      required: "You must state a reason"
   weight:
     title: "Weight"
     description: "Categories with a low weight are ordered earlier than those with a high weight in the category list. Categories with the same weight are ordered alphabetically."
@@ -187,10 +194,15 @@ fields:
     title: "Content"
   title:
     title: "Title"
+    validations:
+      max_length: "The title must be a maximum of %max_length% characters"
+      empty: "The title cannot be empty"
   body:
     title: "Body"
   category:
     title: "Category"
+    validations:
+      required: "You must choose a category"
   user:
     title: "User"
   attachments:
@@ -232,6 +244,9 @@ post:
   posted: "Posted"
   posting: "Posting..."
   allow_posting: "Allow posting"
+  submitted: "Your post has been submitted"
+  updated: "The post has been updated"
+  does_not_exist: "The post does not exist"
 
 report_post:
   reported: "Reported a post"
@@ -265,6 +280,9 @@ about:
   local_area:
     title: "Local area"
 
+rss:
+  description: 'An RSS feed containing the latest posts'
+
 buttons:
   sign_up: "Sign up"
   apply: "Apply"
@@ -292,6 +310,7 @@ buttons:
   forgot_password: "Forgot password"
   reset_password: "Reset your password"
   find_out_more: "Find out more"
+  skip_for_now: "Skip for now"
   add_a_category: "Add a category"
   add_a_question: "Add a question"
   add_a_location: "Add a location"
@@ -372,6 +391,13 @@ admin:
       messages:
         unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
+    verify:
+      title: "Verify"
+      alternate_title: "Manually verify"
+      messages:
+        already_verified: "%username% could not be verified because they are already verified."
+        warning: "Users should verify their email address by clicking the verification link in the email they receive when creating an account. You should only manually verify users if you are certain that they own the email address they have signed up with."
+        success: "Users verified"
     dismiss:
       title: "Dismiss"
       messages:
@@ -385,11 +411,11 @@ admin:
     view_more: "View more"
   settings:
     title: "Settings"
+    messages:
+      saved: "Settings saved"
     validations:
       habitat_name:
         max_characters: "Your Habitat name must be a maximum of %max_characters% characters"
-      sidebar_content:
-        disallowed_html_tags: "The sidebar content contains disallowed HTML tags"
   tables:
     summary: "Displaying %item_count% of %total_item_count%"
     filtered_summary: "Displaying %item_count% of %filtered_item_count% filtered from %total_item_count%"
@@ -431,14 +457,19 @@ admin:
     title: "Categories"
   announcements:
     title: "Announcements"
-    validations:
-      content:
-        disallowed_html_tags: "The announcement content contains disallowed HTML tags"
   user_registration:
     title: "User registration"
     allow_registration: "Allow users to register"
+    user_registrations_disabled: "Users who register for an account will receive an email to verify their email address. You are not able to allow users to register until you <a class=\"alert-link\" href=\"%mail_settings_url%\">configure your mail settings</a>."
+    validations:
+      invalid_value: "This field has an invalid value"
     registration_challenge:
       title: "Registration challenge"
+      validations:
+        no_correct_answers: "All questions must have at least one correct answer"
+        answer_character_count: "All answers must be 255 characters or less"
+        question_character_count: "All questions must be 255 characters or less"
+        json: "Unable to validate the registration questions"
       help_text: "You can create questions which the user must answer correctly in order to create an account. If creating multiple questions, the user will be required to answer one question at random when registering for an account."
   amazon_s3_details:
     title: "Amazon S3 details"
@@ -450,12 +481,16 @@ modals:
     title: "Insert hyperlink"
   update_hyperlink:
     title: "Update hyperlink"
-  cancel: Cancel
+  cancel: "Cancel"
+  sign_in:
+    body: "You need to be logged in to do that."
 
 menus:
   contextual:
     edit:
       title: Edit
+    share:
+      title: Share
     report:
       title: Report
     view_posts:
@@ -540,8 +575,11 @@ misc:
   any: "Any"
   loading: "Loading..."
   to_comment: "to comment on this post."
+  or: "or"
 
 commands:
   reset_admin_password:
     title: "Reset the administrator password"
     no_admin: "You have not yet created an administrator account"
+  daily_digest_email:
+    no_mail_configuration: "Unable to send the daily digest email until the mail settings have been configured"

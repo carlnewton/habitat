@@ -506,6 +506,14 @@ class SetupController extends AbstractController
             return $this->render('setup/mail.html.twig');
         }
 
+        if ($request->request->has('skip')) {
+            $setupSetting->setValue('complete');
+            $this->entityManager->persist($setupSetting);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_admin_index');
+        }
+
         $fieldErrors = $this->validateSetupMailRequest($request);
 
         if (!empty($fieldErrors)) {

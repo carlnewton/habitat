@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:georss="http://www.georss.org/georss">
+    <channel>
+        <title>{{ setting('habitatName', 'Habitat') }}</title>
+        <link>{{ absolute_url(path('app_index_index')) }}</link>
+        <description>{{ 'rss.description' | trans }}</description>
+        <atom:link href="{{ absolute_url(path('app_rss_latest')) }}" rel="self" type="application/rss+xml" />
+        {% for post in posts %}
+            <item>
+                <title>{{ post.title }}</title>
+                <link>{{ absolute_url(path('app_view_post', { id: post.id })) }}</link>
+                <guid isPermaLink="true">{{ absolute_url(path('app_view_post', { id: post.id })) }}</guid>
+                <description>
+                    <![CDATA[
+                        {{ post.body | sanitize_html('app.post_sanitizer') }}
+                    ]]>
+                </description>
+                {% if show_category %}
+                    <category>{{ post.category.name }}</category>
+                {% endif %}
+                <pubDate>{{ post.posted|local_date('r') }}</pubDate>
+                {% if post.attachments is not empty %}
+                    {% for attachment in post.attachments %}
+                    <media:content url="{{ absolute_url(path('app_load_attachment', { postId: post.id, attachmentId: attachment.id })) }}" medium="image" width="{{ attachment.width }}" height="{{ attachment.height }}" />
+                    {% endfor %}
+                {% endif %}
+                {% if post.latitude is not null and post.longitude is not null %}
+                    <georss:point>{{ post.latitude }} {{ post.longitude }}</georss:point>
+                {% endif %}
+            </item>
+        {% endfor %}
+    </channel>
+</rss>

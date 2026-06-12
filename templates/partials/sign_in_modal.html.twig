@@ -1,0 +1,22 @@
+<div class="modal" id="signInModal" tabindex="-1" data-test="modal-log-in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ 'menus.utility.log_in.title' | trans }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'modals.cancel' | trans }}"></button>
+            </div>
+            <div class="modal-body">
+                {{ 'modals.sign_in.body' | trans }}
+            </div>
+            <div class="modal-footer">
+                <div class="vstack gap-3">
+                    <a class="btn btn-lg btn-primary" href="{{ path('app_login') }}" data-test="modal-log-in-link">{{ 'menus.utility.log_in.title' | trans }}</a>
+                    {% if setting('registration') == 'on' %}
+                        <div class="text-center text-muted">{{ 'misc.or' | trans }}</div>
+                        <a class="btn btn-lg btn-outline-secondary" href="{{ path('app_signup') }}" data-test="modal-sign-up-link">{{ 'account.sign_up.title' | trans }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

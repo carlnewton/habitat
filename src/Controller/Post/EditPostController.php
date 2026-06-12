@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Note: If ever opening this up to generic users, ensure not to allow frozen accounts to edit posts.
+ * NOTE: If ever opening this up to generic users, ensure not to allow frozen accounts to edit posts.
  */
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class EditPostController extends AbstractController
@@ -46,7 +46,7 @@ class EditPostController extends AbstractController
         ]);
 
         if (!$post) {
-            throw $this->createNotFoundException('The post does not exist');
+            throw $this->createNotFoundException($this->translator->trans('post.does_not_exist'));
         }
 
         $categoryRepository = $this->entityManager->getRepository(Category::class);
@@ -70,7 +70,7 @@ class EditPostController extends AbstractController
             if (!$this->isCsrfTokenValid('edit', $submittedToken)) {
                 $this->addFlash(
                     'warning',
-                    'Something went wrong, please try again.'
+                    $this->translator->trans('fields.csrf_token.validations.invalid'),
                 );
 
                 return $this->redirectToRoute('app_edit_post', ['id' => $post->getId()]);
@@ -85,6 +85,7 @@ class EditPostController extends AbstractController
             $post
                 ->setTitle(trim($request->request->get('title')))
                 ->setBody(trim($request->request->get('body')))
+                ->setUpdated(new \DateTime())
                 ->setCategory($postCategory)
             ;
 
@@ -170,10 +171,7 @@ class EditPostController extends AbstractController
 
             $this->entityManager->flush();
 
-            $this->addFlash(
-                'notice',
-                'The post has been updated'
-            );
+            $this->addFlash('notice', $this->translator->trans('post.updated'));
 
             return $this->redirectToRoute('app_view_post', ['id' => $post->getId()]);
         }
@@ -229,19 +227,19 @@ class EditPostController extends AbstractController
         $errors = [];
 
         if (mb_strlen($request->request->get('title')) > Post::TITLE_MAX_LENGTH) {
-            $errors['title'][] = 'The title must be a maximum of ' . Post::TITLE_MAX_LENGTH . ' characters';
+            $errors['title'][] = $this->translator->trans('fields.title.validations.max_length', ['%max_length%' => Post::TITLE_MAX_LENGTH]);
         } elseif (empty(trim($request->request->get('title')))) {
-            $errors['title'][] = 'The title cannot be empty';
+            $errors['title'][] = $this->translator->trans('fields.title.validations.empty');
         }
 
         if (strlen($request->request->get('reason')) > 255) {
-            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+            $errors['reason'][] = $this->translator->trans('fields.reason.validations.max_length', ['%max_length%' => 255]);
         } elseif (empty(trim($request->request->get('reason')))) {
-            $errors['reason'][] = 'This is a required field';
+            $errors['reason'][] = $this->translator->trans('fields.reason.validations.required');
         }
 
         if (empty($request->request->get('category'))) {
-            $errors['category'][] = 'You must choose a category';
+            $errors['category'][] = $this->translator->trans('fields.category.validations.required');
         } else {
             $foundCategory = null;
             foreach ($this->categories as $category) {
@@ -255,7 +253,7 @@ class EditPostController extends AbstractController
             $radiusSetting = $settingsRepository->getSettingByName('locationRadiusMeters');
             $latLngSetting = $settingsRepository->getSettingByName('locationLatLng');
             if (is_null($foundCategory)) {
-                $errors['category'][] = 'You must choose a category';
+                $errors['category'][] = $this->translator->trans('fields.category.validations.required');
             } elseif (
                 (
                     CategoryLocationOptionsEnum::REQUIRED === $foundCategory->getLocation()
@@ -277,7 +275,7 @@ class EditPostController extends AbstractController
                     )
                 )
             ) {
-                $errors['location'][] = 'You must choose a location';
+                $errors['location'][] = $this->translator->trans('fields.location.validations.required');
             }
         }
 

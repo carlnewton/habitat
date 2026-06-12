@@ -36,6 +36,15 @@
                         <button type="submit" class="dropdown-item checkbox-action">{% if 'ROLE_MODERATOR' in user.roles %}{{ 'admin.actions.demote.title' | trans }}{% else %}{{ 'admin.actions.promote.title' | trans }}{% endif %}</button>
                     </form>
                 </li>
+                {% if not user.emailVerified %}
+                    <li>
+                        <form class="action-item-form" method="post" action="{{ path('app_moderation_users_verify') }}">
+                            <input name="items" type="hidden" value="{{ user.id }}"/>
+                            <input type="hidden" name="token" value="{{ csrf_token('admin') }}">
+                            <button type="submit" class="dropdown-item checkbox-action">{{ 'admin.actions.verify.title' | trans }}</button>
+                        </form>
+                    </li>
+                {% endif %}
             {% endif %}
             <li>
                 <form class="action-item-form" method="post" action="{% if user.frozen %}{{ path('app_moderation_users_unfreeze') }}{% else %}{{ path('app_moderation_users_freeze') }}{% endif %}">

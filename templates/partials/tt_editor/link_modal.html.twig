@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="linkUrl" class="form-label">{{ 'fields.link_url.title' | trans }}</label>
-                    <input type="text" class="form-control" name="linkUrl" id="linkUrl" value="">
+                    <input type="text" data-test="hyperlink-url" class="form-control" name="linkUrl" id="linkUrl" value="">
                 </div>
             </div>
             <div class="modal-footer">
@@ -16,7 +16,7 @@
                     <button type="button" class="btn btn-outline-danger d-none" data-bs-dismiss="modal" id="ttBtnARemove">{{ 'buttons.remove' | trans }}</button>
                 </div>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'modals.cancel' | trans }}</button>
-                <button data-insert="{{ 'buttons.insert' | trans }}" data-update="{{ 'buttons.update' | trans }}" type="button" class="btn btn-primary" data-bs-dismiss="modal" id="ttBtnASubmit">{{ 'buttons.insert' | trans }}</button>
+                <button data-test="insert-hyperlink" data-insert="{{ 'buttons.insert' | trans }}" data-update="{{ 'buttons.update' | trans }}" type="button" class="btn btn-primary" data-bs-dismiss="modal" id="ttBtnASubmit">{{ 'buttons.insert' | trans }}</button>
             </div>
         </div>
     </div>
