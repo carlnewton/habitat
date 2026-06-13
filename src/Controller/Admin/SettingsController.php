@@ -178,10 +178,6 @@ class SettingsController extends AbstractController
             $errors['theme'][] = $this->translator->trans('fields.theme.validations.empty');
         }
 
-        if (SidebarContent::stripTags($request->request->get('sidebarContent')) !== $request->request->get('sidebarContent')) {
-            $errors['sidebarContent'][] = $this->translator->trans('admin.settings.validations.sidebar_content.disallowed_html_tags');
-        }
-
         return $errors;
     }
 
