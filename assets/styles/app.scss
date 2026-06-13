@@ -14,6 +14,48 @@ body {
 }
 
 #map { height: 100%; }
+
+#map .leaflet-btn {
+    background-color: #fff;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    background-clip: padding-box;
+    font-size: 15px;
+    height: 33px;
+    width: 33px;
+}
+
+#map .leaflet-btn-active {
+    background-color: #fffacd;
+}
+
+#map .leaflet-btn:hover {
+    background: rgb(244, 244, 244);
+    border: 2px solid rgba(0,0,0,0.33);
+}
+
+#map .leaflet-btn-active:hover {
+    background-color: #ffffe0;
+}
+
+@keyframes pulse {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+    100% { filter: brightness(1); }
+}
+#map .my-location-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes walk {
+    to {
+        stroke-dashoffset: 24;
+    }
+}
+#map .location-path {
+    animation: walk 1s infinite;
+}
+
 .post-card a {
     text-decoration: none !important;
 }

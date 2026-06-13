@@ -30,9 +30,9 @@ map.setMaxBounds(perimeter.getBounds().pad(0.3));
 map.setMinZoom(map.getBoundsZoom(map.options.maxBounds));
 
 var markerIcon = L.icon({
-    iconUrl: '/build/images/marker-icon.2b3e1faf.png',
-    iconSize:     [25, 41],
-    iconAnchor:   [13, 41],
+    iconUrl: '/build/images/marker_icon.png',
+    iconSize:     [30, 41],
+    iconAnchor:   [15, 41],
 })
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

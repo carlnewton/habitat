@@ -289,7 +289,9 @@ buttons:
   continue: "Continue"
   change: "Change"
   clear: "Clear"
+  use_current_location: "Use your current location"
   show_current_location: "Show your current location"
+  hide_current_location: "Hide your current location"
   save: "Save"
   insert: "Insert"
   update: "Update"
@@ -327,6 +329,7 @@ map:
     invalid_location: "You must choose a valid location"
     invalid_location_size: "You must choose a valid location size"
     out_of_bounds: "The location can only be set inside the bounds of this Habitat"
+    location_disabled: "You need to enable access to your location to do that"
 
 user_settings:
   title: "Settings"
@@ -355,6 +358,7 @@ measurement_units:
       short: "km"
   miles:
     label: "miles"
+  away: "away"
 
 admin:
   actions:

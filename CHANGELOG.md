@@ -10,7 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#123] Dark mode
+- [#117] Users can see their location on the post map
 - [#131] A message displays when an anonymous user clicks a heart
+
+### Changed
+
+- Map marker icon inherits the style of the Habitat logo
 
 ### Fixed
 
