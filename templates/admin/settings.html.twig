@@ -26,7 +26,7 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="d-flex gx-2">
-                            <button type="button" class="btn btn-outline-secondary me-2 get-location" title="{{ 'buttons.show_current_location' | trans }}"><i class="bi bi-crosshair2"></i></button>
+                            <button type="button" class="btn btn-outline-secondary me-2 get-location" title="{{ 'buttons.use_current_location' | trans }}"><i class="bi bi-crosshair2"></i></button>
                             <div class="input-group">
                                 <span class="input-group-text">{{ 'map.size_label' | trans }}</span>
                                 <input type="number" step="0.1" name="locationRadius" id="locationRadius" class="form-control" autocomplete="off" min="0">
@@ -60,6 +60,27 @@
             {% if errors.language is defined %}
                 <div class="invalid-feedback">
                     {% for errorMessage in errors.language %}
+                        <p>{{ errorMessage }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="theme" class="form-label">{{ 'fields.theme.title' | trans }}</label>
+
+            <div class="input-group p-0 {% if errors.theme is defined %} is-invalid{% endif %}">
+                <input type="radio" class="btn-check" name="theme" value="light" id="light" autocomplete="off"{% if values.theme is defined and values.theme == 'light' %} checked{% endif %}>
+                <label class="btn btn-outline-secondary rounded-start" for="light">{{ 'fields.theme.light' | trans }}</label>
+                <input type="radio" class="btn-check" name="theme" value="dark" id="dark" autocomplete="off"{% if values.theme is defined and values.theme == 'dark' %} checked{% endif %}>
+                <label class="btn btn-outline-secondary" for="dark">{{ 'fields.theme.dark' | trans }}</label>
+            </div>
+
+            {% if adminUserTheme %}
+                <div class="form-text">{{ 'fields.theme.override' | trans({'%theme%' : adminUserTheme, '%user_settings_url%': path('app_settings') }) | raw }}</div>
+            {% endif %}
+            {% if errors.theme is defined %}
+                <div class="invalid-feedback">
+                    {% for errorMessage in errors.theme %}
                         <p>{{ errorMessage }}</p>
                     {% endfor %}
                 </div>

@@ -161,6 +161,13 @@ fields:
     title: "Name"
   habitat_name:
     title: "Habitat name"
+  theme:
+    title: "Theme"
+    dark: "dark"
+    light: "light"
+    override: "You have selected the %theme% theme as a <a href=\"%user_settings_url%\">user setting</a>, which will prevent you from seeing this global default change."
+    validations:
+      empty: "You must select a theme."
   location:
     title: "Location"
     validations:
@@ -282,7 +289,9 @@ buttons:
   continue: "Continue"
   change: "Change"
   clear: "Clear"
+  use_current_location: "Use your current location"
   show_current_location: "Show your current location"
+  hide_current_location: "Hide your current location"
   save: "Save"
   insert: "Insert"
   update: "Update"
@@ -320,6 +329,7 @@ map:
     invalid_location: "You must choose a valid location"
     invalid_location_size: "You must choose a valid location size"
     out_of_bounds: "The location can only be set inside the bounds of this Habitat"
+    location_disabled: "You need to enable access to your location to do that"
 
 user_settings:
   title: "Settings"
@@ -348,6 +358,7 @@ measurement_units:
       short: "km"
   miles:
     label: "miles"
+  away: "away"
 
 admin:
   actions:
@@ -474,7 +485,9 @@ modals:
     title: "Insert hyperlink"
   update_hyperlink:
     title: "Update hyperlink"
-  cancel: Cancel
+  cancel: "Cancel"
+  sign_in:
+    body: "You need to be logged in to do that."
 
 menus:
   contextual:
@@ -566,6 +579,7 @@ misc:
   any: "Any"
   loading: "Loading..."
   to_comment: "to comment on this post."
+  or: "or"
 
 commands:
   reset_admin_password:

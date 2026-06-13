@@ -1,3 +1,5 @@
+{% set habitat_theme = setting('theme', 'light') %}
+
 <div class="post"{% if loop is defined and loop.last and offset is defined %} hx-indicator="#post-spinner" hx-get="/hx/list-posts?offset={{ offset }}{% if category is defined %}&category={{ category.id }}{% endif %}" hx-trigger="intersect once" hx-swap="afterend"{% endif %}>
     <div class="card shadow mb-3 post-card">
         <div class="card-body">
@@ -12,7 +14,7 @@
             <div id="report-post-{{ post.id }}"></div>
             <div class="mb-2">
                 {% if category is not defined and show_category %}
-                    <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5">
+                    <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-{% if habitat_theme == 'light' %}secondary{% else %}body-emphasis{% endif %} fs-5">
                         <i class="bi bi-tag"></i>
                         {{ post.category.name }}
                     </a>

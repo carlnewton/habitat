@@ -3,3 +3,4 @@ import './2-admin.cy.js';
 import './3-user.cy.js';
 import './4-post.cy.js';
 import './5-comment.cy.js';
+import './6-heart.cy.js';

@@ -39,7 +39,7 @@
         <div id="report-post-{{ post.id }}"></div>
         {% if show_category %}
             <div class="mb-2">
-                <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-secondary fs-5 text-decoration-none">
+                <a href="{{ path('app_category_index', { id: post.category.id }) }}" class="link-{% if habitat_theme == 'light' %}secondary{% else %}body-emphasis{% endif %} fs-5 text-decoration-none">
                     <i class="bi bi-tag"></i>
                     {{ post.category.name }}
                 </a>
@@ -86,7 +86,17 @@
             <h2 id="location">{{ 'fields.location.title' | trans }}</h2>
             <div class="card mb-4">
                 <div class="ratio ratio-16x9">
-                    <div id="map" class="rounded" data-center="{{ post.latitude }},{{ post.longitude }}"></div>
+                    <div
+                        id="map"
+                        class="rounded"
+                        data-center="{{ post.latitude }},{{ post.longitude }}"
+                        data-showcurrentlocation="{{ 'buttons.show_current_location' | trans }}"
+                        data-hidecurrentlocation="{{ 'buttons.hide_current_location' | trans }}"
+                        data-measurementtype="{{ setting('locationMeasurement') }}"
+                        data-measurement="{{ (setting('locationMeasurement') == 'km') ? 'measurement_units.kilometers.label.short' | trans : 'measurement_units.miles.label' | trans }}"
+                        data-away="{{ 'measurement_units.away' | trans }}"
+                        data-error="{{ 'map.validations.location_disabled' | trans }}"
+                    ></div>
                 </div>
             </div>
         {% endif %}
@@ -131,5 +141,12 @@
 
     {% if app.user %}
         {{ encore_entry_script_tags('tt_editor') }}
+    {% endif %}
+{% endblock %}
+
+{% block modals %}
+    {{ parent() }}
+    {% if not app.user %}
+        {% include 'partials/sign_in_modal.html.twig' %}
     {% endif %}
 {% endblock %}

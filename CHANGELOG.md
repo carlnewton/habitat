@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.5.0] - 2026-06-13
+
+### Added
+
+- [#123] Dark mode
+- [#117] Users can see their location on the post map
+- [#131] A message displays when an anonymous user clicks a heart
+
+### Changed
+
+- Map marker icon inherits the style of the Habitat logo
+
+### Fixed
+
+- Do not expect only database ID to be 1 for any entity
+
 ## [1.4.0] - 2026-05-16
 
 ### Added

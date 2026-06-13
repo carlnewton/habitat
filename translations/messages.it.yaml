@@ -161,6 +161,13 @@ fields:
     title: "Nome"
   habitat_name:
     title: "Nome dell'Habitat"
+  theme:
+    title: "Tema"
+    dark: "scura"
+    light: "chiara"
+    override: "Hai selezionato il tema %theme% come <a href=\"%user_settings_url%\">impostazione utente</a>, pertanto non vedrai questa modifica predefinita globale."
+    validations:
+      empty: "Devi scegliere un tema."
   location:
     title: "Posizione"
     validations:
@@ -282,7 +289,9 @@ buttons:
   continue: "Continua"
   change: "Modifica"
   clear: "Libera"
+  use_current_location: "Usa la tua posizione attuale"
   show_current_location: "Mostra la tua posizione attuale"
+  hide_current_location: "Nascondi la tua posizione attuale"
   save: "Salva"
   insert: "Inserisci"
   update: "Aggiorna"
@@ -320,6 +329,7 @@ map:
     invalid_location: "Devi scegliere una posizione valida"
     invalid_location_size: "Devi scegliere una dimensione della posizione valida"
     out_of_bounds: "La posizione può essere impostata solo all'interno dei confini di questo Habitat"
+    location_disabled: "Devi abilitare l'accesso alla tua posizione per farlo"
 
 user_settings:
   title: "Impostazioni"
@@ -348,6 +358,7 @@ measurement_units:
       short: "km"
   miles:
     label: "miglia"
+  away: "di distanza"
 
 admin:
   actions:
@@ -475,6 +486,8 @@ modals:
   update_hyperlink:
     title: "Aggiorna hyperlink"
   cancel: "Annulla"
+  sign_in:
+    body: "Devi essere loggato per farlo."
 
 menus:
   contextual:
@@ -566,6 +579,7 @@ misc:
   any: "Qualsiasi"
   loading: "Caricamento..."
   to_comment: "per commentare questo post."
+  or: "o"
 
 commands:
   reset_admin_password:

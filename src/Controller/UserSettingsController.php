@@ -11,38 +11,50 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UserSettingsController extends AbstractController
 {
-    private UserRepository $userRepository;
+    private ?User $user;
+
+    public function __construct(
+        private SettingsRepository $settings,
+    ) {
+    }
 
     #[Route(path: '/settings', name: 'app_settings')]
     public function settings(
         #[CurrentUser] ?User $user,
-        SettingsRepository $settings,
     ): Response {
-        if (null === $user) {
+        $this->user = $user;
+
+        if (null === $this->user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $userMeasurementUnitSetting = null;
-        if (!empty($user->getSettings())) {
-            foreach ($user->getSettings() as $userSetting) {
-                if ('locationMeasurement' === $userSetting->getName()) {
-                    $userMeasurementUnitSetting = $userSetting;
-                    break;
+        $themeSetting = $this->getUserOrGlobalSetting('theme');
+        $locationMeasurementSetting = $this->getUserOrGlobalSetting('locationMeasurement');
+
+        return $this->render('security/settings.html.twig', [
+            'user' => $this->user,
+            'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'kilometers',
+            'theme' => ($themeSetting) ? $themeSetting->getValue() : 'light',
+        ]);
+    }
+
+    private function getUserOrGlobalSetting(string $settingName): mixed
+    {
+        $savedUserSetting = null;
+        if (!empty($this->user->getSettings())) {
+            foreach ($this->user->getSettings() as $userSetting) {
+                if ($settingName === $userSetting->getName()) {
+                    return $userSetting;
                 }
             }
         }
 
-        $locationMeasurement = null;
-        if (is_null($userMeasurementUnitSetting)) {
-            $measurementUnitSetting = $settings->getSettingByName('locationMeasurement');
-            $locationMeasurement = $measurementUnitSetting->getValue();
-        } else {
-            $locationMeasurement = $userMeasurementUnitSetting->getValue();
+        $savedGlobalSetting = $this->settings->getSettingByName($settingName);
+
+        if (!empty($savedGlobalSetting)) {
+            return $savedGlobalSetting;
         }
 
-        return $this->render('security/settings.html.twig', [
-            'user' => $user,
-            'locationMeasurement' => $locationMeasurement,
-        ]);
+        return null;
     }
 }

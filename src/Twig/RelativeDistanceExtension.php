@@ -4,17 +4,16 @@ namespace App\Twig;
 
 use App\Repository\SettingsRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class RelativeDistanceExtension extends AbstractExtension
 {
-    protected SettingsRepository $settingsRepository;
-    protected Security $security;
-
     public function __construct(
-        SettingsRepository $settingsRepository,
-        Security $security,
+        private SettingsRepository $settingsRepository,
+        private TranslatorInterface $translator,
+        private Security $security,
     ) {
         $this->settingsRepository = $settingsRepository;
         $this->security = $security;
@@ -52,9 +51,20 @@ class RelativeDistanceExtension extends AbstractExtension
         }
 
         if ($distance >= 100) {
-            return round($distance) . ' ' . $measurement . ' away';
+            return round($distance) . $this->getMeasurementTranslation($measurement);
         }
 
-        return round($distance, 1) . ' ' . $measurement . ' away';
+        return round($distance, 1) . $this->getMeasurementTranslation($measurement);
+    }
+
+    private function getMeasurementTranslation(string $measurement): string
+    {
+        switch ($measurement) {
+            case 'miles':
+                return ' ' . $this->translator->trans('measurement_units.miles.label') . ' ' . $this->translator->trans('measurement_units.away');
+            case 'km':
+            default:
+                return ' ' . $this->translator->trans('measurement_units.kilometers.label.short') . ' ' . $this->translator->trans('measurement_units.away');
+        }
     }
 }
