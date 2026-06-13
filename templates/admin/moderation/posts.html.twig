@@ -27,17 +27,17 @@
 {% endblock %}
 
 {% block rows %}
-    <td class="align-middle{% if sort == 'title' %} bg-light border{% endif %}">
+    <td class="align-middle{% if sort == 'title' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
         <a href="{{ path('app_view_post', { id: item.id }) }}">
             {{ item.title }}
         </a>
     </td>
-    <td class="align-middle{% if sort == 'posted' %} bg-light border{% endif %}">{{ item.posted|local_date }}</td>
+    <td class="align-middle{% if sort == 'posted' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.posted|local_date }}</td>
     <td class="align-middle">{{ item.category.name }}</td>
     <td class="align-middle">
         <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
     </td>
-    <td class="align-middle{% if sort == 'attachments' %} bg-light border{% endif %}">{{ item.attachments|length }}</td>
-    <td class="align-middle{% if sort == 'comments' %} bg-light border{% endif %}">{{ item.comments|length }}</td>
-    <td class="align-middle{% if sort == 'hearts' %} bg-light border{% endif %}">{{ item.hearts|length }}</td>
+    <td class="align-middle{% if sort == 'attachments' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.attachments|length }}</td>
+    <td class="align-middle{% if sort == 'comments' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.comments|length }}</td>
+    <td class="align-middle{% if sort == 'hearts' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.hearts|length }}</td>
 {% endblock %}
