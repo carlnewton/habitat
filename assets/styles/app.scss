@@ -61,7 +61,19 @@ div.dropzone {
         border-color: rgb(116, 176, 214);
         color: #171a1d;
     }
-    
+
+    .btn-primary:first-child:active,
+    .btn-outline-primary:first-child:active,
+    .btn-primary:focus-visible,
+    .btn-outline-primary:focus-visible {
+        background-color: rgb(65, 147, 199) !important;
+    }
+
+    .page-link.active, .active > .page-link {
+        background-color: rgb(116, 176, 214);
+        color: #171a1d;
+    }
+
     .btn-outline-primary {
         border-color: rgb(116, 176, 214);
         color: rgb(116, 176, 214);
@@ -80,7 +92,21 @@ div.dropzone {
     div.dropzone {
         color: rgb(116, 176, 214);
     }
+
+    .form-check-input:checked {
+        background-color: rgb(116, 176, 214);
+        border-color: rgb(116, 176, 214);
+    }
+
+    .form-switch .form-check-input:checked {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27%3e%3ccircle r=%273%27 fill=%27%23171a1d%27/%3e%3c/svg%3e");
+    }
+
+    .form-check-input:checked[type="checkbox"] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27%3e%3cpath fill=%27none%27 stroke=%27%23171a1d%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%273%27 d=%27m6 10 3 3 6-6%27/%3e%3c/svg%3e");
+    }
 }
+
 .min-height-100 {
   min-height: 100px;
 }

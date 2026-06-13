@@ -7,6 +7,10 @@
 
 $primary: #177bba;
 
+[data-bs-theme="dark"] {
+    $primary: rgb(116, 176, 214);
+}
+
 @import "~bootstrap/scss/bootstrap";
 @import "~leaflet/dist/leaflet.css";
 @import "app.scss";
