@@ -32,7 +32,7 @@ if (document.getElementById('map') !== null) {
             viewLocationButton = L.DomUtil.create('button', 'leaflet-btn');
 
             viewLocationButton.id = 'view-location-btn';
-            viewLocationButton.innerHTML = '<i class="bi bi-compass"></i>';
+            viewLocationButton.innerHTML = '<i class="bi bi-compass text-black"></i>';
             viewLocationButton.title = document.getElementById('map').dataset.showcurrentlocation;
             viewLocationButton.setAttribute('data-test', 'current-location-btn')
 
@@ -143,7 +143,7 @@ if (document.getElementById('map') !== null) {
 
             L.Control.RelativeDistance = L.Control.extend({
                 onAdd: function(map) {
-                    distanceIndicator = L.DomUtil.create('div', 'bg-light rounded shadow-sm opacity-75 p-1 fs-6');
+                    distanceIndicator = L.DomUtil.create('div', 'text-dark bg-light rounded shadow-sm opacity-75 p-1 fs-6');
 
                     distanceIndicator.id = 'distanceIndicator';
                     distanceIndicator.title = document.getElementById('map').dataset.showcurrentlocation;
