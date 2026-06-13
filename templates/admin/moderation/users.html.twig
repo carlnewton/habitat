@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block rows %}
-    <td class="align-middle{% if sort == 'username' %} bg-light border{% endif %}">
+    <td class="align-middle{% if sort == 'username' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
         <a href="{{ path('app_moderation_user', { id: item.id }) }}">
             {{ item.username }}
         </a>
@@ -57,20 +57,20 @@
             {{ 'users.roles.user' | trans }}
         {% endif %}
     </td>
-    <td class="align-middle{% if sort == 'verified' %} bg-light border{% endif %}">
+    <td class="align-middle{% if sort == 'email_verified' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
         {% if item.emailVerified %}
             <i class="bi bi-check-lg fs-4 text-success"></i>
         {% else %}
             <i class="bi bi-x-lg fs-4 text-danger"></i>
         {% endif %}
     </td>
-    <td class="align-middle{% if sort == 'created' %} bg-light border{% endif %}">{{ item.created|local_date }}</td>
-    <td class="align-middle{% if sort == 'posts' %} bg-light border{% endif %}">
+    <td class="align-middle{% if sort == 'created' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.created|local_date }}</td>
+    <td class="align-middle{% if sort == 'posts' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
         <div class="d-grid">
             <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { user: item.id }) }}">{{ item.posts|length }}</a>
         </div>
     </td>
-    <td class="align-middle{% if sort == 'comments' %} bg-light border{% endif %}">
+    <td class="align-middle{% if sort == 'comments' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
         <div class="d-grid">
             <a class="btn btn-link{% if item.comments|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_comments', { user: item.id }) }}">{{ item.comments|length }}</a>
         </div>

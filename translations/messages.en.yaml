@@ -161,6 +161,13 @@ fields:
     title: "Name"
   habitat_name:
     title: "Habitat name"
+  theme:
+    title: "Theme"
+    dark: "dark"
+    light: "light"
+    override: "You have selected the %theme% theme as a <a href=\"%user_settings_url%\">user setting</a>, which will prevent you from seeing this global default change."
+    validations:
+      empty: "You must select a theme."
   location:
     title: "Location"
     validations:

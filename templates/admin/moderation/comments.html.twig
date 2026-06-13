@@ -20,7 +20,7 @@
 
 {% block rows %}
     <td class="align-middle">{{ item.body | sanitize_html('app.comment_sanitizer') }}</td>
-    <td class="align-middle{% if sort == 'posted' %} bg-light border{% endif %}">{{ item.posted|local_date }}</td>
+    <td class="align-middle{% if sort == 'posted' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.posted|local_date }}</td>
     <td class="align-middle">
         <a href="{{ path('app_moderation_user', { id: item.user.id }) }}">{{ item.user.username }}</a>
     </td>

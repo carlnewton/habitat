@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-xl-6">
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body rounded bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-sliders"></i> {{ 'user_settings.preferences.title' | trans }}
                     </h5>
@@ -27,16 +27,30 @@
                             <input type="hidden" name="token" value="{{ csrf_token('set_measurement_units') }}">
                         </form>
                     </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                            {{ 'fields.theme.title' | trans }}
+                            </div>
+                        </div>
+                        <form id="set-user-theme" hx-post="/hx/set-theme">
+                            <div class="input-group" id="theme">
+                                <button class="btn{% if theme == "light" %} active{% endif %} btn-outline-secondary" type="submit" name="light" id="theme-light">{{ 'fields.theme.light' | trans }}</button>
+                                <button class="btn{% if theme == 'dark' %} active{% endif %} btn-outline-secondary" type="submit" name="dark" id="theme-dark">{{ 'fields.theme.dark' | trans }}</button>
+                            </div>
+                            <input type="hidden" name="token" value="{{ csrf_token('set_theme') }}">
+                        </form>
+                    </li>
                 </ul>
             </div>
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body rounded bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-tag"></i> {{ 'user_settings.hidden_categories.title' | trans }}
                     </h5>
                 </div>
                 {% if user.hiddenCategories is empty %}
-                    <div class="card-body">
+                    <div class="card-body rounded">
                         {{ 'user_settings.hidden_categories.no_hidden_categories' | trans }}
                     </div>
                 {% else %}
@@ -62,7 +76,7 @@
                 {% endif %}
             </div>
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body rounded bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-x-circle"></i> {{ 'user_settings.delete_account.title' | trans }}
                     </h5>
@@ -74,7 +88,7 @@
         </div>
         <div class="col-xl-6">
             <div class="card mb-3">
-                <div class="card-body bg-light">
+                <div class="card-body rounded bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %}">
                     <h5 class="card-title mb-0">
                         <i class="bi bi-person"></i> {{ 'user_settings.change_details.title' | trans }}
                     </h5>

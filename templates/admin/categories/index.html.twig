@@ -33,7 +33,7 @@
                                 </div>
                             </th>
                             {% for heading, headingProperties in headings %}
-                                <th{% if sort == heading %} class="bg-light border border-top-0"{% endif %}>
+                                <th{% if sort == heading %} class="bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border border-top-0"{% endif %}>
                                     {% if headingProperties.sortable is defined and headingProperties.sortable == true %}
                                         <a class="d-flex justify-content-between link-underline link-underline-opacity-0" href="{{ path(app.request.attributes.get('_route'), { 'perPage': items_per_page, 'page': current_page, 'sort': heading, 'order': (order == 'asc' and sort == heading) ? 'desc' : 'asc' })}}">
                                     {% endif %}
@@ -54,18 +54,18 @@
                                         <input class="form-check-input row-check" type="checkbox" onchange="rowCheckChange(this)" value="{{ item.id }}">
                                     </div>
                                 </td>
-                                <td class="align-middle{% if sort == 'name' %} bg-light border{% endif %}"><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
+                                <td class="align-middle{% if sort == 'name' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}"><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
                                 <td>{{ item.description }}</td>
-                                <td class="align-middle{% if sort == 'location' %} bg-light border{% endif %}">{{ item.location.label }}</td>
-                                <td class="align-middle{% if sort == 'weight' %} bg-light border{% endif %}">{{ item.weight }}</td>
-                                <td class="align-middle text-center{% if sort == 'allow_posting' %} bg-light border{% endif %}">
+                                <td class="align-middle{% if sort == 'location' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.location.label }}</td>
+                                <td class="align-middle{% if sort == 'weight' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.weight }}</td>
+                                <td class="align-middle text-center{% if sort == 'allow_posting' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
                                     {% if item.allowPosting %}
                                         <i class="bi bi-check-lg fs-4 text-success"></i>
                                     {% else %}
                                         <i class="bi bi-x-lg fs-4 text-danger"></i>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle{% if sort == 'posts' %} bg-light border{% endif %}">
+                                <td class="align-middle{% if sort == 'posts' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
                                     <div class="d-grid">
                                         <a class="btn btn-link{% if item.posts|length == 0 %} disabled{% endif %}" href="{{ path('app_moderation_posts', { category: item.id }) }}">{{ item.posts|length }}</a>
                                     </div>
