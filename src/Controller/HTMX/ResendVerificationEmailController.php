@@ -58,7 +58,6 @@ class ResendVerificationEmailController extends AbstractController
                     'verificationString' => $user->getEmailVerificationString(),
                 ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
         );
-        exit;
 
         return new Response('', Response::HTTP_OK);
     }
