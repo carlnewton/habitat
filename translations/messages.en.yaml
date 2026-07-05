@@ -70,6 +70,7 @@ fields:
     title: "Description"
   photos:
     title: "Photos"
+    uploaded_file: "Uploaded file"
   post:
     title: "Post"
   posts:
@@ -245,6 +246,15 @@ fields:
   toggle_category:
     enabled: Posts from this category appear in your feed
     disabled: Posts from this category are hidden from your feed
+  question:
+    title: "Question"
+    help_text: "It is recommended to try to ask a question which would be easy for somebody local to answer, but difficult for anyone else, or a bot to guess."
+    validations:
+      brute_force: "This question looks like it might be easy to brute-force. It is recommended to avoid yes or no questions, questions which have numeric answers, or answers from a known list."
+  add_correct_answer:
+    title: "Add a correct answer"
+    validations:
+      brute_force: "This answer looks like it might be easy to brute-force. It is recommended to avoid yes or no questions, questions which have numeric answers, or answers from a known list."
 
 post:
   create: "Create a post"
@@ -343,6 +353,8 @@ buttons:
   add_a_location: "Add a location"
   send_test_email: "Send a test email"
   verify_email_address: "Verify your email address"
+  delete_question: "Delete question"
+  add_photos: "Add photos"
   go_back_home: "Go back home"
 
 map:
@@ -538,6 +550,8 @@ admin:
       invalid_value: "This field has an invalid value"
     registration_challenge:
       title: "Registration challenge"
+      new_question: "New question"
+      correct_answers: "Correct answers"
       validations:
         no_correct_answers: "All questions must have at least one correct answer"
         answer_character_count: "All answers must be 255 characters or less"
