@@ -10,10 +10,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class AddEditCategoryController extends AbstractController
 {
+    public function __construct(
+        protected TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route(path: '/admin/categories/add', name: 'app_admin_categories_add', methods: ['GET', 'POST'])]
     #[Route(path: '/admin/categories/{id}', name: 'app_admin_categories_edit', methods: ['GET', 'POST'])]
     public function add(
@@ -35,10 +41,7 @@ class AddEditCategoryController extends AbstractController
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
             if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-                $this->addFlash(
-                    'warning',
-                    'Something went wrong, please try again.'
-                );
+                $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
                 return $this->render('admin/categories/add_edit.html.twig');
             }
@@ -71,9 +74,9 @@ class AddEditCategoryController extends AbstractController
             $entityManager->flush();
 
             if ('add' === $action) {
-                $this->addFlash('notice', 'Category added');
+                $this->addFlash('notice', $this->translator->trans('flash_messages.category_added'));
             } else {
-                $this->addFlash('notice', 'Category updated');
+                $this->addFlash('notice', $this->translator->trans('flash_messages.category_updated'));
             }
 
             return $this->redirectToRoute('app_admin_categories');
@@ -91,11 +94,11 @@ class AddEditCategoryController extends AbstractController
         $errors = [];
 
         if (empty($request->request->get('name'))) {
-            $errors['name'] = 'This field is required';
+            $errors['name'][] = $this->translator->trans('fields.category_name.validations.required');
         }
 
         if (is_null($request->request->get('location')) || empty(CategoryLocationOptionsEnum::from($request->request->get('location')))) {
-            $errors['location'] = 'This field is required';
+            $errors['location'][] = $this->translator->trans('fields.category_location.validations.required');
         }
 
         return $errors;

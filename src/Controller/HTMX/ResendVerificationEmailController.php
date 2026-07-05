@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResendVerificationEmailController extends AbstractController
 {
@@ -19,6 +20,7 @@ class ResendVerificationEmailController extends AbstractController
         private EntityManagerInterface $entityManager,
         private Mailer $mailer,
         private UrlGeneratorInterface $router,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -46,15 +48,17 @@ class ResendVerificationEmailController extends AbstractController
         $this->mailer->send(
             $user->getEmailAddress(),
             $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
-            'Verify your email address for ' . $domain,
-            '<p>Hello ' . $user->getUsername() . ',</p>' .
-            '<p>Click the link below to verify the email address for your account.</p>' .
-            '<p>Ignore this email if you didn\'t create this account.</p>' .
-            '<p><a href="' . $domain . $this->router->generate('app_verify_user', [
-                'userId' => $user->getId(),
-                'verificationString' => $user->getEmailVerificationString(),
-            ]) . '">Verify your email address</a>'
+            $this->translator->trans('emails.verify_email_address.subject', [
+                '%domain%' => $domain
+            ]),
+            nl2br($this->translator->trans('emails.verify_email_address.body', [
+                '%username%' => $user->getUsername()
+            ])) . '<p><a href="' . $domain . $this->router->generate('app_verify_user', [
+                    'userId' => $user->getId(),
+                    'verificationString' => $user->getEmailVerificationString(),
+                ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
         );
+        exit;
 
         return new Response('', Response::HTTP_OK);
     }

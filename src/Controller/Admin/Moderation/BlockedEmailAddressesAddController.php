@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class BlockedEmailAddressesAddController extends AbstractController
@@ -20,6 +21,11 @@ class BlockedEmailAddressesAddController extends AbstractController
     protected EntityManagerInterface $entityManager;
     protected BlockedEmailAddressRepository $blockedEmailAddressRepository;
     protected UserRepository $userRepository;
+
+    public function __construct(
+        protected TranslatorInterface $translator,
+    ) {
+    }
 
     #[Route(path: '/admin/moderation/blocked-email-addresses/block', name: 'app_moderation_blocked_email_addresses_add', methods: ['GET', 'POST'])]
     public function add(
@@ -35,10 +41,7 @@ class BlockedEmailAddressesAddController extends AbstractController
         if ('POST' === $request->getMethod()) {
             $submittedToken = $request->getPayload()->get('token');
             if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-                $this->addFlash(
-                    'warning',
-                    'Something went wrong, please try again.'
-                );
+                $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
                 return $this->render('admin/moderation/add_blocked_email_address.html.twig');
             }
@@ -71,11 +74,11 @@ class BlockedEmailAddressesAddController extends AbstractController
         $errors = [];
 
         if (empty($request->request->get('email')) || !filter_var($request->request->get('email'), FILTER_VALIDATE_EMAIL)) {
-            $errors['email'][] = 'This is not a valid email address';
+            $errors['email'][] = $this->translator->trans('fields.email_address.validations.invalid_email_address');
         } elseif ($this->blockedEmailAddressRepository->findOneBy(['email_address' => $request->request->get('email')])) {
-            $errors['email'][] = 'This email address is already blocked';
+            $errors['email'][] = $this->translator->trans('fields.email_address.validations.already_blocked');
         } elseif ($this->userRepository->findOneBy(['email_address' => $request->request->get('email')])) {
-            $errors['email'][] = 'This email address belongs to an existing user, you must ban the user instead';
+            $errors['email'][] = $this->translator->trans('fields.email_address.validations.ban_instead');
         }
 
         return $errors;

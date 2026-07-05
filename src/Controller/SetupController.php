@@ -179,7 +179,7 @@ class SetupController extends AbstractController
         if (count($entityErrors) > 0) {
             $this->addFlash(
                 'warning',
-                $this->translator->trans('setup.create_admin_account.validations.generic'),
+                $this->translator->trans('account.validations.generic'),
             );
 
             return $this->render('setup/admin.html.twig');

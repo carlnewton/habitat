@@ -9,10 +9,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class CategoriesDeleteController extends AbstractController
 {
+    public function __construct(
+        protected TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route(path: '/admin/categories/delete', name: 'app_admin_categories_delete', methods: ['POST'], priority: 2)]
     public function delete(
         ?int $id,
@@ -21,10 +27,7 @@ class CategoriesDeleteController extends AbstractController
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->redirectToRoute('app_admin_categories');
         }
@@ -42,7 +45,7 @@ class CategoriesDeleteController extends AbstractController
         if (empty($categories)) {
             $this->addFlash(
                 'warning',
-                'The categories could not be found.'
+                $this->translator->trans('admin.categories.not_found')
             );
 
             return $this->redirectToRoute('app_admin_categories');
@@ -52,7 +55,7 @@ class CategoriesDeleteController extends AbstractController
             if (count($category->getPosts()) > 0) {
                 $this->addFlash(
                     'warning',
-                    'All posts must be assigned to a different category before a category can be deleted.'
+                    $this->translator->trans('admin.categories.assign_to_delete')
                 );
 
                 return $this->redirectToRoute('app_admin_categories');
@@ -71,7 +74,7 @@ class CategoriesDeleteController extends AbstractController
         }
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Categories deleted');
+        $this->addFlash('notice', $this->translator->trans('admin.categories.deleted'));
 
         return $this->redirectToRoute('app_admin_categories');
     }

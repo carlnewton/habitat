@@ -28,10 +28,7 @@ class CommentsDeleteController extends AbstractController
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->redirectToRoute('app_moderation_comments');
         }
@@ -49,7 +46,7 @@ class CommentsDeleteController extends AbstractController
         if (empty($comments)) {
             $this->addFlash(
                 'warning',
-                'The comments could not be found.'
+                $this->translator->trans('admin.moderation.comments.not_found'),
             );
 
             return $this->redirectToRoute('app_moderation_comments');
@@ -93,7 +90,7 @@ class CommentsDeleteController extends AbstractController
         }
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Comments deleted');
+        $this->addFlash('notice', $this->translator->trans('admin.moderation.comments.deleted'));
 
         return $this->redirectToRoute('app_moderation_comments');
     }
@@ -103,9 +100,14 @@ class CommentsDeleteController extends AbstractController
         $errors = [];
 
         if (strlen($request->request->get('reason')) > 255) {
-            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+            $errors['reason'][] = $this->translator->trans(
+                'admin.moderation.comments.validations.reason_max_length',
+                [
+                    '%max_length%' => 255,
+                ]
+            );
         } elseif (empty(trim($request->request->get('reason')))) {
-            $errors['reason'][] = 'This is a required field';
+            $errors['reason'][] = $this->translator->trans('admin.moderation.comments.validations.reason_required');
         }
 
         return $errors;

@@ -11,10 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted('ROLE_SUPER_ADMIN', statusCode: 403, exceptionCode: 10010)]
 class EditS3DetailsController extends AbstractController
 {
+    public function __construct(
+        private TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route(path: '/admin/s3', name: 'app_admin_s3_details', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
@@ -47,10 +53,7 @@ class EditS3DetailsController extends AbstractController
 
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->render('admin/s3/details.html.twig', [
                 'regions' => AmazonS3::REGIONS,
@@ -104,15 +107,15 @@ class EditS3DetailsController extends AbstractController
         $errors = [];
 
         if (empty($request->request->get('region')) || !in_array($request->request->get('region'), AmazonS3::REGIONS)) {
-            $errors['region'][] = 'You must select the region of your S3 bucket';
+            $errors['region'][] = $this->translator->trans('fields.amazon_s3_region.validations.empty');
         }
 
         if (empty($request->request->get('bucketName'))) {
-            $errors['bucketName'][] = 'You must enter the name of your S3 bucket';
+            $errors['bucketName'][] = $this->translator->trans('fields.amazon_s3_bucket_name.validations.empty');
         }
 
         if (empty($request->request->get('accessKey'))) {
-            $errors['accessKey'][] = 'You must enter the access key for your S3 bucket';
+            $errors['accessKey'][] = $this->translator->trans('fields.amazon_s3_access_key.validations.empty');
         }
 
         if (!empty($errors)) {
@@ -135,7 +138,7 @@ class EditS3DetailsController extends AbstractController
             );
         } catch (S3Exception $exception) {
             $errors['s3'] = [
-                'summary' => 'An error occurred when attempting to connect to the S3 bucket',
+                'summary' => $this->translator->trans('setup.image_storage.warnings.amazon_s3_exception'),
                 'detail' => $exception->getMessage(),
             ];
         }

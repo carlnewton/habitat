@@ -61,13 +61,23 @@ class UsersDemoteController extends AbstractController
 
         $usersDemoted = false;
         foreach ($users as $user) {
-            if (!in_array('ROLE_MODERATOR', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be demoted because they are not a moderator.');
+            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.administrator_not_demoted',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
-            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be demoted because they are the administrator.');
+            if (!in_array('ROLE_MODERATOR', $user->getRoles())) {
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.non_moderator_not_demoted',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
@@ -89,7 +99,7 @@ class UsersDemoteController extends AbstractController
 
         if ($usersDemoted) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users demoted');
+            $this->addFlash('notice', $this->translator->trans('admin.moderation.users.demoted'));
         }
 
         return $this->redirectToRoute('app_moderation_users');

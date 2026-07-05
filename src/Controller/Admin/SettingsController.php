@@ -103,10 +103,7 @@ class SettingsController extends AbstractController
             $this->entityManager->persist($sidebarContent);
             $this->entityManager->flush();
 
-            $this->addFlash(
-                'notice',
-                'Settings saved'
-            );
+            $this->addFlash('notice', $this->translator->trans('admin.settings.messages.saved'));
 
             return $this->redirectToRoute('app_admin_settings');
         }

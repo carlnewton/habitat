@@ -14,22 +14,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityController extends AbstractController
 {
     private UserRepository $userRepository;
-
     private RegistrationQuestionRepository $registrationQuestionRepository;
 
-    public function __construct(private EntityManagerInterface $entityManager, private Mailer $mailer)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private Mailer $mailer,
+        private TranslatorInterface $translator,
+    ) {
         $this->userRepository = $entityManager->getRepository(User::class);
         $this->registrationQuestionRepository = $entityManager->getRepository(RegistrationQuestion::class);
     }
@@ -76,7 +78,7 @@ class SecurityController extends AbstractController
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
         $registrationSetting = $settingsRepository->getSettingByName('registration');
         if (empty($registrationSetting) || 'on' !== $registrationSetting->getValue()) {
-            $this->addFlash('warning', 'Registrations are currently disabled');
+            $this->addFlash('warning', $this->translator->trans('account.registration.messages.registration_disabled'));
 
             return $this->redirectToRoute('app_index_index');
         }
@@ -92,7 +94,7 @@ class SecurityController extends AbstractController
         $submittedToken = $request->getPayload()->get('token');
 
         if (!$this->isCsrfTokenValid('signup', $submittedToken)) {
-            $this->addFlash('warning', 'Something went wrong, please try again.');
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->render('security/signup.html.twig');
         }
@@ -141,7 +143,7 @@ class SecurityController extends AbstractController
 
             $entityErrors = $validator->validate($user);
             if (count($entityErrors) > 0) {
-                $this->addFlash('warning', 'Something went wrong with your details, please try again.');
+                $this->addFlash('warning', $this->translator->trans('account.validations.generic'));
 
                 return $this->render('signup.html.twig', [
                     'question' => $newRegistrationQuestion,
@@ -156,18 +158,19 @@ class SecurityController extends AbstractController
             $mailer->send(
                 $user->getEmailAddress(),
                 $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
-                'Verify your email address for ' . $domain,
-                '<p>Hello ' . $user->getUsername() . ',</p>' .
-                '<p>Click the link below to verify the email address for your account.</p>' .
-                '<p>Ignore this email if you didn\'t create this account.</p>' .
-                '<p><a href="' . $domain . $router->generate('app_verify_user', [
-                    'userId' => $user->getId(),
-                    'verificationString' => $emailVerificationString,
-                ]) . '">Verify your email address</a>'
+                $this->translator->trans('emails.verify_email_address.subject', [
+                    '%domain%' => $domain
+                ]),
+                nl2br($this->translator->trans('emails.verify_email_address.body', [
+                    '%username%' => $user->getUsername()
+                ])) . '<p><a href="' . $domain . $router->generate('app_verify_user', [
+                        'userId' => $user->getId(),
+                        'verificationString' => $emailVerificationString,
+                    ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
             );
         }
 
-        $this->addFlash('notice', 'Check your emails to verify your email address');
+        $this->addFlash('notice', $this->translator->trans('flash_messages.check_emails'));
 
         return $this->redirectToRoute('app_index_index');
     }
@@ -177,15 +180,25 @@ class SecurityController extends AbstractController
         $errors = [];
 
         if (empty(trim($request->request->get('username'))) || mb_strlen(trim($request->request->get('username'))) < User::USERNAME_MIN_LENGTH) {
-            $errors['username'][] = 'Your username must be a minimum of ' . User::USERNAME_MIN_LENGTH . ' characters';
+            $errors['username'][] = $this->translator->trans(
+                'fields.username.validations.minimum_characters',
+                [
+                    '%character_length%' => User::USERNAME_MIN_LENGTH,
+                ]
+            );
         }
 
         if (mb_strlen(trim($request->request->get('username'))) > User::USERNAME_MAX_LENGTH) {
-            $errors['username'][] = 'Your username must be a maximum of ' . User::USERNAME_MAX_LENGTH . ' characters';
+            $errors['username'][] = $this->translator->trans(
+                'fields.username.validations.maximum_characters',
+                [
+                    '%character_length%' => User::USERNAME_MAX_LENGTH,
+                ]
+            );
         }
 
         if (!empty(trim($request->request->get('username')) && !ctype_alnum(trim($request->request->get('username'))))) {
-            $errors['username'][] = 'Your username must only use alphabetic and numeric characters';
+            $errors['username'][] = $this->translator->trans('fields.username.validations.alphabetic_numeric');
         }
 
         $existingUser = $this->userRepository->findOneBy([
@@ -193,15 +206,15 @@ class SecurityController extends AbstractController
         ]);
 
         if ($existingUser) {
-            $errors['username'][] = 'This username is already taken';
+            $errors['username'][] = $this->translator->trans('fields.username.validations.already_taken');
         }
 
         if (empty(trim($request->request->get('email'))) || !filter_var(trim($request->request->get('email')), FILTER_VALIDATE_EMAIL)) {
-            $errors['email'][] = 'This is not a valid email address';
+            $errors['email'][] = $this->translator->trans('fields.email_address.validations.invalid_email_address');
         }
 
         if (!User::isPasswordStrong($request->request->get('password'))) {
-            $errors['password'][] = 'You must use a stronger password';
+            $errors['password'][] = $this->translator->trans('fields.password.validations.weak_password');
         }
 
         if ($this->registrationQuestionRepository->count() > 0) {
@@ -210,11 +223,11 @@ class SecurityController extends AbstractController
             ]);
 
             if (empty($question)) {
-                $errors['question'][] = 'Please try answering this again';
+                $errors['question'][] = $this->translator->trans('account.sign_up.challenge.validations.try_again');
             } elseif ('' === $request->request->get('answer')) {
-                $errors['question'][] = 'You must answer the registration challenge question';
+                $errors['question'][] = $this->translator->trans('account.sign_up.challenge.validations.empty');
             } elseif (!$this->questionHasAnswer($question, $request->request->get('answer'))) {
-                $errors['question'][] = 'The answer you gave is incorrect. Please try again';
+                $errors['question'][] = $this->translator->trans('account.sign_up.challenge.validations.incorrect');
             }
         }
 
@@ -247,7 +260,7 @@ class SecurityController extends AbstractController
         ]);
 
         if (empty($verificationString) || 32 !== strlen($verificationString) || !$user) {
-            $this->addFlash('warning', 'Account verification failed.');
+            $this->addFlash('warning', $this->translator->trans('flash_messages.check_emails'));
 
             return $this->redirectToRoute('app_index_index');
         }
@@ -260,7 +273,7 @@ class SecurityController extends AbstractController
 
         $security->login($user, 'security.authenticator.form_login.main');
 
-        $this->addFlash('notice', 'Your account has been verified');
+        $this->addFlash('notice', $this->translator->trans('flash_messages.account_verified'));
 
         return $this->redirectToRoute('app_index_index');
     }
@@ -293,18 +306,19 @@ class SecurityController extends AbstractController
             $mailer->send(
                 $user->getEmailAddress(),
                 $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
-                'Reset your password for ' . $domain,
-                '<p>Hello ' . $user->getUsername() . ',</p>' .
-                '<p>Click the link below to reset the password for your account.</p>' .
-                '<p>Ignore this email if you didn\'t request a password reset.</p>' .
-                '<p><a href="' . $domain . $router->generate('app_reset_password', [
-                    'userId' => $user->getId(),
-                    'verificationString' => $emailVerificationString,
-                ]) . '">Reset your password</a>'
+                $this->translator->trans('emails.password_reset.subject', [
+                    '%domain%' => $domain
+                ]),
+                nl2br($this->translator->trans('emails.password_reset.body', [
+                    '%username%' => $user->getUsername()
+                ])) . '<p><a href="' . $domain . $router->generate('app_reset_password', [
+                        'userId' => $user->getId(),
+                        'verificationString' => $emailVerificationString,
+                    ]) . '">' . $this->translator->trans('buttons.reset_password') . '</a>'
             );
         }
 
-        $this->addFlash('notice', 'Check your emails to reset your password');
+        $this->addFlash('notice', $this->translator->trans('flash_messages.check_emails_reset_password'));
 
         return $this->redirectToRoute('app_index_index');
     }
@@ -323,7 +337,7 @@ class SecurityController extends AbstractController
         ]);
 
         if (empty($verificationString) || 32 !== strlen($verificationString) || !$user) {
-            $this->addFlash('warning', 'Account verification failed.');
+            $this->addFlash('warning', $this->translator->trans('flash_messages.account_verification_failed'));
 
             return $this->redirectToRoute('app_index_index');
         }
@@ -351,7 +365,7 @@ class SecurityController extends AbstractController
 
         $security->login($user, 'form_login');
 
-        $this->addFlash('notice', 'Your password has been reset');
+        $this->addFlash('notice', $this->translator->trans('flash_messages.password_reset'));
 
         return $this->redirectToRoute('app_index_index');
     }

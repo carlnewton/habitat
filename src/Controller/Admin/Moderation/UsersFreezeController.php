@@ -86,13 +86,23 @@ class UsersFreezeController extends AbstractController
 
         $usersFrozen = false;
         foreach ($users as $user) {
-            if ($user->isFrozen()) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be frozen because they are already frozen.');
+            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.administrator_not_frozen',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
-            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be frozen because they are an administrator.');
+            if ($user->isFrozen()) {
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.already_frozen',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
@@ -125,7 +135,7 @@ class UsersFreezeController extends AbstractController
 
         if ($usersFrozen) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users frozen');
+            $this->addFlash('notice', $this->translator->trans('admin.moderation.users.frozen'));
         }
 
         return $this->redirectToRoute('app_moderation_users');
@@ -139,13 +149,18 @@ class UsersFreezeController extends AbstractController
             (int) $request->request->get('freezeForValue') < 1
             || !in_array($request->request->get('freezeForInterval'), self::FREEZE_INTERVALS)
         ) {
-            $errors['freezeFor'][] = 'You must enter a valid freeze time';
+            $errors['freezeFor'][] = $this->translator->trans('admin.moderation.users.validations.invalid_freeze_time');
         }
 
         if (strlen($request->request->get('reason')) > 255) {
-            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+            $errors['reason'][] = $this->translator->trans(
+                'admin.moderation.users.validations.reason_max_length',
+                [
+                    '%max_length%' => 255,
+                ]
+            );
         } elseif (empty(trim($request->request->get('reason')))) {
-            $errors['reason'][] = 'This is a required field';
+            $errors['reason'][] = $this->translator->trans('admin.moderation.users.validations.freeze_reason_required');
         }
 
         return $errors;
