@@ -135,6 +135,7 @@ fields:
       empty: "You must enter the access key for your S3 bucket"
   amazon_s3_secret_key:
     title: "Secret key"
+    help_text: "The value for this field is hidden once saved. If left empty, the existing secret key will be used."
     validations:
       empty: "You must enter the secret key for your S3 bucket"
   smtp_username:
@@ -281,7 +282,11 @@ account:
   registration:
     messages:
       registration_disabled: "Registrations are currently disabled"
-
+  sign_in_to_perform_action:
+    before: "You must "
+    after: " to perform this action"
+  reset_password:
+    title: "Reset your password"
 
 about:
   title: "About Habitat"
@@ -303,6 +308,8 @@ rss:
 
 buttons:
   sign_up: "Sign up"
+  sign_in: "sign in"
+  add_comment: "Add comment"
   apply: "Apply"
   continue: "Continue"
   change: "Change"
@@ -336,6 +343,7 @@ buttons:
   add_a_location: "Add a location"
   send_test_email: "Send a test email"
   verify_email_address: "Verify your email address"
+  go_back_home: "Go back home"
 
 map:
   size_label: "Size"
@@ -384,6 +392,8 @@ admin:
     deleted: "Deleted"
     reason: "Reason"
     confirmation_message: "Are you sure you would like to %action% the selected %subject%?"
+    delete:
+      title: "Delete"
     ban:
       title: "Ban"
       messages:
@@ -510,6 +520,8 @@ admin:
       dismissed: "Reports dismissed"
   categories:
     title: "Categories"
+    singular: "category"
+    plural: "categories"
     not_found: "The categories could not be found"
     assign_to_delete: "All posts must be assigned to a different category before a category can be deleted."
     category_not_found: "The category could not be found."
@@ -534,6 +546,7 @@ admin:
       help_text: "You can create questions which the user must answer correctly in order to create an account. If creating multiple questions, the user will be required to answer one question at random when registering for an account."
   amazon_s3_details:
     title: "Amazon S3 details"
+    change_warning: "This instance has been configured to use Amazon S3 storage for image hosting. You should not change the values here unless images are no longer successfully uploading or being displayed due to an AWS S3 configuration change."
   mail:
     title: "Mail"
 
@@ -609,6 +622,9 @@ moderation_log:
   record_of_actions: The Moderation log is a publicly accessible record of moderation actions taken within this instance of Habitat to ensure accountability and transparency.
   days_available: These records are available for 30 days from the date of the action taken.
   sensitive_content_warning: Some of the logs may contain content of a sensitive nature. This could include obscene material, spam, or URLs that may pose a danger. You are encouraged to exercise caution when viewing the logs and to be mindful of the potentially harmful content you may encounter.
+  date: "Date"
+  moderator: "Moderator"
+  action: "Action"
     
   actions:
     ban: "Banned user '%username%'. Reason: %reason%"
@@ -656,6 +672,13 @@ misc:
   loading: "Loading..."
   to_comment: "to comment on this post."
   or: "or"
+  latest_posts: "Latest posts"
+
+error_pages:
+  not_found:
+    title: "Page not found"
+    subtitle: "The page you're looking for doesn't exist"
+    body: "Are you sure this is the right URL?"
 
 commands:
   reset_admin_password:
