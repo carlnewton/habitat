@@ -159,14 +159,14 @@ class SecurityController extends AbstractController
                 $user->getEmailAddress(),
                 $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
                 $this->translator->trans('emails.verify_email_address.subject', [
-                    '%domain%' => $domain
+                    '%domain%' => $domain,
                 ]),
                 nl2br($this->translator->trans('emails.verify_email_address.body', [
-                    '%username%' => $user->getUsername()
+                    '%username%' => $user->getUsername(),
                 ])) . '<p><a href="' . $domain . $router->generate('app_verify_user', [
-                        'userId' => $user->getId(),
-                        'verificationString' => $emailVerificationString,
-                    ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
+                    'userId' => $user->getId(),
+                    'verificationString' => $emailVerificationString,
+                ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
             );
         }
 
@@ -307,14 +307,14 @@ class SecurityController extends AbstractController
                 $user->getEmailAddress(),
                 $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
                 $this->translator->trans('emails.password_reset.subject', [
-                    '%domain%' => $domain
+                    '%domain%' => $domain,
                 ]),
                 nl2br($this->translator->trans('emails.password_reset.body', [
-                    '%username%' => $user->getUsername()
+                    '%username%' => $user->getUsername(),
                 ])) . '<p><a href="' . $domain . $router->generate('app_reset_password', [
-                        'userId' => $user->getId(),
-                        'verificationString' => $emailVerificationString,
-                    ]) . '">' . $this->translator->trans('buttons.reset_password') . '</a>'
+                    'userId' => $user->getId(),
+                    'verificationString' => $emailVerificationString,
+                ]) . '">' . $this->translator->trans('buttons.reset_password') . '</a>'
             );
         }
 

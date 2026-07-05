@@ -49,14 +49,14 @@ class ResendVerificationEmailController extends AbstractController
             $user->getEmailAddress(),
             $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
             $this->translator->trans('emails.verify_email_address.subject', [
-                '%domain%' => $domain
+                '%domain%' => $domain,
             ]),
             nl2br($this->translator->trans('emails.verify_email_address.body', [
-                '%username%' => $user->getUsername()
+                '%username%' => $user->getUsername(),
             ])) . '<p><a href="' . $domain . $this->router->generate('app_verify_user', [
-                    'userId' => $user->getId(),
-                    'verificationString' => $user->getEmailVerificationString(),
-                ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
+                'userId' => $user->getId(),
+                'verificationString' => $user->getEmailVerificationString(),
+            ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
         );
 
         return new Response('', Response::HTTP_OK);
