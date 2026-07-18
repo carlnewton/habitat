@@ -64,6 +64,10 @@ fields:
     validations:
       required: "You must enter a name for the category"
   category_location:
+    options:
+      disabled: "Disabled"
+      required: "Required"
+      optional: "Optional"
     validations:
       required: "You must specify a location setting"
   description:
@@ -433,6 +437,10 @@ admin:
       freeze_status: "Freeze status"
       not_frozen: "Not frozen"
       currently_frozen: "Currently frozen. This user will be unfrozen"
+      intervals:
+        minutes: "minutes"
+        hours: "hours"
+        days: "days"
       messages:
         unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
@@ -542,6 +550,12 @@ admin:
   announcements:
     title: "Announcements"
     saved: "Announcement saved"
+    types:
+      primary: "Primary"
+      secondary: "Secondary"
+      warning: "Warning"
+      info: "Info"
+      light: "Light"
   user_registration:
     title: "User registration"
     allow_registration: "Allow users to register"
@@ -663,7 +677,7 @@ emails:
     new_reports_link: "View reported content"
   email_sent: "Email sent to %email_address%"
   password_reset:
-    subject: Reset your password for %domain%
+    subject: "Reset your password for %domain%"
     body: |
       Hello %username%,
       Click the link below to reset the password for your account.
@@ -673,7 +687,7 @@ emails:
     body: |
       Hello %username%,
       Click the link below to verify the email address for your account.
-      Ignore this email if you didn\'t create this account.
+      Ignore this email if you didn't create this account.
 
 users:
   roles:

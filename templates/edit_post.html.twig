@@ -44,7 +44,7 @@
         <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
             <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="{{ 'fields.category.title' | trans }}">
                 {% for category in categories %}
-                    <option{% if (post.category is defined and post.category.id == category.id) or (post.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.label|lower }}">{{ category.name }}</option>
+                    <option{% if (post.category is defined and post.category.id == category.id) or (post.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.machineName }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
             <label for="category">{{ 'fields.category.title' | trans }}</label>

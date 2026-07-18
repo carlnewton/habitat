@@ -3,8 +3,6 @@ setup:
     title: "1. Seleziona la tua lingua"
   create_admin_account:
     title: "2. Crea il tuo account amministratore"
-    validations:
-      generic: "Si è verificato un errore con i tuoi dati, riprova."
   set_location:
     title: "3. Imposta la posizione del tuo Habitat"
     info:
@@ -62,16 +60,29 @@ setup:
       test_email_exception: "Si è verificato un problema durante il tentativo di invio di un'email di prova"
 
 fields:
+  category_name:
+    validations:
+      required: "È necessario inserire un nome per la categoria"
+  category_location:
+    options:
+      disabled: "Disabilitata"
+      required: "Richiesta"
+      optional: "Opzionale"
+    validations:
+      required: "È necessario specificare un'impostazione di posizione"
   description:
     title: "Descrizione"
   photos:
     title: "Foto"
+    uploaded_file: "File caricato"
   post:
     title: "Post"
   posts:
     title: "Post"
   comment:
     title: "Commento"
+    validations:
+      empty: "Il commento non può essere vuoto"
   comments:
     title: "Commenti"
   hearts:
@@ -97,6 +108,8 @@ fields:
     help_text: "Il tuo indirizzo email sarà visibile solo ai moderatori e potrà essere usato per recuperare la password."
     validations:
       invalid_email_address: "Questo non è un indirizzo email valido"
+      already_blocked: "Questo indirizzo email è già bloccato"
+      ban_instead: "Questo indirizzo email appartiene a un utente esistente, devi invece bannare l'utente"
       non_matching_email_address: "L'indirizzo email fornito non corrisponde a quello del tuo account"
   password:
     title: "Password"
@@ -127,6 +140,7 @@ fields:
       empty: "Devi inserire la chiave di accesso per il tuo bucket S3"
   amazon_s3_secret_key:
     title: "Chiave segreta"
+    help_text: "Una volta salvato, il valore di questo campo viene nascosto. Se lasciata vuota, verrà utilizzata la chiave segreta esistente."
     validations:
       empty: "Devi inserire la chiave segreta per il tuo bucket S3"
   smtp_username:
@@ -236,6 +250,15 @@ fields:
   toggle_category:
     enabled: "I post di questa categoria vengono visualizzati nel tuo feed"
     disabled: "I post di questa categoria sono nascosti dal tuo feed"
+  question:
+    title: "Domanda"
+    help_text: "Si consiglia di provare a porre una domanda a cui sarebbe facile rispondere per qualcuno del posto, ma difficile da indovinare per chiunque altro o per un bot."
+    validations:
+      brute_force: "Sembra che questa domanda possa essere facile da forzare brutamente. Si consiglia di evitare domande a cui si può rispondere sì o no, domande con risposte numeriche o risposte da un elenco noto."
+  add_correct_answer:
+    title: "Aggiungi una risposta corretta"
+    validations:
+      brute_force: "Sembra che questa risposta possa essere facile da usare con la forza bruta. Si consiglia di evitare domande a cui si può rispondere sì o no, domande con risposte numeriche o risposte da un elenco noto."
 
 post:
   create: "Creare un post"
@@ -264,6 +287,20 @@ account:
     challenge:
       title: "Sfida di registrazione"
       help_text: "Per creare con successo un account, devi rispondere correttamente alla seguente domanda:"
+      validations:
+        try_again: "Per favore, prova a rispondere di nuovo"
+        empty: "Devi rispondere alla domanda sulla sfida di registrazione"
+        incorrect: "La risposta che hai dato non è corretta. Per favore riprova"
+  validations:
+    generic: "Qualcosa è andato storto con i tuoi dati, riprova."
+  registration:
+    messages:
+      registration_disabled: "Le iscrizioni sono attualmente disabilitate"
+  sign_in_to_perform_action:
+    before: "Devi "
+    after: " per eseguire questa azione"
+  reset_password:
+    title: "Reimposta la tua password"
 
 about:
   title: "Informazioni su Habitat"
@@ -285,6 +322,8 @@ rss:
 
 buttons:
   sign_up: "Iscriviti"
+  sign_in: "accedi"
+  add_comment: "Aggiungi commento"
   apply: "Applica"
   continue: "Continua"
   change: "Modifica"
@@ -317,6 +356,10 @@ buttons:
   add_a_question: "Aggiungi una domanda"
   add_a_location: "Aggiungi una posizione"
   send_test_email: "Invia un'email di test"
+  verify_email_address: "Verifica il tuo indirizzo email"
+  delete_question: "Elimina domanda"
+  add_photos: "Aggiungi foto"
+  go_back_home: "Torna a casa"
 
 map:
   size_label: "Dimensione"
@@ -365,6 +408,8 @@ admin:
     deleted: "Eliminato"
     reason: "Motivo"
     confirmation_message: "Sei sicuro di voler %action% il %subject% selezionato?"
+    delete:
+      title: "Eliminare"
     ban:
       title: "Banna"
       messages:
@@ -392,6 +437,10 @@ admin:
       freeze_status: "Stato di blocco"
       not_frozen: "Non bloccato"
       currently_frozen: "Attualmente bloccato. Questo utente sarà sbloccato"
+      intervals:
+        minutes: "minuti"
+        hours: "ore"
+        days: "giorni"
       messages:
         unable_post_comment: "Il %subject% non potrà pubblicare o commentare finché non sarà trascorso il tempo di sblocco"
     unfreeze: "Sblocca"
@@ -435,32 +484,78 @@ admin:
       title: "Moderazione utenti"
       menu_title: "Utenti"
       details: "Dettagli utente"
+      banned: "Utenti bannati"
+      promoted: "Utenti promossi"
+      demoted: "Utenti declassati"
+      frozen: "Utenti bloccato"
+      unfrozen: "Utenti sbloccato"
       validations:
+        invalid_freeze_time: "È necessario inserire un tempo di blocco valido"
+        reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
+        reason_required: "È necessario fornire una motivazione quando si bannano gli utenti"
+        freeze_reason_required: "È necessario inserire un tempo di blocco valido"
+        moderator_not_banned: "%username% non può essere bannato perché è un moderatore. Prima devono essere declassati."
+        already_frozen: "%username% non può essere bloccato perché è già bloccato."
+        not_already_frozen: "%username% non può essere sbloccato perché non è bloccato."
+        administrator_not_frozen: "%username% non può essere bloccato perché è l'amministratore."
+        administrator_not_banned: "%username% non può essere bannato perché è l'amministratore."
+        non_moderator_not_demoted: "%username% non può essere retrocesso perché non è un moderatore."
+        administrator_not_demoted: "%username% non può essere declassato perché è l'amministratore."
+        moderator_not_promoted: "%username% non può essere promosso perché è già un moderatore."
+        administrator_not_promoted: "%username% non può essere promosso perché è l'amministratore."
         users_not_found: "Gli utenti non sono stati trovati"
     posts:
       singular: "post"
       plural: "post"
       title: "Moderazione post"
       menu_title: "Post"
+      not_found: "Impossibile trovare i post."
+      deleted: "Post cancellati"
+      validations:
+        reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
+        reason_required: "Devi fornire un motivo quando elimini i post"
     comments:
       singular: "commento"
       plural: "commenti"
       title: "Moderazione dei commenti"
       menu_title: "Commenti"
+      not_found: "Impossibile trovare i commenti."
+      deleted: "Commenti cancellati"
+      validations:
+        reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
+        reason_required: "È necessario fornire un motivo per eliminare i commenti"
     blocked_email_addresses:
       singular: "indirizzo email"
       plural: "indirizzi email"
       title: "Moderazione indirizzi email bloccati"
       menu_title: "Indirizzi email bloccati"
+      not_found: "Non è stato possibile trovare gli indirizzi email bloccati."
+      unblocked: "Indirizzo email sbloccato"
     reports:
       singular: "segnalazione"
       plural: "segnalazioni"
       title: "Moderazione segnalazioni"
       menu_title: "Segnalazioni"
+      not_found: "Non è stato possibile trovare i rapporti."
+      dismissed: "Rapporti respinti"
   categories:
     title: "Categorie"
+    singular: "categoria"
+    plural: "categorie"
+    not_found: "Non è stato possibile trovare le categorie"
+    assign_to_delete: "Tutti i post devono essere assegnati a una categoria diversa prima che una categoria possa essere eliminata."
+    category_not_found: "Impossibile trovare la categoria."
+    changed: "Categoria modificata"
+    deleted: "Categorie cancellate"
   announcements:
     title: "Annunci"
+    saved: "Annuncio salvato"
+    types:
+      primary: "Primario"
+      secondary: "Secondario"
+      warning: "Avviso"
+      info: "Info"
+      light: "Chiaro"
   user_registration:
     title: "Registrazione utenti"
     allow_registration: "Consenti agli utenti di registrarsi"
@@ -469,6 +564,8 @@ admin:
       invalid_value: "Questo campo ha un valore non valido"
     registration_challenge:
       title: "Sfida di registrazione"
+      new_question: "Nuova domanda"
+      correct_answers: "Risposte corrette"
       validations:
         no_correct_answers: "Tutte le domande devono avere almeno una risposta corretta"
         answer_character_count: "Tutte le risposte devono avere almeno 255 caratteri"
@@ -477,6 +574,7 @@ admin:
       help_text: "Puoi creare domande a cui l'utente deve rispondere correttamente per creare un account. Se crei più domande, all'utente verrà richiesto di rispondere a una domanda a caso quando si registra per un account."
   amazon_s3_details:
     title: "Dettagli Amazon S3"
+    change_warning: "Questa istanza è stata configurata per utilizzare lo storage Amazon S3 per l'hosting delle immagini. Non dovresti modificare i valori qui a meno che le immagini non vengano più caricate o visualizzate correttamente a causa di una modifica alla configurazione di AWS S3."
   mail:
     title: "Posta"
 
@@ -533,6 +631,13 @@ flash_messages:
   account_frozen: "Non puoi eseguire questa azione perché il tuo account è stato bloccato fino al %unfreeze_datetime%. Motivo: %reason%"
   prevent_action_account_unverified: "Non puoi eseguire questa azione perché il tuo indirizzo email non è stato ancora verificato."
   account_unverified: "Il tuo indirizzo email non è stato ancora verificato. Controlla le tue email per verificare il tuo indirizzo email."
+  check_emails: "Controlla le tue email per verificare il tuo indirizzo email."
+  account_verification_failed: "Verifica dell'account non riuscita."
+  account_verified: "Il tuo account è stato verificato."
+  check_emails_reset_password: "Controlla le tue email per reimpostare la password."
+  password_reset: "La tua password è stata reimpostata."
+  category_added: "Categoria aggiunta"
+  category_updated: "Categoria aggiornata"
 
 notifications:
   new_post_comments:
@@ -545,6 +650,9 @@ moderation_log:
   record_of_actions: Il registro di moderazione è un registro pubblicamente accessibile delle azioni di moderazione intraprese all'interno di questa istanza di Habitat per garantire responsabilità e trasparenza.
   days_available: Questi record sono disponibili per 30 giorni dalla data dell'azione intrapresa.
   sensitive_content_warning: Alcuni dei registri possono contenere contenuti di natura delicata. Ciò potrebbe includere materiale osceno, spam o URL che potrebbero rappresentare un pericolo. Si consiglia di prestare attenzione quando si visualizzano i registri e di essere consapevoli dei contenuti potenzialmente dannosi che si possono incontrare.
+  date: "Data"
+  moderator: "Moderatore"
+  action: "Azione"
     
   actions:
     ban: "Utente '%username%' bannato. Motivo: %reason%"
@@ -568,6 +676,18 @@ emails:
     new_reports: "%count% nuove segnalazioni"
     new_reports_link: "Visualizza contenuti segnalati"
   email_sent: "Email inviata a %email_address%"
+  password_reset:
+    subject: "Reimposta la tua password per %domain%"
+    body: |
+      Ciao %username%,
+      Fai clic sul collegamento sottostante per reimpostare la password del tuo account.
+      Ignora questa email se non hai richiesto la reimpostazione della password.
+  verify_email_address:
+    subject: "Verifica il tuo indirizzo email per %domain%"
+    body: |
+      Ciao %username%,
+      Clicca sul link qui sotto per verificare l'indirizzo email del tuo account.
+      Ignora questa email se non hai creato questo account.
 
 users:
   roles:
@@ -580,6 +700,13 @@ misc:
   loading: "Caricamento..."
   to_comment: "per commentare questo post."
   or: "o"
+  latest_posts: "Ultimi post"
+
+error_pages:
+  not_found:
+    title: "Pagina non trovata"
+    subtitle: "La pagina che stai cercando non esiste"
+    body: "Sei sicuro che questo sia l'URL giusto?"
 
 commands:
   reset_admin_password:

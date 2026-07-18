@@ -38,7 +38,7 @@ class CommentsIndexController extends AbstractAdminTableController implements Ad
 
         return [
             'user' => [
-                'label' => 'User',
+                'label' => $this->translator->trans('fields.user.title'),
                 'type' => 'select',
                 'options' => $users,
                 'validation' => 'non-zero-integer',

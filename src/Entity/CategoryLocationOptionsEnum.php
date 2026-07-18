@@ -8,12 +8,12 @@ enum CategoryLocationOptionsEnum: int
     case REQUIRED = 1;
     case OPTIONAL = 2;
 
-    public function label(): string
+    public function machineName(): string
     {
         return match ($this) {
-            self::DISABLED => 'Disabled',
-            self::REQUIRED => 'Required',
-            self::OPTIONAL => 'Optional',
+            self::DISABLED => 'disabled',
+            self::REQUIRED => 'required',
+            self::OPTIONAL => 'optional',
         };
     }
 }

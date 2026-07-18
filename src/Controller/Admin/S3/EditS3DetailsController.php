@@ -97,7 +97,7 @@ class EditS3DetailsController extends AbstractController
 
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Amazon S3 details updated');
+        $this->addFlash('notice', $this->translator->trans('admin.settings.messages.saved'));
 
         return $this->redirectToRoute('app_admin_s3_details');
     }
