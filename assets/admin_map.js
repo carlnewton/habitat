@@ -106,7 +106,7 @@ document.querySelector('#measurement-kms').onclick = function() {
 }
 
 map.on('click', function(e) {
-    document.querySelector('#locationLatLng').value = parseFloat(e.latlng.lat).toPrecision(6) + ',' + parseFloat(e.latlng.lng).toPrecision(6);
+    document.querySelector('#locationLatLng').value = parseFloat(e.latlng.lat).toFixed(6) + ',' + parseFloat(e.latlng.lng).toFixed(6);
     setLocation();
 });
 
