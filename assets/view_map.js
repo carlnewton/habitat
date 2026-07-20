@@ -113,7 +113,7 @@ if (document.getElementById('map') !== null) {
             return;
         }
 
-        var currentLatLng = L.latLng(parseFloat(position.coords.latitude).toPrecision(6), parseFloat(position.coords.longitude).toPrecision(6));
+        var currentLatLng = L.latLng(parseFloat(position.coords.latitude).toFixed(6), parseFloat(position.coords.longitude).toFixed(6));
 
         var locationIcon = L.icon({
             iconUrl: '/build/images/location_icon.png',
