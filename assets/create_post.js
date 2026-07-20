@@ -145,7 +145,7 @@ function withinPerimeter(latLng) {
 }
 
 function getGeolocation(position) {
-    let latLng = L.latLng(parseFloat(position.coords.latitude).toPrecision(6), parseFloat(position.coords.longitude).toPrecision(6));
+    let latLng = L.latLng(parseFloat(position.coords.latitude).toFixed(6), parseFloat(position.coords.longitude).toFixed(6));
     if (!withinPerimeter(latLng)) {
         document.querySelector('#bounds-warning').classList.remove('d-none');
         return;
@@ -167,12 +167,12 @@ document.querySelector('.get-location').onclick = function() {
 }
 
 map.on('click', function(e) {
-    let latLng = L.latLng(parseFloat(e.latlng.lat).toPrecision(6), parseFloat(e.latlng.lng).toPrecision(6));
+    let latLng = L.latLng(parseFloat(e.latlng.lat).toFixed(6), parseFloat(e.latlng.lng).toFixed(6));
     if (!withinPerimeter(latLng)) {
         document.querySelector('#bounds-warning').classList.remove('d-none');
         return;
     }
-    document.querySelector('#locationLatLng').value = parseFloat(e.latlng.lat).toPrecision(6) + ',' + parseFloat(e.latlng.lng).toPrecision(6);
+    document.querySelector('#locationLatLng').value = parseFloat(e.latlng.lat).toFixed(6) + ',' + parseFloat(e.latlng.lng).toFixed(6);
     setLocation();
 });
 
