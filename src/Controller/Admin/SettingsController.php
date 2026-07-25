@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\SetupController;
 use App\Entity\Settings;
 use App\Entity\SidebarContent;
 use App\Entity\User;
 use App\Entity\UserSettings;
 use App\Repository\SettingsRepository;
 use App\Repository\SidebarContentRepository;
+use App\Utilities\Languages;
 use App\Utilities\LatLong;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -63,7 +63,7 @@ class SettingsController extends AbstractController
                 );
 
                 return $this->render('admin/settings.html.twig', [
-                    'languages' => SetupController::LANGUAGES,
+                    'languages' => Languages::LANGUAGES,
                     'adminUserTheme' => $adminUserTheme,
                     'sidebarContent' => ($sidebarContent->getContent()) ? $sidebarContent->getContent() : '',
                 ]);
@@ -73,7 +73,7 @@ class SettingsController extends AbstractController
 
             if (!empty($fieldErrors)) {
                 return $this->render('admin/settings.html.twig', [
-                    'languages' => SetupController::LANGUAGES,
+                    'languages' => Languages::LANGUAGES,
                     'adminUserTheme' => $adminUserTheme,
                     'errors' => $fieldErrors,
                     'values' => [
@@ -117,7 +117,7 @@ class SettingsController extends AbstractController
         $locationRadiusSetting = $this->settingsRepository->getSettingByName('locationRadiusMeters');
 
         return $this->render('admin/settings.html.twig', [
-            'languages' => SetupController::LANGUAGES,
+            'languages' => Languages::LANGUAGES,
             'adminUserTheme' => $adminUserTheme,
             'values' => [
                 'habitatName' => ($habitatNameSetting) ? $habitatNameSetting->getValue() : '',
@@ -163,7 +163,7 @@ class SettingsController extends AbstractController
 
         if (
             empty($request->request->get('language'))
-            || !array_key_exists($request->request->get('language'), SetupController::LANGUAGES)
+            || !array_key_exists($request->request->get('language'), Languages::LANGUAGES)
         ) {
             $errors['language'][] = $this->translator->trans('fields.language.validations.empty');
         }

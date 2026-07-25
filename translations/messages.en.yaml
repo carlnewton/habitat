@@ -391,7 +391,7 @@ user_settings:
     warning: "Warning: Account deletion is perminent. All of your posts and comments will also be deleted."
     description: "To delete your account, enter your email address:"
     validations:
-      admin_account: "This is an adminstrator account and as such cannot be deleted"
+      admin_account: "This is an administrator account and as such cannot be deleted"
     success: "Your account has been deleted"
 
 measurement_units:

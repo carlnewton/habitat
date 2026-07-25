@@ -7,6 +7,7 @@ use App\Entity\CategoryLocationOptionsEnum;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\AmazonS3;
+use App\Utilities\Languages;
 use App\Utilities\LatLong;
 use App\Utilities\Mailer;
 use Aws\S3\Exception\S3Exception;
@@ -37,11 +38,6 @@ class SetupController extends AbstractController
         'complete' => 'app_index_index',
     ];
 
-    public const LANGUAGES = [
-        'en' => 'English',
-        'it' => 'Italiano',
-    ];
-
     private const IMAGE_STORAGE_OPTIONS = [
         'local',
         's3',
@@ -69,7 +65,7 @@ class SetupController extends AbstractController
 
         if ('POST' !== $request->getMethod()) {
             return $this->render('setup/language.html.twig', [
-                'languages' => self::LANGUAGES,
+                'languages' => Languages::LANGUAGES,
             ]);
         }
 
@@ -82,7 +78,7 @@ class SetupController extends AbstractController
             );
 
             return $this->render('setup/language.html.twig', [
-                'languages' => self::LANGUAGES,
+                'languages' => Languages::LANGUAGES,
             ]);
         }
 
@@ -91,7 +87,7 @@ class SetupController extends AbstractController
         if (!empty($fieldErrors)) {
             return $this->render('setup/language.html.twig', [
                 'errors' => $fieldErrors,
-                'languages' => self::LANGUAGES,
+                'languages' => Languages::LANGUAGES,
                 'values' => [
                     'language' => $request->request->get('language'),
                 ],
@@ -694,7 +690,7 @@ class SetupController extends AbstractController
             );
         }
 
-        if (!array_key_exists($request->request->get('language'), self::LANGUAGES)) {
+        if (!array_key_exists($request->request->get('language'), Languages::LANGUAGES)) {
             $errors['language'][] = $this->translator->trans(
                 'fields.language.validations.empty',
             );
