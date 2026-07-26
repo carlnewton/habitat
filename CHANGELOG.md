@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-  [#146] Do not allow logged in users to sign up for an account
+
 ## [1.6.0] - 2026-07-20
 
 ### Changed
