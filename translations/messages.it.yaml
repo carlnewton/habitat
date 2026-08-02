@@ -65,9 +65,9 @@ fields:
       required: "È necessario inserire un nome per la categoria"
   category_location:
     options:
-      disabled: "disabilitato"
-      required: "richiesto"
-      optional: "opzionale"
+      disabled: "Disabilitato"
+      required: "Richiesto"
+      optional: "Opzionale"
     validations:
       required: "È necessario specificare un'impostazione sulla posizione"
   description:
@@ -251,7 +251,7 @@ fields:
     enabled: "I post di questa categoria vengono visualizzati nel tuo feed"
     disabled: "I post di questa categoria sono nascosti dal tuo feed"
   question:
-    title: "domanda"
+    title: "Domanda"
     help_text: "Si consiglia di provare a porre una domanda a cui sia facile rispondere per una persona del posto, ma difficile da indovinare per chiunque altro o per un bot."
     validations:
       brute_force: "Questa domanda sembra facile da risolvere con brute-force. Si consiglia di evitare domande con risposta sì o no, domande con risposte numeriche o domande con risposte tratte da un elenco noto."
@@ -297,10 +297,10 @@ account:
     messages:
       registration_disabled: "Le registrazioni sono attualmente disabilitate."
   sign_in_to_perform_action:
-    before: "Devi"
-    after: "per eseguire questa azione"
+    before: "Devi "
+    after: " per eseguire questa azione"
   reset_password:
-    title: "reimpostare la tua password"
+    title: "Reimpostare la tua password"
 
 about:
   title: "Informazioni su Habitat"
