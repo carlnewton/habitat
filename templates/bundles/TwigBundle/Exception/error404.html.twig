@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1 class="text-center display-1 mt-5">Page not found</h1>
+    <h1 class="text-center display-1 mt-5">{{ 'error_pages.not_found.title' | trans }}</h1>
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <!-- Illustration by manypixels.co -->
@@ -94,10 +94,10 @@
             </g>
             </svg>
         </div>
-        <p class="text-center fs-2 lead">We can't seem to find it</p>
-        <p class="text-center lead">Are you sure this is the right URL? Perhaps we deleted it.</p>
+        <p class="text-center fs-2 lead">{{ 'error_pages.not_found.subtitle' | trans }}</p>
+        <p class="text-center lead">{{ 'error_pages.not_found.body' | trans }}</p>
         <p class="text-center">
-            <a class="btn btn-lg btn-outline-primary" href="{{ path('app_index_index') }}">Go back home</a>
+            <a class="btn btn-lg btn-outline-primary" href="{{ path('app_index_index') }}">{{ 'buttons.go_back_home' | trans }}</a>
         </p>
     </div>
 {% endblock %}

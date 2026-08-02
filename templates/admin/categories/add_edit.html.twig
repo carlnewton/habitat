@@ -72,7 +72,7 @@
             <div class="col-sm-9">
                 <select class="form-select{% if errors.location is defined %} is-invalid{% endif %}" name="location" id="location" aria-label="Location">
                     {% for option in location_options %}
-                        <option{% if (category.location is defined and category.location.value == option.value) %} selected{% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                        <option{% if (category.location is defined and category.location.value == option.value) %} selected{% endif %} value="{{ option.value }}">{{ ('fields.category_location.options.' ~ option.machineName) | trans }}</option>
                     {% endfor %}
                 </select>
                 {% if errors.location is defined %}

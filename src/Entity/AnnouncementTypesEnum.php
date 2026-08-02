@@ -10,17 +10,6 @@ enum AnnouncementTypesEnum: int
     case INFO = 3;
     case LIGHT = 4;
 
-    public function label(): string
-    {
-        return match ($this) {
-            self::PRIMARY => 'Primary',
-            self::SECONDARY => 'Secondary',
-            self::WARNING => 'Warning',
-            self::INFO => 'Info',
-            self::LIGHT => 'Light',
-        };
-    }
-
     public function machineName(): string
     {
         return match ($this) {

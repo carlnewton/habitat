@@ -3,8 +3,6 @@ setup:
     title: "1. Select your language"
   create_admin_account:
     title: "2. Create your admin account"
-    validations:
-      generic: "Something went wrong with your details, please try again."
   set_location:
     title: "3. Set the location of your Habitat"
     info:
@@ -62,16 +60,29 @@ setup:
       test_email_exception: "An issue occurred when attempting to send a test email"
 
 fields:
+  category_name:
+    validations:
+      required: "You must enter a name for the category"
+  category_location:
+    options:
+      disabled: "Disabled"
+      required: "Required"
+      optional: "Optional"
+    validations:
+      required: "You must specify a location setting"
   description:
     title: "Description"
   photos:
     title: "Photos"
+    uploaded_file: "Uploaded file"
   post:
     title: "Post"
   posts:
     title: "Posts"
   comment:
     title: "Comment"
+    validations:
+      empty: "The comment cannot be empty"
   comments:
     title: "Comments"
   hearts:
@@ -97,6 +108,8 @@ fields:
     help_text: "Your email address will be visible to moderators only, and can be used to recover your password."
     validations:
       invalid_email_address: "This is not a valid email address"
+      already_blocked: "This email address is already blocked"
+      ban_instead: "This email address belongs to an existing user, you must ban the user instead"
       non_matching_email_address: "The provided email address does not match that of your account"
   password:
     title: "Password"
@@ -127,6 +140,7 @@ fields:
       empty: "You must enter the access key for your S3 bucket"
   amazon_s3_secret_key:
     title: "Secret key"
+    help_text: "The value for this field is hidden once saved. If left empty, the existing secret key will be used."
     validations:
       empty: "You must enter the secret key for your S3 bucket"
   smtp_username:
@@ -236,6 +250,15 @@ fields:
   toggle_category:
     enabled: Posts from this category appear in your feed
     disabled: Posts from this category are hidden from your feed
+  question:
+    title: "Question"
+    help_text: "It is recommended to try to ask a question which would be easy for somebody local to answer, but difficult for anyone else, or a bot to guess."
+    validations:
+      brute_force: "This question looks like it might be easy to brute-force. It is recommended to avoid yes or no questions, questions which have numeric answers, or answers from a known list."
+  add_correct_answer:
+    title: "Add a correct answer"
+    validations:
+      brute_force: "This answer looks like it might be easy to brute-force. It is recommended to avoid yes or no questions, questions which have numeric answers, or answers from a known list."
 
 post:
   create: "Create a post"
@@ -264,6 +287,20 @@ account:
     challenge:
       title: "Registration challenge"
       help_text: "To successfully create an account, you must correctly answer the following question:"
+      validations:
+        try_again: "Please try answering this again"
+        empty: "You must answer the registration challenge question"
+        incorrect: "The answer you gave is incorrect. Please try again"
+  validations:
+    generic: "Something went wrong with your details, please try again."
+  registration:
+    messages:
+      registration_disabled: "Registrations are currently disabled"
+  sign_in_to_perform_action:
+    before: "You must "
+    after: " to perform this action"
+  reset_password:
+    title: "Reset your password"
 
 about:
   title: "About Habitat"
@@ -285,6 +322,8 @@ rss:
 
 buttons:
   sign_up: "Sign up"
+  sign_in: "sign in"
+  add_comment: "Add comment"
   apply: "Apply"
   continue: "Continue"
   change: "Change"
@@ -317,6 +356,10 @@ buttons:
   add_a_question: "Add a question"
   add_a_location: "Add a location"
   send_test_email: "Send a test email"
+  verify_email_address: "Verify your email address"
+  delete_question: "Delete question"
+  add_photos: "Add photos"
+  go_back_home: "Go back home"
 
 map:
   size_label: "Size"
@@ -348,7 +391,7 @@ user_settings:
     warning: "Warning: Account deletion is perminent. All of your posts and comments will also be deleted."
     description: "To delete your account, enter your email address:"
     validations:
-      admin_account: "This is an adminstrator account and as such cannot be deleted"
+      admin_account: "This is an administrator account and as such cannot be deleted"
     success: "Your account has been deleted"
 
 measurement_units:
@@ -365,6 +408,8 @@ admin:
     deleted: "Deleted"
     reason: "Reason"
     confirmation_message: "Are you sure you would like to %action% the selected %subject%?"
+    delete:
+      title: "Delete"
     ban:
       title: "Ban"
       messages:
@@ -392,6 +437,10 @@ admin:
       freeze_status: "Freeze status"
       not_frozen: "Not frozen"
       currently_frozen: "Currently frozen. This user will be unfrozen"
+      intervals:
+        minutes: "minutes"
+        hours: "hours"
+        days: "days"
       messages:
         unable_post_comment: "The %subject% will not be able to post or comment until the unfreeze time has passed"
     unfreeze: "Unfreeze"
@@ -435,32 +484,78 @@ admin:
       title: "User moderation"
       menu_title: "Users"
       details: "User details"
+      banned: "Users banned"
+      promoted: "Users promoted"
+      demoted: "Users demoted"
+      frozen: "Users frozen"
+      unfrozen: "Users unfrozen"
       validations:
+        invalid_freeze_time: "You must enter a valid freeze time"
+        reason_max_length: "The reason must be a maximum of %max_length% characters"
+        reason_required: "You must provide a reason when banning users"
+        freeze_reason_required: "You must provide a reason when freezing users"
+        moderator_not_banned: "%username% could not be banned because they are a moderator. They must be demoted first."
+        already_frozen: "%username% could not be frozen because they are already frozen."
+        not_already_frozen: "%username% could not be unfrozen because they are not frozen."
+        administrator_not_frozen: "%username% could not be frozen because they are the administrator."
+        administrator_not_banned: "%username% could not be banned because they are the administrator."
+        non_moderator_not_demoted: "%username% could not be demoted because they are not a moderator."
+        administrator_not_demoted: "%username% could not be demoted because they are the administrator."
+        moderator_not_promoted: "%username% could not be promoted because they are already a moderator."
+        administrator_not_promoted: "%username% could not be promoted because they are the administrator."
         users_not_found: "The users could not be found"
     posts:
       singular: "post"
       plural: "posts"
       title: "Post moderation"
       menu_title: "Posts"
+      not_found: "The posts could not be found."
+      deleted: "Posts deleted"
+      validations:
+        reason_max_length: "The reason must be a maximum of %max_length% characters"
+        reason_required: "You must provide a reason when deleting posts"
     comments:
       singular: "comment"
       plural: "comments"
       title: "Comment moderation"
       menu_title: "Comments"
+      not_found: "The comments could not be found."
+      deleted: "Comments deleted"
+      validations:
+        reason_max_length: "The reason must be a maximum of %max_length% characters"
+        reason_required: "You must provide a reason when deleting comments"
     blocked_email_addresses:
       singular: "email address"
       plural: "email addresses"
       title: "Blocked email address moderation"
       menu_title: "Blocked email addresses"
+      not_found: "The blocked email addresses could not be found."
+      unblocked: "Email address unblocked"
     reports:
       singular: "report"
       plural: "reports"
       title: "Report moderation"
       menu_title: "Reports"
+      not_found: "The reports could not be found."
+      dismissed: "Reports dismissed"
   categories:
     title: "Categories"
+    singular: "category"
+    plural: "categories"
+    not_found: "The categories could not be found"
+    assign_to_delete: "All posts must be assigned to a different category before a category can be deleted."
+    category_not_found: "The category could not be found."
+    changed: "Category changed"
+    deleted: "Categories deleted"
   announcements:
     title: "Announcements"
+    saved: "Announcement saved"
+    types:
+      primary: "Primary"
+      secondary: "Secondary"
+      warning: "Warning"
+      info: "Info"
+      light: "Light"
   user_registration:
     title: "User registration"
     allow_registration: "Allow users to register"
@@ -469,6 +564,8 @@ admin:
       invalid_value: "This field has an invalid value"
     registration_challenge:
       title: "Registration challenge"
+      new_question: "New question"
+      correct_answers: "Correct answers"
       validations:
         no_correct_answers: "All questions must have at least one correct answer"
         answer_character_count: "All answers must be 255 characters or less"
@@ -477,6 +574,7 @@ admin:
       help_text: "You can create questions which the user must answer correctly in order to create an account. If creating multiple questions, the user will be required to answer one question at random when registering for an account."
   amazon_s3_details:
     title: "Amazon S3 details"
+    change_warning: "This instance has been configured to use Amazon S3 storage for image hosting. You should not change the values here unless images are no longer successfully uploading or being displayed due to an AWS S3 configuration change."
   mail:
     title: "Mail"
 
@@ -533,6 +631,13 @@ flash_messages:
   account_frozen: "You cannot perform this action because your account has been frozen until %unfreeze_datetime%. Reason: %reason%"
   prevent_action_account_unverified: "You cannot perform this action because your email address has not yet been verified."
   account_unverified: "Your email address has not yet been verified. Check your emails to verify your email address."
+  check_emails: "Check your emails to verify your email address."
+  account_verification_failed: "Account verification failed."
+  account_verified: "Your account has been verified."
+  check_emails_reset_password: "Check your emails to reset your password."
+  password_reset: "Your password has been reset."
+  category_added: "Category added"
+  category_updated: "Category updated"
 
 notifications:
   new_post_comments:
@@ -545,6 +650,9 @@ moderation_log:
   record_of_actions: The Moderation log is a publicly accessible record of moderation actions taken within this instance of Habitat to ensure accountability and transparency.
   days_available: These records are available for 30 days from the date of the action taken.
   sensitive_content_warning: Some of the logs may contain content of a sensitive nature. This could include obscene material, spam, or URLs that may pose a danger. You are encouraged to exercise caution when viewing the logs and to be mindful of the potentially harmful content you may encounter.
+  date: "Date"
+  moderator: "Moderator"
+  action: "Action"
     
   actions:
     ban: "Banned user '%username%'. Reason: %reason%"
@@ -568,6 +676,18 @@ emails:
     new_reports: "%count% new reports"
     new_reports_link: "View reported content"
   email_sent: "Email sent to %email_address%"
+  password_reset:
+    subject: "Reset your password for %domain%"
+    body: |
+      Hello %username%,
+      Click the link below to reset the password for your account.
+      Ignore this email if you didn't request a password reset.
+  verify_email_address:
+    subject: "Verify your email address for %domain%"
+    body: |
+      Hello %username%,
+      Click the link below to verify the email address for your account.
+      Ignore this email if you didn't create this account.
 
 users:
   roles:
@@ -580,6 +700,13 @@ misc:
   loading: "Loading..."
   to_comment: "to comment on this post."
   or: "or"
+  latest_posts: "Latest posts"
+
+error_pages:
+  not_found:
+    title: "Page not found"
+    subtitle: "The page you're looking for doesn't exist"
+    body: "Are you sure this is the right URL?"
 
 commands:
   reset_admin_password:

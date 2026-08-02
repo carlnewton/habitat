@@ -92,7 +92,7 @@ class AnnouncementsController extends AbstractController
 
             $this->addFlash(
                 'notice',
-                'Announcement saved'
+                $this->translator->trans('admin.announcements.saved'),
             );
 
             return $this->redirectToRoute('app_admin_announcements');

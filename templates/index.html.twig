@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="visually-hidden">Latest posts</h1>
+    <h1 class="visually-hidden">{{ 'misc.latest_posts' | trans }}</h1>
     <div id="posts-list">
         {% for post in posts %}
             {% include '/partials/post/post.html.twig' %}

@@ -157,10 +157,7 @@ class MailSettingsController extends AbstractController
 
         $this->entityManager->flush();
 
-        $this->addFlash(
-            'notice',
-            'Mail settings saved'
-        );
+        $this->addFlash('notice', $this->translator->trans('admin.settings.messages.saved'));
 
         return $this->redirectToRoute('app_admin_mail');
     }

@@ -34,7 +34,7 @@
                         <input type="number" class="form-control{% if errors.freezeFor is defined %} is-invalid{% endif %}" name="freezeForValue" min="1" value="{% if values.freezeForValue is defined %}{{ values.freezeForValue }}{% else %}10{% endif %}">
                         <select class="form-select{% if errors.freezeFor is defined %} is-invalid{% endif %}" name="freezeForInterval" id="freezeFormInterval">
                             {% for interval in intervals %}
-                                <option value="{{ interval }}"{% if values.freezeForInterval is defined and values.freezeForInterval == interval %} selected{% endif %}>{{ interval }}</option>
+                                <option value="{{ interval }}"{% if values.freezeForInterval is defined and values.freezeForInterval == interval %} selected{% endif %}>{{ ('admin.actions.freeze.intervals.' ~ interval) | trans }}</option>
                             {% endfor %}
                         </select>
                         {% if errors.freezeFor is defined %}

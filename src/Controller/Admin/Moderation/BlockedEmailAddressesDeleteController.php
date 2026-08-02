@@ -10,11 +10,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class BlockedEmailAddressesDeleteController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
+
+    public function __construct(
+        protected TranslatorInterface $translator,
+    ) {
+    }
 
     #[Route(path: '/admin/moderation/blocked-email-addresses/unblock', name: 'app_moderation_blocked_email_addresses_unblock', methods: ['POST'], priority: 2)]
     public function index(
@@ -23,10 +29,7 @@ class BlockedEmailAddressesDeleteController extends AbstractController
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->redirectToRoute('app_moderation_blocked_email_addresses');
         }
@@ -42,7 +45,7 @@ class BlockedEmailAddressesDeleteController extends AbstractController
         if (empty($blockedEmailAddresses)) {
             $this->addFlash(
                 'warning',
-                'The blocked email addresses could not be found.'
+                $this->translator->trans('admin.moderation.blocked_email_addresses.not_found'),
             );
 
             return $this->redirectToRoute('app_moderation_blocked_email_addresses');
@@ -60,7 +63,7 @@ class BlockedEmailAddressesDeleteController extends AbstractController
         }
 
         $entityManager->flush();
-        $this->addFlash('notice', 'Email addresses unblocked');
+        $this->addFlash('notice', $this->translator->trans('admin.moderation.blocked_email_addresses.unblocked'));
 
         return $this->redirectToRoute('app_moderation_blocked_email_addresses');
     }

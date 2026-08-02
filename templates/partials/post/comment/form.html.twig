@@ -22,5 +22,5 @@
     </div>
     <input type="hidden" name="token" value="{{ csrf_token('comment') }}">
     <input type="hidden" name="postId" value="{{ post.id }}">
-    <button type="submit" class="btn btn-primary" data-test="commentSubmit">Add comment</button>
+    <button type="submit" class="btn btn-primary" data-test="commentSubmit">{{ 'buttons.add_comment' | trans }}</button>
 </form>
