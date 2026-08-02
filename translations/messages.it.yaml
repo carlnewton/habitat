@@ -679,15 +679,15 @@ emails:
   password_reset:
     subject: "Reimposta la password per %domain%"
     body: |
-
-
-
+      Ciao %username%,
+      Fai clic sul link qui sotto per verificare l'indirizzo email del tuo account.
+      Ignora questa email se non hai creato tu questo account.
   verify_email_address:
     subject: "Verifica il tuo indirizzo email per %domain%"
     body: |
-
-
-
+      Ciao %username%,
+      Fai clic sul link qui sotto per verificare l'indirizzo email del tuo account.
+      Ignora questa email se non hai creato tu questo account.
 
 users:
   roles:
