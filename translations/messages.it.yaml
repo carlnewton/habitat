@@ -62,19 +62,19 @@ setup:
 fields:
   category_name:
     validations:
-      required: ""
+      required: "È necessario inserire un nome per la categoria"
   category_location:
     options:
-      disabled: ""
-      required: ""
-      optional: ""
+      disabled: "disabilitato"
+      required: "richiesto"
+      optional: "opzionale"
     validations:
-      required: ""
+      required: "È necessario specificare un'impostazione sulla posizione"
   description:
     title: "Descrizione"
   photos:
     title: "Foto"
-    uploaded_file: ""
+    uploaded_file: "File caricato"
   post:
     title: "Post"
   posts:
@@ -82,7 +82,7 @@ fields:
   comment:
     title: "Commento"
     validations:
-      empty: ""
+      empty: "Il commento non può essere vuoto"
   comments:
     title: "Commenti"
   hearts:
@@ -108,8 +108,8 @@ fields:
     help_text: "Il tuo indirizzo email sarà visibile solo ai moderatori e potrà essere usato per recuperare la password."
     validations:
       invalid_email_address: "Questo non è un indirizzo email valido"
-      already_blocked: ""
-      ban_instead: ""
+      already_blocked: "Questo indirizzo email è già bloccato"
+      ban_instead: "Questo indirizzo email appartiene a un utente esistente, devi invece bannare l'utente"
       non_matching_email_address: "L'indirizzo email fornito non corrisponde a quello del tuo account"
   password:
     title: "Password"
@@ -140,7 +140,7 @@ fields:
       empty: "Devi inserire la chiave di accesso per il tuo bucket S3"
   amazon_s3_secret_key:
     title: "Chiave segreta"
-    help_text: ""
+    help_text: "Il valore di questo campo viene nascosto una volta salvato. Se lasciato vuoto, verrà utilizzata la chiave segreta esistente."
     validations:
       empty: "Devi inserire la chiave segreta per il tuo bucket S3"
   smtp_username:
@@ -251,14 +251,14 @@ fields:
     enabled: "I post di questa categoria vengono visualizzati nel tuo feed"
     disabled: "I post di questa categoria sono nascosti dal tuo feed"
   question:
-    title: ""
-    help_text: ""
+    title: "domanda"
+    help_text: "Si consiglia di provare a porre una domanda a cui sia facile rispondere per una persona del posto, ma difficile da indovinare per chiunque altro o per un bot."
     validations:
-      brute_force: ""
+      brute_force: "Questa domanda sembra facile da risolvere con brute-force. Si consiglia di evitare domande con risposta sì o no, domande con risposte numeriche o domande con risposte tratte da un elenco noto."
   add_correct_answer:
-    title: ""
+    title: "Aggiungi la risposta corretta"
     validations:
-      brute_force: ""
+      brute_force: "Questa risposta sembra essere facile da trovare con brute-force. Si consiglia di evitare domande con risposta sì o no, domande con risposte numeriche o risposte provenienti da un elenco noto."
 
 post:
   create: "Creare un post"
@@ -288,19 +288,19 @@ account:
       title: "Sfida di registrazione"
       help_text: "Per creare con successo un account, devi rispondere correttamente alla seguente domanda:"
       validations:
-        try_again: ""
-        empty: ""
-        incorrect: ""
+        try_again: "Per favore, prova a rispondere di nuovo"
+        empty: "È necessario rispondere alla domanda di verifica della registrazione"
+        incorrect: "La risposta che hai dato è errata. Riprova."
   validations:
-    generic: ""
+    generic: "Si è verificato un errore con i dati inseriti, riprova."
   registration:
     messages:
-      registration_disabled: ""
+      registration_disabled: "Le registrazioni sono attualmente disabilitate."
   sign_in_to_perform_action:
-    before: ""
-    after: ""
+    before: "Devi"
+    after: "per eseguire questa azione"
   reset_password:
-    title: ""
+    title: "reimpostare la tua password"
 
 about:
   title: "Informazioni su Habitat"
@@ -321,9 +321,9 @@ rss:
   description: 'Un feed RSS contenente gli ultimi post'
 
 buttons:
-  sign_up: "Iscriviti"
-  sign_in: ""
-  add_comment: ""
+  sign_up: "Iscrizione"
+  sign_in: "iscriviti"
+  add_comment: "Aggiungi commento"
   apply: "Applica"
   continue: "Continua"
   change: "Modifica"
@@ -356,10 +356,10 @@ buttons:
   add_a_question: "Aggiungi una domanda"
   add_a_location: "Aggiungi una posizione"
   send_test_email: "Invia un'email di test"
-  verify_email_address: ""
-  delete_question: ""
-  add_photos: ""
-  go_back_home: ""
+  verify_email_address: "Verifica il tuo indirizzo email"
+  delete_question: "Elimina domanda"
+  add_photos: "Aggiungi foto"
+  go_back_home: "Torna alla home"
 
 map:
   size_label: "Dimensione"
@@ -409,7 +409,7 @@ admin:
     reason: "Motivo"
     confirmation_message: "Sei sicuro di voler %action% il %subject% selezionato?"
     delete:
-      title: ""
+      title: "Elimina"
     ban:
       title: "Banna"
       messages:
@@ -438,9 +438,9 @@ admin:
       not_frozen: "Non bloccato"
       currently_frozen: "Attualmente bloccato. Questo utente sarà sbloccato"
       intervals:
-        minutes: ""
-        hours: ""
-        days: ""
+        minutes: "minuti"
+        hours: "ore"
+        days: "giorni"
       messages:
         unable_post_comment: "Il %subject% non potrà pubblicare o commentare finché non sarà trascorso il tempo di sblocco"
     unfreeze: "Sblocca"
@@ -484,78 +484,78 @@ admin:
       title: "Moderazione utenti"
       menu_title: "Utenti"
       details: "Dettagli utente"
-      banned: ""
-      promoted: ""
-      demoted: ""
-      frozen: ""
-      unfrozen: ""
+      banned: "Utenti bannati"
+      promoted: "Utenti promossi"
+      demoted: "Utenti declassati"
+      frozen: "Utenti congelati"
+      unfrozen: "Utenti sbloccati"
       validations:
-        invalid_freeze_time: ""
-        reason_max_length: ""
-        reason_required: ""
-        freeze_reason_required: ""
-        moderator_not_banned: ""
-        already_frozen: ""
-        not_already_frozen: ""
-        administrator_not_frozen: ""
-        administrator_not_banned: ""
-        non_moderator_not_demoted: ""
-        administrator_not_demoted: ""
-        moderator_not_promoted: ""
-        administrator_not_promoted: ""
+        invalid_freeze_time: "È necessario inserire un tempo di congelamento valido"
+        reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
+        reason_required: "È necessario fornire una motivazione quando si bannano gli utenti."
+        freeze_reason_required: "È necessario fornire una motivazione quando si bloccano gli utenti."
+        moderator_not_banned: "%username% non può essere bannato perché è un moderatore. Deve prima essere retrocesso di ruolo."
+        already_frozen: "%username% non può essere congelato perché è già congelato."
+        not_already_frozen: "%username% non può essere sbloccato perché non è bloccato."
+        administrator_not_frozen: "%username% non può essere bloccato perché è amministratore."
+        administrator_not_banned: "%username% non può essere bannato perché è amministratore."
+        non_moderator_not_demoted: "%username% non può essere retrocesso perché non è un moderatore."
+        administrator_not_demoted: "%username% non può essere declassato perché è amministratore."
+        moderator_not_promoted: "%username% non può essere promosso perché è già un moderatore."
+        administrator_not_promoted: "%username% non può essere promosso perché è amministratore."
         users_not_found: "Gli utenti non sono stati trovati"
     posts:
       singular: "post"
       plural: "post"
       title: "Moderazione post"
       menu_title: "Post"
-      not_found: ""
-      deleted: ""
+      not_found: "I post non sono stati trovati."
+      deleted: "Post eliminati"
       validations:
-        reason_max_length: ""
-        reason_required: ""
+        reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
+        reason_required: "È necessario fornire una motivazione quando si eliminano i post."
     comments:
       singular: "commento"
       plural: "commenti"
       title: "Moderazione dei commenti"
       menu_title: "Commenti"
-      not_found: ""
-      deleted: ""
+      not_found: "I commenti non sono stati trovati."
+      deleted: "Commenti eliminati"
       validations:
-        reason_max_length: ""
-        reason_required: ""
+        reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
+        reason_required: "È necessario fornire una motivazione quando si eliminano i commenti."
     blocked_email_addresses:
       singular: "indirizzo email"
       plural: "indirizzi email"
       title: "Moderazione indirizzi email bloccati"
       menu_title: "Indirizzi email bloccati"
-      not_found: ""
-      unblocked: ""
+      not_found: "Gli indirizzi email bloccati non sono stati trovati."
+      unblocked: "Indirizzo email sbloccato"
     reports:
       singular: "segnalazione"
       plural: "segnalazioni"
       title: "Moderazione segnalazioni"
       menu_title: "Segnalazioni"
-      not_found: ""
-      dismissed: ""
+      not_found: "I report non sono stati trovati."
+      dismissed: "Report respinti"
   categories:
     title: "Categorie"
-    singular: ""
-    plural: ""
-    not_found: ""
-    assign_to_delete: ""
-    category_not_found: ""
-    changed: ""
-    deleted: ""
+    singular: "categoria"
+    plural: "categorie"
+    not_found: "Le categorie non sono state trovate"
+    assign_to_delete: "Tutti i post devono essere assegnati a una categoria diversa prima che una categoria possa essere eliminata."
+    category_not_found: "La categoria non è stata trovata."
+    changed: "Categoria modificata"
+    deleted: "Categoria eliminata"
   announcements:
     title: "Annunci"
-    saved: ""
+    saved: "Annuncio salvato"
     types:
-      primary: ""
-      secondary: ""
-      warning: ""
-      info: ""
-      light: ""
+      primary: "Primario"
+      secondary: "Secondario"
+      warning: "Avviso"
+      info: "Info"
+      light: "Chiaro"
   user_registration:
     title: "Registrazione utenti"
     allow_registration: "Consenti agli utenti di registrarsi"
@@ -564,8 +564,8 @@ admin:
       invalid_value: "Questo campo ha un valore non valido"
     registration_challenge:
       title: "Sfida di registrazione"
-      new_question: ""
-      correct_answers: ""
+      new_question: "Nuova domanda"
+      correct_answers: "Risposte corrette"
       validations:
         no_correct_answers: "Tutte le domande devono avere almeno una risposta corretta"
         answer_character_count: "Tutte le risposte devono avere almeno 255 caratteri"
@@ -574,7 +574,7 @@ admin:
       help_text: "Puoi creare domande a cui l'utente deve rispondere correttamente per creare un account. Se crei più domande, all'utente verrà richiesto di rispondere a una domanda a caso quando si registra per un account."
   amazon_s3_details:
     title: "Dettagli Amazon S3"
-    change_warning: ""
+    change_warning: "Questa istanza è stata configurata per utilizzare lo storage Amazon S3 per l'hosting delle immagini. Non è consigliabile modificare questi valori a meno che le immagini non vengano più caricate o visualizzate correttamente a causa di una modifica della configurazione di AWS S3."
   mail:
     title: "Posta"
 
@@ -631,13 +631,13 @@ flash_messages:
   account_frozen: "Non puoi eseguire questa azione perché il tuo account è stato bloccato fino al %unfreeze_datetime%. Motivo: %reason%"
   prevent_action_account_unverified: "Non puoi eseguire questa azione perché il tuo indirizzo email non è stato ancora verificato."
   account_unverified: "Il tuo indirizzo email non è stato ancora verificato. Controlla le tue email per verificare il tuo indirizzo email."
-  check_emails: ""
-  account_verification_failed: ""
-  account_verified: ""
-  check_emails_reset_password: ""
-  password_reset: ""
-  category_added: ""
-  category_updated: ""
+  check_emails: "Controlla la tua casella di posta elettronica per verificare il tuo indirizzo email."
+  account_verification_failed: "Verifica dell'account non riuscita."
+  account_verified: "Il tuo account è stato verificato."
+  check_emails_reset_password: "Controlla la tua casella di posta elettronica per reimpostare la password."
+  password_reset: "La tua password è stata reimpostata."
+  category_added: "Categoria aggiunta"
+  category_updated: "Categoria aggiornata"
 
 notifications:
   new_post_comments:
@@ -650,9 +650,9 @@ moderation_log:
   record_of_actions: Il registro di moderazione è un registro pubblicamente accessibile delle azioni di moderazione intraprese all'interno di questa istanza di Habitat per garantire responsabilità e trasparenza.
   days_available: Questi record sono disponibili per 30 giorni dalla data dell'azione intrapresa.
   sensitive_content_warning: Alcuni dei registri possono contenere contenuti di natura delicata. Ciò potrebbe includere materiale osceno, spam o URL che potrebbero rappresentare un pericolo. Si consiglia di prestare attenzione quando si visualizzano i registri e di essere consapevoli dei contenuti potenzialmente dannosi che si possono incontrare.
-  date: ""
-  moderator: ""
-  action: ""
+  date: "Data"
+  moderator: "Moderatore"
+  action: "Azione"
     
   actions:
     ban: "Utente '%username%' bannato. Motivo: %reason%"
@@ -677,17 +677,17 @@ emails:
     new_reports_link: "Visualizza contenuti segnalati"
   email_sent: "Email inviata a %email_address%"
   password_reset:
-    subject: ""
+    subject: "Reimposta la password per %domain%"
     body: |
-
-
-
+      Ciao %username%,
+      Fai clic sul link qui sotto per verificare l'indirizzo email del tuo account.
+      Ignora questa email se non hai creato tu questo account.
   verify_email_address:
-    subject: ""
+    subject: "Verifica il tuo indirizzo email per %domain%"
     body: |
-
-
-
+      Ciao %username%,
+      Fai clic sul link qui sotto per verificare l'indirizzo email del tuo account.
+      Ignora questa email se non hai creato tu questo account.
 
 users:
   roles:
@@ -700,13 +700,13 @@ misc:
   loading: "Caricamento..."
   to_comment: "per commentare questo post."
   or: "o"
-  latest_posts: ""
+  latest_posts: "Ultimi post"
 
 error_pages:
   not_found:
-    title: ""
-    subtitle: ""
-    body: ""
+    title: "Pagina non trovata"
+    subtitle: "La pagina che stai cercando non esiste"
+    body: "Sei sicuro che questo sia l'URL corretto?"
 
 commands:
   reset_admin_password:
