@@ -401,7 +401,7 @@ measurement_units:
       short: "km"
   miles:
     label: "miglia"
-  away: "distanza"
+  away: "di distanza"
 
 admin:
   actions:
