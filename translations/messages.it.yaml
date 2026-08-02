@@ -295,7 +295,7 @@ account:
     generic: "Si è verificato un errore con i dati inseriti, riprova."
   registration:
     messages:
-      registration_disabled: "Le registrazioni sono attualmente disabilitate."
+      registration_disabled: "Le registrazioni sono attualmente disabilitate"
   sign_in_to_perform_action:
     before: "Devi "
     after: " per eseguire questa azione"
@@ -513,7 +513,7 @@ admin:
       deleted: "Post eliminati"
       validations:
         reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
-        reason_required: "È necessario fornire una motivazione quando si eliminano i post."
+        reason_required: "È necessario fornire una motivazione quando si eliminano i post"
     comments:
       singular: "commento"
       plural: "commenti"
@@ -523,7 +523,7 @@ admin:
       deleted: "Commenti eliminati"
       validations:
         reason_max_length: "Il motivo deve essere un massimo di %max_length% caratteri"
-        reason_required: "È necessario fornire una motivazione quando si eliminano i commenti."
+        reason_required: "È necessario fornire una motivazione quando si eliminano i commenti"
     blocked_email_addresses:
       singular: "indirizzo email"
       plural: "indirizzi email"
