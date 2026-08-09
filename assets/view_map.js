@@ -61,10 +61,6 @@ if (document.getElementById('map') !== null) {
     map.addLayer(location);
     map.setMaxBounds(latLng.toBounds(500));
 
-    map.on('click', function(ev) {
-    });
-
-
     document.addEventListener("click", (event) => {
         if (
             event.target.id === 'map' ||
