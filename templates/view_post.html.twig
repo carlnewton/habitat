@@ -84,11 +84,10 @@
         {% endif %}
         {% if post.latitude is not null and post.longitude is not null %}
             <h2 id="location">{{ 'fields.location.title' | trans }}</h2>
-            <div class="card mb-4">
-                <div class="ratio ratio-16x9">
+            <div id="map-border" class="card mb-4 ratio ratio-16x9 rounded border border-4 border-primary border-opacity-50">
+                <div class="p-1">
                     <div
                         id="map"
-                        class="rounded"
                         data-center="{{ post.latitude }},{{ post.longitude }}"
                         data-showcurrentlocation="{{ 'buttons.show_current_location' | trans }}"
                         data-hidecurrentlocation="{{ 'buttons.hide_current_location' | trans }}"
