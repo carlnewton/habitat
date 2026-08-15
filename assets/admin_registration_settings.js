@@ -1,5 +1,4 @@
 var questionsInput = document.querySelector('#registration-challenge-questions');
-const DEFAULT_QUESTION_HEADER = 'New question';
 
 buildRegistrationAccordion();
 
@@ -16,7 +15,7 @@ document.addEventListener('input', function (e) {
 
         let headerText = e.target.value;
         if (headerText === undefined || headerText === '') {
-            headerText = DEFAULT_QUESTION_HEADER;
+            headerText = document.getElementById('questions-accordion').dataset.defaultquestionheader;
         }
         e.target.closest('.accordion-question').querySelector('.accordion-button').innerText = headerText;
         buildRegistrationJson();
@@ -182,16 +181,17 @@ function buildRegistrationJson() {
 function buildAnswerField(answer = '') {
 
     const answerField = document.createElement('div');
+    const correctAnswerField = document.getElementById('questions-accordion').dataset.correctanswerfield;
     answerField.classList.add('input-group');
     answerField.innerHTML = `
-        <input type="text" class="registration-question-answer form-control" value="${answer}" placeholder="Add a correct answer" maxlength="255">
+        <input type="text" class="registration-question-answer form-control" value="${answer}" placeholder="${correctAnswerField}" maxlength="255">
         <button class="btn btn-outline-danger btn-registration-question-answer-delete" type="button"><i class="bi bi-x-lg"></i></button>
     `;
 
 
     const alert = document.createElement('div');
     alert.classList.add('alert', 'alert-warning', 'd-none', 'mt-2');
-    alert.innerText = 'This answer looks like it might be easy to brute-force. It is recommended to avoid yes or no questions, questions which have numeric answers, or answers from a known list.';
+    alert.innerText = document.getElementById('questions-accordion').dataset.correctanswerbruteforce;
     const answerFieldWithAlert = document.createElement('div');
     answerFieldWithAlert.classList.add('mb-3', 'registration-question-answer-container');
     answerFieldWithAlert.appendChild(answerField);
@@ -203,7 +203,7 @@ function buildAnswerField(answer = '') {
 function buildAccordionItem(id, question) {
     let answerFields = '';
     let questionText = '';
-    let questionHeader = DEFAULT_QUESTION_HEADER;
+    let questionHeader = document.getElementById('questions-accordion').dataset.defaultquestionheader;
     if (question !== undefined) {
         questionText = question.question;
         questionHeader = question.question;
@@ -215,6 +215,11 @@ function buildAccordionItem(id, question) {
     }
     answerFields += buildAnswerField().outerHTML;
     const accordionItem = document.createElement('div');
+    const questionLabel = document.getElementById('questions-accordion').dataset.questionfield;
+    const questionHelpText = document.getElementById('questions-accordion').dataset.questionhelptext;
+    const questionBruteForce = document.getElementById('questions-accordion').dataset.questionbruteforce;
+    const correctAnswersLabel = document.getElementById('questions-accordion').dataset.correctanswers;
+    const deleteQuestionBtn = document.getElementById('questions-accordion').dataset.deletequestion;
     accordionItem.classList.add('accordion-question', 'accordion-item');
     accordionItem.innerHTML = `
         <h2 class="accordion-header">
@@ -225,33 +230,19 @@ function buildAccordionItem(id, question) {
         <div id="question-${id}" class="accordion-collapse collapse" data-bs-parent="#questions-accordion">
             <div class="accordion-body">
                 <div class="mb-3">
-                    <label for="question-${id}-question" class="form-label">Question</label>
+                    <label for="question-${id}-question" class="form-label">${questionLabel}</label>
                     <div class="form-text">
-                        <p>
-                            It is recommended to try to ask a question which would be easy for somebody local to
-                            answer, but difficult for anyone else, or a bot to guess.
-                        </p>
+                        <p>${questionHelpText}</p>
                     </div>
                     <input type="text" class="form-control registration-question" id="question-${id}-question" value="${questionText}" placeholder="Add a question" maxlength="255">
-                    <div class="mt-2 alert alert-warning d-none">
-                        This question looks like it might be easy to brute-force. It is recommended to avoid yes or no questions, questions which have numeric answers, or answers from a known list.
-                    </div>
+                    <div class="mt-2 alert alert-warning d-none">${questionBruteForce}</div>
                 </div>
                 <div class="mb-3">
-                    <label for="question-${id}-answers" class="form-label">Correct answers</label>
-                    <div class="form-text">
-                        <p>
-                            Answers are not cases sensitive and white space before and after the answer will be ignored.
-                        </p>
-                        <p>
-                            For instance, <kbd>&nbsp;&nbsp;Example answer</kbd>, <kbd>example ANSWER&nbsp&nbsp</kbd> and
-                            <kbd>ExAmPlE aNsWeR</kbd> will all be considered as variations of the same answer.
-                        </p>
-                    </div>
+                    <label for="question-${id}-answers" class="form-label">${correctAnswersLabel}</label>
                     <div class="registration-question-answers">
                         ${answerFields}
                     </div>
-                    <button class="btn btn-outline-danger btn-registration-question-delete">Delete question</button>
+                    <button class="btn btn-outline-danger btn-registration-question-delete">${deleteQuestionBtn}</button>
                 </div>
             </div>
         </div>

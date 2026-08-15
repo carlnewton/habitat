@@ -181,7 +181,7 @@ let dropzone = new Dropzone(".dropzone", {
     maxFilesize: 99,
     acceptedFiles: "image/*",
     addRemoveLinks: true,
-    dictDefaultMessage: "<i class=\"bi fs-2 bi-upload\"></i><br>Add photos",
+    dictDefaultMessage: "<i class=\"bi fs-2 bi-upload\"></i><br>" + document.getElementById('photo-upload').dataset.addphotos,
     success: function (file, response) {
         let attachmentIdString = document.getElementById('attachmentIds').value;
         let attachmentIdArray = attachmentIdString.split(',');
@@ -278,7 +278,10 @@ if (existingAttachmentIds.length > 0) {
             continue;
         }
 
-        dropzone.displayExistingFile({ name: 'Uploaded file', attachmentId: existingAttachmentIdArray[i] }, '/attachment/unposted/' + existingAttachmentIdArray[i])
+        dropzone.displayExistingFile({
+            name: document.getElementById('photo-upload').dataset.uploadedfile,
+            attachmentId: existingAttachmentIdArray[i]
+        }, '/attachment/unposted/' + existingAttachmentIdArray[i])
     }
 }
 

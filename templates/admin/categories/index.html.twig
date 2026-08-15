@@ -56,7 +56,7 @@
                                 </td>
                                 <td class="align-middle{% if sort == 'name' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}"><a href="{{ path('app_admin_categories_edit', { id: item.id }) }}">{{ item.name }}</a></td>
                                 <td>{{ item.description }}</td>
-                                <td class="align-middle{% if sort == 'location' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.location.label }}</td>
+                                <td class="align-middle{% if sort == 'location' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ ('fields.category_location.options.' ~ item.location.machineName) | trans }}</td>
                                 <td class="align-middle{% if sort == 'weight' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">{{ item.weight }}</td>
                                 <td class="align-middle text-center{% if sort == 'allow_posting' %} bg-{% if habitat_theme == 'light' %}light{% else %}dark-subtle{% endif %} border{% endif %}">
                                     {% if item.allowPosting %}

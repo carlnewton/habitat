@@ -57,7 +57,7 @@ class CategoriesIndexController extends AbstractAdminTableController implements 
 
     public function getItemsLabel(): string
     {
-        return 'categories';
+        return $this->translator->trans('admin.categories.plural');
     }
 
     public function getDefaultSortProperty(): string

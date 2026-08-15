@@ -61,13 +61,23 @@ class UsersPromoteController extends AbstractController
 
         $usersPromoted = false;
         foreach ($users as $user) {
-            if (in_array('ROLE_MODERATOR', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be promoted because they are already a moderator.');
+            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.administrator_not_promoted',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
-            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be promoted because they are the administrator.');
+            if (in_array('ROLE_MODERATOR', $user->getRoles())) {
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.moderator_not_promoted',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
@@ -89,7 +99,7 @@ class UsersPromoteController extends AbstractController
 
         if ($usersPromoted) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users promoted');
+            $this->addFlash('notice', $this->translator->trans('admin.moderation.users.promoted'));
         }
 
         return $this->redirectToRoute('app_moderation_users');

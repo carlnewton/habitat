@@ -45,7 +45,18 @@
             <div class="form-text">
                 {{ 'admin.user_registration.registration_challenge.help_text' | trans }}
             </div>
-            <div class="accordion my-3{% if errors.questions is defined %} is-invalid{% endif %}" id="questions-accordion"></div>
+            <div
+                class="accordion my-3{% if errors.questions is defined %} is-invalid{% endif %}"
+                id="questions-accordion"
+                data-defaultquestionheader="{{ 'admin.user_registration.registration_challenge.new_question' | trans }}"
+                data-correctanswerfield="{{ 'fields.add_correct_answer.title' | trans }}"
+                data-correctanswerbruteforce="{{ 'fields.add_correct_answer.validations.brute_force' | trans }}"
+                data-questionfield="{{ 'fields.question.title' | trans }}"
+                data-questionhelptext="{{ 'fields.question.help_text' | trans }}"
+                data-questionbruteforce="{{ 'fields.question.validations.brute_force' | trans }}"
+                data-correctanswers="{{ 'admin.user_registration.registration_challenge.correct_answers' | trans }}"
+                data-deletequestion="{{ 'buttons.delete_question' | trans }}"
+            ></div>
             {% if errors.questions is defined %}
                 <div class="invalid-feedback">
                     <ul>

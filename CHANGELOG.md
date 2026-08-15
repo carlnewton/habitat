@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Toggle focus state when viewing a map
+
 ### Fixed
 
 -  [#146] Do not allow logged in users to sign up for an account
@@ -16,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Redraw SVG icon to use optimal paths and no complex transformations
+- ~100% translation text coverage
 
 ### Fixed
 

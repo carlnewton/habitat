@@ -108,7 +108,7 @@ class AddCommentController extends AbstractController
         $errors = [];
 
         if (empty(trim($request->request->get('comment')))) {
-            $errors['comment'][] = 'The comment cannot be empty';
+            $errors['comment'][] = $this->translator->trans('fields.comment.validations.empty');
         }
 
         return $errors;

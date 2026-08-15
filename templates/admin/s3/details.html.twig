@@ -1,10 +1,9 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Amazon S3 details' %}
+{% set page_title = 'admin.amazon_s3_details.title' | trans %}
 
 {% block body %}
     <div class="alert alert-warning">
-        This instance has been configured to use Amazon S3 storage for image hosting. You should not change the values here
-        unless images are no longer successfully uploading or being displayed due to an AWS S3 configuration change.
+        {{ 'admin.amazon_s3_details.change_warning' | trans }}
     </div>
     {% if errors.s3 is defined %}
         <div class="card">
@@ -65,7 +64,7 @@
             <label for="secretKey" class="form-label">Secret key</label>
             <input type="password" class="form-control{% if errors.secretKey is defined %} is-invalid{% endif %}" id="secretKey" name="secretKey" placeholder="secret-key"{% if values.secretKey is defined %} value="{{ values.secretKey }}{% endif %}">
             <div class="form-text">
-                The value for this field is hidden once saved. If left empty, the existing secret key will be used.
+                {{ 'fields.amazon_s3_secret_key.help_text' | trans }}
             </div>
             {% if errors.secretKey is defined %}
                     <div class="invalid-feedback">

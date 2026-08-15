@@ -43,7 +43,7 @@ class UserRegistrationSettingsController extends AbstractController
             if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
                 $this->addFlash(
                     'warning',
-                    'Something went wrong, please try again.'
+                    $this->translator->trans('fields.csrf_token.validations.invalid'),
                 );
 
                 return $this->render('admin/user_registration.html.twig', [

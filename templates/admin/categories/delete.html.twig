@@ -1,5 +1,7 @@
 {% extends 'admin/base.html.twig' %}
-{% set page_title = 'Delete categories' %}
+
+{% set subject = ((categories|length == 1) ? 'admin.categories.singular' : 'admin.categories.plural') | trans %}
+{% set page_title = ('admin.actions.delete.title' | trans) ~ ' ' ~ subject %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
@@ -12,7 +14,12 @@
 
     <div class="card">
         <div class="card-header p-5 text-center">
-            <p class="lead">Are you sure you would like to delete {% if categories|length > 1 %}these categories{% else %}this category{% endif %}?</p>
+            <p class="lead">
+                {{ 'admin.actions.confirmation_message' | trans({
+                    '%action%': 'admin.actions.delete.title' | trans | lower,
+                    '%subject%': subject,
+                }) }}
+            </p>
             <form method="post">
                 <input name="items" type="hidden" value="{{ category_ids }}">
                 <input type="hidden" name="token" value="{{ csrf_token('admin') }}">

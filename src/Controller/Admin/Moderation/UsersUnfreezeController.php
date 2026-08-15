@@ -62,7 +62,12 @@ class UsersUnfreezeController extends AbstractController
         $usersUnfrozen = false;
         foreach ($users as $user) {
             if (!$user->isFrozen()) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be unfrozen because they are not frozen.');
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.not_already_frozen',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
@@ -74,7 +79,7 @@ class UsersUnfreezeController extends AbstractController
 
         if ($usersUnfrozen) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users unfrozen');
+            $this->addFlash('notice', $this->translator->trans('admin.moderation.users.unfrozen'));
         }
 
         return $this->redirectToRoute('app_moderation_users');

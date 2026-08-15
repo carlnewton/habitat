@@ -60,7 +60,7 @@
                                 checked
                             {% endif %}
                         >
-                        <label class="form-check-label" for="type-{{ type.machineName }}">{{ type.label }}</label>
+                        <label class="form-check-label" for="type-{{ type.machineName }}">{{ ('admin.announcements.types.' ~ type.machineName) | trans }}</label>
                     </li>
                 {% endfor %}
             </ul>

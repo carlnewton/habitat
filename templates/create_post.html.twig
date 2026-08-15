@@ -44,7 +44,7 @@
         <div class="form-floating mb-3{% if categories|length == 1 %} d-none{% endif %}">
             <select class="form-select{% if errors.category is defined %} is-invalid{% endif %}" name="category" id="category" aria-label="{{ 'fields.category.title' | trans }}">
                 {% for category in categories %}
-                    <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.label|lower }}">{{ category.name }}</option>
+                    <option{% if (values.category is defined and values.category == category.id) or (values.category is not defined and app.request.query.get('category') == category.id) %} selected{% endif %} value="{{ category.id }}" data-location="{{ category.location.machineName }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
             <label for="category">{{ 'fields.category.title' | trans }}</label>
@@ -56,7 +56,12 @@
                 </div>
             {% endif %}
         </div>
-        <div class="dropzone mb-3"></div>
+        <div
+            id="photo-upload"
+            class="dropzone mb-3"
+            data-addphotos="{{ 'buttons.add_photos' | trans }}"
+            data-uploadedfile="{{ 'fields.photos.uploaded_file' | trans }}"
+        ></div>
         <input type="hidden" name="attachmentIds" id="attachmentIds" value="{% if values.attachmentIds is defined %}{{ values.attachmentIds }}{% endif %}">
         <button class="btn btn-outline-primary mb-3" id="add-location-btn" type="button">{{ 'buttons.add_a_location' | trans }}</button>
         <div id="location-card" class="card mb-3{% if errors.location is defined %} border-danger{% endif %}">

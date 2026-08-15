@@ -10,11 +10,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted(new Expression('is_granted("ROLE_SUPER_ADMIN") or is_granted("ROLE_MODERATOR")'), statusCode: 403, exceptionCode: 10010)]
 class ReportsDismissController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
+
+    public function __construct(
+        private TranslatorInterface $translator,
+    ) {
+    }
 
     #[Route(path: '/admin/moderation/reports/dismiss', name: 'app_moderation_reports_dismiss', methods: ['POST'], priority: 2)]
     public function index(
@@ -23,10 +29,7 @@ class ReportsDismissController extends AbstractController
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->redirectToRoute('app_moderation_reports');
         }
@@ -42,7 +45,7 @@ class ReportsDismissController extends AbstractController
         if (empty($reports)) {
             $this->addFlash(
                 'warning',
-                'The reports could not be found.'
+                $this->translator->trans('admin.moderation.reports.not_found'),
             );
 
             return $this->redirectToRoute('app_moderation_reports');
@@ -63,7 +66,7 @@ class ReportsDismissController extends AbstractController
 
         if ($reportsDismissed) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Reports dismissed');
+            $this->addFlash('notice', $this->translator->trans('admin.moderation.reports.dismissed'));
         }
 
         return $this->redirectToRoute('app_moderation_reports');

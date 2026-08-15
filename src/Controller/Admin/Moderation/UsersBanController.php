@@ -29,10 +29,7 @@ class UsersBanController extends AbstractController
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->redirectToRoute('app_moderation_users');
         }
@@ -48,7 +45,7 @@ class UsersBanController extends AbstractController
         if (empty($users)) {
             $this->addFlash(
                 'warning',
-                'The users could not be found.'
+                $this->translator->trans('admin.moderation.users.validations.users_not_found'),
             );
 
             return $this->redirectToRoute('app_moderation_users');
@@ -78,11 +75,21 @@ class UsersBanController extends AbstractController
         $blockedEmailAddressRepository = $entityManager->getRepository(BlockedEmailAddress::class);
         foreach ($users as $user) {
             if (in_array('ROLE_MODERATOR', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be banned because they are a moderator. They must be demoted first.');
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.moderator_not_banned',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
             if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $this->addFlash('warning', $user->getUsername() . ' could not be banned because they are an administrator.');
+                $this->addFlash('warning', $this->translator->trans(
+                    'admin.moderation.users.validations.administrator_not_banned',
+                    [
+                        '%username%' => $user->getUsername(),
+                    ]
+                ));
                 continue;
             }
 
@@ -113,7 +120,7 @@ class UsersBanController extends AbstractController
 
         if ($usersBanned) {
             $entityManager->flush();
-            $this->addFlash('notice', 'Users banned');
+            $this->addFlash('notice', $this->translator->trans('admin.moderation.users.banned'));
         }
 
         return $this->redirectToRoute('app_moderation_users');
@@ -124,9 +131,14 @@ class UsersBanController extends AbstractController
         $errors = [];
 
         if (strlen($request->request->get('reason')) > 255) {
-            $errors['reason'][] = 'The value of this field must be a maximum of 255 characters';
+            $errors['reason'][] = $this->translator->trans(
+                'admin.moderation.users.validations.reason_max_length',
+                [
+                    '%max_length%' => 255,
+                ]
+            );
         } elseif (empty(trim($request->request->get('reason')))) {
-            $errors['reason'][] = 'This is a required field';
+            $errors['reason'][] = $this->translator->trans('admin.moderation.users.validations.reason_required');
         }
 
         return $errors;

@@ -29,10 +29,7 @@ class PostsChangeCategoryController extends AbstractController
     ): Response {
         $submittedToken = $request->getPayload()->get('token');
         if (!$this->isCsrfTokenValid('admin', $submittedToken)) {
-            $this->addFlash(
-                'warning',
-                'Something went wrong, please try again.'
-            );
+            $this->addFlash('warning', $this->translator->trans('fields.csrf_token.validations.invalid'));
 
             return $this->redirectToRoute('app_moderation_posts');
         }
@@ -51,7 +48,7 @@ class PostsChangeCategoryController extends AbstractController
         if (empty($posts)) {
             $this->addFlash(
                 'warning',
-                'The posts could not be found.'
+                $this->translator->trans('admin.moderation.posts.not_found'),
             );
 
             return $this->redirectToRoute('app_moderation_posts');
@@ -71,7 +68,7 @@ class PostsChangeCategoryController extends AbstractController
         if (!$category) {
             $this->addFlash(
                 'warning',
-                'The category could not be found.'
+                $this->translator->trans('admin.categories.category_not_found'),
             );
 
             return $this->redirectToRoute('app_moderation_posts');
@@ -95,7 +92,7 @@ class PostsChangeCategoryController extends AbstractController
         }
         $entityManager->flush();
 
-        $this->addFlash('notice', 'The category has been changed');
+        $this->addFlash('notice', $this->translator->trans('admin.categories.changed'));
 
         return $this->redirectToRoute('app_moderation_posts');
     }
