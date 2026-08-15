@@ -31,11 +31,18 @@ class UserSettingsController extends AbstractController
         $themeSetting = $this->getUserOrGlobalSetting('theme');
         $locationMeasurementSetting = $this->getUserOrGlobalSetting('locationMeasurement');
 
-        return $this->render('security/settings.html.twig', [
+        $settings = [
             'user' => $this->user,
             'locationMeasurement' => ($locationMeasurementSetting) ? $locationMeasurementSetting->getValue() : 'kilometers',
             'theme' => ($themeSetting) ? $themeSetting->getValue() : 'light',
-        ]);
+        ];
+
+        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $adminDigestEmailSetting = $this->settings->getSettingByName('digestEmail');
+            $settings['digest'] = ($adminDigestEmailSetting) ? $adminDigestEmailSetting->getValue() : 'daily';
+        }
+
+        return $this->render('security/settings.html.twig', $settings);
     }
 
     private function getUserOrGlobalSetting(string $settingName): mixed

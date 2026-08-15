@@ -381,6 +381,12 @@ user_settings:
     measurement_units:
       title: "Measurement units"
       description: "Display distances in"
+    digest:
+      title: "Send digest email"
+      description: "Sends a summary of any new users, posts, comments or reports."
+      daily: "daily"
+      immediately: "immediately"
+      never: "never"
   hidden_categories:
     title: "Hidden categories"
     no_hidden_categories: "You are not currently hiding any categories."

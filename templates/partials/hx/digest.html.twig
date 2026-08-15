@@ -1,0 +1,10 @@
+{% if is_granted('ROLE_SUPER_ADMIN') and digest %}
+    <form id="set-digest" hx-post="/hx/set-digest">
+        <div class="btn-group-vertical" id="digest">
+            <button class="btn{% if digest == "daily" %} active{% endif %} btn-outline-secondary" type="submit" name="daily" id="digest-daily">{{ 'user_settings.preferences.digest.daily' | trans }}</button>
+            <button class="btn{% if digest == "immediately" %} active{% endif %} btn-outline-secondary" type="submit" name="immediately" id="digest-immediately">{{ 'user_settings.preferences.digest.immediately' | trans }}</button>
+            <button class="btn{% if digest == "never" %} active{% endif %} btn-outline-secondary" type="submit" name="never" id="digest-never">{{ 'user_settings.preferences.digest.never' | trans }}</button>
+        </div>
+        <input type="hidden" name="token" value="{{ csrf_token('set_digest') }}">
+    </form>
+{% endif %}
