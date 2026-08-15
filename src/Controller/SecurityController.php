@@ -70,7 +70,12 @@ class SecurityController extends AbstractController
         ValidatorInterface $validator,
         Mailer $mailer,
         UrlGeneratorInterface $router,
+        #[CurrentUser] ?User $currentUser,
     ): Response {
+        if ($currentUser) {
+            return $this->redirectToRoute('app_index_index');
+        }
+
         if (0 === $this->userRepository->count()) {
             return $this->redirectToRoute('app_index_index');
         }
@@ -283,7 +288,12 @@ class SecurityController extends AbstractController
         UrlGeneratorInterface $router,
         Mailer $mailer,
         Request $request,
+        #[CurrentUser] ?User $currentUser,
     ): Response {
+        if ($currentUser) {
+            return $this->redirectToRoute('app_index_index');
+        }
+
         if ('POST' !== $request->getMethod()) {
             return $this->render('security/forgot_password.html.twig');
         }
