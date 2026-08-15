@@ -13,7 +13,9 @@ if (document.getElementById('map') !== null) {
     ];
     var map = L.map('map', {
         center: centerLatLngArr,
-        zoom: 19
+        zoom: 19,
+        dragging: false,
+        scrollWheelZoom: false,
     });
 
     var markerIcon = L.icon({
@@ -58,6 +60,29 @@ if (document.getElementById('map') !== null) {
 
     map.addLayer(location);
     map.setMaxBounds(latLng.toBounds(500));
+
+    map.on('zoomstart', function(e) {
+        document.getElementById('map-border').classList.remove('border-opacity-50');
+    })
+
+    document.addEventListener("click", (event) => {
+        if (
+            event.target.id === 'map' ||
+            document.getElementById('map').contains(event.target)
+        ) {
+            document.getElementById('map-border').classList.remove('border-opacity-50');
+
+            map.scrollWheelZoom.enable();
+            map.dragging.enable();
+
+            return;
+        }
+
+        document.getElementById('map-border').classList.add('border-opacity-50');
+
+        map.scrollWheelZoom.disable();
+        map.dragging.disable();
+    })
 
     document.getElementById('view-location-btn').onclick = function() {
         myLocationEnabled = !myLocationEnabled;
