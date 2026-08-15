@@ -61,6 +61,10 @@ if (document.getElementById('map') !== null) {
     map.addLayer(location);
     map.setMaxBounds(latLng.toBounds(500));
 
+    map.on('zoomstart', function(e) {
+        document.getElementById('map-border').classList.remove('border-opacity-50');
+    })
+
     document.addEventListener("click", (event) => {
         if (
             event.target.id === 'map' ||
