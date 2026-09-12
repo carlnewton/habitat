@@ -97,7 +97,7 @@ abstract class AbstractSendDigestEmailCommand extends Command
 
         if (!empty($newReports)) {
             $reportsModerationRoute = $this->urlGenerator->generate('app_moderation_reports');
-            $body .= '<p>' . 
+            $body .= '<p>' .
                 $this->translator->trans('emails.digest.new_reports', ['%count%' => count($newReports)]) .
                 '</p><p><a href="' . $domain . $reportsModerationRoute . '">' .
                 $this->translator->trans('emails.digest.new_reports_link') . '</a></p>'

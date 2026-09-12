@@ -15,7 +15,7 @@ class SendDailyDigestEmailCommand extends AbstractSendDigestEmailCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $digest = $this->settingsRepository->getSettingByName('digestEmail');
-        if (!$digest || $digest->getValue() !== 'daily') {
+        if (!$digest || 'daily' !== $digest->getValue()) {
             $output->writeln($this->translator->trans('commands.digest_email.skipped'));
 
             return Command::SUCCESS;
