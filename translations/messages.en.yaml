@@ -671,7 +671,7 @@ moderation_log:
     change_category: "Moved post '%post_title%' from '%from_category%' to '%to_category%'"
 
 emails:
-  daily_digest:
+  digest:
     subject: "New activity in your Habitat"
     body: |
       Hello %admin%,
@@ -681,6 +681,8 @@ emails:
     new_comments: "%count% new comments"
     new_reports: "%count% new reports"
     new_reports_link: "View reported content"
+    change_frequency: "You can change how often you receive these emails from your"
+    change_frequency_settings_page: "user settings page"
   email_sent: "Email sent to %email_address%"
   password_reset:
     subject: "Reset your password for %domain%"
@@ -718,5 +720,6 @@ commands:
   reset_admin_password:
     title: "Reset the administrator password"
     no_admin: "You have not yet created an administrator account"
-  daily_digest_email:
-    no_mail_configuration: "Unable to send the daily digest email until the mail settings have been configured"
+  digest_email:
+    no_mail_configuration: "Unable to send the digest email until the mail settings have been configured"
+    skipped: "The digest email for this interval has been skipped."

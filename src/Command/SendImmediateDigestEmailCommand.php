@@ -8,14 +8,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Scheduler\Attribute\AsCronTask;
 
-#[AsCronTask('0 7 * * *')]
-#[AsCommand(name: 'habitat:send-daily-digest-email')]
-class SendDailyDigestEmailCommand extends AbstractSendDigestEmailCommand
+#[AsCronTask('* * * * *')]
+#[AsCommand(name: 'habitat:send-immediate-digest-email')]
+class SendImmediateDigestEmailCommand extends AbstractSendDigestEmailCommand
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $digest = $this->settingsRepository->getSettingByName('digestEmail');
-        if (!$digest || $digest->getValue() !== 'daily') {
+        if ($digest && $digest->getValue() !== 'immediately') {
             $output->writeln($this->translator->trans('commands.digest_email.skipped'));
 
             return Command::SUCCESS;
@@ -26,6 +26,6 @@ class SendDailyDigestEmailCommand extends AbstractSendDigestEmailCommand
 
     protected function getDateRange(): string
     {
-        return '1 day';
+        return '1 minute';
     }
 }
