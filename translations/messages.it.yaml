@@ -665,7 +665,7 @@ moderation_log:
     change_category: "Post '%post_title%' spostato da '%from_category%' a '%to_category%'"
 
 emails:
-  daily_digest:
+  digest:
     subject: "Nuova attività nel tuo Habitat"
     body: |
       Ciao %admin%,
@@ -675,6 +675,8 @@ emails:
     new_comments: "%count% nuovi commenti"
     new_reports: "%count% nuove segnalazioni"
     new_reports_link: "Visualizza contenuti segnalati"
+    change_frequency:
+    change_frequency_settings_page:
   email_sent: "Email inviata a %email_address%"
   password_reset:
     subject: "Reimposta la password per %domain%"
@@ -712,5 +714,6 @@ commands:
   reset_admin_password:
     title: "Reimposta la password dell'amministratore"
     no_admin: "Non hai ancora creato un account amministratore"
-  daily_digest_email:
-    no_mail_configuration: "Impossibile inviare l'email di digest giornaliero finché le impostazioni della posta non sono state configurate"
+  digest_email:
+    no_mail_configuration: "Impossibile inviare l'email di digest finché le impostazioni della posta non sono state configurate"
+    skipped:

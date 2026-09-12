@@ -13,8 +13,8 @@ class SetupMailFixtures extends Fixture implements FixtureGroupInterface, Depend
     private const SETTINGS = [
         'smtpFromEmailAddress' => 'from@example.com',
         'smtpToEmailAddress' => 'to@example.com',
-        'smtpPort' => '587',
-        'smtpServer' => 'mail.example.com',
+        'smtpPort' => '1025',
+        'smtpServer' => 'habitat-mailer-1',
         'smtpPassword' => 'password',
         'smtpUsername' => 'username',
         'setup' => 'complete',

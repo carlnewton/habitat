@@ -51,10 +51,6 @@ class Mailer
 
     public function send(string $to, string $from, string $subject, string $body)
     {
-        if ('dev' === getenv('APP_ENV')) {
-            return; // Do not send mail on a dev environment
-        }
-
         $username = $this->settingsRepository->getSettingByName('smtpUsername');
         $password = $this->settingsRepository->getSettingByName('smtpPassword');
         $server = $this->settingsRepository->getSettingByName('smtpServer');
