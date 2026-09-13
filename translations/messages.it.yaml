@@ -382,11 +382,11 @@ user_settings:
       title: "Unità di misura"
       description: "Visualizza le distanze in"
     digest:
-      title:
-      description:
-      daily:
-      immediately:
-      never:
+      title:"Invia email di riepilogo"
+      description:"Invia un riepilogo di tutti i nuovi utenti,post,commenti o segnalazioni.s"
+      daily:"giornalmente"
+      immediately:"immediatamente"
+      never:"mai"
   hidden_categories:
     title: "Categorie nascoste"
     no_hidden_categories: "Attualmente non stai nascondendo nessuna categoria."
@@ -681,8 +681,8 @@ emails:
     new_comments: "%count% nuovi commenti"
     new_reports: "%count% nuove segnalazioni"
     new_reports_link: "Visualizza contenuti segnalati"
-    change_frequency:
-    change_frequency_settings_page:
+    change_frequency:"Puoi modificare la frequenza con cui ricevi queste email dalla tua"
+    change_frequency_settings_page: "pagina delle impostazioni utente"
   email_sent: "Email inviata a %email_address%"
   password_reset:
     subject: "Reimposta la password per %domain%"
@@ -721,5 +721,5 @@ commands:
     title: "Reimposta la password dell'amministratore"
     no_admin: "Non hai ancora creato un account amministratore"
   digest_email:
-    no_mail_configuration: "Impossibile inviare l'email di digest finché le impostazioni della posta non sono state configurate"
-    skipped:
+    no_mail_configuration: "Impossibile inviare l'email di riepilogo finché non vengono configurate le impostazioni della posta"
+    skipped: "L'email di riepilogo per questo intervallo è stata saltata"
