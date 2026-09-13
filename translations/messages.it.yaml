@@ -318,7 +318,7 @@ about:
     title: "Area locale"
 
 rss:
-  description: 'Un feed RSS contenente gli ultimi post'
+  description: "Un feed RSS contenente gli ultimi post"
 
 buttons:
   sign_up: "Iscrizione"
@@ -381,6 +381,12 @@ user_settings:
     measurement_units:
       title: "Unità di misura"
       description: "Visualizza le distanze in"
+    digest:
+      title: "Invia email di riepilogo"
+      description: "Invia un riepilogo di tutti i nuovi utenti, post, commenti o segnalazioni."
+      daily: "giornalmente"
+      immediately: "immediatamente"
+      never: "mai"
   hidden_categories:
     title: "Categorie nascoste"
     no_hidden_categories: "Attualmente non stai nascondendo nessuna categoria."
@@ -665,7 +671,7 @@ moderation_log:
     change_category: "Post '%post_title%' spostato da '%from_category%' a '%to_category%'"
 
 emails:
-  daily_digest:
+  digest:
     subject: "Nuova attività nel tuo Habitat"
     body: |
       Ciao %admin%,
@@ -675,6 +681,8 @@ emails:
     new_comments: "%count% nuovi commenti"
     new_reports: "%count% nuove segnalazioni"
     new_reports_link: "Visualizza contenuti segnalati"
+    change_frequency: "Puoi modificare la frequenza con cui ricevi queste email dalla tua"
+    change_frequency_settings_page: "pagina delle impostazioni utente"
   email_sent: "Email inviata a %email_address%"
   password_reset:
     subject: "Reimposta la password per %domain%"
@@ -712,5 +720,6 @@ commands:
   reset_admin_password:
     title: "Reimposta la password dell'amministratore"
     no_admin: "Non hai ancora creato un account amministratore"
-  daily_digest_email:
-    no_mail_configuration: "Impossibile inviare l'email di digest giornaliero finché le impostazioni della posta non sono state configurate"
+  digest_email:
+    no_mail_configuration: "Impossibile inviare l'email di riepilogo finché non vengono configurate le impostazioni della posta"
+    skipped: "L'email di riepilogo per questo intervallo è stata saltata."

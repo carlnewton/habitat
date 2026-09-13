@@ -144,3 +144,12 @@ docker exec -it habitat-habitat-app-1 bash
 ```
 
 Habitat can be loaded in the web browser from [localhost](https://localhost).
+
+### Mailpit
+
+The Mailpit web interface can be [accessed over port 32770](http://localhost:32770) when running in development mode.
+
+The mail fixture is setup to use the following credentials, allowing mail to be sent to the Mailpit container:
+
+SMTP Server: habitat-mailer-1
+SMTP Port: 1025
