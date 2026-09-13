@@ -722,4 +722,4 @@ commands:
     no_admin: "Non hai ancora creato un account amministratore"
   digest_email:
     no_mail_configuration: "Impossibile inviare l'email di riepilogo finché non vengono configurate le impostazioni della posta"
-    skipped: "L'email di riepilogo per questo intervallo è stata saltata"
+    skipped: "L'email di riepilogo per questo intervallo è stata saltata."

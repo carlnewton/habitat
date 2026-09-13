@@ -40,7 +40,7 @@ describe('admin', function() {
       cy.getElement('freeze').click();
       cy.getElement('reason').type('Example reason');
       cy.getElement('btn-freeze').click();
-      cy.getElement('warning-message').contains('could not be frozen because they are an administrator');
+      cy.getElement('warning-message').contains('could not be frozen because they are the administrator');
     })
 
     it('is not possible for administrator to ban self', function() {
@@ -51,7 +51,7 @@ describe('admin', function() {
       cy.getElement('ban').click();
       cy.getElement('reason').type('Example reason');
       cy.getElement('btn-ban').click();
-      cy.getElement('warning-message').contains('could not be banned because they are an administrator');
+      cy.getElement('warning-message').contains('could not be banned because they are the administrator');
     })
         
   })
