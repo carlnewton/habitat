@@ -15,7 +15,7 @@ class SendImmediateDigestEmailCommand extends AbstractSendDigestEmailCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $digest = $this->settingsRepository->getSettingByName('digestEmail');
-        if ($digest && 'immediately' !== $digest->getValue()) {
+        if (!$digest || 'immediately' !== $digest->getValue()) {
             $output->writeln($this->translator->trans('commands.digest_email.skipped'));
 
             return Command::SUCCESS;
