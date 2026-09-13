@@ -318,7 +318,7 @@ about:
     title: "Local area"
 
 rss:
-  description: 'An RSS feed containing the latest posts'
+  description: "An RSS feed containing the latest posts"
 
 buttons:
   sign_up: "Sign up"
