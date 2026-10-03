@@ -5,17 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.6.0]
 
 ### Changed
 
-- Toggle focus state when viewing a map
-- Admin digest emails can be configured to be sent immediately, daily or never
-- Option to delete own account does not appear for administrator in settings
+- [#116] Admin digest emails can be configured to be sent immediately, daily or never
 
 ### Fixed
 
--  [#146] Do not allow logged in users to sign up for an account
+- A map has to be focused when viewing a post to zoom or pan, preventing interruptions from scrolling
+- The option to delete own account does no longer appears for the administrator in user settings
+- [#146] Logged in users can no longer view the account creation page
 
 ## [1.6.0] - 2026-07-20
 
