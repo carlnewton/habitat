@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-10-21
+
+### Fixed
+
+- Updated PHP version to 8.4.27 to address CVE-2026-109618 and CVE-2026-109619
+
 ## [1.7.0] - 2026-10-03
 
 ### Changed
