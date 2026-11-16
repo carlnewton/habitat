@@ -127,7 +127,7 @@ class CreatePostController extends AbstractController
             $this->entityManager->flush();
 
             if (!empty($request->request->get('attachmentIds'))) {
-                $this->addAttachmentsToPost($request->request->get('attachmentIds'), $post);
+                $this->addAttachmentsToPost($request->request->get('attachmentIds'), $post, $user);
             }
 
             $this->addFlash('notice', $this->translator->trans('post.submitted'));
@@ -140,7 +140,7 @@ class CreatePostController extends AbstractController
         ]);
     }
 
-    protected function addAttachmentsToPost(string $attachmentIdString, Post $post): void
+    protected function addAttachmentsToPost(string $attachmentIdString, Post $post, User $user): void
     {
         if (empty($attachmentIdString)) {
             return;
@@ -165,7 +165,7 @@ class CreatePostController extends AbstractController
 
         $attachmentIdArray = array_unique($attachmentIdArray);
 
-        $attachmentEntities = $attachmentRepository->findOrphanedById($attachmentIdArray);
+        $attachmentEntities = $attachmentRepository->findOrphanedById($attachmentIdArray, $user);
 
         if (empty($attachmentEntities)) {
             return;

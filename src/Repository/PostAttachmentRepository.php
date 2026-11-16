@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PostAttachment;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,13 +22,15 @@ class PostAttachmentRepository extends ServiceEntityRepository
         parent::__construct($registry, PostAttachment::class);
     }
 
-    public function findOrphanedById(array $ids): array
+    public function findOrphanedById(array $ids, User $user): array
     {
         $qb = $this->createQueryBuilder('p');
 
         return $qb
             ->andWhere('p.post IS NULL')
             ->andWhere($qb->expr()->in('p.id', $ids))
+            ->andWhere('p.user = :userId')
+            ->setParameter('userId', $user->getId())
             ->orderBy('p.id', 'ASC')
             ->getQuery()
             ->getResult()
