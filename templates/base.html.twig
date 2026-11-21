@@ -16,9 +16,9 @@
         {% endblock %}
 
         {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
             {# This is to prevent the flash of unstyled content: https://bugzilla.mozilla.org/show_bug.cgi?id=1404468 #}
             <script>(_=>{let a})()</script>
-            {{ encore_entry_script_tags('app') }}
         {% endblock %}
 
         {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
