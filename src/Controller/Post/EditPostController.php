@@ -139,7 +139,7 @@ class EditPostController extends AbstractController
                         $newAttachmentIds[] = $attachmentId;
                     }
                 }
-                $this->addAttachmentsToPost(implode(',', $newAttachmentIds), $post);
+                $this->addAttachmentsToPost(implode(',', $newAttachmentIds), $post, $user);
             }
 
             if (!empty($removedAttachmentIds)) {
@@ -183,7 +183,7 @@ class EditPostController extends AbstractController
         ]);
     }
 
-    protected function addAttachmentsToPost(string $attachmentIdString, Post $post): void
+    protected function addAttachmentsToPost(string $attachmentIdString, Post $post, User $user): void
     {
         if (empty($attachmentIdString)) {
             return;
@@ -208,7 +208,7 @@ class EditPostController extends AbstractController
 
         $attachmentIdArray = array_unique($attachmentIdArray);
 
-        $attachmentEntities = $attachmentRepository->findOrphanedById($attachmentIdArray);
+        $attachmentEntities = $attachmentRepository->findOrphanedById($attachmentIdArray, $user);
 
         if (empty($attachmentEntities)) {
             return;
