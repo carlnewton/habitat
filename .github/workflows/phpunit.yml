@@ -8,3 +8,5 @@ jobs:
     - uses: actions/checkout@v4
     - uses: php-actions/composer@v6
     - uses: php-actions/phpunit@v4
+      with:
+        php_extensions: mbstring
