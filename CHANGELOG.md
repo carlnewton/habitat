@@ -9,13 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded Symfony to 8.1
+- Upgrade Symfony to 8.1
+
+### Fixed
+
+- [#164] Prevent users from attaching a different user's unposted or orphaned image upload
 
 ## [1.7.1] - 2026-10-21
 
 ### Fixed
 
-- Updated PHP version to 8.4.27 to address CVE-2026-109618 and CVE-2026-109619
+- Update PHP version to 8.4.27 to address CVE-2026-109618 and CVE-2026-109619
 
 ## [1.7.0] - 2026-10-03
 
