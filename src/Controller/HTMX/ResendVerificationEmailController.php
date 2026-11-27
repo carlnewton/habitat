@@ -3,7 +3,6 @@
 namespace App\Controller\HTMX;
 
 use App\Entity\Email;
-use DateTimeImmutable;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\Mailer;
@@ -64,7 +63,7 @@ class ResendVerificationEmailController extends AbstractController
                 'verificationString' => $user->getEmailVerificationString(),
             ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
         );
-        $email->setCreated(new DateTimeImmutable());
+        $email->setCreated(new \DateTimeImmutable());
 
         $this->entityManager->persist($email);
         $this->entityManager->flush();

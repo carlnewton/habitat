@@ -34,8 +34,8 @@ class SendQueuedEmailCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $emails = $this->emailRepository->findBy([], [
-                'created' => 'ASC',
-            ],
+            'created' => 'ASC',
+        ],
             self::MAX_EMAILS,
         );
 

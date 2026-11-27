@@ -10,7 +10,6 @@ use App\Entity\User;
 use App\Repository\EmailRepository;
 use App\Repository\RegistrationQuestionRepository;
 use App\Repository\UserRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -178,7 +177,7 @@ class SecurityController extends AbstractController
                     'verificationString' => $emailVerificationString,
                 ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
             );
-            $email->setCreated(new DateTimeImmutable());
+            $email->setCreated(new \DateTimeImmutable());
 
             $this->entityManager->persist($email);
             $this->entityManager->flush();
@@ -337,7 +336,7 @@ class SecurityController extends AbstractController
                     'verificationString' => $emailVerificationString,
                 ]) . '">' . $this->translator->trans('buttons.reset_password') . '</a>'
             );
-            $email->setCreated(new DateTimeImmutable());
+            $email->setCreated(new \DateTimeImmutable());
 
             $this->entityManager->persist($email);
             $this->entityManager->flush();
