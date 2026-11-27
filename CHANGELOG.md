@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Registration and password emails are sent using the worker
+
 ## [1.8.0] - 2026-11-22
 
 ### Changed

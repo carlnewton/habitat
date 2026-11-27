@@ -2,6 +2,7 @@
 
 namespace App\Controller\HTMX;
 
+use App\Entity\Email;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Utilities\Mailer;
@@ -45,12 +46,16 @@ class ResendVerificationEmailController extends AbstractController
         $settingsRepository = $this->entityManager->getRepository(Settings::class);
 
         $domain = getenv('SERVER_NAME');
-        $this->mailer->send(
-            $user->getEmailAddress(),
-            $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+
+        $email = new Email();
+        $email->setToEmailAddress($user->getEmailAddress());
+        $email->setFromEmailAddress($settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue());
+        $email->setSubject(
             $this->translator->trans('emails.verify_email_address.subject', [
                 '%domain%' => $domain,
             ]),
+        );
+        $email->setBody(
             nl2br($this->translator->trans('emails.verify_email_address.body', [
                 '%username%' => $user->getUsername(),
             ])) . '<p><a href="' . $domain . $this->router->generate('app_verify_user', [
@@ -58,6 +63,10 @@ class ResendVerificationEmailController extends AbstractController
                 'verificationString' => $user->getEmailVerificationString(),
             ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
         );
+        $email->setCreated(new \DateTimeImmutable());
+
+        $this->entityManager->persist($email);
+        $this->entityManager->flush();
 
         return new Response('', Response::HTTP_OK);
     }

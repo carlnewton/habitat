@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\BlockedEmailAddress;
+use App\Entity\Email;
 use App\Entity\RegistrationQuestion;
 use App\Entity\Settings;
 use App\Entity\User;
+use App\Repository\EmailRepository;
 use App\Repository\RegistrationQuestionRepository;
 use App\Repository\UserRepository;
-use App\Utilities\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -25,14 +26,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SecurityController extends AbstractController
 {
     private UserRepository $userRepository;
+    private EmailRepository $emailRepository;
     private RegistrationQuestionRepository $registrationQuestionRepository;
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private Mailer $mailer,
         private TranslatorInterface $translator,
     ) {
         $this->userRepository = $entityManager->getRepository(User::class);
+        $this->emailRepository = $entityManager->getRepository(Email::class);
         $this->registrationQuestionRepository = $entityManager->getRepository(RegistrationQuestion::class);
     }
 
@@ -68,7 +70,6 @@ class SecurityController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
-        Mailer $mailer,
         UrlGeneratorInterface $router,
         #[CurrentUser] ?User $currentUser,
     ): Response {
@@ -160,12 +161,15 @@ class SecurityController extends AbstractController
 
             $domain = getenv('SERVER_NAME');
 
-            $mailer->send(
-                $user->getEmailAddress(),
-                $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+            $email = new Email();
+            $email->setToEmailAddress($user->getEmailAddress());
+            $email->setFromEmailAddress($settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue());
+            $email->setSubject(
                 $this->translator->trans('emails.verify_email_address.subject', [
                     '%domain%' => $domain,
-                ]),
+                ])
+            );
+            $email->setBody(
                 nl2br($this->translator->trans('emails.verify_email_address.body', [
                     '%username%' => $user->getUsername(),
                 ])) . '<p><a href="' . $domain . $router->generate('app_verify_user', [
@@ -173,6 +177,10 @@ class SecurityController extends AbstractController
                     'verificationString' => $emailVerificationString,
                 ]) . '">' . $this->translator->trans('buttons.verify_email_address') . '</a>'
             );
+            $email->setCreated(new \DateTimeImmutable());
+
+            $this->entityManager->persist($email);
+            $this->entityManager->flush();
         }
 
         $this->addFlash('notice', $this->translator->trans('flash_messages.check_emails'));
@@ -286,7 +294,6 @@ class SecurityController extends AbstractController
     #[Route(path: '/forgot-password', name: 'app_forgot_password')]
     public function forgotPassword(
         UrlGeneratorInterface $router,
-        Mailer $mailer,
         Request $request,
         #[CurrentUser] ?User $currentUser,
     ): Response {
@@ -313,12 +320,15 @@ class SecurityController extends AbstractController
             $settingsRepository = $this->entityManager->getRepository(Settings::class);
             $domain = getenv('SERVER_NAME');
 
-            $mailer->send(
-                $user->getEmailAddress(),
-                $settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue(),
+            $email = new Email();
+            $email->setToEmailAddress($user->getEmailAddress());
+            $email->setFromEmailAddress($settingsRepository->getSettingByName('smtpFromEmailAddress')->getValue());
+            $email->setSubject(
                 $this->translator->trans('emails.password_reset.subject', [
                     '%domain%' => $domain,
                 ]),
+            );
+            $email->setBody(
                 nl2br($this->translator->trans('emails.password_reset.body', [
                     '%username%' => $user->getUsername(),
                 ])) . '<p><a href="' . $domain . $router->generate('app_reset_password', [
@@ -326,6 +336,10 @@ class SecurityController extends AbstractController
                     'verificationString' => $emailVerificationString,
                 ]) . '">' . $this->translator->trans('buttons.reset_password') . '</a>'
             );
+            $email->setCreated(new \DateTimeImmutable());
+
+            $this->entityManager->persist($email);
+            $this->entityManager->flush();
         }
 
         $this->addFlash('notice', $this->translator->trans('flash_messages.check_emails_reset_password'));
